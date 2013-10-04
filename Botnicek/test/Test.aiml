@@ -1,0 +1,660 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml version="1.0.1" xmlns="http://alicebot.org/2001/AIML-1.0.1"
+    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://alicebot.org/2001/AIML-1.0.1 http://aitools.org/aiml/schema/AIML.xsd">
+<!--
+Copyright Václav Brodec 2013.
+
+This file is part of Botníèek.
+
+Botníèek is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Botníèek is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Botníèek.  If not, see <http://www.gnu.org/licenses/>.
+-->
+    <category>
+		<!--
+			Provede všechny testy a vypíše je ve formátu "1výsledek
+			2výsledek 3(textový výstup)výsledek 4výsledek...".
+			Výsledek ok znaèí úspìch, fail neúspìch. Odchylka od
+			formátu znaèí neúspìch daného testu.
+		-->
+        <pattern>TEST</pattern>
+        <template>
+			1-<srai>TESTPLAIN</srai>
+			2-<srai>TESTSETDISPLAYVALUE</srai>
+			3-<srai>TESTTHINK</srai>
+			4-<srai>TESTTHINKSET</srai>
+			5-<srai>TESTSETGET</srai>
+			6-<srai>TESTSETGETSERIAL</srai>
+			7-<srai>TESTSETTOPIC</srai>
+			8-<srai>TESTTOPICMATCH</srai>
+			9-<srai>TESTSINGLECONDITION</srai>
+			10-<srai>TESTSINGLECONDITIONWITHWILDCARD</srai>
+			11-<srai>TESTMULTICONDITION</srai>
+			12-<srai>TESTMULTICONDITIONWITHWILDCARD</srai>
+			13-<srai>TESTMULTICONDITIONDEFAULT</srai>
+			14-<srai>TESTMULTINAMECONDITION</srai>
+			15-<srai>TESTMULTINAMECONDITIONWITHWILDCARD</srai>
+			16-<srai>TESTSTAR</srai>
+			17-<srai>TESTSTARS</srai>
+			18-<srai>TESTUNDERSCORES</srai>
+			19-<srai>TESTRANDOM</srai>
+			20-<srai>TESTFORMATTING</srai>
+			21-<srai>TESTBOTPREDICATE</srai>
+			22-<srai>TESTBOTUNKNOWNPREDICATE</srai>
+			23-<srai>TESTCONDITIONSETVALUE</srai>
+			24-<srai>TESTJAVASCRIPT</srai>
+			25-<srai>TESTSYSTEM</srai>
+			26-<srai>TESTNESTEDCONDITION</srai>
+			27-<srai>TESTSETFROMCONDITION</srai>
+			28-<srai>TESTVERSION</srai>
+			29-<srai>TESTSRAI</srai>
+			30-<srai>TESTSR</srai>
+			31-<srai>TESTNESTEDSRAI</srai>
+			32-<srai>TESTTHINKSRAI</srai>
+			33-<srai>TESTSTARSET</srai>
+			34-<srai>TESTID</srai>
+			35-<srai>TESTSIZE</srai>
+			36-<srai>TESTDATE</srai>
+			37-<srai>TESTGOSSIP</srai>
+			38-<srai>TESTNAMEDISPLAY</srai>
+			39-<srai>TESTGENDER</srai>
+			40-<srai>TESTDEEPSRAI</srai>
+			41-<srai>TESTPERSON</srai>
+			42-<srai>TESTPERSON2</srai>
+			43-<srai>TESTOVERWRITING</srai>
+			44-<srai>TESTMOREWILDCARDS</srai>
+		</template>
+    </category>
+	<category>
+        <pattern>TESTPLAIN</pattern>
+        <template>ok</template>
+    </category>
+    <category>
+        <pattern>TESTSETDISPLAYVALUE</pattern>
+        <template><set name="test">ok</set></template>
+    </category>
+	<category>
+        <pattern>TESTTHINK</pattern>
+        <template><think>fail</think>ok</template>
+    </category>
+    <category>
+        <pattern>TESTTHINKSET</pattern>
+        <template><think>
+				<set name="test">fail</set>
+			</think>ok</template>
+    </category>
+    <category>
+        <pattern>TESTSETGET</pattern>
+        <template><think>
+				<set name="test">ok</set>
+			</think><get name="test"/></template>
+    </category>
+    <category>
+        <pattern>TESTSETGETSERIAL</pattern>
+        <template><think>
+				<set name="test">ok</set>
+			</think><get name="test"/><think>
+				<set name="test">fail</set>
+			</think></template>
+    </category>
+    <category>
+        <pattern>TESTSETTOPIC</pattern>
+        <template><think>
+				<set name="topic">set topic</set>
+			</think>ok</template>
+    </category>
+    <topic name="SET TOPIC">
+        <category>
+            <pattern>TESTTOPICMATCH</pattern>
+            <template>ok<think>
+					<set name="topic"/>
+				</think></template>
+        </category>
+    </topic>
+    <category>
+        <pattern>TESTSINGLECONDITION</pattern>
+        <template><think>
+				<set name="test">match</set>
+			</think><condition name="test" value="MATCH">ok</condition><think>
+				<set name="test"/>
+			</think></template>
+    </category>
+    <category>
+        <pattern>TESTSINGLECONDITIONWITHWILDCARD</pattern>
+        <template><think>
+				<set name="test">match some words</set>
+			</think><condition name="test" value="MATCH *">ok</condition><think>
+				<set name="test"/>
+			</think></template>
+    </category>
+    <category>
+        <pattern>TESTMULTICONDITION</pattern>
+        <template><think>
+				<set name="test">match</set>
+			</think><condition name="test">
+                <li value="NOMATCH">fail</li>
+                <li value="MATCH">ok</li>
+                <li value="NOMATCH">fail</li>
+                <li>fail</li>
+            </condition><think>
+				<set name="test"/>
+			</think></template>
+    </category>
+    <category>
+        <pattern>TESTMULTICONDITIONWITHWILDCARD</pattern>
+        <template><think>
+				<set name="test">match some words</set>
+			</think><condition name="test">
+                <li value="MATCH">fail</li>
+                <li value="MATCH *">ok</li>
+                <li>fail</li>
+            </condition><think>
+				<set name="test"/>
+			</think></template>
+    </category>
+    <category>
+        <pattern>TESTMULTICONDITIONDEFAULT</pattern>
+        <template><think>
+				<set name="test">match</set>
+			</think><condition name="test">
+				<li value="NOMATCH">fail</li>
+				<li value="NOMATCH">fail</li>
+				<li value="NOMATCH">fail</li>
+				<li>ok</li>
+			</condition><think>
+				<set name="test"/>
+			</think></template>
+    </category>
+    <category>
+        <pattern>TESTMULTINAMECONDITION</pattern>
+        <template><think>
+				<set name="test">match</set>
+			</think><condition>
+				<li name="test" value="NOMATCH">fail</li>
+				<li name="test" value="MATCH">ok</li>
+				<li name="test" value="NOMATCH">fail</li>
+				<li>fail</li>
+			</condition><think>
+				<set name="test"/>
+			</think></template>
+    </category>
+    <category>
+        <pattern>TESTMULTINAMECONDITIONWITHWILDCARD</pattern>
+        <template><think>
+				<set name="test">match some words</set>
+			</think><condition>
+				<li name="test" value="MATCH">fail</li>
+				<li name="test" value="MATCH *">ok</li>
+				<li name="test" value="MATCH">fail</li>
+				<li>fail</li>
+			</condition><think>
+				<set name="test"/>
+			</think></template>
+    </category>
+    <category>
+        <pattern>TESTSTAR</pattern>
+        <template><srai>doteststar ok</srai></template>
+    </category>
+	<category>
+        <pattern>DOTESTSTAR *</pattern>
+        <template><star/></template>
+    </category>
+    <category>
+        <pattern>TESTSTARS</pattern>
+        <template><srai>doteststars one and o and two and k</srai></template>
+    </category>
+	<category>
+        <pattern>DOTESTSTARS * AND * AND * AND *</pattern>
+        <template><think>
+				<star index="1"/>
+			</think><star index="2"/><think>
+				<star index="3"/>
+			</think><star index="4"/></template>
+    </category>
+    <category>
+        <pattern>TESTUNDERSCORES</pattern>
+        <template><srai>dotestunderscores one and o and two and k</srai></template>
+    </category>
+	<category>
+        <pattern>DOTESTUNDERSCORES * AND * AND * AND *</pattern>
+        <template><think>
+				<star index="1"/>
+			</think><star index="2"/><think>
+				<star index="3"/>
+			</think><star index="4"/></template>
+    </category>
+    <category>
+        <pattern>TESTRANDOM</pattern>
+        <template><random>
+                <li>ok</li>
+                <li>ok</li>
+                <li>ok</li>
+                <li>ok</li>
+                <li>ok</li>
+            </random></template>
+    </category>
+    <category>
+        <pattern>TESTFORMATTING</pattern>
+        <template>(<uppercase>upper case</uppercase>,
+			<lowercase>LoWeR cAsE</lowercase>,
+			<formal>first letters upper case</formal>,
+			<sentence>this is sentence. this to. this not</sentence>)ok</template>
+    </category>
+    <category>
+        <pattern>TESTBOTPREDICATE</pattern>
+        <template><bot name="botpredicate"/></template>
+    </category>
+	<category>
+        <pattern>TESTBOTUNKNOWNPREDICATE</pattern>
+        <template><bot name="unknown"/>ok</template>
+    </category>
+    <category>
+        <pattern>TESTCONDITIONSETVALUE</pattern>
+        <template><think>
+				<set name="result"/>
+				<set name="test">testvalue</set>
+			</think><condition>
+                <li name="test" value="NOMATCH"><think>
+						<set name="result">fail</set>
+					</think><get name="result"/></li>
+                <li name="test" value="TESTVALUE"><think>
+						<set name="result">ok</set>
+					</think><get name="result"/></li>
+                <li name="test" value="NOMATCH"><think>
+						<set name="result">fail</set>
+					</think><get name="result"/></li>
+                <li>fail</li>
+            </condition><think>
+				<set name="result"/>
+			</think><think>
+				<set name="test"/>
+			</think></template>
+    </category>
+    <category>
+        <pattern>TESTJAVASCRIPT</pattern>
+        <template><javascript>"Not" + " supported" + "."</javascript>ok</template>
+    </category>
+    <category>
+        <pattern>TESTSYSTEM</pattern>
+        <template><system>echo Not supported</system>ok</template>
+    </category>
+    <category>
+        <pattern>TESTNESTEDCONDITION</pattern>
+        <template><think>
+				<set name="test">test</set>
+				<set name="subtest">subtest</set>
+			</think><condition>
+                <li name="test" value="TEST"><condition>
+                        <li name="subtest" value="NOMATCH">fail</li>
+                        <li>ok</li>
+                    </condition></li>
+                <li>fail</li>
+            </condition><think>
+				<set name="subtest"/>
+				<set name="test"/>
+			</think></template>
+    </category>
+    <category>
+        <pattern>TESTSETFROMCONDITION</pattern>
+        <template><think>
+				<set name="subtest">match</set>
+			</think><set name="test"><condition name="subtest">
+                    <li value="NOMATCH">fail</li>
+                    <li value="MATCH">ok</li>
+                    <li value="NOMATCH">fail</li>
+                    <li>fail</li>
+                </condition></set><think>
+					<set name="subtest"/>
+					<set name="test"/>
+			</think></template>
+    </category>
+    <category>
+        <pattern>TESTVERSION</pattern>
+        <template>(<version/>)ok</template>
+    </category>
+    <category>
+        <pattern>TESTSRAI</pattern><template><srai>dotestsrai</srai></template>
+    </category>
+    <category>
+        <pattern>DOTESTSRAI</pattern>
+        <template>ok</template>
+    </category>
+    <category>
+        <pattern>TESTSR</pattern>
+        <template><srai>dotestsr1 dotestsr2</srai></template>
+    </category>
+	<category>
+        <pattern>DOTESTSR1 *</pattern>
+        <template><sr/></template>
+    </category>
+	<category>
+        <pattern>DOTESTSR2</pattern>
+        <template>ok</template>
+    </category>
+    <category>
+        <pattern>TESTNESTEDSRAI</pattern>
+        <template><srai>dosrainested</srai></template>
+    </category>
+    <category>
+        <pattern>DOSRAINESTED</pattern>
+        <template><srai>dotestsrai</srai></template>
+    </category>
+    <category>
+        <pattern>TESTTHINKSRAI</pattern>
+        <template>ok<think><srai>dotestthinksrai</srai></think></template>
+    </category>
+    <category>
+        <pattern>DOTESTTHINKSRAI</pattern>
+        <template>fail</template>
+    </category>
+	<category>
+        <pattern>TESTSTARSET</pattern>
+        <template><srai>doteststarset ok</srai></template>
+    </category>
+    <category>
+        <pattern>DOTESTSTARSET *</pattern>
+        <template><think>
+				<set name="test"><star/></set>
+			</think><get name="test"/></template>
+    </category>
+	<category>
+        <pattern>TESTID</pattern>
+        <template><srai><id/></srai></template>
+    </category>
+    <category>
+        <pattern>LOCALHOST</pattern>
+        <template>ok</template>
+    </category>
+	<category>
+        <pattern>TESTSIZE</pattern>
+        <template><srai><size/></srai></template>
+    </category>
+    <category>
+        <pattern>115</pattern>
+        <template>ok</template>
+    </category>
+	<category>
+        <pattern>TESTDATE</pattern>
+        <template>(<date/>)ok</template>
+    </category>
+    <category>
+        <pattern>TESTGOSSIP</pattern>
+        <template><think>
+				<gossip>Testovací promluva v <date/>.</gossip>
+			</think>ok</template>
+    </category>
+    <category>
+        <pattern>TESTNAMEDISPLAY</pattern>
+        <template><set name="ok">fail</set></template>
+    </category>
+    <category>
+        <pattern>TESTGENDER</pattern>
+        <template><srai><gender>kdo je on</gender></srai></template>
+    </category>
+	<category>
+        <pattern>KDO JE ONA</pattern>
+        <template>ok</template>
+    </category>
+    <category>
+        <pattern>TESTDEEPSRAI</pattern>
+        <template><srai>srai50</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI50</pattern>
+        <template><srai>srai49</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI49</pattern>
+        <template><srai>srai48</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI48</pattern>
+        <template><srai>srai47</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI47</pattern>
+        <template><srai>srai46</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI46</pattern>
+        <template><srai>srai45</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI45</pattern>
+        <template><srai>srai44</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI44</pattern>
+        <template><srai>srai43</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI43</pattern>
+        <template><srai>srai42</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI42</pattern>
+        <template><srai>srai41</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI41</pattern>
+        <template><srai>srai40</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI40</pattern>
+        <template><srai>srai39</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI39</pattern>
+        <template><srai>srai38</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI38</pattern>
+        <template><srai>srai37</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI37</pattern>
+        <template><srai>srai36</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI36</pattern>
+        <template><srai>srai35</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI35</pattern>
+        <template><srai>srai34</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI34</pattern>
+        <template><srai>srai33</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI33</pattern>
+        <template><srai>srai32</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI32</pattern>
+        <template><srai>srai31</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI31</pattern>
+        <template><srai>srai30</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI30</pattern>
+        <template><srai>srai29</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI29</pattern>
+        <template><srai>srai28</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI28</pattern>
+        <template><srai>srai27</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI27</pattern>
+        <template><srai>srai26</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI26</pattern>
+        <template><srai>srai25</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI25</pattern>
+        <template><srai>srai24</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI24</pattern>
+        <template><srai>srai23</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI23</pattern>
+        <template><srai>srai22</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI22</pattern>
+        <template><srai>srai21</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI21</pattern>
+        <template><srai>srai20</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI20</pattern>
+        <template><srai>srai19</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI19</pattern>
+        <template><srai>srai18</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI18</pattern>
+        <template><srai>srai17</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI17</pattern>
+        <template><srai>srai16</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI16</pattern>
+        <template><srai>srai15</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI15</pattern>
+        <template><srai>srai14</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI14</pattern>
+        <template><srai>srai13</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI13</pattern>
+        <template><srai>srai12</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI12</pattern>
+        <template><srai>srai11</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI11</pattern>
+        <template><srai>srai10</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI10</pattern>
+        <template><srai>srai9</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI9</pattern>
+        <template><srai>srai8</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI8</pattern>
+        <template><srai>srai7</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI7</pattern>
+        <template><srai>srai6</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI6</pattern>
+        <template><srai>srai5</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI5</pattern>
+        <template><srai>srai4</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI4</pattern>
+        <template><srai>srai3</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI3</pattern>
+        <template><srai>srai2</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI2</pattern>
+        <template><srai>srai1</srai></template>
+    </category>
+    <category>
+        <pattern>SRAI1</pattern>
+        <template>ok</template>
+    </category>
+	<category>
+        <pattern>TESTPERSON</pattern>
+        <template><srai>dotestperson já</srai></template>
+    </category>
+    <category>
+        <pattern>DOTESTPERSON *</pattern>
+        <template><srai><person/></srai></template>
+    </category>
+	<category>
+        <pattern>TY</pattern>
+        <template>ok</template>
+    </category>
+    <category>
+        <pattern>TESTPERSON2</pattern>
+        <template><srai>dotestperson2 já</srai></template>
+    </category>
+    <category>
+        <pattern>DOTESTPERSON2 *</pattern>
+        <template><srai><person/></srai></template>
+    </category>
+	<category>
+        <pattern>ON</pattern>
+        <template>ok</template>
+    </category>
+    <category>
+        <pattern>TESTOVERWRITING</pattern>
+        <template>fail</template>
+    </category>
+    <category>
+        <pattern>TESTOVERWRITING</pattern>
+        <template>ok</template>
+    </category>
+    <category>
+        <pattern>TESTMOREWILDCARDS</pattern>
+        <template><srai>dotestmorewildcards one</srai></template>
+    </category>
+    <category>
+        <pattern>DOTESTMOREWILDCARDS * *</pattern>
+        <template>fail</template>
+    </category>
+    <category>
+        <pattern>DOTESTMOREWILDCARDS *</pattern>
+        <template>ok</template>
+    </category>
+	<category>
+        <pattern>*</pattern>
+        <template>fail</template>
+    </category>
+</aiml>

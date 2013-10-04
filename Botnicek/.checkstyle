@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<fileset-config file-format-version="1.2.0" simple-config="false" sync-formatter="false">
+  <local-check-config name="My Eclipse Checkstyle Config" location="C:\Users\user\Documents\Eclipse\MyCheckstyleFormatterForEclipse.xml" type="external" description="">
+    <additional-data name="protect-config-file" value="false"/>
+  </local-check-config>
+  <local-check-config name="Botnicek Checkstyle Config" location="internal_config__1370474878022.xml" type="internal" description=""/>
+  <local-check-config name="Botnicek Tests Checkstyle Config" location="internal_config__1370474901312.xml" type="internal" description="Without line length check"/>
+  <fileset name="all" enabled="false" check-config-name="My Eclipse Checkstyle Config" local="true">
+    <file-match-pattern match-pattern="." include-pattern="true"/>
+  </fileset>
+  <fileset name="Java Tests" enabled="true" check-config-name="Botnicek Tests Checkstyle Config" local="true">
+    <file-match-pattern match-pattern="test/.*.java$" include-pattern="true"/>
+  </fileset>
+  <fileset name="Java Source" enabled="true" check-config-name="Botnicek Checkstyle Config" local="true">
+    <file-match-pattern match-pattern="src/.*.java$" include-pattern="true"/>
+  </fileset>
+  <filter name="FilesFromPackage" enabled="true">
+    <filter-data value="locale"/>
+  </filter>
+</fileset-config>
