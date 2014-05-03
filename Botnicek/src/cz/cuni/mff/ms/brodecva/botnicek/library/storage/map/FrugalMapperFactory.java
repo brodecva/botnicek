@@ -37,11 +37,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.classes.ClassManagment;
  * @author Václav Brodec
  * @version 1.0
  */
-/**
- * @author user
- * @version 1.0
- * 
- */
 public final class FrugalMapperFactory implements MapperFactory, Serializable {
     /**
      * UID serializované verze.

@@ -25,12 +25,42 @@ package cz.cuni.mff.ms.brodecva.botnicek.library.loader;
  * @version 1.0
  */
 public class SourceParserException extends Exception {
-
+    
     /**
      * UID serializované verze.
      */
     private static final long serialVersionUID = 4444662262587032985L;
-
+    
+    /**
+     * Hodnota indikující nepřítomné systémové či veřejné ID prvku s výskytem chyby.
+     */
+    public static final String NOT_PRESENT_ID = null;
+    
+    /**
+     * Hodnota indikující nepřítomné číslo sloupce či řádky výskytu chyby.
+     */
+    public static final int NOT_PRESENT_NUMBER = -1;
+    
+    /**
+     * Systémový identifikátor prvku s výskytem chyby.
+     */
+    private final String systemId;
+    
+    /**
+     * Veřejný identifikátor prvku s výskytem chyby.
+     */
+    private final String publicId;
+    
+    /**
+     * Číslo řádku výskytu chyby (první má číslo 1).
+     */
+    private final int lineNumber;
+    
+    /**
+     * Číslo sloupce výskytu chyby (první má číslo 1).
+     */
+    private final int columnNumber;
+    
     /**
      * Vytvoří novou výjimku s {@code null} místo podrobné zprávy. Příčina
      * není inicializována, může být dodatečně nastavena voláním
@@ -38,6 +68,11 @@ public class SourceParserException extends Exception {
      */
     public SourceParserException() {
         super();
+        
+        this.systemId = null;
+        this.publicId = null;
+        this.lineNumber = -1;
+        this.columnNumber = -1;
     }
 
     /**
@@ -55,6 +90,11 @@ public class SourceParserException extends Exception {
      */
     public SourceParserException(final String message, final Throwable cause) {
         super(message, cause);
+        
+        this.systemId = null;
+        this.publicId = null;
+        this.lineNumber = -1;
+        this.columnNumber = -1;
     }
 
     /**
@@ -68,6 +108,11 @@ public class SourceParserException extends Exception {
      */
     public SourceParserException(final String message) {
         super(message);
+        
+        this.systemId = null;
+        this.publicId = null;
+        this.lineNumber = -1;
+        this.columnNumber = -1;
     }
 
     /**
@@ -84,5 +129,68 @@ public class SourceParserException extends Exception {
      */
     public SourceParserException(final Throwable cause) {
         super(cause);
+        
+        this.systemId = null;
+        this.publicId = null;
+        this.lineNumber = -1;
+        this.columnNumber = -1;
+    }
+    
+    /**
+     * Vytvoří novou výjimku s danou příčinou a podrobnou zprávou
+     * {@code (cause==null \? null : cause.toString()} (což typicky
+     * obsahuje třídu a podrobnou zprávu o příčině). Tento konstruktor je
+     * užitečný pro výjimky, které nejsou nic víc než obaly pro jiné vyhoditelné
+     * objekty. Tento konstruktor navíc přikládá do výjimky informace o umístění chyby. 
+     * 
+     * @param cause
+     *            příčina (která je uložena pro pozdější získání pomocí metody
+     *            {@link Throwable#getCause()}). (Hodnota {@code null} je
+     *            povolena: říká, že příčina neexistuje či není známa.)
+     * @param systemId systémový identifikátor prvku s chybou (Hodnota {@code null} je
+     *            povolena: říká, že ID není dostupné.)
+     * @param publicId veřejný identifikátor prvku s chybou (Hodnota {@value #NOT_PRESENT_ID} je
+     *            povolena: říká, že ID není dostupné.)
+     * @param lineNumber číslo řádku s chybou (číslováno od 1, hodnota {@value #NOT_PRESENT_NUMBER} značí chybějící informaci)
+     * @param columnNumber číslo sloupce s chybou (číslováno od 1, hodnota {@value #NOT_PRESENT_NUMBER} značí chybějící informaci)
+     */
+    public SourceParserException(final Throwable cause, final String systemId,
+            final String publicId, final int lineNumber, final int columnNumber) {
+        super(cause);
+        
+        this.systemId = systemId;
+        this.publicId = publicId;
+        this.lineNumber = lineNumber;
+        this.columnNumber = columnNumber;
+    }
+    
+    /**
+     * @return systémový identifikátor prvku s chybou (Hodnota {@code null} je
+     *            povolena: říká, že ID není dostupné.)
+     */
+    public String getSystemId() {
+        return systemId;
+    }
+
+    /**
+     * @return veřejný identifikátor prvku s chybou (Hodnota {@value #NOT_PRESENT_ID} je
+     *            povolena: říká, že ID není dostupné.)
+     */
+    public String getPublicId() {
+        return publicId;
+    }
+
+    /**
+     * @return číslo řádku s chybou (číslováno od 1, hodnota {@value #NOT_PRESENT_NUMBER} značí chybějící informaci)
+     */
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
+    /**
+     * @return číslo sloupce s chybou (číslováno od 1, hodnota {@value #NOT_PRESENT_NUMBER} značí chybějící informaci)
+     */
+    public int getColumnNumber() {
+        return columnNumber;
     }
 }

@@ -89,7 +89,6 @@ public interface Language {
      */
     String substituteEmoticons(final String text);
     
-
     /**
      * Zbaví text interpunkčních znamének, která se nacházejí mimo hranice vět.
      * 

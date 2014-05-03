@@ -40,11 +40,13 @@ public final class DefaultIndexFactory implements IndexFactory, Serializable {
      */
     private static final long serialVersionUID = -1764372632713653455L;
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Vrátí číselnou hodnotu atributu index. Číslo 1 je výchozí hodnota v
+     * případě chyby.
      * 
-     * @see cz.cuni.mff.ms.brodecva.botnicek.library.parser.IndexFactory#
-     * createOneDimensionalIndex(org.w3c.dom.Element)
+     * @param element
+     *            prvek s atributem index obsahujícím číslo
+     * @return číslo načteného indexu, 1 v případě chybného načtení
      */
     @Override
     public Index createIndex(final Element element) {
@@ -56,11 +58,13 @@ public final class DefaultIndexFactory implements IndexFactory, Serializable {
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Vrátí číselný pár podle hodnoty atributu index. Pár (1, 1) je výchozí
+     * hodnota v případě chyby.
      * 
-     * @see cz.cuni.mff.ms.brodecva.botnicek.library.parser.IndexFactory#
-     * createTwoDimensionalIndex(org.w3c.dom.Element)
+     * @param element
+     *            prvek s atributem index obsahujícím dvě čísla oddělená čárkou
+     * @return načtený dvojrozměrný index, pár (1, 1) v případě chybného načtení
      */
     @Override
     public TwoDimensionalIndex create2DIndex(final Element element) {

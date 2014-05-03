@@ -3,6 +3,7 @@
 	<name>Botnicek</name>
 	<comment></comment>
 	<projects>
+		<project>Botnicek - IDE</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

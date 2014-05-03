@@ -1,0 +1,1 @@
+Umístění logů pro debugging.

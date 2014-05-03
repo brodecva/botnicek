@@ -122,7 +122,12 @@ public enum XML {
     /**
      * Oddělovač prefixu v názvu prvku.
      */
-    PREFIX_DELIMITER(":");
+    PREFIX_DELIMITER(":"),
+    
+    /**
+     * Atribut s umístěním schématu pro prostor jmen.
+     */
+    SCHEMA_ATT("schemaLocation");
 
     /**
      * Lokalizátor hlášek výjimek.

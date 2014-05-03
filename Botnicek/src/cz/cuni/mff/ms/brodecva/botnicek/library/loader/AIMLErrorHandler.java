@@ -64,7 +64,7 @@ public final class AIMLErrorHandler implements ErrorHandler, Serializable {
                 MESSAGE_LOCALIZER.getMessage("loader.AIMLParserError") + ": "
                         + getParseExceptionInfo(spe);
 
-        throw new SAXException(message);
+        throw new SAXException(message, spe);
     }
 
     /*
@@ -78,7 +78,7 @@ public final class AIMLErrorHandler implements ErrorHandler, Serializable {
                 MESSAGE_LOCALIZER.getMessage("loader.AIMLParserFatalError") + ": "
                         + getParseExceptionInfo(spe);
 
-        throw new SAXException(message);
+        throw new SAXException(message, spe);
     }
 
     /*

@@ -37,6 +37,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 import cz.cuni.mff.ms.brodecva.botnicek.library.logging.BotnicekLogger;
@@ -65,7 +66,7 @@ public final class AIMLSourceParser implements SourceParser, Serializable {
     /**
      * Cesta k schématu.
      */
-    private static final String AIML_SCHEMA_SOURCE =
+    public static final String AIML_SCHEMA_SOURCE =
             "/cz/cuni/mff/ms/brodecva/botnicek/library/platform/AIML.xsd";
 
     /**
@@ -172,7 +173,16 @@ public final class AIMLSourceParser implements SourceParser, Serializable {
 
         try {
             reader.parse(input);
-        } catch (IOException | SAXException e) {
+        } catch (final IOException e) {
+            throw new SourceParserException(e);
+        } catch (final SAXException e) {
+            final Throwable cause = e.getCause();
+            
+            if (cause instanceof SAXParseException) {
+                final SAXParseException parseCause = (SAXParseException) cause;
+                throw new SourceParserException(parseCause, parseCause.getSystemId(), parseCause.getPublicId(), parseCause.getLineNumber(), parseCause.getColumnNumber());
+            }
+            
             throw new SourceParserException(e);
         }
     }

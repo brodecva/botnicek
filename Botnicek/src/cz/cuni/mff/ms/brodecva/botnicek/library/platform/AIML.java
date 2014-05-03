@@ -88,6 +88,11 @@ public enum AIML {
      * Žolík hvězdička.
      */
     STAR_WILDCARD("*"),
+    
+    /**
+     * Žolík podtržítko.
+     */
+    UNDERSCORE_WILDCARD("_"),
 
     /**
      * Přípona souborů.
@@ -98,7 +103,17 @@ public enum AIML {
      * Rozpoznávaný prostor jmen.
      */
     NAMESPACE_URI("http://alicebot.org/2001/AIML-1.0.1"),
-
+    
+    /**
+     * Prostor jmen schématu.
+     */
+    SCHEMA_NAMESPACE_URI("http://www.w3.org/2001/XMLSchema-instance"),
+    
+    /**
+     * Prostor jmen schématu.
+     */
+    BACKUP_SCHEMA_LOCATION("http://alicebot.org/2001/AIML-1.0.1 http://aitools.org/aiml/schema/AIML.xsd"),
+    
     /**
      * Atribut name.
      */
@@ -132,7 +147,18 @@ public enum AIML {
     /**
      * Prvek kategorie.
      */
-    CATEGORY("category");
+    CATEGORY("category"),
+    
+    /**
+     * Oddělovač slov.
+     */
+    WORD_DELIMITER(" "),
+    
+    
+    /**
+     * Oddělovač indexů ve 2D indexu.
+     */
+    INDICES_DELIMITER(", ");
 
     /**
      * Textová hodnota výrazu.

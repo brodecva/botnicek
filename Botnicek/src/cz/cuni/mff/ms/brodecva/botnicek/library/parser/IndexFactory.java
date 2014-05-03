@@ -60,22 +60,20 @@ public interface IndexFactory {
     String COMMA = ",";
 
     /**
-     * Vrátí číselnou hodnotu atributu index. Číslo 1 je výchozí hodnota v
-     * případě chyby.
+     * Vrátí číselnou hodnotu atributu index.
      * 
      * @param element
      *            prvek s atributem index obsahujícím číslo
-     * @return číslo načteného indexu, 1 v případě chybného načtení
+     * @return číslo načteného indexu
      */
     Index createIndex(Element element);
 
     /**
-     * Vrátí číselný pár podle hodnoty atributu index. Pár (1, 1) je výchozí
-     * hodnota v případě chyby.
+     * Vrátí číselný pár podle hodnoty atributu index.
      * 
      * @param element
      *            prvek s atributem index obsahujícím dvě čísla oddělená čárkou
-     * @return načtený dvojrozměrný index, pár (1, 1) v případě chybného načtení
+     * @return načtený dvojrozměrný index
      */
     TwoDimensionalIndex create2DIndex(Element element);
 }
