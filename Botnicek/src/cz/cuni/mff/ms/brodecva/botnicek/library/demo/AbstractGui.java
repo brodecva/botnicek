@@ -343,7 +343,7 @@ public abstract class AbstractGui implements Gui {
      * Přidá daný vstup k zobrazení.
      * 
      * @param author
-     *            jméno autora     *                 * 
+     *            jméno autora
      * @param input
      *            přidaný vstup
      */

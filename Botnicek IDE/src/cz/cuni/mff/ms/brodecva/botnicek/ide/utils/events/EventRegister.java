@@ -23,6 +23,11 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events;
  * @version 1.0
  */
 public interface EventRegister {
-    public <L> void addEventListener(Class<? extends Event<L>> type, L listener);
-    public <L> void removeEventListener(Class<? extends Event<L>> type, L listener);
+    public <K, L> void addListener(Class<? extends MappedEvent<K, L>> type, K key, L listener);
+    public <K, L> void removeListener(Class<? extends MappedEvent<K, L>> type, K key, L listener);
+    public <K, L> void removeAllListeners(Class<? extends MappedEvent<K, L>> type, K key);
+    
+    public <L> void addListener(Class<? extends Event<L>> type, L listener);
+    public <L> void removeListener(Class<? extends Event<L>> type, L listener);
+    public <K, L> void removeAllListeners(Class<? extends Event<L>> type);
 }

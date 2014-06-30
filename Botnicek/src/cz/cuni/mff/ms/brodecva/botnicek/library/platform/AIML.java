@@ -107,11 +107,6 @@ public enum AIML {
     /**
      * Prostor jmen schématu.
      */
-    SCHEMA_NAMESPACE_URI("http://www.w3.org/2001/XMLSchema-instance"),
-    
-    /**
-     * Prostor jmen schématu.
-     */
     BACKUP_SCHEMA_LOCATION("http://alicebot.org/2001/AIML-1.0.1 http://aitools.org/aiml/schema/AIML.xsd"),
     
     /**
@@ -158,7 +153,12 @@ public enum AIML {
     /**
      * Oddělovač indexů ve 2D indexu.
      */
-    INDICES_DELIMITER(", ");
+    INDICES_DELIMITER(", "),
+    
+    /**
+     * Výchozí prefix.
+     */
+    DEFAULT_PREFIX("");
 
     /**
      * Textová hodnota výrazu.

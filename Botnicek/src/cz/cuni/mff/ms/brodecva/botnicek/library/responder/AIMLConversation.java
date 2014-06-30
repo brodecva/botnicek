@@ -179,15 +179,12 @@ public final class AIMLConversation implements Conversation, Serializable {
      * @param predicatesSetBehavior
      *            názvy predikátů zobrazené na strategie pro zobrazení výstupu
      *            při jejich nastavování
-     * @throws ConversationException
-     *             pokud dojde chybě při konverzaci
      */
     public AIMLConversation(final Loader loader, final Splitter splitter,
             final Normalizer normalizer, final Language language,
             final TemplateParserFactory parserFactory,
             final Map<String, String> defaultPredicates,
-            final Map<String, DisplayStrategy> predicatesSetBehavior)
-            throws ConversationException {
+            final Map<String, DisplayStrategy> predicatesSetBehavior) {
         this(loader, splitter, normalizer, language, parserFactory,
                 defaultPredicates, predicatesSetBehavior, Executors
                         .newSingleThreadExecutor());
@@ -214,15 +211,13 @@ public final class AIMLConversation implements Conversation, Serializable {
      *            při jejich nastavování
      * @param executor
      *            exekutor vláken
-     * @throws ConversationException
-     *             pokud dojde chybě při konverzaci
      */
     public AIMLConversation(final Loader loader, final Splitter splitter,
             final Normalizer normalizer, final Language language,
             final TemplateParserFactory parserFactory,
             final Map<String, String> defaultPredicates,
             final Map<String, DisplayStrategy> predicatesSetBehavior,
-            final ExecutorService executor) throws ConversationException {
+            final ExecutorService executor) {
         LOGGER.log(Level.INFO, "responder.ConversationCreating", new Object[] { loader,
                 splitter, normalizer, language, parserFactory, defaultPredicates, predicatesSetBehavior, executor });
 

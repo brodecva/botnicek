@@ -20,15 +20,19 @@ package cz.cuni.mff.ms.brodecva.botnicek.library.api;
 
 import java.io.Serializable;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import cz.cuni.mff.ms.brodecva.botnicek.library.logging.BotnicekLogger;
 import cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration;
+import cz.cuni.mff.ms.brodecva.botnicek.library.utils.ExceptionMessageLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property;
 import cz.cuni.mff.ms.brodecva.botnicek.library.utils.Text;
 
@@ -39,13 +43,20 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.Text;
  * @version 1.0
  * @see cz.cuni.mff.ms.brodecva.botnicek.library.responder.Bot
  */
-public final class AIMLBotConfiguration implements BotConfiguration, Serializable {
+public final class AIMLBotConfiguration implements BotConfiguration,
+        Serializable {
 
     /**
      * UID serializované verze.
      */
     private static final long serialVersionUID = 7297669968890376999L;
-    
+
+    /**
+     * Lokalizátor hlášek výjimek.
+     */
+    private static final ExceptionMessageLocalizer MESSAGE_LOCALIZER =
+            ExceptionMessageLocalizer.getLocalizer();
+
     /**
      * Logger.
      */
@@ -55,27 +66,27 @@ public final class AIMLBotConfiguration implements BotConfiguration, Serializabl
     /**
      * Klíč ke jménu.
      */
-    private static final String NAME_KEY = "Name";
+    public static final String NAME_KEY = "Name";
 
     /**
      * Klíč umístění souborů.
      */
-    private static final String FILES_KEY = "FilesLocation";
+    public static final String FILES_KEY = "FilesLocation";
 
     /**
      * Klíč cesty k souboru s promluvami.
      */
-    private static final String GOSSIP_PATH_KEY = "GossipPath";
+    public static final String GOSSIP_PATH_KEY = "GossipPath";
 
     /**
      * Klíč k přednostnímu načítání.
      */
-    private static final String BEFORE_LOADING_ORDER_KEY = "BeforeLoadingOrder";
+    public static final String BEFORE_LOADING_ORDER_KEY = "BeforeLoadingOrder";
 
     /**
      * Klíč k dodatečnému načítání.
      */
-    private static final String AFTER_LOADING_ORDER_KEY = "AfterLoadingOrder";
+    public static final String AFTER_LOADING_ORDER_KEY = "AfterLoadingOrder";
 
     /**
      * Jméno robota.
@@ -137,36 +148,103 @@ public final class AIMLBotConfiguration implements BotConfiguration, Serializabl
      */
     public static BotConfiguration create(
             final Map<String, String> botSettings,
-            final Map<String, String> botPredicates) throws ConfigurationException {
-        LOGGER.log(Level.INFO, "api.BotSettingsReading", new Object[] { botSettings });
-        
+            final Map<String, String> botPredicates)
+            throws ConfigurationException {
+        LOGGER.log(Level.INFO, "api.BotSettingsReading",
+                new Object[] { botSettings });
+
         final String name = Configuration.readValue(botSettings, NAME_KEY);
         LOGGER.log(Level.INFO, "api.BotNameRead", new Object[] { name });
-        
+
         final Path filesLocation =
                 Configuration.readPath(botSettings, FILES_KEY);
-        LOGGER.log(Level.INFO, "api.BotFilesRead", new Object[] { filesLocation });
+        LOGGER.log(Level.INFO, "api.BotFilesRead",
+                new Object[] { filesLocation });
 
         final Path gossipPath =
                 Configuration.readPath(botSettings, GOSSIP_PATH_KEY);
-        LOGGER.log(Level.INFO, "api.BotGossipLocationRead", new Object[] { gossipPath });
-        
+        LOGGER.log(Level.INFO, "api.BotGossipLocationRead",
+                new Object[] { gossipPath });
+
         final List<String> beforeLoadingOrder =
                 Configuration.readLoadingOrder(botSettings,
                         BEFORE_LOADING_ORDER_KEY);
-        LOGGER.log(Level.INFO, "api.BotBeforeRead", new Object[] { beforeLoadingOrder });
+        LOGGER.log(Level.INFO, "api.BotBeforeRead",
+                new Object[] { beforeLoadingOrder });
 
         final List<String> afterLoadingOrder =
                 Configuration.readLoadingOrder(botSettings,
                         AFTER_LOADING_ORDER_KEY);
-        LOGGER.log(Level.INFO, "api.BotAfterRead", new Object[] { afterLoadingOrder });
+        LOGGER.log(Level.INFO, "api.BotAfterRead",
+                new Object[] { afterLoadingOrder });
 
         final Map<String, String> validBotPredicates =
                 Configuration.readValidEntries(botPredicates);
-        LOGGER.log(Level.INFO, "api.BotPredicatesRead", new Object[] { validBotPredicates });
+        LOGGER.log(Level.INFO, "api.BotPredicatesRead",
+                new Object[] { validBotPredicates });
 
         return new AIMLBotConfiguration(name, filesLocation, gossipPath,
                 validBotPredicates, beforeLoadingOrder, afterLoadingOrder);
+    }
+
+    /**
+     * Vytvoří konfiguraci.
+     * 
+     * @param name
+     *            jméno robota
+     * @param filesLocation
+     *            umístění souborů
+     * @param gossipPath
+     *            cesta k souboru s promluvami
+     * @param predicates
+     *            predikáty
+     * @param beforeLoadingOrder
+     *            pořadí souborů k přednostnímu načítání
+     * @param afterLoadingOrder
+     *            pořadí souborů k dodatečnému načítání
+     * @return konfigurace
+     */
+    public static AIMLBotConfiguration of(final String name,
+            final Path filesLocation, final Path gossipPath,
+            final Map<String, String> predicates,
+            final List<String> beforeLoadingOrder,
+            final List<String> afterLoadingOrder) {
+        if (name == null || filesLocation == null || gossipPath == null
+                || predicates == null || beforeLoadingOrder == null
+                || afterLoadingOrder == null) {
+            throw new NullPointerException(
+                    MESSAGE_LOCALIZER.getMessage("api.NullArgument"));
+        }
+
+        for (final Entry<String, String> predicate : predicates.entrySet()) {
+            final String key = predicate.getKey();
+            final String value = predicate.getValue();
+
+            if (key == null || value == null) {
+                throw new NullPointerException(
+                        MESSAGE_LOCALIZER.getMessage("api.NullPredicateEntry"));
+            }
+
+            if (key.isEmpty() || value.isEmpty()) {
+                throw new IllegalArgumentException(
+                        MESSAGE_LOCALIZER.getMessage("api.EmptyPredicateEntry"));
+            }
+        }
+
+        for (final String item : beforeLoadingOrder) {
+            if (item == null) {
+                throw new NullPointerException(
+                        MESSAGE_LOCALIZER.getMessage("api.NullOrderingItem"));
+            }
+
+            if (item.isEmpty()) {
+                throw new IllegalArgumentException(
+                        MESSAGE_LOCALIZER.getMessage("api.EmptyOrderingItem"));
+            }
+        }
+
+        return new AIMLBotConfiguration(name, filesLocation, gossipPath,
+                predicates, beforeLoadingOrder, afterLoadingOrder);
     }
 
     /**
@@ -192,9 +270,9 @@ public final class AIMLBotConfiguration implements BotConfiguration, Serializabl
         this.name = name;
         this.filesLocation = filesLocation;
         this.gossipPath = gossipPath;
-        this.predicates = predicates;
-        this.beforeLoadingOrder = beforeLoadingOrder;
-        this.afterLoadingOrder = afterLoadingOrder;
+        this.predicates = new HashMap<>(predicates);
+        this.beforeLoadingOrder = new ArrayList<>(beforeLoadingOrder);
+        this.afterLoadingOrder = new ArrayList<>(afterLoadingOrder);
     }
 
     /*
@@ -263,7 +341,9 @@ public final class AIMLBotConfiguration implements BotConfiguration, Serializabl
         return Collections.unmodifiableList(afterLoadingOrder);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -277,14 +357,11 @@ public final class AIMLBotConfiguration implements BotConfiguration, Serializabl
         builder.append(", gossipPath=");
         builder.append(gossipPath);
         builder.append(", predicates=");
-        builder.append(Text.toString(predicates.entrySet(),
-                maxLen));
+        builder.append(Text.toString(predicates.entrySet(), maxLen));
         builder.append(", beforeLoadingOrder=");
-        builder.append(Text.toString(
-                beforeLoadingOrder, maxLen));
+        builder.append(Text.toString(beforeLoadingOrder, maxLen));
         builder.append(", afterLoadingOrder=");
-        builder.append(Text.toString(afterLoadingOrder,
-                maxLen));
+        builder.append(Text.toString(afterLoadingOrder, maxLen));
         builder.append("]");
         return builder.toString();
     }

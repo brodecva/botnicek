@@ -22,6 +22,6 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events;
  * @author Václav Brodec
  * @version 1.0
  */
-public interface Event<L> {
+public interface Event<L> extends Visitable {
     void dispatchTo(L listener);
 }

@@ -29,7 +29,7 @@ public class Mutable<T> {
         this.value = value;
     }
     
-    public void set(T value) {
+    public void set(final T value) {
         this.value = value;
     }
     

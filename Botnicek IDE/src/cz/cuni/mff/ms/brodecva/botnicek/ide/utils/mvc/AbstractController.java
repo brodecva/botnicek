@@ -23,17 +23,23 @@ import java.util.Set;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.utils.Callback;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Callback;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.MappedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event;
 
 /**
  * @author Václav Brodec
  * @version 1.0
  */
-public class AbstractController<V> implements Controller<V> {
+public abstract class AbstractController<V> implements Controller<V> {
     private final EventManager eventManager;
     private final Set<V> views = new HashSet<>();
+    
+    /*protected AbstractController() {
+        this(DefaultEventManager.create());
+    }*/
     
     protected AbstractController(final EventManager eventManager) {
         Preconditions.checkNotNull(eventManager);
@@ -59,8 +65,34 @@ public class AbstractController<V> implements Controller<V> {
     
     protected void callViews(final Callback<V> callback) {
         for (final V view : this.views) {
-            callback.call(view);
+            try {
+                callback.call(view);
+            } catch (final RuntimeException e) {
+                throw e;
+            }
         }
+    }
+    
+    protected final void fire(final MappedEvent<?, ?> event) {
+        Preconditions.checkNotNull(event);
+        
+        this.eventManager.fire(event);
+    }
+    
+    protected final <K, L> void addListener(final Class<? extends MappedEvent<K, L>> type, final K key, final L listener) {
+        Preconditions.checkNotNull(type);
+        Preconditions.checkNotNull(key);
+        Preconditions.checkNotNull(listener);
+        
+        this.eventManager.addListener(type, key, listener);
+    }
+    
+    protected final <K, L> void removeListener(Class<? extends MappedEvent<K, L>> type, K key, L listener) {
+        Preconditions.checkNotNull(type);
+        Preconditions.checkNotNull(key);
+        Preconditions.checkNotNull(listener);
+        
+        this.eventManager.removeListener(type, key, listener);
     }
     
     protected final void fire(final Event<?> event) {
@@ -69,17 +101,33 @@ public class AbstractController<V> implements Controller<V> {
         this.eventManager.fire(event);
     }
     
-    protected final <L> void addEventListener(Class<? extends Event<L>> type, L listener) {
+    protected final <L> void addListener(final Class<? extends Event<L>> type, final L listener) {
         Preconditions.checkNotNull(type);
         Preconditions.checkNotNull(listener);
         
-        this.eventManager.addEventListener(type, listener);
+        this.eventManager.addListener(type, listener);
     }
     
-    protected final <L> void removeEventListener(Class<? extends Event<L>> type, L listener) {
+    protected final <L> void removeListener(final Class<? extends Event<L>> type, final L listener) {
         Preconditions.checkNotNull(type);
         Preconditions.checkNotNull(listener);
         
-        this.eventManager.removeEventListener(type, listener);
+        this.eventManager.removeListener(type, listener);
     }
+    
+    protected final <K, L> void removeAllListeners(final Class<? extends MappedEvent<K, L>> type, final K key) {
+        Preconditions.checkNotNull(type);
+        Preconditions.checkNotNull(key);
+        
+        this.eventManager.removeAllListeners(type, key);
+    }
+    
+    protected final <L> void removeAllListeners(final Class<? extends Event<L>> type) {
+        Preconditions.checkNotNull(type);
+        
+        this.eventManager.removeAllListeners(type);
+    }
+    
+    public void fill(final V view) {
+    };
 }

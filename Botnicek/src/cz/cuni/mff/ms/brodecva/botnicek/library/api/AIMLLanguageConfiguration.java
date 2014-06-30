@@ -23,7 +23,9 @@ import static cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property.toMap;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,6 +33,7 @@ import java.util.regex.Pattern;
 
 import cz.cuni.mff.ms.brodecva.botnicek.library.logging.BotnicekLogger;
 import cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration;
+import cz.cuni.mff.ms.brodecva.botnicek.library.utils.ExceptionMessageLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.library.utils.Text;
 
 /**
@@ -40,28 +43,35 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.Text;
  * @version 1.0
  * @see cz.cuni.mff.ms.brodecva.botnicek.library.language.Language
  */
-public final class AIMLLanguageConfiguration implements LanguageConfiguration, Serializable {
+public final class AIMLLanguageConfiguration implements LanguageConfiguration,
+        Serializable {
 
     /**
      * UID serializované verze.
      */
     private static final long serialVersionUID = -1372788897997147873L;
-    
+
+    /**
+     * Lokalizátor hlášek výjimek.
+     */
+    private static final ExceptionMessageLocalizer MESSAGE_LOCALIZER =
+            ExceptionMessageLocalizer.getLocalizer();
+
     /**
      * Logger.
      */
     private static final Logger LOGGER = BotnicekLogger
             .getLogger(AIMLLanguageConfiguration.class);
-    
+
     /**
      * Klíč položky jméno.
      */
-    private static final String NAME_KEY = "Name";
+    public static final String NAME_KEY = "Name";
 
     /**
      * Klíč položky oddělovače.
      */
-    private static final String DELIM_KEY = "SentenceDelim";
+    public static final String DELIM_KEY = "SentenceDelim";
 
     /**
      * Jméno.
@@ -181,47 +191,137 @@ public final class AIMLLanguageConfiguration implements LanguageConfiguration, S
             final Map<String, String> emoticonsSubsProperties,
             final Map<String, String> innerPunctuationSubsProperties)
             throws ConfigurationException {
-        LOGGER.log(Level.INFO, "api.LanguageSettingsReading", new Object[] { languageSettings });
-        
+        LOGGER.log(Level.INFO, "api.LanguageSettingsReading",
+                new Object[] { languageSettings });
+
         final String name = Configuration.readValue(languageSettings, NAME_KEY);
         LOGGER.log(Level.INFO, "api.LanguageNameRead", new Object[] { name });
-        
+
         final Pattern sentenceDelim =
                 Configuration.readPattern(languageSettings, DELIM_KEY);
-        LOGGER.log(Level.INFO, "api.LanguageDelimRead", new Object[] { sentenceDelim });
-        
+        LOGGER.log(Level.INFO, "api.LanguageDelimRead",
+                new Object[] { sentenceDelim });
+
         final Map<Pattern, String> validGenderSubs =
                 readReplacements(genderSubsProperties);
-        LOGGER.log(Level.INFO, "api.LanguageGenderRead", new Object[] { validGenderSubs });
-        
+        LOGGER.log(Level.INFO, "api.LanguageGenderRead",
+                new Object[] { validGenderSubs });
+
         final Map<Pattern, String> validPersonSubs =
                 readReplacements(personSubsProperties);
-        LOGGER.log(Level.INFO, "api.LanguagePersonRead", new Object[] { validPersonSubs });
-        
+        LOGGER.log(Level.INFO, "api.LanguagePersonRead",
+                new Object[] { validPersonSubs });
+
         final Map<Pattern, String> validPerson2Subs =
                 readReplacements(person2SubsProperties);
-        LOGGER.log(Level.INFO, "api.LanguagePerson2Read", new Object[] { validPerson2Subs });
-        
+        LOGGER.log(Level.INFO, "api.LanguagePerson2Read",
+                new Object[] { validPerson2Subs });
+
         final Map<Pattern, String> validAbbreviationsSubs =
                 readReplacements(abbreviationsSubsProperties);
-        LOGGER.log(Level.INFO, "api.LanguageAbbreviationsRead", new Object[] { validAbbreviationsSubs });
-        
+        LOGGER.log(Level.INFO, "api.LanguageAbbreviationsRead",
+                new Object[] { validAbbreviationsSubs });
+
         final Map<Pattern, String> validSpellingSubs =
                 readReplacements(spellingSubsProperties);
-        LOGGER.log(Level.INFO, "api.LanguageSpellingRead", new Object[] { validSpellingSubs });
-        
+        LOGGER.log(Level.INFO, "api.LanguageSpellingRead",
+                new Object[] { validSpellingSubs });
+
         final Map<Pattern, String> validEmoticonsSubs =
                 readReplacements(emoticonsSubsProperties);
-        LOGGER.log(Level.INFO, "api.LanguageEmoticonsRead", new Object[] { validEmoticonsSubs });
-        
+        LOGGER.log(Level.INFO, "api.LanguageEmoticonsRead",
+                new Object[] { validEmoticonsSubs });
+
         final Map<Pattern, String> validInnerPunctuationSubs =
                 readReplacements(innerPunctuationSubsProperties);
-        LOGGER.log(Level.INFO, "api.LanguagePunctuationRead", new Object[] { validInnerPunctuationSubs });
+        LOGGER.log(Level.INFO, "api.LanguagePunctuationRead",
+                new Object[] { validInnerPunctuationSubs });
 
         return new AIMLLanguageConfiguration(name, sentenceDelim,
                 validGenderSubs, validPersonSubs, validPerson2Subs,
                 validAbbreviationsSubs, validSpellingSubs, validEmoticonsSubs,
                 validInnerPunctuationSubs);
+    }
+
+    /**
+     * Vytvoří konfiguraci jazyka.
+     * 
+     * @param name
+     *            jméno
+     * @param sentenceDelim
+     *            oddělovač vět
+     * @param genderSubs
+     *            nahrazení
+     * @param personSubs
+     *            nahrazení 1. a 2. osoby
+     * @param person2Subs
+     *            nahrazení 1. a 3. osoby
+     * @param abbreviationsSubs
+     *            nahrazení zkratek
+     * @param spellingSubs
+     *            oprava pravopisu
+     * @param emoticonsSubs
+     *            nahrazení emotikon
+     * @param innerPunctuationSubs
+     *            nahrazení vnitřní interpunkce
+     * @return konfigurace
+     */
+    public static AIMLLanguageConfiguration of(final String name,
+            final Pattern sentenceDelim, final Map<Pattern, String> genderSubs,
+            final Map<Pattern, String> personSubs,
+            final Map<Pattern, String> person2Subs,
+            final Map<Pattern, String> abbreviationsSubs,
+            final Map<Pattern, String> spellingSubs,
+            final Map<Pattern, String> emoticonsSubs,
+            final Map<Pattern, String> innerPunctuationSubs) {
+        if (name == null || genderSubs == null || personSubs == null
+                || person2Subs == null || abbreviationsSubs == null
+                || spellingSubs == null || emoticonsSubs == null
+                || innerPunctuationSubs == null) {
+            throw new NullPointerException(
+                    MESSAGE_LOCALIZER.getMessage("api.NullArgument"));
+        }
+
+        if (name.isEmpty()) {
+            throw new IllegalArgumentException(
+                    MESSAGE_LOCALIZER.getMessage("api.EmptyNameArgument"));
+        }
+        checkSubs(genderSubs);
+        checkSubs(personSubs);
+        checkSubs(person2Subs);
+        checkSubs(abbreviationsSubs);
+        checkSubs(spellingSubs);
+        checkSubs(emoticonsSubs);
+        checkSubs(innerPunctuationSubs);
+
+        return new AIMLLanguageConfiguration(name, sentenceDelim, genderSubs,
+                personSubs, person2Subs, abbreviationsSubs, spellingSubs,
+                emoticonsSubs, innerPunctuationSubs);
+    }
+
+    /**
+     * Ověří vstup substitucí.
+     * 
+     * @param subs
+     *            substituce
+     */
+    private static void checkSubs(final Map<Pattern, String> subs) {
+        for (final Entry<Pattern, String> substitution : subs.entrySet()) {
+            final Pattern key = substitution.getKey();
+            final String value = substitution.getValue();
+
+            if (key == null || value == null) {
+                throw new NullPointerException(
+                        MESSAGE_LOCALIZER
+                                .getMessage("api.NullSubstitutionEntry"));
+            }
+
+            if (value.isEmpty()) {
+                throw new IllegalArgumentException(
+                        MESSAGE_LOCALIZER
+                                .getMessage("api.EmptySubstitutionValue"));
+            }
+        }
     }
 
     /**
@@ -256,13 +356,13 @@ public final class AIMLLanguageConfiguration implements LanguageConfiguration, S
             final Map<Pattern, String> innerPunctuationSubs) {
         this.name = name;
         this.sentenceDelim = sentenceDelim;
-        this.genderSubs = genderSubs;
-        this.personSubs = personSubs;
-        this.person2Subs = person2Subs;
-        this.abbreviationsSubs = abbreviationsSubs;
-        this.spellingSubs = spellingSubs;
-        this.emoticonsSubs = emoticonsSubs;
-        this.innerPunctuationSubs = innerPunctuationSubs;
+        this.genderSubs = new HashMap<>(genderSubs);
+        this.personSubs = new HashMap<>(personSubs);
+        this.person2Subs = new HashMap<>(person2Subs);
+        this.abbreviationsSubs = new HashMap<>(abbreviationsSubs);
+        this.spellingSubs = new HashMap<>(spellingSubs);
+        this.emoticonsSubs = new HashMap<>(emoticonsSubs);
+        this.innerPunctuationSubs = new HashMap<>(innerPunctuationSubs);
     }
 
     /*
@@ -365,7 +465,9 @@ public final class AIMLLanguageConfiguration implements LanguageConfiguration, S
         return Collections.unmodifiableMap(innerPunctuationSubs);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -377,26 +479,19 @@ public final class AIMLLanguageConfiguration implements LanguageConfiguration, S
         builder.append(", sentenceDelim=");
         builder.append(sentenceDelim);
         builder.append(", genderSubs=");
-        builder.append(Text.toString(genderSubs.entrySet(),
-                maxLen));
+        builder.append(Text.toString(genderSubs.entrySet(), maxLen));
         builder.append(", personSubs=");
-        builder.append(Text.toString(personSubs.entrySet(),
-                maxLen));
+        builder.append(Text.toString(personSubs.entrySet(), maxLen));
         builder.append(", person2Subs=");
-        builder.append(Text.toString(person2Subs.entrySet(),
-                maxLen));
+        builder.append(Text.toString(person2Subs.entrySet(), maxLen));
         builder.append(", abbreviationsSubs=");
-        builder.append(Text.toString(
-                abbreviationsSubs.entrySet(), maxLen));
+        builder.append(Text.toString(abbreviationsSubs.entrySet(), maxLen));
         builder.append(", spellingSubs=");
-        builder.append(Text.toString(spellingSubs.entrySet(),
-                maxLen));
+        builder.append(Text.toString(spellingSubs.entrySet(), maxLen));
         builder.append(", emoticonsSubs=");
-        builder.append(Text.toString(
-                emoticonsSubs.entrySet(), maxLen));
+        builder.append(Text.toString(emoticonsSubs.entrySet(), maxLen));
         builder.append(", innerPunctuationSubs=");
-        builder.append(Text.toString(
-                innerPunctuationSubs.entrySet(), maxLen));
+        builder.append(Text.toString(innerPunctuationSubs.entrySet(), maxLen));
         builder.append("]");
         return builder.toString();
     }

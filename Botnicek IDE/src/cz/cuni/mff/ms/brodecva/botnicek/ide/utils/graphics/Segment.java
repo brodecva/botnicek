@@ -121,7 +121,7 @@ public class Segment {
     }
     
     public Segment moveTo(final int newToX, final int newToY) {
-        return Segment.create(newToX, newToY, this.xTo, this.yTo);
+        return Segment.create(this.xFrom, this.yFrom, newToX, newToY);
     }
     
     public boolean isPoint() {

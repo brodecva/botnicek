@@ -23,6 +23,7 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc;
  * @version 1.0
  */
 public interface Controller<V> {
-    void addView(final V view);
-    void removeView(final V view);
+    void addView(V view);
+    void removeView(V view);
+    void fill(V view);
 }

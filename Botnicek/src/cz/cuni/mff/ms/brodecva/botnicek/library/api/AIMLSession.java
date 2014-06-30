@@ -170,7 +170,7 @@ public final class AIMLSession implements Session {
                     new AIMLConversation(loader, splitter, normalizer,
                             language, parserFactory, defaultPredicates,
                             predicatesSetBehavior);
-        } catch (ConversationException | LoaderException e) {
+        } catch (final LoaderException e) {
             throw new SessionException(e);
         }
 

@@ -127,7 +127,22 @@ public enum XML {
     /**
      * Atribut s umístěním schématu pro prostor jmen.
      */
-    SCHEMA_ATT("schemaLocation");
+    SCHEMA_ATT("schemaLocation"),
+    
+    /**
+     * Prostor jmen XML schématu.
+     */
+    SCHEMA_NAMESPACE_URI("http://www.w3.org/2001/XMLSchema-instance"),
+    
+    /**
+     * Výchozí prefix XML schématu.
+     */
+    DEFAULT_SCHEMA_PREFIX("xsi"),
+    
+    /**
+     * Prostor jmen atributu definice prostoru jmen.
+     */
+    XMLNS_NAMESPACE("http://www.w3.org/2000/xmlns/");
 
     /**
      * Lokalizátor hlášek výjimek.
