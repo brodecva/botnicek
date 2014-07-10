@@ -24,7 +24,7 @@ import java.util.Set;
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Callback;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManagerTest;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.MappedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event;

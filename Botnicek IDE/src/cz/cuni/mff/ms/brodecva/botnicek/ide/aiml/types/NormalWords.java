@@ -26,8 +26,11 @@ import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.NormalWordChecker;
+import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Normalizer;
+import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.SimpleNormalizer;
 
 /**
  * @author Václav Brodec
@@ -68,9 +71,23 @@ public class NormalWords {
     
     public static NormalWord of(final String text) {
         Preconditions.checkNotNull(text);
-        Preconditions.checkArgument(checker.check(text, text).isValid());
+        
+        final CheckResult result = checker.check(text, text);
+        Preconditions.checkArgument(result.isValid(), result.getMessage());
         
         return NormalWordImplementation.create(text);
+    }
+    
+    public static NormalWord from(final String text) {
+        Preconditions.checkNotNull(text);
+        Preconditions.checkArgument(!text.isEmpty(), "Text je prázdný.");
+        
+        final Normalizer normalizer = new SimpleNormalizer();
+        
+        final String converted = normalizer.convertToNormalChars(text);
+        Preconditions.checkArgument(!converted.isEmpty(), "Nelze převést na normální název.");
+        
+        return NormalWordImplementation.create(converted);
     }
     
     public static NormalWord join(final NormalWord... names) {

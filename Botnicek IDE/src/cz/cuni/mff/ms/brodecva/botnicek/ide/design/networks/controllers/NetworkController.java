@@ -30,7 +30,8 @@ public interface NetworkController extends Controller<NetworkView> {
     void addNode(int x, int y);
     void removeNode(NormalWord nodeName);
     
-    void addArc(String arcName, NormalWord firstNodeName, NormalWord secondNodeName);
+    void addArc(String proposedArcName, NormalWord firstNodeName, NormalWord secondNodeName);
+    
     void removeArc(NormalWord arcName);
     
     void fill(NetworkView view);

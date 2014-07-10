@@ -226,9 +226,7 @@ public final class DefaultDfsVisitor implements DfsVisitor {
 
     @Override
     public boolean visited(final Node node) {
-        if (node == null) {
-            throw new NullPointerException();
-        }
+        Preconditions.checkNotNull(node);
         
         return !isFresh(node);
     }

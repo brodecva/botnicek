@@ -32,7 +32,9 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.HashBiMap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.SetMultimap;
 
 /**
  * @author Václav Brodec
@@ -79,7 +81,7 @@ public class DefaultDirectedMultigraph<V, E> implements DirectedMultigraph<V, E>
     }
     
     private final Set<V> vertices = new HashSet<V>();
-    private final Map<V, Set<Joint<V>>> verticesToEndings = new HashMap<>();
+    private final SetMultimap<V, Joint<V>> verticesToEndings = HashMultimap.create();
     private final BiMap<E, Joint<V>> edgesToEndings = HashBiMap.create();
     
     public static <V, E> DirectedMultigraph<V, E> create() {
@@ -99,7 +101,6 @@ public class DefaultDirectedMultigraph<V, E> implements DirectedMultigraph<V, E>
         Preconditions.checkArgument(!this.vertices.contains(vertex));
         
         this.vertices.add(vertex);
-        this.verticesToEndings.put(vertex, new HashSet<Joint<V>>());
     }
 
     /* (non-Javadoc)
@@ -119,8 +120,8 @@ public class DefaultDirectedMultigraph<V, E> implements DirectedMultigraph<V, E>
         
         final Joint<V> created = new Joint<V>(from, to);
         this.edgesToEndings.put(edge, created);
-        this.verticesToEndings.get(from).add(created);
-        this.verticesToEndings.get(to).add(created);
+        this.verticesToEndings.put(from, created);
+        this.verticesToEndings.put(to, created);
     }
 
     /* (non-Javadoc)
@@ -133,7 +134,7 @@ public class DefaultDirectedMultigraph<V, E> implements DirectedMultigraph<V, E>
         final boolean contained = this.vertices.remove(vertex);
         Preconditions.checkArgument(contained);
         
-        final Collection<Joint<V>> joints = this.verticesToEndings.get(vertex);
+        final Set<Joint<V>> joints = this.verticesToEndings.get(vertex);
         for (final Joint<V> affected : joints) {
             this.edgesToEndings.inverse().remove(affected);
         }
@@ -156,6 +157,7 @@ public class DefaultDirectedMultigraph<V, E> implements DirectedMultigraph<V, E>
         }
                
         final Set<Entry<Joint<V>, E>> jointEntries = removeJoints(joints);
+        this.verticesToEndings.removeAll(vertex);
         this.vertices.remove(vertex);
         
         try {
@@ -168,6 +170,7 @@ public class DefaultDirectedMultigraph<V, E> implements DirectedMultigraph<V, E>
             }
         } catch (final Exception e) {
             this.vertices.add(vertex);
+            this.verticesToEndings.putAll(vertex, joints);
             addJoints(jointEntries);
             throw e;
         }
@@ -221,11 +224,8 @@ public class DefaultDirectedMultigraph<V, E> implements DirectedMultigraph<V, E>
         final Joint<V> affected = this.edgesToEndings.get(edge);
         Preconditions.checkArgument(affected != null);
         
-        final Collection<Joint<V>> outJoints = this.verticesToEndings.get(affected.getStart());
-        final Collection<Joint<V>> inJoints = this.verticesToEndings.get(affected.getEnd());
-        
-        outJoints.remove(affected);
-        inJoints.remove(affected);
+        this.verticesToEndings.remove(affected.getStart(), affected);
+        this.verticesToEndings.remove(affected.getEnd(), affected);
     }
 
     /* (non-Javadoc)
@@ -239,11 +239,11 @@ public class DefaultDirectedMultigraph<V, E> implements DirectedMultigraph<V, E>
         final boolean present = this.vertices.remove(old);
         Preconditions.checkArgument(present);
         
-        final Set<Joint<V>> joints = this.verticesToEndings.remove(old);
+        final Set<Joint<V>> joints = this.verticesToEndings.removeAll(old);
         for (final Joint<V> affected : joints) {
             affected.replace(fresh, old);
         }
-        this.verticesToEndings.put(fresh, joints);
+        this.verticesToEndings.putAll(fresh, joints);
         this.vertices.add(fresh);
     }
 
@@ -319,17 +319,17 @@ public class DefaultDirectedMultigraph<V, E> implements DirectedMultigraph<V, E>
         Preconditions.checkNotNull(vertex);
         Preconditions.checkNotNull(filter);
         
-        final Collection<Joint<V>> allJoints = this.verticesToEndings.get(vertex);
-        Preconditions.checkArgument(allJoints != null);
+        final Set<Joint<V>> allJoints = this.verticesToEndings.get(vertex);
+        Preconditions.checkArgument(!allJoints.isEmpty());
         
         final Collection<Joint<V>> directedJoints = Collections2.filter(allJoints, filter);
         
-        final Set<E> result = new HashSet<>();
+        final ImmutableSet.Builder<E> resultBuilder = ImmutableSet.builder();
         for (final Joint<V> joint : directedJoints) {
-            result.add(this.edgesToEndings.inverse().get(joint));
+            resultBuilder.add(this.edgesToEndings.inverse().get(joint));
         }
         
-        return result;
+        return resultBuilder.build();
     }
 
     /* (non-Javadoc)

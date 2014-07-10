@@ -49,8 +49,8 @@ public abstract class AbstractNode implements Node {
     protected AbstractNode(final NormalWord name, final Network parent, final int x, final int y) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(parent);        
-        Preconditions.checkArgument(x > 0);
-        Preconditions.checkArgument(y > 0);
+        Preconditions.checkArgument(x >= 0);
+        Preconditions.checkArgument(y >= 0);
         
         this.name = name;
         this.parent = parent;
@@ -61,7 +61,7 @@ public abstract class AbstractNode implements Node {
     
     protected AbstractNode(final Node original) {
         this.name = original.getName();
-        this.parent = original.getParent();
+        this.parent = original.getNetwork();
         
         this.x = original.getX();
         this.y = original.getY();
@@ -69,10 +69,6 @@ public abstract class AbstractNode implements Node {
     
     public final NormalWord getName() {
         return this.name;
-    }
-    
-    public final Network getParent() {
-        return this.parent;
     }
     
     public final int getX() {
@@ -88,9 +84,7 @@ public abstract class AbstractNode implements Node {
         
         final Set<Arc> outs = this.parent.getOuts(this);
         for (final Arc arc : outs) {
-            if (!visitor.visited(arc.getTo())) {
-                arc.accept(visitor);
-            }
+            arc.accept(visitor);
         }
         
         visitor.visitExit(this);

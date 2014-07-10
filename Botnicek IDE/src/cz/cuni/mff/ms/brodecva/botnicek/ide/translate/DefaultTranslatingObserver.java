@@ -20,6 +20,7 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.translate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,7 +29,9 @@ import java.util.Map.Entry;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -59,7 +62,7 @@ public class DefaultTranslatingObserver implements TranslatingObserver {
     private final NormalWord randomizeState;
     private final NormalWord testingPredicate;
     
-    private final Map<Network, List<Topic>> units = new HashMap<>();
+    private final ListMultimap<Network, Topic> units = ArrayListMultimap.create();
     
     private Optional<Network> current;
     
@@ -174,12 +177,7 @@ public class DefaultTranslatingObserver implements TranslatingObserver {
         }
         
         final Network currentRaw = this.current.get();
-        final List<Topic> present = this.units.get(currentRaw);
-        if (present == null) {
-            this.units.put(currentRaw, new LinkedList<>(Arrays.asList(added)));
-        } else {
-           present.add(added);
-        }
+        this.units.put(currentRaw, added);
     }
     
     /* (non-Javadoc)
@@ -187,12 +185,11 @@ public class DefaultTranslatingObserver implements TranslatingObserver {
      */
     @Override
     public Map<Network, List<Topic>> getResult() {
-        final Map<Network, List<Topic>> result = Maps.newHashMapWithExpectedSize(this.units.size());
+        final Map<Network, Collection<Topic>> collectionResult = this.units.asMap();
+        final Map<Network, ? extends Collection<Topic>> rawResult = collectionResult;
         
-        for (final Entry<Network, List<Topic>> unit : this.units.entrySet()) {
-            result.put(unit.getKey(), new ArrayList<>(unit.getValue()));
-        }
-        
-        return result;
+        @SuppressWarnings("unchecked")
+        final Map<Network, List<Topic>> castResult = (Map<Network, List<Topic>>) rawResult; 
+        return castResult;
     }
 }

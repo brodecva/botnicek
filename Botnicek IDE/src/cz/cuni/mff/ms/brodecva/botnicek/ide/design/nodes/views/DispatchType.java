@@ -26,7 +26,7 @@ import java.awt.Stroke;
  * @version 1.0
  */
 public enum DispatchType {
-    ORDERED(new BasicStroke(1.0f,
+    ORDERED(new BasicStroke(5.0f,
             BasicStroke.CAP_BUTT,
             BasicStroke.JOIN_MITER,
             10.0f,

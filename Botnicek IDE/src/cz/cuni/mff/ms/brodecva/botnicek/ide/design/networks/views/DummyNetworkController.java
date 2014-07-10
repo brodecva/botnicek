@@ -88,15 +88,11 @@ final class DummyNetworkController implements NetworkController {
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController
-     * #addArc(java.lang.String, java.lang.String, java.lang.String)
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.controllers.NetworkController#addArc(java.lang.String, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
      */
     @Override
-    public void addArc(String arcName, NormalWord firstNodeName,
+    public void addArc(String proposedArcName, NormalWord firstNodeName,
             NormalWord secondNodeName) {
 
     }

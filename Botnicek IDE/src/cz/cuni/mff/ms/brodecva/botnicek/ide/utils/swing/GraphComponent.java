@@ -18,6 +18,7 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing;
 
+import java.awt.Rectangle;
 import java.awt.event.ComponentListener;
 import java.util.Arrays;
 
@@ -28,6 +29,12 @@ import javax.swing.JComponent;
  * @version 1.0
  */
 public abstract class GraphComponent extends JComponent {
+
+    private static final int FRAME_SIZE = 100;
+    
+    private static Rectangle frame(final Rectangle bounds) {
+        return new Rectangle(bounds.x - FRAME_SIZE, bounds.y - FRAME_SIZE, bounds.width + 2 * FRAME_SIZE, bounds.height + 2 * FRAME_SIZE);
+    }
 
     public GraphComponent() {
         super();
@@ -40,5 +47,37 @@ public abstract class GraphComponent extends JComponent {
         for (final ComponentListener removed : listenersCopy) {
             this.removeComponentListener(removed);
         }
+    }
+    
+    public void setFramedBounds(Rectangle bounds) {
+        setBounds(frame(bounds));
+    }
+    
+    public int getContentWidth() {
+        return getWidth() - 2 * FRAME_SIZE;
+    }
+    
+    public int getContentHeight() {
+        return getHeight() - 2 * FRAME_SIZE;
+    }
+    
+    public int getFrameWidth() {
+        return FRAME_SIZE;
+    }
+    
+    public int getFrameHeight() {
+        return FRAME_SIZE;
+    }
+    
+    public void setContentLocation(final int x, final int y) {
+        super.setLocation(x - FRAME_SIZE, y - FRAME_SIZE);
+    }
+    
+    public int getContentX() {
+        return this.getX() + getFrameWidth();
+    }
+    
+    public int getContentY() {
+        return this.getY() + getFrameHeight();
     }
 }

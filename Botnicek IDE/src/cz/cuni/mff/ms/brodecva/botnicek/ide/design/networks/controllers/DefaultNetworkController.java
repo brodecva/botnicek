@@ -18,8 +18,15 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.controllers;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
+
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.AbstractDfsObserver;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.ArcRemovedListener;
@@ -43,6 +50,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Callback;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.AbstractController;
+import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Normalizer;
 
 /**
  * @author Václav Brodec
@@ -228,11 +236,17 @@ public class DefaultNetworkController extends AbstractController<NetworkView> im
     }
 
     /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController#addArc(java.lang.String, java.lang.String, java.lang.String)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.controllers.NetworkController#addArc(java.lang.String, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
      */
     @Override
-    public void addArc(final String name, final NormalWord firstName, final NormalWord secondName) {
-        this.network.addArc(name, firstName, secondName);
+    public void addArc(final String proposedName, final NormalWord firstName, final NormalWord secondName) {
+        Preconditions.checkNotNull(proposedName);
+        Preconditions.checkNotNull(firstName);
+        Preconditions.checkNotNull(secondName);
+        
+        final NormalWord normalName = NormalWords.from(proposedName);
+        
+        this.network.addArc(normalName, firstName, secondName);
     }
 
     /* (non-Javadoc)
@@ -243,23 +257,35 @@ public class DefaultNetworkController extends AbstractController<NetworkView> im
         Preconditions.checkNotNull(view);
                 
         view.renamed(this.network);
+        
+        final Collection<Node> nodes = new HashSet<>();
+        final Collection<Arc> arcs = new HashSet<>();
         this.network.accept(DefaultDfsVisitor.create(new AbstractDfsObserver() {
             
             /* (non-Javadoc)
              * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.AbstractDfsObserver#notifyDiscovery(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
              */
             @Override
-            public void notifyDiscovery(Node discovered) {
-                view.nodeAdded(discovered);
+            public void notifyDiscovery(final Node discovered) {
+                final boolean fresh = nodes.add(discovered);
+                assert fresh;
             }
             
             /* (non-Javadoc)
              * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.AbstractDfsObserver#notifyExamination(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
              */
             @Override
-            public void notifyExamination(Arc examined) {
-                view.arcAdded(examined);
+            public void notifyExamination(final Arc examined) {
+                final boolean fresh = arcs.add(examined);
+                assert fresh;
             }
         }));
+        
+        for (final Node node : nodes) {
+            view.nodeAdded(node);
+        }
+        for (final Arc arc : arcs) {
+            view.arcAdded(arc);
+        }
     }
 }

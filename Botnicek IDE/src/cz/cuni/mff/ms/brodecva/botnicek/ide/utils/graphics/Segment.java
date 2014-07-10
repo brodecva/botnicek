@@ -86,12 +86,13 @@ public class Segment {
         
         final int xSlope = xTo - xFrom;
         final int ySlope = yTo - yFrom;
-        final double parameter = - (xSlope * xFromDelta + ySlope * yFromDelta) / (xSlope * xSlope) + (ySlope * ySlope);
+        
+        final double parameter = - (xSlope * xFromDelta + ySlope * yFromDelta) / (xSlope * xSlope + ySlope * ySlope);
 
         final double projectionX = xFrom + parameter * xSlope;
         final double projectionY = yFrom + parameter * ySlope;
 
-        if ((parameter >= 0) && (parameter <= 1) )
+        if ((parameter >= 0) && (parameter <= 1))
         {
             final double projectionDeltaX = projectionX - x;
             final double projectionDeltaY = projectionY - y;

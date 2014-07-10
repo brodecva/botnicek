@@ -55,6 +55,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesContro
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.views.NodeUI;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.views.NodesView;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.GraphComponent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.IrregularMouseListener;
 
 import java.awt.GridLayout;
@@ -71,11 +72,6 @@ import javax.swing.JScrollPane;
  * @version 1.0
  */
 public final class NetworkInternalWindow implements NetworkView, NodesView {
-    
-    private static final String NODE_RENAME_MESSAGE = "Zadejte nový název uzlu:";
-    private static final String NODE_RENAME_TITLE_CONTENT = "Přejmenovat uzel";
-    private static final String NODE_RENAME_ERROR_TITLE = "Neplatný formát jména uzlu";
-    private static final String NORE_RENAME_ERROR_MESSAGE = "Zadejte platné jméno uzlu!";
     
     private final JInternalFrame frame;
     
@@ -219,34 +215,7 @@ public final class NetworkInternalWindow implements NetworkView, NodesView {
         final NodeUI added = NodeUI.create(node, this.nodesController);
         this.nodes.put(node.getName(), added);
         
-        added.addMouseListener(IrregularMouseListener.decorate(added, new MouseAdapter() {
-            
-            @Override
-            public void mouseClicked(final MouseEvent e) {
-                if (e.getClickCount() != 2) {
-                    return;
-                }
-                
-                if (e.isControlDown()) {
-                    added.toggleProceedType();
-                } else if (e.isAltDown()) {
-                    added.toggleDispatchType();
-                } else if (e.isShiftDown()) {
-                    Object newNameInput;
-                    do {
-                        newNameInput = JOptionPane.showInputDialog(added, NODE_RENAME_MESSAGE, NODE_RENAME_TITLE_CONTENT, JOptionPane.PLAIN_MESSAGE, null, null, added.getName());
-                        
-                        try {
-                            final NormalWord normalNewNameInput = NormalWords.of(newNameInput.toString());
-                            added.rename(normalNewNameInput);
-                            return;
-                        } catch (final IllegalArgumentException ex) {
-                            JOptionPane.showMessageDialog(frame, NORE_RENAME_ERROR_MESSAGE, NODE_RENAME_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
-                        }
-                    } while (newNameInput != null);
-                }
-            }
-        }));
+        
         added.addMouseListener(IrregularMouseListener.decorate(added, (MouseListener) arcDesignListener));
         added.addMouseMotionListener(IrregularMouseListener.decorate(added, (MouseMotionListener) arcDesignListener));
         
@@ -338,22 +307,12 @@ public final class NetworkInternalWindow implements NetworkView, NodesView {
         Preconditions.checkArgument(to != null);
         
         final ArcUI added = ArcUI.create(arc, from, to, this.arcPropertiesController);
-        
-        added.addMouseListener(new MouseAdapter() {
-            
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() != 2) {
-                    return;
-                }
-                
-                added.showProperties();
-            }
-        });
         added.addMouseListener(IrregularMouseListener.decorate(added, (MouseListener) this.arcDesignListener));
         added.addMouseMotionListener(IrregularMouseListener.decorate(added, (MouseMotionListener) this.arcDesignListener));
         
         this.designPanel.add(added);
         this.designPanel.setComponentZOrder(added, this.designPanel.getComponentCount() - 1);
+        this.designPanel.repaint();
         
         this.arcs.put(arc.getName(), added);
     }
@@ -367,7 +326,7 @@ public final class NetworkInternalWindow implements NetworkView, NodesView {
         assert SwingUtilities.isEventDispatchThread();
         Preconditions.checkNotNull(arc);
         
-        final ArcUI present = this.arcs.remove(arc.getName());
+        final GraphComponent present = this.arcs.remove(arc.getName());
         Preconditions.checkArgument(present != null);
         
         present.removeAllComponentListeners();

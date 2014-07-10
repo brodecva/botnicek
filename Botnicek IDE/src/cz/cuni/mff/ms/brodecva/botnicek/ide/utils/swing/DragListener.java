@@ -29,6 +29,7 @@ import com.google.common.base.Preconditions;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.DragFinishedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.DragFinishedListener;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManagerTest;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
 
 /**

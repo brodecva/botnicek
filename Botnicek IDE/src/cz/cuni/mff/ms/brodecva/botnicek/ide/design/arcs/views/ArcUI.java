@@ -18,10 +18,13 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.util.Map;
 import com.google.common.base.Preconditions;
@@ -43,6 +46,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.views.NodeUI;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.graphics.Segment;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.GraphComponent;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.IrregularMouseListener;
 
 
 /**
@@ -65,7 +69,7 @@ public final class ArcUI extends GraphComponent implements ArcView {
     
     private static final int ARROW_SIDE_LENGTH = 10;
     private static final double ARROW_ARM_ANGLE = Math.toRadians(30);
-    private static final int DEFAULT_THICKNESS = 3;
+    private static final int DEFAULT_THICKNESS = 6;
     
     private final ArcPropertiesController arcPropertiesController;
     
@@ -98,10 +102,23 @@ public final class ArcUI extends GraphComponent implements ArcView {
         newInstance.setOffset(offset);
         newInstance.setThickness(thickness);
         
-        newInstance.setBounds(newInstance.getSegment().toBounds());
+        newInstance.setFramedBounds(newInstance.getSegment().toBounds());
         
         from.addOut(newInstance);
         to.addIn(newInstance);
+        
+        newInstance.addMouseListener(IrregularMouseListener.decorate(newInstance, new MouseAdapter() {
+            
+            public void mouseClicked(final MouseEvent e) {
+                if (e.getClickCount() != 2) {
+                    return;
+                }
+                
+                newInstance.showProperties();
+            }
+        }));
+        
+        newInstance.setBackground(Color.PINK);
         
         return newInstance;
     }
@@ -221,27 +238,35 @@ public final class ArcUI extends GraphComponent implements ArcView {
     public void paintComponent(final Graphics graphics) {
         super.paintComponent(graphics);
         
+        final Graphics2D graphics2d = (Graphics2D) graphics;
+        graphics2d.setColor(this.type.getColor());
+        graphics2d.setStroke(this.type.getStroke());
+        
         final Segment segment = getSegment();
+        
         final int xFrom = segment.getFromX();
         final int yFrom = segment.getFromY();
         
         final int xTo = segment.getToX();
         final int yTo = segment.getToY();
         
-        final Graphics2D graphics2d = (Graphics2D) graphics;
-        graphics2d.setColor(this.type.getColor());
-        graphics2d.setStroke(this.type.getStroke());
+        final int xOrigin = getX();
+        final int yOrigin = getY();
         
-        final double theta = Math.atan2(yTo - yFrom, xTo - xFrom);
+        final int xFromOrigin = xFrom - xOrigin;
+        final int xToOrigin = xTo - xOrigin;
+        final int yFromOrigin = yFrom - yOrigin;
+        final int yToOrigin = yTo - yOrigin;
         
-        final Line2D.Double mainLine = new Line2D.Double(xFrom, yFrom, xTo, yTo);
+        final Line2D.Double mainLine = new Line2D.Double(xFromOrigin, yFromOrigin, xToOrigin, yToOrigin);
         graphics2d.draw(mainLine);
         
-        final int xCenter = (xFrom + xTo) /2;
-        final int yCenter = (yFrom + yTo) /2;
+        final double theta = Math.atan2(yTo - yFrom, xTo - xFrom);
+        final int xCenter = (xFromOrigin + xToOrigin) /2;
+        final int yCenter = (yFromOrigin + yToOrigin) /2;
         drawArrowArms(xCenter, yCenter, graphics2d, theta);
         
-        graphics.drawString(String.format("%1s$ (%2s$)", getName(), getPriority()), xCenter, yCenter);
+        graphics.drawString(String.format("%s (%s)", this.name.getText(), getPriority()), xCenter, yCenter);
     }
 
     /**
@@ -270,9 +295,10 @@ public final class ArcUI extends GraphComponent implements ArcView {
     }
     
     public void jointMoved() {
+        setFramedBounds(getSegment().toBounds());
         repaint();
     }
-
+    
     /**
      * 
      */

@@ -61,6 +61,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.ConversationSettingsDi
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.LanguageSettingsDialog;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.TestPanel;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManagerTest;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
 
 import java.awt.event.ActionListener;

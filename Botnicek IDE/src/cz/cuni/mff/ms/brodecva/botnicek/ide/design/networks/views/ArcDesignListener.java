@@ -36,6 +36,8 @@ import javax.swing.event.MouseInputListener;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcUI;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.controllers.NetworkController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.views.NodeUI;
@@ -46,6 +48,7 @@ public final class ArcDesignListener extends MouseAdapter implements MouseInputL
     private static final String ARC_NAME_MESSAGE = "Zadejte název nového přechodu:";
     private static final String ARC_NAME_TITLE_CONTENT = "Pojmenovat přechod";
     private static final String ARC_NAME_INITIAL_VALUE = "";
+    private static final String ARC_NAME_ERROR_TITLE = "Chyba v názvu.";
     
     private final JComponent lineComponent = new JComponent() {
         
@@ -128,12 +131,20 @@ public final class ArcDesignListener extends MouseAdapter implements MouseInputL
             if (this.nodes.contains(source) && !this.from.equals(source)) {
                 final NodeUI to = (NodeUI) source;
                 
-                final Object newNameInput = JOptionPane.showInputDialog(to, ARC_NAME_MESSAGE, ARC_NAME_TITLE_CONTENT, JOptionPane.PLAIN_MESSAGE, null, null, ARC_NAME_INITIAL_VALUE);
-                if (newNameInput == null) {
-                    return;
-                }                
-                
-                this.controller.addArc(newNameInput.toString(), this.from.getNodeName(), to.getNodeName());
+                while (true) {
+                    final Object newNameInput = JOptionPane.showInputDialog(to, ARC_NAME_MESSAGE, ARC_NAME_TITLE_CONTENT, JOptionPane.PLAIN_MESSAGE, null, null, ARC_NAME_INITIAL_VALUE);
+                    if (newNameInput == null) {
+                        return;
+                    }
+                    
+                    try {
+                        this.controller.addArc(newNameInput.toString(), this.from.getNodeName(), to.getNodeName());
+                        return;
+                    } catch (final IllegalArgumentException ex) {
+                        JOptionPane.showMessageDialog(to, ex.getMessage(), ARC_NAME_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+                        continue;
+                    }
+                }
             }
         }
     }

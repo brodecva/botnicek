@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResultImplementation;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.types.Mutable;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.XML;
 
 /**
@@ -30,6 +29,30 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.platform.XML;
  * @version 1.0
  */
 public class DefaultMixedPatternChecker implements MixedPatternChecker {
+    
+    private static class TagProcessingResult {
+        private final CheckResult checkResult;
+        private final int indexOffset;
+        
+        private TagProcessingResult(final CheckResult checkResult, final int indexOffset) {
+            this.checkResult = checkResult;
+            this.indexOffset = indexOffset;
+        }
+
+        /**
+         * @return the checkResult
+         */
+        public CheckResult getCheckResult() {
+            return checkResult;
+        }
+
+        /**
+         * @return the indexOffset
+         */
+        public int getIndex() {
+            return indexOffset;
+        }
+    }
     
     private static Pattern botTagPattern = java.util.regex.Pattern.compile("<(?:[^:]:)?bot[^/>]+name=\"[\\p{Digit}\\p{Lu}[\\p{L}&&\\p{IsUppercase}&&\\P{IsLowercase}&&\\P{IsLowercase}]]+\"[^/>]*(?:/>|></(?:[^:]:)?bot>)");
     
@@ -49,31 +72,39 @@ public class DefaultMixedPatternChecker implements MixedPatternChecker {
         boolean inWord = false;
         
         final char[] characters = patternContent.toCharArray();
-        for (int index = 0; index < characters.length; index++) {
+        int index = 0;
+        while (index < characters.length) {
             final int position = index + 1;
-            final char character = characters[index]; 
+            final char character = characters[index];
             
             if (XML.TAG_START.equals(Character.toString(character))) {
                 inWord = true;
                 
-                final Mutable<Integer> tagOffset = Mutable.of(index);
-                final CheckResult tagResult = processTag(source, characters, tagOffset);
-                index = tagOffset.get();
+                final TagProcessingResult tagProcessingResult = processTag(source, characters, index);
+                final CheckResult tagResult = tagProcessingResult.getCheckResult();
+                index = tagProcessingResult.getIndex();
                 
                 if (!tagResult.isValid()) {
                     return tagResult;
                 }
+                
+                index++;
             } else if (character == ' ') {
                 if (!inWord || index == characters.length - 1) {
                     return CheckResultImplementation.fail(source, position, "Excesive whitespace at position %1$s.", position);
                 }
+                
                 inWord = false;
+                index++;
             } else if (Character.isDigit(character)) {
                 inWord = true;
+                index++;
             } else if (Character.isUpperCase(character)) {
                 inWord = true;
+                index++;
             } else if (Character.isLetter(character) && !Character.isLowerCase(character) && !Character.isUpperCase(character) && !Character.isTitleCase(character)) {
                 inWord = true;
+                index++;
             } else {
                 return CheckResultImplementation.fail(source, position, "Invalid character at position %1$s.", position);
             }
@@ -82,21 +113,20 @@ public class DefaultMixedPatternChecker implements MixedPatternChecker {
         return CheckResultImplementation.succeed(source);
     }
 
-    private static CheckResult processTag(final Object source, final char[] characters, final Mutable<Integer> index) {
-        int offset = index.get();
+    private static TagProcessingResult processTag(final Object source, final char[] characters, final int index) {
+        int offset = index;
         final int tagInitialPosition = offset + 1;
         
         final StringBuilder tagBuilder = new StringBuilder(characters[offset]);
         while (!botTagPattern.matcher(tagBuilder).matches()) {
             if (offset >= characters.length) {
-                return CheckResultImplementation.fail(source, tagInitialPosition, "Invalid bot tag starting at %1$s", tagInitialPosition);
+                return new TagProcessingResult(CheckResultImplementation.fail(source, tagInitialPosition, "Invalid bot tag starting at %1$s", tagInitialPosition), offset);
             }
             
             offset++;
             tagBuilder.append(characters[offset]);
         }
         
-        index.set(offset);
-        return CheckResultImplementation.succeed(source);
+        return new TagProcessingResult(CheckResultImplementation.succeed(source), offset);
     }
 }

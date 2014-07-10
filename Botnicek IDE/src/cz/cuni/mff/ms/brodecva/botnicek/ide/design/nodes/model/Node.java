@@ -36,7 +36,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Direction;
  */
 public interface Node extends Visitable, DispatchProcessible, ProceedProcessible, StackProcessible {
     NormalWord getName();
-    Network getParent();
     
     int getX();
     int getY();

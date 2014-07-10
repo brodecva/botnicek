@@ -18,13 +18,12 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
 
@@ -50,10 +49,10 @@ public class DefaultEventManager implements EventManager {
         
         private <L> void visitCommon(final Event<L> event) {
             @SuppressWarnings("unchecked")
-            final Set<L> listeners = (Set<L>) eventsToListeners.get(event.getClass());
-            if (listeners == null) {
-                return;
-            }
+            final Class<? extends Event<L>> type = (Class<? extends Event<L>>) event.getClass();
+            
+            @SuppressWarnings("unchecked")
+            final Set<L> listeners = (Set<L>) eventsToListeners.get(type);
             
             for (final L listener : listeners) {
                 event.dispatchTo(listener);
@@ -73,10 +72,13 @@ public class DefaultEventManager implements EventManager {
     }
 
     private final Table<Class<? extends MappedEvent<?, ?>>, Object, Set<?>> eventsAndKeysToListeners = HashBasedTable.create();
-    private final Map<Class<? extends Event<?>>, Set<?>> eventsToListeners = new HashMap<>();
+    private final SetMultimap<Class<? extends Event<?>>, ?> eventsToListeners = HashMultimap.create();
     
     public static DefaultEventManager create() {
         return new DefaultEventManager();
+    }
+    
+    private DefaultEventManager() {
     }
     
     /* (non-Javadoc)
@@ -134,14 +136,8 @@ public class DefaultEventManager implements EventManager {
         
         @SuppressWarnings("unchecked")
         final Set<L> listeners = (Set<L>) this.eventsToListeners.get(type);
-        if (listeners == null) {
-            @SuppressWarnings("unchecked")
-            final Set<L> newListeners = Sets.<L>newHashSet(listener);
-            this.eventsToListeners.put(type, newListeners);
-        } else {
-            final boolean fresh = listeners.add(listener);
-            Preconditions.checkArgument(fresh);
-        }
+        final boolean fresh = listeners.add(listener);
+        Preconditions.checkArgument(fresh);
     }
 
     /* (non-Javadoc)
@@ -153,16 +149,8 @@ public class DefaultEventManager implements EventManager {
         Preconditions.checkNotNull(type);
         Preconditions.checkNotNull(listener);
         
-        @SuppressWarnings("unchecked")
-        final Set<L> listeners = (Set<L>) this.eventsToListeners.get(type);
-        Preconditions.checkArgument(listeners != null);
-        
-        final boolean contained = listeners.remove(listener);
+        final boolean contained = this.eventsToListeners.remove(type, listener);
         Preconditions.checkArgument(contained);
-        
-        if (listeners.isEmpty()) {
-            this.eventsToListeners.remove(type);
-        }
     }
     
     /* (non-Javadoc)
@@ -195,7 +183,7 @@ public class DefaultEventManager implements EventManager {
     public <K, L> void removeAllListeners(final Class<? extends Event<L>> type) {
         Preconditions.checkNotNull(type);
         
-        final Set<?> listeners = this.eventsToListeners.remove(type);
-        Preconditions.checkArgument(listeners != null);
+        final Set<?> listeners = this.eventsToListeners.removeAll(type);
+        Preconditions.checkArgument(!listeners.isEmpty());
     }
 }

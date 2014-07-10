@@ -29,12 +29,15 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
 import javax.swing.event.MouseInputListener;
 
 import com.google.common.base.Preconditions;
@@ -73,12 +76,21 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.IrregularMouseListener;
  */
 public class NodeUI extends GraphComponent implements NodesView {
     
+    /**
+     * 
+     */
+    private static final String NODE_RENAME_MESSAGE = "Zadejte nový název uzlu:";
+    private static final String NODE_RENAME_TITLE_CONTENT = "Přejmenovat uzel";
+    private static final String NODE_RENAME_ERROR_TITLE = "Neplatný formát jména uzlu";
+    private static final String NORE_RENAME_ERROR_MESSAGE = "Zadejte platné jméno uzlu!";
+    
     private static final Color LABEL_COLOR = Color.BLACK;
     private static final Map<Class<? extends PositionalNode>, PositionalType> TO_POSITIONAL_DEFAULTS;
     private static final Map<Class<? extends ProceedNode>, ProceedType> TO_PROCEED_DEFAULTS;
     private static final Map<Class<? extends DispatchNode>, DispatchType> TO_DISPATCH_DEFAULTS;
     
-    private static final Dimension DEFAULT_DIMENSION = new Dimension(24, 24);
+    private static final int SIZE = 24;
+    private static final Dimension DEFAULT_DIMENSION = new Dimension(SIZE, SIZE);
     
     private final NodesController controller;
     
@@ -161,7 +173,7 @@ public class NodeUI extends GraphComponent implements NodesView {
         final NodeUI newInstance = new NodeUI(name, positional, proceed, dispatch, controller);
         
         final Rectangle bounds = new Rectangle(new Point((int) (location.getX() - dimension.getWidth() / 2), (int) (location.getY() -  dimension.getHeight() / 2)), dimension);
-        newInstance.setBounds(bounds);
+        newInstance.setFramedBounds(bounds);
         
         newInstance.addComponentListener(new ComponentAdapter() {
             /* (non-Javadoc)
@@ -178,13 +190,43 @@ public class NodeUI extends GraphComponent implements NodesView {
             
             @Override
             public void finished() {
-                controller.changeNode(name, newInstance.getX(), newInstance.getY());
+                controller.changeNode(name, Math.max(0, newInstance.getContentX()), Math.max(0, newInstance.getContentY()));
             }
         });
         
         final MouseInputListener irregularDragListener = IrregularMouseListener.decorate(newInstance, (MouseInputListener) dragListener);
         newInstance.addMouseListener(irregularDragListener);
         newInstance.addMouseMotionListener(irregularDragListener);
+        
+        newInstance.addMouseListener(IrregularMouseListener.decorate(newInstance, new MouseAdapter() {
+            
+            @Override
+            public void mouseClicked(final MouseEvent e) {
+                if (e.getClickCount() != 2) {
+                    return;
+                }
+                
+                if (e.isControlDown()) {
+                    newInstance.toggleProceedType();
+                } else if (e.isAltDown()) {
+                    newInstance.toggleDispatchType();
+                } else if (e.isShiftDown()) {
+                    while (true) {
+                        final Object newNameInput = JOptionPane.showInputDialog(newInstance, NODE_RENAME_MESSAGE, NODE_RENAME_TITLE_CONTENT, JOptionPane.PLAIN_MESSAGE, null, null, newInstance.getName());
+                        if (newNameInput == null) {
+                            return;
+                        }
+                        
+                        try {
+                            newInstance.rename(newNameInput.toString());
+                            return;
+                        } catch (final IllegalArgumentException ex) {
+                            continue;
+                        }
+                    }
+                }
+            }
+        }));
         
         return newInstance;
     }
@@ -236,7 +278,7 @@ public class NodeUI extends GraphComponent implements NodesView {
         setNodeName(name);
     }
 
-    public final void rename(final NormalWord name) {
+    public final void rename(final String name) {
         Preconditions.checkNotNull(name);
         
         this.controller.rename(this.name, name);
@@ -263,22 +305,15 @@ public class NodeUI extends GraphComponent implements NodesView {
     public final void nodeMoved(Node original, final Node newVersion) {
         Preconditions.checkNotNull(newVersion);
         
-        setLocation(newVersion.getX(), newVersion.getY());
+        setContentLocation(newVersion.getX(), newVersion.getY());
         this.invalidate();
-    }
-    
-    public void dragFinished() {
-        this.controller.changeNode(this.name, getX(), getY());
     }
     
     @Override
     public boolean contains(final int x, final int y) {
-        final int width = this.getWidth();
-        assert width == this.getHeight();
-        
-        final double radius = width / 2d;
-        final double centerX = radius;
-        final double centerY = radius;
+        final double radius = getContentWidth() / 2d;
+        final double centerX = getFrameWidth() + radius;
+        final double centerY = getFrameHeight() + radius;
         
         final double xDelta = x - centerX;
         final double yDelta = y - centerY;
@@ -298,7 +333,7 @@ public class NodeUI extends GraphComponent implements NodesView {
      * @param graphics2d
      */
     private void paintCircle(final Graphics2D graphics2d) {
-        final Ellipse2D.Double circle = new Ellipse2D.Double(0, 0, this.getWidth(), this.getHeight());
+        final Ellipse2D.Double circle = new Ellipse2D.Double(getFrameWidth(), getFrameHeight(), getContentWidth(), getContentHeight());
         
         graphics2d.setColor(this.positional.getRim());
         graphics2d.setStroke(this.dispatch.getStroke());
@@ -324,7 +359,7 @@ public class NodeUI extends GraphComponent implements NodesView {
         final int width = this.getWidth();
         final int height = this.getHeight();
         
-        graphics.drawString(nameString, Math.max(0, (this.getWidth() - nameStringWidth) / 2), Math.max(0, (height + stringHeight) / 2));
+        graphics.drawString(nameString, Math.max(0, (width - nameStringWidth) / 2), Math.max(0, (height + stringHeight) / 2));
     }
 
     /**

@@ -60,7 +60,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Callback;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManagerTest;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.AbstractController;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration;

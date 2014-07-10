@@ -63,15 +63,17 @@ public abstract class AbstractArc implements Arc {
     }
     
     public final boolean isAttached(final Node node, final Direction direction) {
-        return getAttached(direction).equals(node);
+        final Node attached = getAttached(direction);
+        
+        return attached.equals(node);
     }
     
     public final Node getFrom() {
-        return getAttached(Direction.OUT);
+        return getAttached(Direction.IN);
     }
     
     public final Node getTo() {
-        return getAttached(Direction.IN);
+        return getAttached(Direction.OUT);
     }
     
     public final Node getAttached(final Direction direction) {
@@ -89,7 +91,12 @@ public abstract class AbstractArc implements Arc {
      */
     @Override
     public final void accept(final Visitor visitor) {
-        getTo().accept(visitor);
+        visitor.visit(this);
+        
+        final Node to = getTo();
+        if (!visitor.visited(to)) {
+            to.accept(visitor);            
+        }
     }
     
     public final Network getNetwork() {

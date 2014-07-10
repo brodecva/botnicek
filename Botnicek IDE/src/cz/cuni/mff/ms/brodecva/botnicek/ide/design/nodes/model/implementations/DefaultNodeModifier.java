@@ -38,6 +38,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.NodeModifier;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.OrderedNode;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RandomNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.TableUtils;
@@ -59,6 +60,7 @@ public class DefaultNodeModifier implements NodeModifier {
         defaultsBuilder.put(EnterOrderedInputNode.class, ExitNode.class, ExitInputNode.class);
         defaultsBuilder.put(EnterOrderedInputNode.class, InnerNode.class, InnerOrderedInputNode.class);
         defaultsBuilder.put(EnterOrderedInputNode.class, InputNode.class, EnterOrderedInputNode.class);
+        defaultsBuilder.put(EnterOrderedInputNode.class, ProcessingNode.class, EnterOrderedProcessingNode.class);
         defaultsBuilder.put(EnterOrderedInputNode.class, IsolatedNode.class, IsolatedInputNode.class);
         defaultsBuilder.put(EnterOrderedInputNode.class, Node.class, EnterOrderedInputNode.class);
         defaultsBuilder.put(EnterOrderedInputNode.class, OrderedNode.class, EnterOrderedInputNode.class);
@@ -68,6 +70,7 @@ public class DefaultNodeModifier implements NodeModifier {
         defaultsBuilder.put(EnterOrderedProcessingNode.class, ExitNode.class, ExitProcessingNode.class);
         defaultsBuilder.put(EnterOrderedProcessingNode.class, InnerNode.class, InnerOrderedProcessingNode.class);
         defaultsBuilder.put(EnterOrderedProcessingNode.class, InputNode.class, EnterOrderedInputNode.class);
+        defaultsBuilder.put(EnterOrderedProcessingNode.class, ProcessingNode.class, EnterOrderedProcessingNode.class);
         defaultsBuilder.put(EnterOrderedProcessingNode.class, IsolatedNode.class, IsolatedProcessingNode.class);
         defaultsBuilder.put(EnterOrderedProcessingNode.class, Node.class, EnterOrderedProcessingNode.class);
         defaultsBuilder.put(EnterOrderedProcessingNode.class, OrderedNode.class, EnterOrderedProcessingNode.class);
@@ -77,6 +80,7 @@ public class DefaultNodeModifier implements NodeModifier {
         defaultsBuilder.put(EnterRandomInputNode.class, ExitNode.class, ExitInputNode.class);
         defaultsBuilder.put(EnterRandomInputNode.class, InnerNode.class, InnerRandomInputNode.class);
         defaultsBuilder.put(EnterRandomInputNode.class, InputNode.class, EnterRandomInputNode.class);
+        defaultsBuilder.put(EnterRandomInputNode.class, ProcessingNode.class, EnterRandomProcessingNode.class);
         defaultsBuilder.put(EnterRandomInputNode.class, IsolatedNode.class, IsolatedInputNode.class);
         defaultsBuilder.put(EnterRandomInputNode.class, Node.class, EnterRandomInputNode.class);
         defaultsBuilder.put(EnterRandomInputNode.class, OrderedNode.class, EnterOrderedInputNode.class);
@@ -86,6 +90,7 @@ public class DefaultNodeModifier implements NodeModifier {
         defaultsBuilder.put(EnterRandomProcessingNode.class, ExitNode.class, ExitProcessingNode.class);
         defaultsBuilder.put(EnterRandomProcessingNode.class, InnerNode.class, InnerRandomProcessingNode.class);
         defaultsBuilder.put(EnterRandomProcessingNode.class, InputNode.class, EnterRandomInputNode.class);
+        defaultsBuilder.put(EnterRandomProcessingNode.class, ProcessingNode.class, EnterRandomProcessingNode.class);
         defaultsBuilder.put(EnterRandomProcessingNode.class, IsolatedNode.class, IsolatedProcessingNode.class);
         defaultsBuilder.put(EnterRandomProcessingNode.class, Node.class, EnterRandomProcessingNode.class);
         defaultsBuilder.put(EnterRandomProcessingNode.class, OrderedNode.class, EnterOrderedProcessingNode.class);
@@ -95,6 +100,7 @@ public class DefaultNodeModifier implements NodeModifier {
         defaultsBuilder.put(InnerOrderedInputNode.class, ExitNode.class, ExitInputNode.class);
         defaultsBuilder.put(InnerOrderedInputNode.class, InnerNode.class, InnerOrderedInputNode.class);
         defaultsBuilder.put(InnerOrderedInputNode.class, InputNode.class, InnerOrderedInputNode.class);
+        defaultsBuilder.put(InnerOrderedInputNode.class, ProcessingNode.class, InnerOrderedProcessingNode.class);
         defaultsBuilder.put(InnerOrderedInputNode.class, IsolatedNode.class, IsolatedInputNode.class);
         defaultsBuilder.put(InnerOrderedInputNode.class, Node.class, InnerOrderedInputNode.class);
         defaultsBuilder.put(InnerOrderedInputNode.class, OrderedNode.class, InnerOrderedInputNode.class);
@@ -104,6 +110,7 @@ public class DefaultNodeModifier implements NodeModifier {
         defaultsBuilder.put(InnerOrderedProcessingNode.class, ExitNode.class, ExitProcessingNode.class);
         defaultsBuilder.put(InnerOrderedProcessingNode.class, InnerNode.class, InnerOrderedProcessingNode.class);
         defaultsBuilder.put(InnerOrderedProcessingNode.class, InputNode.class, InnerOrderedInputNode.class);
+        defaultsBuilder.put(InnerOrderedProcessingNode.class, ProcessingNode.class, InnerOrderedProcessingNode.class);
         defaultsBuilder.put(InnerOrderedProcessingNode.class, IsolatedNode.class, IsolatedProcessingNode.class);
         defaultsBuilder.put(InnerOrderedProcessingNode.class, Node.class, InnerOrderedProcessingNode.class);
         defaultsBuilder.put(InnerOrderedProcessingNode.class, OrderedNode.class, InnerOrderedProcessingNode.class);
@@ -113,6 +120,7 @@ public class DefaultNodeModifier implements NodeModifier {
         defaultsBuilder.put(InnerRandomInputNode.class, ExitNode.class, ExitInputNode.class);
         defaultsBuilder.put(InnerRandomInputNode.class, InnerNode.class, InnerRandomInputNode.class);
         defaultsBuilder.put(InnerRandomInputNode.class, InputNode.class, InnerRandomInputNode.class);
+        defaultsBuilder.put(InnerRandomInputNode.class, ProcessingNode.class, InnerRandomProcessingNode.class);
         defaultsBuilder.put(InnerRandomInputNode.class, IsolatedNode.class, IsolatedInputNode.class);
         defaultsBuilder.put(InnerRandomInputNode.class, Node.class, InnerRandomInputNode.class);
         defaultsBuilder.put(InnerRandomInputNode.class, OrderedNode.class, InnerOrderedInputNode.class);
@@ -122,6 +130,7 @@ public class DefaultNodeModifier implements NodeModifier {
         defaultsBuilder.put(InnerRandomProcessingNode.class, ExitNode.class, ExitProcessingNode.class);
         defaultsBuilder.put(InnerRandomProcessingNode.class, InnerNode.class, InnerRandomProcessingNode.class);
         defaultsBuilder.put(InnerRandomProcessingNode.class, InputNode.class, InnerRandomInputNode.class);
+        defaultsBuilder.put(InnerRandomProcessingNode.class, ProcessingNode.class, InnerRandomProcessingNode.class);
         defaultsBuilder.put(InnerRandomProcessingNode.class, IsolatedNode.class, IsolatedProcessingNode.class);
         defaultsBuilder.put(InnerRandomProcessingNode.class, Node.class, InnerRandomProcessingNode.class);
         defaultsBuilder.put(InnerRandomProcessingNode.class, OrderedNode.class, InnerOrderedProcessingNode.class);
@@ -131,6 +140,7 @@ public class DefaultNodeModifier implements NodeModifier {
         defaultsBuilder.put(ExitInputNode.class, ExitNode.class, ExitInputNode.class);
         defaultsBuilder.put(ExitInputNode.class, InnerNode.class, InnerOrderedInputNode.class);
         defaultsBuilder.put(ExitInputNode.class, InputNode.class, ExitInputNode.class);
+        defaultsBuilder.put(ExitInputNode.class, ProcessingNode.class, ExitProcessingNode.class);
         defaultsBuilder.put(ExitInputNode.class, IsolatedNode.class, IsolatedInputNode.class);
         defaultsBuilder.put(ExitInputNode.class, Node.class, ExitInputNode.class);
         defaultsBuilder.put(ExitInputNode.class, OrderedNode.class, ExitInputNode.class);
@@ -140,6 +150,7 @@ public class DefaultNodeModifier implements NodeModifier {
         defaultsBuilder.put(ExitProcessingNode.class, ExitNode.class, ExitProcessingNode.class);
         defaultsBuilder.put(ExitProcessingNode.class, InnerNode.class, InnerOrderedProcessingNode.class);
         defaultsBuilder.put(ExitProcessingNode.class, InputNode.class, ExitInputNode.class);
+        defaultsBuilder.put(ExitProcessingNode.class, ProcessingNode.class, ExitProcessingNode.class);
         defaultsBuilder.put(ExitProcessingNode.class, IsolatedNode.class, IsolatedProcessingNode.class);
         defaultsBuilder.put(ExitProcessingNode.class, Node.class, ExitProcessingNode.class);
         defaultsBuilder.put(ExitProcessingNode.class, OrderedNode.class, ExitProcessingNode.class);
@@ -149,6 +160,7 @@ public class DefaultNodeModifier implements NodeModifier {
         defaultsBuilder.put(IsolatedInputNode.class, ExitNode.class, ExitInputNode.class);
         defaultsBuilder.put(IsolatedInputNode.class, InnerNode.class, InnerOrderedInputNode.class);
         defaultsBuilder.put(IsolatedInputNode.class, InputNode.class, IsolatedInputNode.class);
+        defaultsBuilder.put(IsolatedInputNode.class, ProcessingNode.class, IsolatedProcessingNode.class);
         defaultsBuilder.put(IsolatedInputNode.class, IsolatedNode.class, IsolatedInputNode.class);
         defaultsBuilder.put(IsolatedInputNode.class, Node.class, IsolatedInputNode.class);
         defaultsBuilder.put(IsolatedInputNode.class, OrderedNode.class, IsolatedInputNode.class);
@@ -158,6 +170,7 @@ public class DefaultNodeModifier implements NodeModifier {
         defaultsBuilder.put(IsolatedProcessingNode.class, ExitNode.class, ExitProcessingNode.class);
         defaultsBuilder.put(IsolatedProcessingNode.class, InnerNode.class, InnerOrderedProcessingNode.class);
         defaultsBuilder.put(IsolatedProcessingNode.class, InputNode.class, IsolatedInputNode.class);
+        defaultsBuilder.put(IsolatedProcessingNode.class, ProcessingNode.class, IsolatedProcessingNode.class);
         defaultsBuilder.put(IsolatedProcessingNode.class, IsolatedNode.class, IsolatedProcessingNode.class);
         defaultsBuilder.put(IsolatedProcessingNode.class, Node.class, IsolatedProcessingNode.class);
         defaultsBuilder.put(IsolatedProcessingNode.class, OrderedNode.class, IsolatedProcessingNode.class);
@@ -167,31 +180,23 @@ public class DefaultNodeModifier implements NodeModifier {
     }
     
     private final Table<Class<? extends Node>, Class<? extends Node>, Class<? extends Node>> changes;
-
-    private NamingAuthority namingAuthority;
     
-    public static DefaultNodeModifier create(final NamingAuthority namingAuthority) {
-        return new DefaultNodeModifier(namingAuthority);
+    public static DefaultNodeModifier create() {
+        return new DefaultNodeModifier(DEFAULTS);
     }
     
-    public static DefaultNodeModifier create(final Map< Class<? extends Node>, Map<Class<? extends Node>, Class<? extends Node>> > changes, final NamingAuthority namingAuthority) {
-        return new DefaultNodeModifier(changes, namingAuthority);
+    public static DefaultNodeModifier create(final Map< Class<? extends Node>, Map<Class<? extends Node>, Class<? extends Node>> > changes) {
+        return new DefaultNodeModifier(changes);
     }
     
-    private DefaultNodeModifier(final NamingAuthority namingAuthority) {
-        this(DEFAULTS, namingAuthority);
+    private DefaultNodeModifier(final Map< Class<? extends Node>, Map<Class<? extends Node>, Class<? extends Node>> > changes) {
+        this(TableUtils.toImmutableTable(changes));
     }
     
-    private DefaultNodeModifier(final Map< Class<? extends Node>, Map<Class<? extends Node>, Class<? extends Node>> > changes, final NamingAuthority namingAuthority) {
-        this(TableUtils.toImmutableTable(changes), namingAuthority);
-    }
-    
-    private DefaultNodeModifier(final Table< Class<? extends Node>, Class<? extends Node>, Class<? extends Node>> changes, final NamingAuthority namingAuthority) {
+    private DefaultNodeModifier(final Table< Class<? extends Node>, Class<? extends Node>, Class<? extends Node>> changes) {
         Preconditions.checkNotNull(changes);
-        Preconditions.checkNotNull(namingAuthority);
         
         this.changes = ImmutableTable.copyOf(changes);
-        this.namingAuthority = namingAuthority;
     }
 
     /* (non-Javadoc)
@@ -203,23 +208,10 @@ public class DefaultNodeModifier implements NodeModifier {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(type);
         
-        Preconditions.checkArgument(x > 0);
-        Preconditions.checkArgument(y > 0);
+        Preconditions.checkArgument(x >= 0);
+        Preconditions.checkArgument(y >= 0);
         
         final NormalWord oldName = node.getName();
-        final NormalWord newName;
-        if (oldName.equals(name)) {
-            newName = oldName;
-        } else {
-            this.namingAuthority.release(oldName.getText());
-            
-            try {
-                newName = NormalWords.of(this.namingAuthority.use(name.getText()));
-            } catch (final Exception e) {
-                this.namingAuthority.use(oldName.getText());
-                throw e;
-            }
-        }
         
         final Class<? extends Node> nodeClass = node.getClass();
         final Class<? extends Node> mappedClass = this.changes.get(nodeClass, type);
@@ -238,7 +230,7 @@ public class DefaultNodeModifier implements NodeModifier {
         }
         
         try {
-            return (Node) factoryMethod.invoke(null, newName, node.getParent(), x, y);
+            return (Node) factoryMethod.invoke(null, name, node.getNetwork(), x, y);
         } catch (final IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException e) {
             throw new IllegalArgumentException(e);

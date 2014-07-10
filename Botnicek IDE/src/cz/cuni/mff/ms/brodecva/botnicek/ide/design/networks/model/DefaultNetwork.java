@@ -122,7 +122,7 @@ public final class DefaultNetwork implements Visitable, Network {
     }
     
     @Override
-    public void addArc(final String name, final NormalWord fromName, NormalWord toName) {
+    public void addArc(final NormalWord name, final NormalWord fromName, NormalWord toName) {
         this.parent.addArc(this, name, fromName, toName);
     }
 

@@ -16,11 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils;
+package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import com.google.common.base.Preconditions;
@@ -34,9 +33,12 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RealignmentProcessor;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.AvailableReferencesReducedEvent;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.SystemGraph.Update;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.Update.NodeSwitch;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Callback;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.DefaultDirectedMultigraph;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.DirectedMultigraph;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Direction;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Function;
 
 /**
  * @author Václav Brodec
@@ -44,89 +46,15 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
  */
 public class SystemGraph implements DirectedMultigraph<Node, Arc> {
     
-    public final static class Update {
-        private final Map<EnterNode, RecurentArc> referencesRemoved;
-        private final Set<EnterNode> initialsAdded;
-        private final Set<EnterNode> initialsRemoved;
-        private final Set<IsolatedNode> isolatedAdded;
-        private final Set<IsolatedNode> isolatedRemoved;
-        
-        public static Update of(final Map<? extends EnterNode, ? extends RecurentArc> referencesRemoved,
-                final Set<? extends EnterNode> initialsAdded,
-                final Set<? extends EnterNode> initialsRemoved,
-                final Set<? extends IsolatedNode> isolatedAdded,
-                final Set<? extends IsolatedNode> isolatedRemoved) {
-            return new Update(referencesRemoved, initialsAdded, initialsRemoved, isolatedAdded, isolatedRemoved);
-        }
-        
-        private Update(final Map<? extends EnterNode, ? extends RecurentArc> referencesRemoved,
-                final Set<? extends EnterNode> initialsAdded,
-                final Set<? extends EnterNode> initialsRemoved,
-                final Set<? extends IsolatedNode> isolatedAdded,
-                final Set<? extends IsolatedNode> isolatedRemoved) {
-            Preconditions.checkNotNull(referencesRemoved);
-            Preconditions.checkNotNull(initialsAdded);
-            Preconditions.checkNotNull(initialsRemoved);
-            Preconditions.checkNotNull(isolatedAdded);
-            Preconditions.checkNotNull(isolatedRemoved);
-            
-            this.referencesRemoved = ImmutableMap.copyOf(referencesRemoved);
-            this.initialsAdded = ImmutableSet.copyOf(initialsAdded);
-            this.initialsRemoved = ImmutableSet.copyOf(initialsRemoved);
-            this.isolatedAdded = ImmutableSet.copyOf(isolatedAdded);
-            this.isolatedRemoved = ImmutableSet.copyOf(isolatedRemoved);
-        }
-
-        /**
-         * @return the referencesRemoved
-         */
-        public Map<EnterNode, RecurentArc> getReferencesRemoved() {
-            return referencesRemoved;
-        }
-
-        /**
-         * @return the initialsAdded
-         */
-        public Set<EnterNode> getInitialsAdded() {
-            return initialsAdded;
-        }
-
-        /**
-         * @return the initialsRemoved
-         */
-        public Set<EnterNode> getInitialsRemoved() {
-            return initialsRemoved;
-        }
-
-        /**
-         * @return the isolatedAdded
-         */
-        public Set<IsolatedNode> getIsolatedAdded() {
-            return isolatedAdded;
-        }
-
-        /**
-         * @return the isolatedRemoved
-         */
-        public Set<IsolatedNode> getIsolatedRemoved() {
-            return isolatedRemoved;
-        }
-    }
-    
     private final DirectedMultigraph<Node, Arc> innerGraph = DefaultDirectedMultigraph.create();
     private final Map<NormalWord, Node> namesToNodes = new HashMap<>();
     private final Map<NormalWord, Arc> namesToArcs = new HashMap<>();
     
-    private final Dispatcher dispatcher;
-    
-    public static SystemGraph create(final Dispatcher dispatcher) {
-        return new SystemGraph(dispatcher);
+    public static SystemGraph create() {
+        return new SystemGraph();
     }
     
-    private SystemGraph(final Dispatcher dispatcher) {
-        Preconditions.checkNotNull(dispatcher);
-        
-        this.dispatcher = dispatcher;
+    private SystemGraph() {
     }
     
     public Node getVertex(final NormalWord name) {
@@ -150,8 +78,9 @@ public class SystemGraph implements DirectedMultigraph<Node, Arc> {
         final ImmutableSet.Builder<EnterNode> initialsAddedBuilder = ImmutableSet.builder();
         final ImmutableSet.Builder<EnterNode> initialsRemovedBuilder = ImmutableSet.builder();
         final ImmutableSet.Builder<IsolatedNode> isolatedAddedBuilder = ImmutableSet.builder();
+        final ImmutableSet.Builder<NodeSwitch> affectedBuilder = ImmutableSet.builder();
         
-        this.innerGraph.extractVertex(removed, new Function<Node, Node>() {
+        extractVertex(removed, new Function<Node, Node>() {
             @Override
             public Node apply(final Node input) {
                 return processor.realign(input);
@@ -159,21 +88,25 @@ public class SystemGraph implements DirectedMultigraph<Node, Arc> {
         }, new Callback<Node>() {
             @Override
             public void call(final Node input) {
-                final Node realigned = processor.realign(input);
+                final Node realigned = processor.realign(input);               
                 
-                final Collection<? extends RecurentArc> referring = references.get(input);
-                Preconditions.checkArgument(referring == null || realigned.equals(input), "Removal forbidden. The adjcent node " + input + " of the node " + removed + " cannot be reduced to isolated point as it is referred as entry point to network " + removed.getNetwork() + "by " + referring + ".");
-                
-                if (initialNodes.contains(input) && !input.equals(realigned)) {
-                    initialsRemovedBuilder.add((EnterNode) input);
-                }
-                
-                if (!input.equals(input) && (realigned instanceof EnterNode)) {
-                    initialsAddedBuilder.add((EnterNode) input);
-                }
-                
-                if (!input.equals(input) && (realigned instanceof IsolatedNode)) {
-                    isolatedAddedBuilder.add((IsolatedNode) input);
+                if (!realigned.equals(input)) {
+                    final Collection<? extends RecurentArc> referring = references.get(input);
+                    Preconditions.checkArgument(referring == null, "Removal forbidden. The adjcent node " + input + " of the node " + removed + " cannot be reduced to isolated point as it is referred as entry point to network " + removed.getNetwork() + "by " + referring + ".");
+                    
+                    if (initialNodes.contains(input)) {
+                        initialsRemovedBuilder.add((EnterNode) input);
+                    }
+                    
+                    if (realigned instanceof EnterNode) {
+                        initialsAddedBuilder.add((EnterNode) input);
+                    }
+                    
+                    if (realigned instanceof IsolatedNode) {
+                        isolatedAddedBuilder.add((IsolatedNode) input);
+                    }
+                    
+                    affectedBuilder.add(NodeSwitch.of(input, realigned));
                 }
             }
         }, new Callback<Arc>() {
@@ -188,7 +121,7 @@ public class SystemGraph implements DirectedMultigraph<Node, Arc> {
             }
         });
         
-        return Update.of(referencesRemovedBuilder.build(), initialsAddedBuilder.build(), initialsRemovedBuilder.build(), isolatedAddedBuilder.build(), ImmutableSet.<IsolatedNode>of());
+        return Update.of(referencesRemovedBuilder.build(), initialsAddedBuilder.build(), initialsRemovedBuilder.build(), isolatedAddedBuilder.build(), ImmutableSet.<IsolatedNode>of(), affectedBuilder.build());
     }
     
     public Update removeAndRealign(final Arc removed, final RealignmentProcessor processor, final Map<? extends EnterNode, ? extends Collection<? extends RecurentArc>> references, Set<? extends EnterNode> initials, Set<? extends IsolatedNode> isolated) throws IllegalArgumentException {
@@ -196,7 +129,7 @@ public class SystemGraph implements DirectedMultigraph<Node, Arc> {
         Preconditions.checkNotNull(processor);
         Preconditions.checkNotNull(references);
         
-        this.innerGraph.removeEdge(removed);
+        removeEdge(removed);
         
         final Node from = removed.getFrom();
         final Node to = removed.getTo();
@@ -206,13 +139,13 @@ public class SystemGraph implements DirectedMultigraph<Node, Arc> {
         try {            
             Preconditions.checkArgument(referring == null || newFrom.equals(from) || (referring.size() == 1 && referring.contains(removed)), "Removal forbidden. The node " + from + " the removed arc " + removed + " comes from cannot be reduced to an isolated point as it is referred as entry point to network " + from.getNetwork() + "by " + referring + ".");
         } catch (final Exception e) {
-            this.innerGraph.add(removed, from, to);
+            add(removed, from, to);
             
             throw e;
         }
         
-        this.innerGraph.replaceVertex(newFrom, from);
-        this.innerGraph.replaceVertex(newTo, to);
+        replaceVertex(newFrom, from);
+        replaceVertex(newTo, to);
         
         final ImmutableMap.Builder<EnterNode, RecurentArc> referencesRemovedBuilder = ImmutableMap.builder();
         final ImmutableSet.Builder<EnterNode> initialsAddedBuilder = ImmutableSet.builder();
@@ -245,7 +178,8 @@ public class SystemGraph implements DirectedMultigraph<Node, Arc> {
             }
         }
         
-        return Update.of(referencesRemovedBuilder.build(), initialsAddedBuilder.build(), initialsRemovedBuilder.build(), isolatedAddedBuilder.build(), ImmutableSet.<IsolatedNode>of());
+        final Set<NodeSwitch> affected = ImmutableSet.of(NodeSwitch.of(from, newFrom), NodeSwitch.of(to, newTo));
+        return Update.of(referencesRemovedBuilder.build(), initialsAddedBuilder.build(), initialsRemovedBuilder.build(), isolatedAddedBuilder.build(), ImmutableSet.<IsolatedNode>of(), affected);
     }
     
     public Update addAndRealign(final Arc added, final Node from, final Node to,
@@ -257,13 +191,13 @@ public class SystemGraph implements DirectedMultigraph<Node, Arc> {
         Preconditions.checkNotNull(initials);
         Preconditions.checkNotNull(isolated);
                 
-        this.innerGraph.add(added, from, to);
+        add(added, from, to);
         
         final Node newFrom = processor.realign(from);
         final Node newTo = processor.realign(to);
         
-        this.innerGraph.replaceVertex(newFrom, from);
-        this.innerGraph.replaceVertex(newTo, to);
+        replaceVertex(newFrom, from);
+        replaceVertex(newTo, to);
         
         final ImmutableSet.Builder<EnterNode> initialsAddedBuilder = ImmutableSet.builder();
         final ImmutableSet.Builder<EnterNode> initialsRemovedBuilder = ImmutableSet.builder();
@@ -289,7 +223,8 @@ public class SystemGraph implements DirectedMultigraph<Node, Arc> {
             }
         }
         
-        return Update.of(ImmutableMap.<EnterNode, RecurentArc>of(), initialsAddedBuilder.build(), initialsRemovedBuilder.build(), ImmutableSet.<IsolatedNode>of(), isolatedRemovedBuilder.build());
+        final Set<NodeSwitch> affected = ImmutableSet.of(NodeSwitch.of(from, newFrom), NodeSwitch.of(to, newTo));
+        return Update.of(ImmutableMap.<EnterNode, RecurentArc>of(), initialsAddedBuilder.build(), initialsRemovedBuilder.build(), ImmutableSet.<IsolatedNode>of(), isolatedRemovedBuilder.build(), affected);
     }
     
     /* (non-Javadoc)
@@ -501,7 +436,7 @@ public class SystemGraph implements DirectedMultigraph<Node, Arc> {
         final Set<Arc> connections = connections(first, direction);
         
         for (final Arc connection : connections) {
-            if (connection.isAttached(second, direction.getOpposite())) {
+            if (connection.isAttached(second, direction)) {
                 return true;
             }
         }
