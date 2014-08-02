@@ -46,7 +46,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.responder.AIMLBot;
 import cz.cuni.mff.ms.brodecva.botnicek.library.responder.AIMLConversation;
 import cz.cuni.mff.ms.brodecva.botnicek.library.responder.Bot;
 import cz.cuni.mff.ms.brodecva.botnicek.library.responder.Conversation;
-import cz.cuni.mff.ms.brodecva.botnicek.library.responder.ConversationException;
 import cz.cuni.mff.ms.brodecva.botnicek.library.storage.MatchingStructure;
 import cz.cuni.mff.ms.brodecva.botnicek.library.storage.WordTree;
 import cz.cuni.mff.ms.brodecva.botnicek.library.storage.map.FrugalMapperFactory;

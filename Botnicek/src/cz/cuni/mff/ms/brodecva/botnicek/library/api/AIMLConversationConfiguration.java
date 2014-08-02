@@ -178,7 +178,7 @@ public final class AIMLConversationConfiguration implements
                         MESSAGE_LOCALIZER.getMessage("api.NullPredicateEntry"));
             }
 
-            if (key.isEmpty() || value.isEmpty()) {
+            if (key.isEmpty()) {
                 throw new IllegalArgumentException(
                         MESSAGE_LOCALIZER.getMessage("api.EmptyPredicateEntry"));
             }

@@ -25,6 +25,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -227,13 +229,31 @@ public final class AIMLConversation implements Conversation, Serializable {
         this.language = language;
         this.parserFactory = parserFactory;
 
-        predicates = new HashMap<String, String>(defaultPredicates);
+        this.predicates = keysToUppercase(new HashMap<String, String>(defaultPredicates));
         this.predicatesSetBehavior =
-                new HashMap<String, DisplayStrategy>(predicatesSetBehavior);
+                keysToUppercase(new HashMap<String, DisplayStrategy>(predicatesSetBehavior));
 
         this.executor = executor;
         
         LOGGER.log(Level.INFO, "responder.ConversationCreated");
+    }
+    
+    /**
+     * Převede klíče mapy na velká písmena. Duplicitní položky budou bez záruky přemazány poslední úpravou.
+     * 
+     * @param map mapa
+     * @param <V> typ hodnoty
+     * @return mapa s klíči s velkými písmeny
+     */
+    private static <V> Map<String, V> keysToUppercase(final Map<String, V> map) {
+        final Set<Entry<String, V>> entries = map.entrySet();
+        final Map<String, V> result = new HashMap<>();
+        
+        for (final Entry<String, V> entry : entries) {
+            result.put(entry.getKey().toUpperCase(), entry.getValue());
+        }
+        
+        return result;
     }
 
     /*
@@ -606,7 +626,7 @@ public final class AIMLConversation implements Conversation, Serializable {
      */
     @Override
     public String getPredicateValue(final String name) {
-        final String value = predicates.get(name);
+        final String value = predicates.get(name.toUpperCase());
         final String result;
         if (value == null) {
             result = Conversation.NOT_FOUND_PRED_VALUE;
@@ -633,12 +653,12 @@ public final class AIMLConversation implements Conversation, Serializable {
             throw new NullPointerException(MESSAGE_LOCALIZER.getMessage("responder.NullPredicate"));
         }
         
-        predicates.put(name, value);
+        predicates.put(name.toUpperCase(), value);
         if (LOGGER.isLoggable(Level.FINE)) {
             LOGGER.log(Level.FINE, "responder.ConversationPredicateSet", new Object[] { this, name, value });
         }
 
-        final DisplayStrategy displayStrategy = predicatesSetBehavior.get(name);
+        final DisplayStrategy displayStrategy = predicatesSetBehavior.get(name.toUpperCase());
         if (displayStrategy == null) {
             return value;
         }

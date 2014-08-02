@@ -315,12 +315,6 @@ public final class AIMLLanguageConfiguration implements LanguageConfiguration,
                         MESSAGE_LOCALIZER
                                 .getMessage("api.NullSubstitutionEntry"));
             }
-
-            if (value.isEmpty()) {
-                throw new IllegalArgumentException(
-                        MESSAGE_LOCALIZER
-                                .getMessage("api.EmptySubstitutionValue"));
-            }
         }
     }
 

@@ -67,7 +67,7 @@ public final class AIMLWord implements Word, Serializable {
      */
     public AIMLWord(final String value, final Normalizer normalizer) {
         if (value == null) {
-            throw new NullPointerException("WordStringNull");
+            throw new NullPointerException(MESSAGE_LOCALIZER.getMessage("WordStringNull"));
         }
 
         for (char c : value.toCharArray()) {

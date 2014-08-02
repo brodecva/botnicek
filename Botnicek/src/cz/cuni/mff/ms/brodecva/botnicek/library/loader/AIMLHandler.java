@@ -334,7 +334,7 @@ public final class AIMLHandler extends DefaultHandler2 implements Handler,
                             new Object[] { localName, uri });
                 }
             } else {
-                throw new SAXException("NotValidSource");
+                throw new SAXException(MESSAGE_LOCALIZER.getMessage("NotValidSource"));
             }
         } else {
             if (phase == AIMLPartMarker.TEMPLATE) {

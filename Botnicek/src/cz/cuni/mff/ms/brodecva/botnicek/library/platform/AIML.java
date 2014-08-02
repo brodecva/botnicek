@@ -158,7 +158,12 @@ public enum AIML {
     /**
      * Výchozí prefix.
      */
-    DEFAULT_PREFIX("");
+    DEFAULT_PREFIX(""),
+    
+    /**
+     * Název predikátu pro nastavení tématu.
+     */
+    TOPIC_PREDICATE("TOPIC");
 
     /**
      * Textová hodnota výrazu.
