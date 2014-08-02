@@ -18,43 +18,62 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events;
 
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.SetMultimap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import com.google.common.collect.Table;
 
 /**
+ * <p>Výchozí implementace správce událostí.</p>
+ * <p>Kromě toho, že realizuje odesílání zpráv o události tak, aby klient nemusel rozlišovat, jaký typ odesílá, tak dovoluje v případě potřeby neodebírat posluchač, aniž by docházelo k unikání paměti.</p>
+ * <p>Přestože jsou instance této třídy serializovatelné, nelze toto garantovat pro vložené objekty.</p>
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultEventManager implements EventManager {
+public final class DefaultEventManager implements EventManager, Serializable {
     
+    /**
+     * <p>Návštěvník pro rozlišení typu události při vypravování posluchačům.</p>
+     * <p>Díky němu je událost podle svého typu rozesílána správným posluchačům.</p>
+     * <p>Při průchodu posluchači bere v potaz vlastnosti {@link WeakHashMap} při iteraci přes členy.</p>
+     */
     private final class MappedEventVisitor implements Visitor {
         
         private <K, L> void visitMapped(final MappedEvent<K, L> event) {
             @SuppressWarnings("unchecked")
-            final Set<L> mappedListeners = (Set<L>) eventsAndKeysToListeners.get(event.getClass(), event.getKey());
+            final Map<K, Set<?>> keysTolisteners = (Map<K, Set<?>>) eventsAndKeysToListeners.get(event.getClass());
+            if (keysTolisteners == null) {
+                return;
+            }
+            
+            @SuppressWarnings("unchecked")
+            final Set<L> mappedListeners = (Set<L>) keysTolisteners.get(event.getKey());
             if (mappedListeners == null) {
                 return;
             }
             
-            for (final L listener : mappedListeners) {
+            final Set<L> listenersSnapshot = ImmutableSet.copyOf(mappedListeners);
+            for (final L listener : listenersSnapshot) {
                 event.dispatchTo(listener);
             }
         }
         
         private <L> void visitCommon(final Event<L> event) {
             @SuppressWarnings("unchecked")
-            final Class<? extends Event<L>> type = (Class<? extends Event<L>>) event.getClass();
+            final Set<L> listeners = (Set<L>) eventsToListeners.get(event.getClass());
+            if (listeners == null) {
+                return;
+            }
             
-            @SuppressWarnings("unchecked")
-            final Set<L> listeners = (Set<L>) eventsToListeners.get(type);
-            
-            for (final L listener : listeners) {
+            final Set<L> listenersSnapshot = ImmutableSet.copyOf(listeners);
+            for (final L listener : listenersSnapshot) {
                 event.dispatchTo(listener);
             }
         }
@@ -70,10 +89,17 @@ public class DefaultEventManager implements EventManager {
             visitCommon(event);
         }
     }
-
-    private final Table<Class<? extends MappedEvent<?, ?>>, Object, Set<?>> eventsAndKeysToListeners = HashBasedTable.create();
-    private final SetMultimap<Class<? extends Event<?>>, ?> eventsToListeners = HashMultimap.create();
     
+    private static final long serialVersionUID = 1L;
+
+    private final Map<Class<? extends MappedEvent<?, ?>>, Map<?, Set<?>>> eventsAndKeysToListeners = new HashMap<>();
+    private final Map<Class<? extends Event<?>>, Set<?>> eventsToListeners = new HashMap<>();
+    
+    /**
+     * Vytvoří manažer událostí.
+     * 
+     * @return manažer
+     */
     public static DefaultEventManager create() {
         return new DefaultEventManager();
     }
@@ -92,15 +118,27 @@ public class DefaultEventManager implements EventManager {
         Preconditions.checkNotNull(listener);
         
         @SuppressWarnings("unchecked")
-        final Set<L> listeners = (Set<L>) this.eventsAndKeysToListeners.get(type, key);
-        if (listeners == null) {
-            @SuppressWarnings("unchecked")
-            final Set<L> newListeners = Sets.newHashSet(listener);
-            this.eventsAndKeysToListeners.put(type, key, newListeners);
+        final Map<K, Set<?>> keysTolisteners = (Map<K, Set<?>>) this.eventsAndKeysToListeners.get(type);
+        final Map<K, Set<?>> usedKeysToListeners;
+        if (keysTolisteners == null) {
+            usedKeysToListeners = new WeakHashMap<>();
+            this.eventsAndKeysToListeners.put(type, usedKeysToListeners);
         } else {
-            final boolean fresh = listeners.add(listener);
-            Preconditions.checkArgument(fresh);
+            usedKeysToListeners = keysTolisteners;
         }
+        
+        @SuppressWarnings("unchecked")
+        final Set<L> listeners = (Set<L>) usedKeysToListeners.get(key);
+        final Set<L> usedListeners;
+        if (listeners == null) {
+            usedListeners = Collections.newSetFromMap(new WeakHashMap<L, Boolean>());
+            usedKeysToListeners.put(key, usedListeners);
+        } else {
+            usedListeners = listeners;
+        }
+        
+        final boolean fresh = usedListeners.add(listener);
+        Preconditions.checkArgument(fresh);
     }
 
     /* (non-Javadoc)
@@ -114,14 +152,21 @@ public class DefaultEventManager implements EventManager {
         Preconditions.checkNotNull(listener);
         
         @SuppressWarnings("unchecked")
-        final Set<L> listeners = (Set<L>) this.eventsAndKeysToListeners.get(type, key);
+        final Map<K, Set<?>> keysTolisteners = (Map<K, Set<?>>) this.eventsAndKeysToListeners.get(type);
+        Preconditions.checkArgument(keysTolisteners != null);
+        
+        @SuppressWarnings("unchecked")
+        final Set<L> listeners = (Set<L>) keysTolisteners.get(key);
         Preconditions.checkArgument(listeners != null);
         
         final boolean contained = listeners.remove(listener);
         Preconditions.checkArgument(contained);
         
         if (listeners.isEmpty()) {
-            this.eventsAndKeysToListeners.remove(type, key);
+            keysTolisteners.remove(key);
+        }
+        if (keysTolisteners.isEmpty()) {
+            this.eventsAndKeysToListeners.remove(type);
         }
     }
 
@@ -136,7 +181,15 @@ public class DefaultEventManager implements EventManager {
         
         @SuppressWarnings("unchecked")
         final Set<L> listeners = (Set<L>) this.eventsToListeners.get(type);
-        final boolean fresh = listeners.add(listener);
+        final Set<L> usedListeners;
+        if (listeners == null) {
+            usedListeners = Sets.newSetFromMap(new WeakHashMap<L, Boolean>());
+            this.eventsToListeners.put(type, usedListeners);
+        } else {
+            usedListeners = listeners;
+        }
+        
+        final boolean fresh = usedListeners.add(listener);
         Preconditions.checkArgument(fresh);
     }
 
@@ -149,8 +202,16 @@ public class DefaultEventManager implements EventManager {
         Preconditions.checkNotNull(type);
         Preconditions.checkNotNull(listener);
         
-        final boolean contained = this.eventsToListeners.remove(type, listener);
+        @SuppressWarnings("unchecked")
+        final Set<L> listeners = (Set<L>) this.eventsToListeners.get(type);
+        Preconditions.checkArgument(listeners != null);
+        
+        final boolean contained = listeners.remove(listener);
         Preconditions.checkArgument(contained);
+        
+        if (listeners.isEmpty()) {
+            this.eventsToListeners.remove(listeners);
+        }
     }
     
     /* (non-Javadoc)
@@ -172,8 +233,18 @@ public class DefaultEventManager implements EventManager {
         Preconditions.checkNotNull(type);
         Preconditions.checkNotNull(key);
         
-        final Set<?> removed = this.eventsAndKeysToListeners.remove(type, key);
-        Preconditions.checkArgument(removed != null);
+        Preconditions.checkNotNull(type);
+        Preconditions.checkNotNull(key);
+        
+        @SuppressWarnings("unchecked")
+        final Map<K, Set<?>> keysTolisteners = (Map<K, Set<?>>) this.eventsAndKeysToListeners.get(type);
+        Preconditions.checkArgument(keysTolisteners != null);
+        
+        keysTolisteners.remove(key);
+        
+        if (keysTolisteners.isEmpty()) {
+            this.eventsAndKeysToListeners.remove(type);
+        }
     }
 
     /* (non-Javadoc)
@@ -183,7 +254,8 @@ public class DefaultEventManager implements EventManager {
     public <K, L> void removeAllListeners(final Class<? extends Event<L>> type) {
         Preconditions.checkNotNull(type);
         
-        final Set<?> listeners = this.eventsToListeners.removeAll(type);
-        Preconditions.checkArgument(!listeners.isEmpty());
+        Preconditions.checkNotNull(type);
+        
+        this.eventsToListeners.remove(type);
     }
 }

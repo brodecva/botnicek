@@ -19,23 +19,36 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResultImplementation;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
+import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 
 
 /**
+ * Výchozí implementace aplikuje vlastní implementaci normalizéru prostého vzoru jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultSimplePatternChecker implements SimplePatternChecker {
+public final class DefaultSimplePatternChecker implements SimplePatternChecker {
     
+    /**
+     * Vytvoří validátor.
+     * 
+     * @return validátor
+     */
     public static DefaultSimplePatternChecker create() {
         return new DefaultSimplePatternChecker();
     }
 
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker#check(cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source, java.lang.Object, java.lang.String)
+     */
     @Override
-    public CheckResult check(final Object source, final String patternContent) {
+    public CheckResult check(final Source source, Object subject, final String patternContent) {
         if (patternContent.isEmpty()) {
-            return CheckResultImplementation.fail(source, 0, "The pattern is empty.");
+            return DefaultCheckResult.fail(0, ExceptionLocalizer.print("EmptyPattern"), source, subject);
         }
         
         boolean inWord = false;
@@ -47,7 +60,7 @@ public class DefaultSimplePatternChecker implements SimplePatternChecker {
             
             if (character == ' ') {
                 if (!inWord || index == characters.length - 1) {
-                    return CheckResultImplementation.fail(source, position, "Excesive whitespace at position %1$s.", position);
+                    return DefaultCheckResult.fail(position, ExceptionLocalizer.print("ExcessiveWhitespace"), source, subject);
                 }
                 inWord = false;
             } else if (Character.isDigit(character)) {
@@ -56,11 +69,13 @@ public class DefaultSimplePatternChecker implements SimplePatternChecker {
                 inWord = true;
             } else if (Character.isLetter(character) && !Character.isLowerCase(character) && !Character.isUpperCase(character) && !Character.isTitleCase(character)) {
                 inWord = true;
+            } else if (AIML.STAR_WILDCARD.getValue().equals(Character.toString(character)) || AIML.UNDERSCORE_WILDCARD.getValue().equals(Character.toString(character))) {
+                inWord = true;
             } else {
-                return CheckResultImplementation.fail(source, position, "Invalid character at position %1$s.", position);
+                return DefaultCheckResult.fail(position, ExceptionLocalizer.print("InvalidCharacter"), source, subject);
             }
         }
         
-        return CheckResultImplementation.succeed(source);
+        return DefaultCheckResult.succeed(source, subject);
     }
 }

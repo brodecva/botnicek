@@ -19,9 +19,10 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template;
 
 /**
+ * Textové uzly v šabloně.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface TemplateText extends TemplateElement {
-
 }

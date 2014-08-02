@@ -19,26 +19,23 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CompoundElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.ConditionElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.lists.DefaultListItem;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.lists.ListItem;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.lists.ValueOnlyListItem;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 
 /**
+ * Podmínka, který testuje hodnotu predikátu oproti vzorům vnořených položek.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-conditional-elements">http://www.alicebot.org/TR/2011/#section-conditional-elements</a>
  */
 public final class SinglePredicateCondition extends AbstractProperElement implements ConditionElement {
     private static final String NAME = "condition";
@@ -47,49 +44,54 @@ public final class SinglePredicateCondition extends AbstractProperElement implem
     private final List<ValueOnlyListItem> items;
     private final Optional<DefaultListItem> defaultItem;
     
-    public static SinglePredicateCondition of(final NormalWord name, final ListItem... items) {
-        return of(name, Arrays.asList(items));
-    }
-    
-    public static SinglePredicateCondition of(final NormalWord name, final List<ListItem> items) {
-        Preconditions.checkNotNull(items);
-        
-        final Builder<ValueOnlyListItem> listBuilder = ImmutableList.builder();
-        Optional<DefaultListItem> defaultItem = Optional.absent();
-        for (final ListItem item : items) {
-            Preconditions.checkNotNull(item);
-            if (item instanceof DefaultListItem) {
-                if (defaultItem.isPresent()) {
-                    throw new IllegalArgumentException();
-                }
-                
-                defaultItem = Optional.of((DefaultListItem) item);
-            } else if (item instanceof ValueOnlyListItem) {
-                listBuilder.add((ValueOnlyListItem) item);
-            } else throw new IllegalArgumentException();
-        }
-        
-        return new SinglePredicateCondition(name, defaultItem, listBuilder.build());
-    }
-    
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param name název testovaného predikátu
+     * @param defaultItem výchozí položka, jejíž obsah bude zpracování v případě, že neuspěje žádná s hodnotou
+     * @param items položky se vzory pro hodnotu testovaného predikátu
+     * @return prvek
+     */
     public static SinglePredicateCondition create(final NormalWord name, final DefaultListItem defaultItem, final ValueOnlyListItem... items) {
         Preconditions.checkNotNull(items);
         
         return create(name, defaultItem, Arrays.asList(items));
     }
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param name název testovaného predikátu
+     * @param items položky se vzory pro hodnotu testovaného predikátu
+     * @return prvek
+     */
     public static SinglePredicateCondition create(final NormalWord name, final ValueOnlyListItem... items) {
         Preconditions.checkNotNull(items);
         
         return create(name, Arrays.asList(items));
     }
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param name název testovaného predikátu
+     * @param defaultItem výchozí položka, jejíž obsah bude zpracování v případě, že neuspěje žádná s hodnotou
+     * @param items položky se vzory pro hodnotu testovaného predikátu
+     * @return prvek
+     */
     public static SinglePredicateCondition create(final NormalWord name, final DefaultListItem defaultItem, final List<ValueOnlyListItem> items) {
         Preconditions.checkNotNull(defaultItem);
         
         return new SinglePredicateCondition(name, Optional.of(defaultItem), items);
     }
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param name název testovaného predikátu
+     * @param items položky se vzory pro hodnotu testovaného predikátu
+     * @return prvek
+     */
     public static SinglePredicateCondition create(final NormalWord name, final List<ValueOnlyListItem> items) {
         return new SinglePredicateCondition(name, Optional.<DefaultListItem>absent(), items);
     }
@@ -108,7 +110,35 @@ public final class SinglePredicateCondition extends AbstractProperElement implem
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
+    }
+    
+
+    /**
+     * Vrátí název testovaného predikátu.
+     * 
+     * @return název testovaného predikátu
+     */
+    public NormalWord getName() {
+        return name;
+    }
+
+    /**
+     * Vrátí obsažené položky se vzorem.
+     * 
+     * @return obsažené položky se vzorem
+     */
+    public List<ValueOnlyListItem> getItems() {
+        return items;
+    }
+
+    /**
+     * Vrátí výchozí položku, pokud je obsažena, jinak {@code null}.
+     * 
+     * @return výchozí položka
+     */
+    public DefaultListItem getDefaultItem() {
+        return this.defaultItem.orNull();
     }
 }

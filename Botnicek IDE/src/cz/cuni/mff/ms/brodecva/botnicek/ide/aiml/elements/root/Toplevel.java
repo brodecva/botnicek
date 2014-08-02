@@ -21,6 +21,8 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.root;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element;
 
 /**
+ * Značkovací rozhraní prvků obsažených přímo v kořenovém prvku.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */

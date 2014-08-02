@@ -22,12 +22,21 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.SystemDefinedElement;
 
 /**
+ * Vrátí počet načtených kategorií.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * 
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-system-defined-predicates">http://www.alicebot.org/TR/2011/#section-system-defined-predicates</a>
  */
 public class Size extends AbstractProperElement implements SystemDefinedElement {
     private static final String NAME = "size";
 
+    /**
+     * Vytvoří prvek.
+     * 
+     * @return prvek
+     */
     public static Size create() {
         return new Size();
     }
@@ -39,7 +48,7 @@ public class Size extends AbstractProperElement implements SystemDefinedElement 
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
 }

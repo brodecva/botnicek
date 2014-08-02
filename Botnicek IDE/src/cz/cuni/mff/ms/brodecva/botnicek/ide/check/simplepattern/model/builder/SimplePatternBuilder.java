@@ -19,15 +19,19 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.builder;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.ContentAggregator;
 
 /**
+ * Konstruktor validního prostého vzoru.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public interface SimplePatternBuilder {
-    void add(String content);
-    boolean isValid();
-    CheckResult check();
+public interface SimplePatternBuilder extends ContentAggregator {
+    /**
+     * Sestaví validní prostý vzor.
+     * 
+     * @return validní prostý vzor
+     */
     SimplePattern build();
 }

@@ -19,40 +19,49 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.render;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.root.Aiml;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.root.Toplevel;
 
 /**
+ * Výchozí implementace generátoru zdrojového kódu.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultRenderer implements Renderer {
+public final class DefaultRenderer implements Renderer {
 
     private final RenderingVisitorFactory renderingVisitorFactory;
     
     private final Map<URI, String> namespacesToPrefixes;
     
+    /**
+     * Vytvoří generátor.
+     * 
+     * @param visitorFactory továrna na návštěvníky stromu dokumentu
+     * @param namespacesToPrefixes nastavení prefixů pro prostory jmen
+     * @return generátor
+     */
     public static Renderer create(final RenderingVisitorFactory visitorFactory, final Map<URI, String> namespacesToPrefixes) {
         return new DefaultRenderer(visitorFactory, namespacesToPrefixes);
     }
     
-    /**
-     * 
-     */
     private DefaultRenderer(final RenderingVisitorFactory visitorFactory, final Map<URI, String> namespacesToPrefixes) {
         Preconditions.checkNotNull(visitorFactory);
         Preconditions.checkNotNull(namespacesToPrefixes);
         
+        final Map<URI, String> namespacesToPrefixesCopy = ImmutableMap.copyOf(namespacesToPrefixes);
+        
         this.renderingVisitorFactory = visitorFactory;
-        this.namespacesToPrefixes = namespacesToPrefixes;
+        this.namespacesToPrefixes = namespacesToPrefixesCopy;
     }
 
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.render.Renderer#render(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element)
+     */
     public String render(final Element element) {
         Preconditions.checkNotNull(element);
         
@@ -60,14 +69,5 @@ public class DefaultRenderer implements Renderer {
         element.accept(visitor);
         
         return visitor.getResult();
-    }
-    
-    @Override
-    public String render(final List<? extends Toplevel> documentContents) {
-        Preconditions.checkNotNull(documentContents);
-        
-        final Aiml document = Aiml.create(documentContents, this.namespacesToPrefixes);
-        
-        return render(document);
     }
 }

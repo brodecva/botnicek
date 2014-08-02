@@ -19,16 +19,19 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 
 /**
+ * Posluchač události změny vlastností hrany.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface ArcChangedListener {
 
     /**
-     * @param node
+     * Reaguje na změnu hrany na dodanou verzi.
+     * 
+     * @param arc nová verze hrany
      */
     void arcChanged(Arc arc);
 

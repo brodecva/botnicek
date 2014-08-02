@@ -18,46 +18,64 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
-import java.util.Arrays;
-import java.util.List;
-
+import java.net.URI;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractCompoundElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CaptureElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CovertElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 
 /**
+ * Při vyhodnocení interpret načte specifikovaný zdroj a v něm obsažené objekty jazyka AIML. Ty se pak účastní vyhodnocování jako kdyby byly načteny při startu interpretu. 
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-learn">http://www.alicebot.org/TR/2011/#section-learn</a>
  */
-public final class Learn extends AbstractCompoundElement implements CovertElement {
+public final class Learn extends AbstractProperElement implements CovertElement {
     private static final String NAME = "learn";
 
-    public static Learn create(final TemplateElement... content) {
-        return new Learn(content);
+    private final URI sourceUri;
+    
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param sourceUri URI zdroje pro načtení
+     * @return prvek
+     */
+    public static Learn create(final URI sourceUri) {
+        return new Learn(sourceUri);
     }
     
-    public static Learn create(final List<TemplateElement> content) {
-        return new Learn(content);
-    }
-    
-    private Learn(final TemplateElement... content) {
-        super(content);
-    }
-    
-    private Learn(final List<TemplateElement> content) {
-        super(content);
+    private Learn(final URI sourceUri) {
+        super();
+        
+        Preconditions.checkNotNull(sourceUri);
+        
+        this.sourceUri = sourceUri;
     }
 
     /* (non-Javadoc)
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
+    }
+
+    /**
+     * Vrátí URI zdroje pro načtení nového obsahu.
+     * 
+     * @return URI zdroje pro načtení nového obsahu
+     */
+    public URI getSourceUri() {
+        return sourceUri;
+    }
+    
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement#getText()
+     */
+    @Override
+    public String getText() {
+        return this.sourceUri.toString();
     }
 }

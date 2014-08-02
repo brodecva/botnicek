@@ -25,7 +25,7 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.print;
  * @version 1.0
  * @see Printer
  */
-public class PrintConfigurationException extends Exception {
+public final class PrintConfigurationException extends RuntimeException {
 
     /**
      * UID serializované verze.

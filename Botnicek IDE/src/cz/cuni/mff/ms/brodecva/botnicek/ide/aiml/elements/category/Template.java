@@ -18,55 +18,72 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.category;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import com.google.common.collect.ImmutableList;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractCompoundElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 
 
 /**
- * @author Václav Brodec
+ * <p>Prvek popisující šablonu svým obsahem.</p>
+ * <p>Prvek je vždy obsažen v kategorii, společně se vzorem promluvy a pro zmínku.</p>
+ * 
  * @version 1.0
+ * @author Václav Brodec
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-template">http://www.alicebot.org/TR/2011/#section-template</a>
  */
-public class Template extends AbstractElement {
+public class Template extends AbstractCompoundElement {
+    
     private static final String NAME = "template";
     
-    private List<TemplateElement> content;
-    
-    public static Template create(final TemplateElement... content) {
-        return new Template(content);
-    }
-    
-    public static Template create(final List<TemplateElement> content) {
-        return new Template(content);
-    }
-    
-    private Template(final TemplateElement... content) {
-        this(Arrays.asList(content));
-    }
-    
-    private Template(final List<TemplateElement> content) {
-        Preconditions.checkNotNull(content);
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param children potomci
+     * @return prvek
+     */
+    public static Template create(final TemplateElement... children) {
+        Preconditions.checkNotNull(children);
         
-        this.content = ImmutableList.copyOf(content);
+        return new Template(children);
     }
     
-    public List<Element> getChildren() {
-        return ImmutableList.<Element>copyOf(this.content);
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param children potomci
+     * @return prvek
+     */
+    public static Template create(final List<TemplateElement> children) {
+        Preconditions.checkNotNull(children);
+        
+        return new Template(children);
+    }
+    
+    private Template(final TemplateElement... children) {
+        super(children);
+    }
+    
+    private Template(final List<TemplateElement> children) {
+        super(children);
     }
     
     /* (non-Javadoc)
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Template [getName()=" + getLocalName() + ", getChildren()="
+                + getChildren() + "]";
     }    
 }

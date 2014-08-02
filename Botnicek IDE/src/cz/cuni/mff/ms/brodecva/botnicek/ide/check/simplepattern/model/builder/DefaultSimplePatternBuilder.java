@@ -20,23 +20,21 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.builder;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.SimplePatternChecker;
 
 /**
+ * Výchozí implementace konstruktoru validního prostého vzoru dle specifikace jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultSimplePatternBuilder implements SimplePatternBuilder {
+public final class DefaultSimplePatternBuilder implements SimplePatternBuilder, Source {
     
     private final static class SimplePatternImplementation implements SimplePattern {
         private final String text;
-        
-        public static SimplePatternImplementation create() {
-            return new SimplePatternImplementation("");
-        }
         
         public static SimplePatternImplementation create(final String rawContent) {
             return new SimplePatternImplementation(rawContent);
@@ -93,11 +91,18 @@ public class DefaultSimplePatternBuilder implements SimplePatternBuilder {
     private final StringBuilder contentBuilder;
     private final SimplePatternChecker checker;
     
+    /**
+     * Vytvoří konstruktor.
+     * 
+     * @param checker přímý validátor
+     * @param startContent úvodní řetězec k sestavení
+     * @return konstruktor
+     */
     public static DefaultSimplePatternBuilder create(final SimplePatternChecker checker, final String startContent) {
         return new DefaultSimplePatternBuilder(checker, startContent);
     }
     
-    public DefaultSimplePatternBuilder(final SimplePatternChecker checker, final String startContent) {
+    private DefaultSimplePatternBuilder(final SimplePatternChecker checker, final String startContent) {
         Preconditions.checkNotNull(checker);
         Preconditions.checkNotNull(startContent);
         
@@ -131,6 +136,6 @@ public class DefaultSimplePatternBuilder implements SimplePatternBuilder {
 
     @Override
     public CheckResult check() {
-        return this.checker.check(this, this.contentBuilder.toString());
+        return this.checker.check(this, this, this.contentBuilder.toString());
     }
 }

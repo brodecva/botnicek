@@ -18,15 +18,10 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model;
 
-import java.util.Iterator;
-import java.util.List;
-
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessible;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessible;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor;
-
 
 /**
+ * Uzel náhodného sledu navštívení odchozích hran.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */

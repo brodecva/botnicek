@@ -19,9 +19,6 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -42,6 +39,11 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.AbstractDfsObserver;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.ArcChangedEvent;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.ArcRenamedEvent;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.ArcReprioritizedEvent;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.ArcRetypedEvent;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.FromRenamedEvent;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.ToRenamedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.ArcModifier;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.DefaultArcModifier;
@@ -49,12 +51,12 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.RecurentArc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.TransitionArc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.ArcAddedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.NodeAddedEvent;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.NodeMovedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.NodeRemovedEvent;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.NodeRenamedEvent;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.NodeTypeChangedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.DefaultNetwork;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.events.NodeMovedEvent;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.events.NodeRenamedEvent;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.events.NodeTypeChangedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InputNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
@@ -72,15 +74,25 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.AvailableRefere
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.NetworkAddedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.SystemRenamedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.Update.NodeSwitch;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Direction;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
 
 
 /**
+ * <p>Výchozí implementace systému ukládá všechny uzly a hrany sítí do jednoho grafu. Jejich rozložení do sítí či přítomnost ve speciálních kategoriích (vstupní uzly, referované uzly z jiných sítí) je uloženo zvlášť a udržováno v synchronizaci.</p>
+ * <p>Pro přehlednost rozhraní jsou operace nad jednou sítí proveditelné zprostředkovaně přes model sítě, který ovšem deleguje všechny metody na rodičovský systém.</p>
+ * <p>Pro přehlednost rozhraní jsou operace nad jednou sítí proveditelné zprostředkovaně i přes fasádu v podobě sítě, který ovšem deleguje všechny metody na rodičovský systém.</p>
+ * <p>Model systému vysílá pomocí vloženého vysílače zpráv veškeré změny ve formě událostí.</p>
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public class DefaultSystem implements System {
+    
+    private static final int MAX_BRANCHING_FACTOR = 17;
     
     private final NamingAuthority statesNamingAuthority;
     private final NamingAuthority predicatesNamingAuthority;
@@ -91,9 +103,7 @@ public class DefaultSystem implements System {
     
     private final SetMultimap<EnterNode, RecurentArc> references = HashMultimap.create();
     private final SetMultimap<Network, EnterNode> initialNodes = HashMultimap.create();
-    private final Map<Network, Set<IsolatedNode>> isolatedNodes = new HashMap<>();
     private final SetMultimap<Network, Node> networksNodes = HashMultimap.create();
-    private final Map<Node, Network> nodesNetworks = new HashMap<>();
     
     private final SystemGraph graph;
     private final BiMap<Network, String> networksNames = HashBiMap.create();
@@ -101,22 +111,58 @@ public class DefaultSystem implements System {
     private final Dispatcher dispatcher;
     
     private String name;
+    private final Set<String> reservedNetworkNames;
     
-    public static DefaultSystem create(final String name, final Dispatcher dispatcher, final NamingAuthority statesNamingAuthority, final NamingAuthority predicatesNamingAuthority) {
+    /**
+     * Vytvoří prázdný systém sítí.
+     * 
+     * @param name název systému
+     * @param dispatcher vysílač událostí
+     * @param statesNamingAuthority autorita přidělující názvy stavů tak, aby nekolidovaly
+     * @param predicatesNamingAuthority autorita přidělující názvy predikátů tak, aby nekolidovaly
+     * @param reservedNetworkNames rezervované názvy sítí
+     * @return systém
+     */
+    public static DefaultSystem create(final String name, final Dispatcher dispatcher, final NamingAuthority statesNamingAuthority, final NamingAuthority predicatesNamingAuthority, Set<String> reservedNetworkNames) {
+        Preconditions.checkNotNull(name);
+        Preconditions.checkNotNull(dispatcher);
         Preconditions.checkNotNull(statesNamingAuthority);
         Preconditions.checkNotNull(predicatesNamingAuthority);
         
         final NodeModifier nodeModifier = DefaultNodeModifier.create();
         
-        return new DefaultSystem(name, SystemGraph.create(), statesNamingAuthority, NormalizedNamingAuthority.create(), nodeModifier, DefaultArcModifier.create(statesNamingAuthority), DefaultRealignmentProcessor.create(nodeModifier), dispatcher);
+        return new DefaultSystem(name, SystemGraph.create(), statesNamingAuthority, NormalizedNamingAuthority.create(), nodeModifier, DefaultArcModifier.create(), DefaultRealignmentProcessor.create(nodeModifier), reservedNetworkNames, dispatcher);
     }
 
+    /**
+     * Vytvoří prázdný systém sítí.
+     * 
+     * @param name název systému
+     * @param graph uložiště uzlů a hran
+     * @param statesNamingAuthority autorita přidělující názvy stavů tak, aby nekolidovaly
+     * @param variablesNamingAuthority autorita přidělující názvy predikátů tak, aby nekolidovaly
+     * @param nodeModifier modifikátor uzlů 
+     * @param arcModifier  modifikátor hran
+     * @param realignmentProcessor opravný procesor uzlů po strukturálních změnách grafu
+     * @param reservedNetworkNames rezervované názvy sítí
+     * @param dispatcher vysílač událostí
+     * @return systém
+     */
+    public static DefaultSystem create(final String name, final SystemGraph graph,
+            final NamingAuthority statesNamingAuthority, final NamingAuthority variablesNamingAuthority,
+            final NodeModifier nodeModifier,
+            final ArcModifier arcModifier,
+            final RealignmentProcessor realignmentProcessor,
+            final Set<String> reservedNetworkNames, final Dispatcher dispatcher) {
+        return new DefaultSystem(name, graph, statesNamingAuthority, variablesNamingAuthority, nodeModifier, arcModifier, realignmentProcessor, reservedNetworkNames, dispatcher);
+    }
+    
     private DefaultSystem(final String name, final SystemGraph graph,
             final NamingAuthority statesNamingAuthority, final NamingAuthority variablesNamingAuthority,
             final NodeModifier nodeModifier,
             final ArcModifier arcModifier,
             final RealignmentProcessor realignmentProcessor,
-            final Dispatcher dispatcher) {
+            Set<String> reservedNetworkNames, final Dispatcher dispatcher) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(statesNamingAuthority);
         Preconditions.checkNotNull(variablesNamingAuthority);
@@ -126,6 +172,7 @@ public class DefaultSystem implements System {
         Preconditions.checkNotNull(dispatcher);
         Preconditions.checkNotNull(graph);
         Preconditions.checkArgument(!name.isEmpty());
+        Preconditions.checkNotNull(reservedNetworkNames);
 
         this.name = name;
         this.statesNamingAuthority = statesNamingAuthority;
@@ -135,6 +182,7 @@ public class DefaultSystem implements System {
         this.realignmentProcessor = realignmentProcessor;
         this.dispatcher = dispatcher;
         this.graph = graph;
+        this.reservedNetworkNames = ImmutableSet.copyOf(reservedNetworkNames);
     }
     
     /* (non-Javadoc)
@@ -153,6 +201,9 @@ public class DefaultSystem implements System {
         }
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System#getNetworks()
+     */
     public Set<Network> getNetworks() {
         return ImmutableSet.copyOf(networks());
     }
@@ -172,15 +223,15 @@ public class DefaultSystem implements System {
         final Network added = DefaultNetwork.create(this);
         Preconditions.checkArgument(!contains(added));
         Preconditions.checkArgument(!this.networksNames.inverse().containsKey(name));
+        Preconditions.checkArgument(!this.reservedNetworkNames.contains(name));
         
         insertNetwork(added, name);
-        
-        this.dispatcher.fire(NetworkAddedEvent.create(this, added));
     }
     
     private void insertNetwork(final Network network, final String name) {
-        this.isolatedNodes.put(network, new HashSet<IsolatedNode>());
         this.networksNames.put(network, name);
+        
+        this.dispatcher.fire(NetworkAddedEvent.create(this, network));
     }
     
     /* (non-Javadoc)
@@ -205,34 +256,33 @@ public class DefaultSystem implements System {
         final Set<EnterNode> initials = initial(removed);
         for (final EnterNode initial : initials) {
             final Collection<RecurentArc> referring = this.references.get(initial);
-            if (referring == null) {
+            if (referring.isEmpty()) {
                 continue;
             }
             
             for (final RecurentArc inidividualReferring : referring) {                
-                Preconditions.checkArgument(inidividualReferring.getNetwork().equals(removed), "The network " + removed + " is referred by arc " + inidividualReferring + " from other network " + inidividualReferring.getNetwork() + ".");            
+                Preconditions.checkArgument(inidividualReferring.getNetwork().equals(removed), ExceptionLocalizer.print("NetworkReferredElsewhere", removed.getName(), inidividualReferring.getName(), inidividualReferring.getNetwork().getName()));            
             }
         }
         
         removeReferences(removed);
         removeNodes(removed);
         deleteNetwork(removed);
-        
-        this.dispatcher.fire(AvailableReferencesReducedEvent.create(this, initials));
-        this.dispatcher.fire(cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.NetworkRemovedEvent.create(this, removed));
-        this.dispatcher.fire(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.NetworkRemovedEvent.create(removed));
     }
     
     private void deleteNetwork(final Network network) {
         this.networksNames.remove(network);
         this.initialNodes.removeAll(network);
-        this.isolatedNodes.remove(network);
+        this.networksNodes.removeAll(network);
+        
+        this.dispatcher.fire(cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.NetworkRemovedEvent.create(this, network));
+        this.dispatcher.fire(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.NetworkRemovedEvent.create(network));
     }
     
-    /**
-     * @param removed
-     */
     private void removeNodes(final Network removed) {
+        final ImmutableSet.Builder<Node> removedNodesBuilder = ImmutableSet.builder();
+        final ImmutableSet.Builder<Arc> removedArcsBuilder = ImmutableSet.builder();
+        
         removed.accept(DefaultDfsVisitor.create(new AbstractDfsObserver() {
             
             /* (non-Javadoc)
@@ -240,8 +290,7 @@ public class DefaultSystem implements System {
              */
             @Override
             public void notifyDiscovery(final Node discovered) {
-                graph.removeVertex(discovered);
-                statesNamingAuthority.release(discovered.getName().getText());
+                removedNodesBuilder.add(discovered);
             }
             
             /* (non-Javadoc)
@@ -249,10 +298,25 @@ public class DefaultSystem implements System {
              */
             @Override
             public void notifyExamination(Arc examined) {
-                graph.removeEdge(examined);
+                removedArcsBuilder.add(examined);
+                
                 statesNamingAuthority.release(examined.getName().getText());
             }
         }));
+        
+        final Set<Node> removedNodes = removedNodesBuilder.build();
+        for (final Node removedNode : removedNodes) {
+            this.graph.removeVertex(removedNode);
+            statesNamingAuthority.release(removedNode.getName().getText());
+        }
+        
+        final Set<Arc> removedArcs = removedArcsBuilder.build();
+        for (final Arc removedArc : removedArcs) {
+            this.graph.removeEdge(removedArc);
+            statesNamingAuthority.release(removedArc.getName().getText());
+        }
+        
+        this.dispatcher.fire(AvailableReferencesReducedEvent.create(this, initial(removed)));
     }
 
     private void removeReferences(final Network removed) {
@@ -272,7 +336,7 @@ public class DefaultSystem implements System {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System#addNode(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network, int, int)
      */
     @Override
-    public Node addNode(final Network network, final int x, final int y) {
+    public void addNode(final Network network, final int x, final int y) {
         Preconditions.checkNotNull(network);
         Preconditions.checkArgument(x >= 0);
         Preconditions.checkArgument(y >= 0);
@@ -282,15 +346,13 @@ public class DefaultSystem implements System {
         
         final IsolatedNode freshDefault = instantiateInitialNode(NormalWords.of(generatedName), network, x, y);
         insertNode(freshDefault, network);        
-        isolated(network).add(freshDefault);
-        
-        this.dispatcher.fire(NodeAddedEvent.create(network, freshDefault));
-        
-        return freshDefault;
     }
     
-    private void insertNode(final Node node, final Network network) {
+    private void insertNode(final IsolatedNode node, final Network network) {
         this.graph.add(node);
+        addNodeToNetwork(network, node);
+        
+        this.dispatcher.fire(NodeAddedEvent.create(network, node));
     }
     
     private IsolatedNode instantiateInitialNode(final NormalWord name, final Network parent, final int x, final int y) {
@@ -306,30 +368,16 @@ public class DefaultSystem implements System {
     }
     
     /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System#getInitialNodes(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System#getNodes(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)
      */
     @Override
-    public Set<EnterNode> getInitialNodes(final Network network) {
+    public Set<Node> getNodes(final Network network) {
         Preconditions.checkNotNull(network);
+        Preconditions.checkArgument(contains(network));
+                
+        final Set<Node> nodes = this.networksNodes.get(network);
         
-        final Set<EnterNode> present = initial(network);
-        Preconditions.checkNotNull(present);
-        
-        return new HashSet<>(present);
-    }
-    
-    private Set<IsolatedNode> isolated(final Network network) {
-        return this.isolatedNodes.get(network);
-    }
-    
-    @Override
-    public Set<IsolatedNode> getIsolatedNodes(final Network network) {
-        Preconditions.checkNotNull(network);
-        
-        final Set<IsolatedNode> present = isolated(network);
-        Preconditions.checkNotNull(present);
-        
-        return new HashSet<>(present);
+        return ImmutableSet.copyOf(nodes);
     }
     
     /* (non-Javadoc)
@@ -348,48 +396,63 @@ public class DefaultSystem implements System {
     public void removeNode(final Node removed) {
         Preconditions.checkNotNull(removed);
         Preconditions.checkArgument(this.graph.containsVertex(removed));
-        checkReferences(removed);        
         
         final Network network = removed.getNetwork();
+        checkForReferences(removed, network, "RemovalForbidden");
         
         final Set<EnterNode> initials = initial(network);
-        final Set<IsolatedNode> isolated = isolated(network);
         assert initials != null;
-        assert isolated != null;
-        
-        final Update removeUpdate = this.graph.removeAndRealign(removed, this.realignmentProcessor, ImmutableMap.copyOf(this.references.asMap()), ImmutableSet.copyOf(initials), ImmutableSet.copyOf(isolated));
+        final Update removeUpdate = this.graph.removeAndRealign(removed, this.realignmentProcessor, ImmutableMap.copyOf(this.references.asMap()), ImmutableSet.copyOf(initials));
         
         this.statesNamingAuthority.release(removed.getName().getText());
         this.references.entries().removeAll(removeUpdate.getReferencesRemoved().entrySet());
-        updateIsolated(isolated, removeUpdate);
         updateInitials(initials, removeUpdate);
         updateAffected(removeUpdate);
-        removeFromSpecial(removed, isolated, initials);
+        removeFromInitial(removed, initials);
+        removeNodeFromNetwork(removed, network);
+        updateArcs(removeUpdate);
         
         this.dispatcher.fire(NodeRemovedEvent.create(network, removed));
     }
 
-    /**
-     * @param removeUpdate
-     */
+    private void updateArcs(final Update removeUpdate) {
+        for (final Arc removed : removeUpdate.getEdgesRemoved()) {
+            this.statesNamingAuthority.release(removed.getName().getText());
+            
+            this.dispatcher.fire(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.ArcRemovedEvent.create(removed));
+            this.dispatcher.fire(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.ArcRemovedEvent.create(removed.getNetwork(), removed));
+            this.dispatcher.fire(cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.ArcRemovedEvent.create(this, removed));
+        }
+    }
+
+    private void checkForReferences(final Node affected, final Network network, final String messageKey) {
+        if (this.references.containsKey(affected)) {
+            final EnterNode castAffected = (EnterNode) affected;
+            
+            final Set<RecurentArc> referring = this.references.get(castAffected);
+            final RecurentArc firstReferring = referring.iterator().next();
+            
+            throw new IllegalArgumentException(UiLocalizer.print(messageKey, affected.getName(), network.getName(), firstReferring.getName(), firstReferring.getNetwork().getName()));
+        }
+    }
+
     private void updateAffected(final Update update) {
         final Set<NodeSwitch> affected = update.getAffected();
         
-        for (final NodeSwitch switeched : affected) {
-            final Node from = switeched.getFrom();
-            final Node to = switeched.getTo();
+        for (final NodeSwitch switched : affected) {
+            final Node from = switched.getFrom();
+            final Node to = switched.getTo();
             
             final Network network = from.getNetwork();
             assert network.equals(to.getNetwork());
+            
+            removeNodeFromNetwork(from, network);
+            addNodeToNetwork(network, to);
             
             this.dispatcher.fire(NodeTypeChangedEvent.create(network, from, to));
         }
     }
 
-    /**
-     * @param initials
-     * @param update
-     */
     private void updateInitials(final Set<EnterNode> initials,
             final Update update) {
         final Set<EnterNode> initialsRemoved = update.getInitialsRemoved();
@@ -405,25 +468,10 @@ public class DefaultSystem implements System {
         }
     }
 
-    /**
-     * @param removed
-     * @param network
-     * @param presentInitials
-     */
-    private void removeFromSpecial(final Node removed, final Set<? extends IsolatedNode> isolated,
-            final Set<? extends EnterNode> initials) {
-        isolated.remove(removed);
-        
+    private void removeFromInitial(final Node removed, final Set<? extends EnterNode> initials) {
         final boolean isInitial = initials.remove(removed);
         if (isInitial) {
             this.dispatcher.fire(AvailableReferencesReducedEvent.create(this, Sets.newHashSet((EnterNode) removed)));
-        }
-    }
-
-    private void checkReferences(final Node removed) {
-        if (this.references.containsKey(removed)) {
-            final Collection<RecurentArc> referring = this.references.get((EnterNode) removed);
-            throw new IllegalArgumentException("The node " + removed + " is referred by as entry point to the network " + removed.getNetwork() + " by " + referring + " as entry.");
         }
     }
 
@@ -443,12 +491,9 @@ public class DefaultSystem implements System {
         Preconditions.checkArgument(from.getNetwork().equals(network));
         Preconditions.checkArgument(to.getNetwork().equals(network));        
         
-        Preconditions.checkArgument(!from.pointsTo(to), "The arc already exists.");
-        
-        if (this.references.containsKey(to)) {
-            final Collection<RecurentArc> referring = this.references.get((EnterNode) to);
-            throw new IllegalArgumentException("The end point " + to + " is referenced as entry point to the network " + to.getNetwork() + " by " + referring); 
-        }
+        Preconditions.checkArgument(!from.pointsTo(to), ExceptionLocalizer.print("ArcExists"));
+        Preconditions.checkArgument(from.getOutDegree() + 1 <= MAX_BRANCHING_FACTOR, ExceptionLocalizer.print("MaxBranches"));
+        checkForReferences(to, network, "ChangeForbidden");
         
         final String generatedName = this.statesNamingAuthority.use(name.getText());
         
@@ -461,21 +506,13 @@ public class DefaultSystem implements System {
         }
         
         final Set<EnterNode> initials = initial(network);
-        final Set<IsolatedNode> isolated = isolated(network);
         
-        final Update addUpdate = this.graph.addAndRealign(added, from, to, this.realignmentProcessor, ImmutableSet.copyOf(initials), ImmutableSet.copyOf(isolated));
+        final Update addUpdate = this.graph.addAndRealign(added, from, to, this.realignmentProcessor, ImmutableSet.copyOf(initials));
         
         updateInitials(initials, addUpdate);
-        updateIsolated(isolated, addUpdate);
         updateAffected(addUpdate);
         
         this.dispatcher.fire(ArcAddedEvent.create(network, added));
-    }
-    
-    private void updateIsolated(final Set<IsolatedNode> isolated,
-            final Update update) {
-        isolated.removeAll(update.getIsolatedRemoved());
-        isolated.addAll(update.getIsolatedAdded());
     }
     
     /* (non-Javadoc)
@@ -491,6 +528,9 @@ public class DefaultSystem implements System {
         removeArc(removed);
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System#removeArc(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
+     */
     @Override
     public void removeArc(final Arc removed) {
         Preconditions.checkNotNull(removed);
@@ -499,13 +539,11 @@ public class DefaultSystem implements System {
         final Network network = removed.getNetwork();
         
         final Set<EnterNode> initials = initial(network);
-        final Set<IsolatedNode> isolated = isolated(network);
         
-        final Update removeUpdate = this.graph.removeAndRealign(removed, this.realignmentProcessor, ImmutableMap.copyOf(this.references.asMap()), ImmutableSet.copyOf(initials), ImmutableSet.copyOf(isolated));
+        final Update removeUpdate = this.graph.removeAndRealign(removed, this.realignmentProcessor, ImmutableMap.copyOf(this.references.asMap()), ImmutableSet.copyOf(initials));
         
         this.references.entries().removeAll(removeUpdate.getReferencesRemoved().entrySet());
         this.statesNamingAuthority.release(removed.getName().getText());
-        updateIsolated(isolated, removeUpdate);
         updateInitials(initials, removeUpdate);
         updateAffected(removeUpdate);
         
@@ -546,17 +584,14 @@ public class DefaultSystem implements System {
             return;
         }
         
-        if (this.references.containsKey(oldVersion)) {
-            final Collection<RecurentArc> referring = this.references.get((EnterNode) oldVersion);
-            throw new IllegalArgumentException("Change of type forbidden. The node " + oldVersion + " is referenced as entry point to the network " + oldVersion.getNetwork() + " by " + referring);
-        }
-        
         final Node newVersion = this.nodeModifier.change(oldVersion, type);
         this.graph.replaceVertex(newVersion, oldVersion);
-        
-        replaceInSpecials(oldVersion, newVersion);
+        repalceInInitials(oldVersion, newVersion);
         
         final Network network = oldVersion.getNetwork();
+        removeNodeFromNetwork(oldVersion, network);
+        addNodeToNetwork(network, newVersion);
+        
         this.dispatcher.fire(NodeTypeChangedEvent.create(network, oldVersion, newVersion));
     }
     
@@ -586,10 +621,23 @@ public class DefaultSystem implements System {
             throw e;
         }
         
-        replaceInSpecials(oldVersion, newVersion);
+        repalceInInitials(oldVersion, newVersion);
         
         final Network network = oldVersion.getNetwork();
+        removeNodeFromNetwork(oldVersion, network);
+        addNodeToNetwork(network, newVersion);
+        
         this.dispatcher.fire(NodeRenamedEvent.create(network, oldVersion, newVersion));
+        
+        final Set<Arc> outs = newVersion.getOuts();
+        for (final Arc out : outs) {
+            this.dispatcher.fire(FromRenamedEvent.create(out, oldVersion, newVersion));
+        }
+        
+        final Set<Arc> ins = newVersion.getIns();
+        for (final Arc in : ins) {
+            this.dispatcher.fire(ToRenamedEvent.create(in, oldVersion, newVersion));
+        }
     }
     
     /* (non-Javadoc)
@@ -611,25 +659,15 @@ public class DefaultSystem implements System {
         final Node newVersion = this.nodeModifier.change(oldVersion, x, y);
         this.graph.replaceVertex(newVersion, oldVersion);
         
-        replaceInSpecials(oldVersion, newVersion);
+        repalceInInitials(oldVersion, newVersion);
         
         final Network network = oldVersion.getNetwork();
+        removeNodeFromNetwork(oldVersion, network);
+        addNodeToNetwork(network, newVersion);
+        
         this.dispatcher.fire(NodeMovedEvent.create(network, oldVersion, newVersion));
     }
-        
-    /**
-     * @param oldVersion
-     * @param newVersion
-     */
-    private void replaceInSpecials(final Node oldVersion, final Node newVersion) {
-        replaceInIsolated(oldVersion, newVersion);
-        repalceInInitials(oldVersion, newVersion);
-    }
 
-    /**
-     * @param oldVersion
-     * @param newVersion
-     */
     private void
             repalceInInitials(final Node oldVersion, final Node newVersion) {
         final Set<EnterNode> initials = this.initialNodes.get(oldVersion.getNetwork());
@@ -638,27 +676,17 @@ public class DefaultSystem implements System {
         if (initial && newVersion instanceof EnterNode) {
             final EnterNode castNewVersion = (EnterNode) newVersion; 
             initials.add(castNewVersion);
+            
             this.dispatcher.fire(AvailableReferencesReducedEvent.create(this, ImmutableSet.of((EnterNode) oldVersion)));
             this.dispatcher.fire(AvailableReferencesExtendedEvent.create(this, ImmutableSet.of(castNewVersion)));
         }
     }
 
-    /**
-     * @param oldVersion
-     * @param newVersion
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System#changeArc(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority, java.lang.Class, java.lang.Object[])
      */
-    private void
-            replaceInIsolated(final Node oldVersion, final Node newVersion) {
-        final Set<IsolatedNode> isolatedNodes = this.isolatedNodes.get(oldVersion.getNetwork());
-        final boolean isolated = isolatedNodes.remove(oldVersion);
-        
-        if (isolated && newVersion instanceof IsolatedNode) {
-            isolatedNodes.add((IsolatedNode) newVersion);
-        }
-    }
-
     @Override
-    public void changeArc(final Arc changed, final NormalWord newName, final int priority, final Class<? extends Arc> type, final Object... arguments) {
+    public void changeArc(final Arc changed, final NormalWord newName, final Priority priority, final Class<? extends Arc> type, final Object... arguments) {
         Preconditions.checkNotNull(changed);
         Preconditions.checkNotNull(newName);
         Preconditions.checkNotNull(type);
@@ -669,14 +697,14 @@ public class DefaultSystem implements System {
             final RecurentArc referring = (RecurentArc) changed;
             final EnterNode target = referring.getTarget();
             
-            references.get(target).remove(referring);
+            references.remove(target, referring);
         }
         
         final String generatedName = this.statesNamingAuthority.replace(changed.getName().getText(), newName.getText());
         
         final Arc replacement;
         try {
-            replacement = this.arcModifier.change(changed, generatedName, priority, type, arguments);
+            replacement = this.arcModifier.change(changed, NormalWords.of(generatedName), priority, type, arguments);
         } catch (final Exception e) {
             this.statesNamingAuthority.release(generatedName);
             throw e;
@@ -690,6 +718,17 @@ public class DefaultSystem implements System {
         
         this.graph.replaceEdge(replacement, changed);
         this.dispatcher.fire(ArcChangedEvent.create(changed, replacement));
+        
+        final Network network = changed.getNetwork();
+        if (!replacement.getName().equals(changed.getName())) {
+            this.dispatcher.fire(ArcRenamedEvent.create(network, changed, replacement));
+        }
+        if (!replacement.getPriority().equals(changed.getPriority())) {
+            this.dispatcher.fire(ArcReprioritizedEvent.create(network, changed, replacement));
+        }
+        if (!replacement.getClass().equals(changed.getClass())) {
+            this.dispatcher.fire(ArcRetypedEvent.create(network, changed, replacement));
+        }
     }
 
     /* (non-Javadoc)
@@ -750,10 +789,6 @@ public class DefaultSystem implements System {
         return this.statesNamingAuthority;
     }
 
-    /**
-     * @param referrencing
-     * @param target
-     */
     private void registerReference(final RecurentArc referrencing, final EnterNode target) {
         assert this.graph.containsEdge(referrencing);
         assert this.graph.containsVertex(target);
@@ -856,11 +891,25 @@ public class DefaultSystem implements System {
     
     private void addNodeToNetwork(final Network network, final Node node) {
         this.networksNodes.put(network, node);
-        this.nodesNetworks.put(node, network);
     }
     
     private void removeNodeFromNetwork(final Node node, final Network network) {
         this.networksNodes.remove(network, node);
-        this.nodesNetworks.remove(node);
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System#getMaxBranchingFactor()
+     */
+    @Override
+    public int getMaxBranchingFactor() {
+        return MAX_BRANCHING_FACTOR;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "DefaultSystem [name=" + name + "]";
     }
 }

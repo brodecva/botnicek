@@ -19,9 +19,11 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template;
 
 /**
+ * Prvek s direktivou pro vnější zpracování obsahu.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-external-processor-elements">http://www.alicebot.org/TR/2011/#section-external-processor-elements</a>
  */
 public interface ExternalProcessorElement extends TemplateElement {
-
 }

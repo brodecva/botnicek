@@ -25,6 +25,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
 
 /**
+ * Událost přidání uzlu do sítě.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
@@ -32,6 +34,13 @@ public class NodeAddedEvent extends AbstractMappedEvent<Network, NodeAddedListen
     
     private final Node newNode;
     
+    /**
+     * Vytvoří událost.
+     * 
+     * @param network síť
+     * @param newNode přidaný uzel
+     * @return událost
+     */
     public static NodeAddedEvent create(final Network network, final Node newNode) {
         return new NodeAddedEvent(network, newNode);
     }

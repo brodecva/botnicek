@@ -19,8 +19,11 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template;
 
 /**
+ * Prvky, jejichž hodnoty jsou poskytované běhovým prostředím.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-system-defined-predicates">http://www.alicebot.org/TR/2011/#section-system-defined-predicates</a>
  */
 public interface SystemDefinedElement extends TemplateElement {
 }

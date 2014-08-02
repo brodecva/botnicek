@@ -26,9 +26,10 @@ import com.google.common.collect.ImmutableSet;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.MappedEvent;
 
 /**
+ * Událost změny dostupné množiny vstupních uzlů sítí (do kterých je možné se zanořit).
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
@@ -36,6 +37,13 @@ public class AvailableReferencesChangedEvent extends AbstractMappedEvent<System,
     
     private final Set<EnterNode> references;
     
+    /**
+     * Vytvoří událost.
+     * 
+     * @param system rodičovský systém
+     * @param references aktuální množina dostupných uzlů
+     * @return událost
+     */
     public static AvailableReferencesChangedEvent create(final System system, final Set<EnterNode> references) {
         return new AvailableReferencesChangedEvent(system, references);
     }

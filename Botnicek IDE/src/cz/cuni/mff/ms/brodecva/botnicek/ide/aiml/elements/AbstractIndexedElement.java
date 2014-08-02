@@ -21,42 +21,54 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements;
 import java.util.Set;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.AtomicElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CaptureElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Attribute;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.AttributeImplementation;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.Index;
 
 /**
+ * <p>Abstraktní třída prvku který má jednorozměrný kladný celočíselný index zapsaný v atributu index.</p>
+ * <p>Tento typ indexu používají některé prvky (a příslušné implementace by měly dědit od této třídy), které odkazují na jiný text (část zachycené promluvy...).</p>
+ * <p>Volitelně lze vynechat, pak značí index s číslem 1.</p>
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public abstract class AbstractIndexedElement extends AbstractProperElement implements AtomicElement {
+    
     private static final String ATT_INDEX = "index";
     
     private final Optional<Index> index;
     
+    /**
+     * Vytvoří prvek s implicitním indexem 1.
+     */
     protected AbstractIndexedElement() {
         this(Optional.<Index>absent());
     }
     
+    /**
+     * Vytvoří prvek s explicitním indexem.
+     * 
+     * @param index index
+     */
     protected AbstractIndexedElement(final Index index) {
         this(Optional.of(index));
     }
     
     private AbstractIndexedElement(final Optional<Index> index) {
-        Preconditions.checkNotNull(index);
+        assert index != null;
         
         this.index = index;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getAttributes()
+    /**
+     * {@inheritDoc}
+     * 
+     * Poskytne jediný atribut s indexem v případě explicitního zadání.
      */
     @Override
     public Set<Attribute> getAttributes() {
@@ -65,5 +77,14 @@ public abstract class AbstractIndexedElement extends AbstractProperElement imple
         } else {
             return ImmutableSet.of();
         }
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "AbstractIndexedElement [index=" + index + ", getClass()="
+                + getClass() + "]";
     }
 }

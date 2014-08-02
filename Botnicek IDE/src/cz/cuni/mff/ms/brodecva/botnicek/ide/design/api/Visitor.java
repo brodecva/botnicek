@@ -25,19 +25,52 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 
 
 /**
+ * Návštěvník (návrhový vzor) systému sítí.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface Visitor {
+    /**
+     * Navštíví systém.
+     * 
+     * @param system systém
+     */
     void visit(System system);
     
+    /**
+     * Navštíví síť.
+     * 
+     * @param network síť
+     */
     void visit(Network network);
         
+    /**
+     * Vstoupí do uzlu sítě.
+     * 
+     * @param node uzel sítě.
+     */
     void visitEnter(Node node);
         
+    /**
+     * Vystoupí z uzlu sítě.
+     * 
+     * @param node uzel sítě.
+     */
     void visitExit(Node node);
         
+    /**
+     * Navštíví hranu sítě.
+     * 
+     * @param arc hrana mezi uzly jedné sítě
+     */
     void visit(Arc arc);
         
+    /**
+     * Indikuje, zda-li byl uzel již navštíven.
+     * 
+     * @param node uzel
+     * @return zda-li byl uzen návštěvníkem již navštíven
+     */
     boolean visited(Node node);
 }

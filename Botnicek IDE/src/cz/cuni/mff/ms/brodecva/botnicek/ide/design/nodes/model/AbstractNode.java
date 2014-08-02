@@ -26,25 +26,29 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Direction;
-
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 
 
 /**
+ * Abstraktní uzel.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public abstract class AbstractNode implements Node {
     private final NormalWord name;
     private final Network parent;
+    
     private final int x;
     private final int y;
         
     /**
-     * @param name
-     * @param y 
-     * @param x 
+     * Vytvoří uzel dle parametrů.
+     * 
+     * @param name název uzlu
+     * @param parent rodičovská síť
+     * @param x umístění uzlu v souřadnici x
+     * @param y umístění uzlu v souřadnici y
      */
     protected AbstractNode(final NormalWord name, final Network parent, final int x, final int y) {
         Preconditions.checkNotNull(name);
@@ -59,7 +63,14 @@ public abstract class AbstractNode implements Node {
         this.y = y;
     }
     
+    /**
+     * Kopírovací konstruktor.
+     * 
+     * @param original původní uzel
+     */
     protected AbstractNode(final Node original) {
+        Preconditions.checkNotNull(original);
+        
         this.name = original.getName();
         this.parent = original.getNetwork();
         
@@ -67,18 +78,30 @@ public abstract class AbstractNode implements Node {
         this.y = original.getY();
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node#getName()
+     */
     public final NormalWord getName() {
         return this.name;
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node#getX()
+     */
     public final int getX() {
         return this.x;
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node#getY()
+     */
     public final int getY() {
         return this.y;
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitable#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor)
+     */
     public final void accept(final Visitor visitor) {
         visitor.visitEnter(this);
         
@@ -90,10 +113,16 @@ public abstract class AbstractNode implements Node {
         visitor.visitExit(this);
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node#getOuts()
+     */
     public final Set<Arc> getOuts() {
         return this.parent.getOuts(this);
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node#getIns()
+     */
     public final Set<Arc> getIns() {
         return this.parent.getIns(this);
     }
@@ -162,7 +191,7 @@ public abstract class AbstractNode implements Node {
      * @see java.lang.Object#hashCode()
      */
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + name.hashCode();
@@ -173,10 +202,10 @@ public abstract class AbstractNode implements Node {
     }
 
     /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(final Object obj) {
+    public final boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -203,5 +232,25 @@ public abstract class AbstractNode implements Node {
             return false;
         }
         return true;
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Node [name=");
+        builder.append(name.getText());
+        builder.append(", parent=");
+        builder.append(parent.getName());
+        builder.append(", x=");
+        builder.append(x);
+        builder.append(", y=");
+        builder.append(y);
+        builder.append(", getClass()=");
+        builder.append(getClass());
+        builder.append("]");
+        return builder.toString();
     }
 }

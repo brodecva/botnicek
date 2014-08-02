@@ -21,15 +21,25 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.api.Visitor;
 
 /**
+ * Abstraktní třída pro prvek jež není interpretován a je za něj dosazena pouze jeho textová hodnota.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public abstract class AbstractRawElement extends AbstractElement {
+    
+    @Override
+    public String getLocalName() {
+        return "";
+    }
+    
     /* (non-Javadoc)
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#visitEnter(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.api.Visitor)
      */
     @Override
     protected void visitEnter(Visitor visitor) {
+        super.visitEnter(visitor);
+        
         visitor.visitEnter(this);
     }
     
@@ -38,6 +48,17 @@ public abstract class AbstractRawElement extends AbstractElement {
      */
     @Override
     protected void visitExit(Visitor visitor) {
+        super.visitExit(visitor);
+        
         visitor.visitExit(this);
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "AbstractRawElement [getText()=" + getText() + ", getClass()="
+                + getClass() + "]";
     }
 }

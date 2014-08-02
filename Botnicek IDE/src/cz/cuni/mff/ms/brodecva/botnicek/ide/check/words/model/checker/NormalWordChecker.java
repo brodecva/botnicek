@@ -18,12 +18,13 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker;
 
 /**
+ * Rozhraní pro provedení kontroly normálního slova dle specifikace jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public interface NormalWordChecker {
-    CheckResult check(Object source, final String name);
+public interface NormalWordChecker extends Checker {
 }

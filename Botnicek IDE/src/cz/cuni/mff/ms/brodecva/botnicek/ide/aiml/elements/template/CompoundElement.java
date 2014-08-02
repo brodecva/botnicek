@@ -19,6 +19,8 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template;
 
 /**
+ * Prvky, které mají složitější vnitřní strukturu.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */

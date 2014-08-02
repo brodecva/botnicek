@@ -24,22 +24,23 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractRawElement;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.XML;
 
 /**
+ * Komentář.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-comments">http://www.alicebot.org/TR/2011/#section-comments</a>
  */
 public class Comment extends AbstractRawElement implements TemplateElement {
     private final String content;
     
-    public static Comment create() {
-        return new Comment();
-    }
-    
+    /**
+     * Vytvoří komentář.
+     * 
+     * @param content text komentáře
+     * @return komentář
+     */
     public static Comment create(final String content) {
         return new Comment(content);
-    }
-    
-    private Comment() {
-        this("");
     }
     
     private Comment(final String content) {
@@ -52,7 +53,7 @@ public class Comment extends AbstractRawElement implements TemplateElement {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return "comment";
     }
     

@@ -22,11 +22,11 @@ import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.MappedEvent;
 
 /**
+ * Událost přidání hrany do sítě.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
@@ -34,6 +34,13 @@ public class ArcAddedEvent extends AbstractMappedEvent<Network, ArcAddedListener
     
     private final Arc newArc;
     
+    /**
+     * Vytvoří událost.
+     * 
+     * @param network síť
+     * @param newArc nová hrana v síti
+     * @return událost
+     */
     public static ArcAddedEvent create(final Network network, final Arc newArc) {
         return new ArcAddedEvent(network, newArc);
     }

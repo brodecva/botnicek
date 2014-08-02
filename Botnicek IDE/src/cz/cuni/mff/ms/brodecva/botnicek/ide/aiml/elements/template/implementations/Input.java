@@ -18,35 +18,46 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
-import java.util.Set;
-
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableSet;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractDoubleIndexedElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.AtomicElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.AttributeImplementation;
-import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.Index;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.TwoDimensionalIndex;
 
 /**
+ * Vrátí předchozí vstup uživatele určený první (kolikátý zpět) a druhou (pořadí věty) položkou indexu.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-input">http://www.alicebot.org/TR/2011/#section-input</a>
  */
 public class Input extends AbstractDoubleIndexedElement implements AtomicElement {
     private static final String NAME = "input";
     
+    /**
+     * Vytvoří prvek s implicitním indexem.
+     * 
+     * @return prvek
+     */
     public static Input create() {
         return new Input();
     }
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param index částečně explicitní index
+     * @return prvek
+     */
     public static Input create(final Index index) {
         return new Input(index);
     }
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param index2d explicitní index
+     * @return prvek
+     */
     public static Input create(final TwoDimensionalIndex index2d) {
         return new Input(index2d);
     }
@@ -67,7 +78,7 @@ public class Input extends AbstractDoubleIndexedElement implements AtomicElement
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
 }

@@ -18,15 +18,15 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.lists;
 
-import java.util.List;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 
 
 /**
+ * Položka seznamu.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-condition">http://www.alicebot.org/TR/2011/#section-condition</a>
  */
 public interface ListItem extends Element {
 }

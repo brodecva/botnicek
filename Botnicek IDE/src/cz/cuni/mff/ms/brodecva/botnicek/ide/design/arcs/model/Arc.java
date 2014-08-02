@@ -22,23 +22,95 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitable;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processible;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Direction;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 
 
 /**
+ * Hrana sítě.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface Arc extends Processible, Visitable {
+    /**
+     * Vrátí název hrany.
+     * 
+     * @return název hrany
+     */
     NormalWord getName();
+    
+    /**
+     * Zjistí, zda-li do uzlu míří tato hrana.
+     * 
+     * @param node uzel
+     * @return zda-li do něj míří tato hrana
+     */
     boolean isTo(Node node);
+    
+    /**
+     * Zjistí, zda-li z uzlu vychází tato hrana.
+     * 
+     * @param node uzel
+     * @return zda-li z něj vychází tato hrana
+     */
     boolean isFrom(Node node);
+    
+    /**
+     * Zjistí, zda-li je v daném směru přichycena hrana k uzlu.
+     * 
+     * @param node uzel
+     * @param direction směr
+     * @return zda-li je v daném směru přichycena hrana k uzlu
+     */
     boolean isAttached(Node node, Direction direction);
+    
+    /**
+     * Vrátí výchozí uzel.
+     * 
+     * @return výchozí uzel
+     */
     Node getFrom();
+    
+    /**
+     * Vrátí cílový uzel.
+     * 
+     * @return cílový uzel
+     */
     Node getTo();
+    
+    /**
+     * Vrátí koncový uzel v daném směru.
+     * 
+     * @param direction směr
+     * @return koncový uzel
+     */
     Node getAttached(Direction direction);
-    int getPriority();
+    
+    /**
+     * Vrátí prioritu hrany.
+     * 
+     * @return priorita
+     */
+    Priority getPriority();
+    
+    /**
+     * Vrátí rodičovskou síť.
+     * 
+     * @return rodičovská síť
+     */
     Network getNetwork();
+    
+    /**
+     * Porovná objekt s hranou. Shoduje se pouze pokud jde o hranu se stejnými vlastnostmi a stejného typu.
+     */
+    @Override
+    public boolean equals(Object obj);
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode();
 }

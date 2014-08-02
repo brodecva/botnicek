@@ -19,9 +19,10 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model;
 
 /**
+ * Značkovací rozhraní uzlů rozlišujících způsob vypravení za odchozími hranami (deterministické či ne).
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface DispatchNode extends Node {
-
 }

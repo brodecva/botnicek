@@ -19,18 +19,22 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types;
 
 /**
+ * Prostý vzor se nachází v definicích tématu a testovacích podmínkách. Od složeného vzoru se liší tím, že nedovoluje výskyt značky <a href="http://www.alicebot.org/TR/2011/#section-pattern-side-bot-elements">bot</a>.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-simple-pattern-expressions">http://www.alicebot.org/TR/2011/#section-simple-pattern-expressions</a>
  */
 public interface SimplePattern extends MixedPattern {
+    
     /* (non-Javadoc)
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern#hashCode()
      */
     @Override
     public int hashCode();
     
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern#equals(java.lang.Object)
+    /**
+     * Porovná objekt se vzorem. Shoduje se s každým prostým vzorem stejného textu.
      */
     @Override
     public boolean equals(Object obj);

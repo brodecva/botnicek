@@ -18,10 +18,10 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.IsolatedProcessingNode;
-
 
 /**
+ * Izolovaný uzel.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */

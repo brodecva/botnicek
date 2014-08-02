@@ -33,15 +33,39 @@ import javax.xml.transform.stream.StreamSource;
 import com.google.common.base.Preconditions;
 
 /**
+ * Výchozí implementace formátovače využívá pro zpracování XML standardní knihovny.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultPrettyPrinter implements Printer {
+public final class DefaultPrettyPrinter implements Printer {
+    /**
+     * Výchozí velikost odsazení ve znacích.
+     */
+    public static final int DEFAULT_INDENTATION = 4;
+    
     private static final String ENABLE_OPTION_VALUE = "yes";
     private static final String INDENT_NUMBER_OPTION_NAME = "indent-number";
     
     private final Transformer transformer;
     
+    /**
+     * Vytvoří formátovač s výchozím nastavením velikost odsazení.
+     * 
+     * @return formátovač
+     * @throws PrintConfigurationException pokud nelze inicializovat
+     */
+    public static DefaultPrettyPrinter create() throws PrintConfigurationException {
+        return create(DEFAULT_INDENTATION);
+    }
+    
+    /**
+     * Vytvoří formátovač.
+     * 
+     * @param indent velikost odsazení v počtu znaků
+     * @return formátovač
+     * @throws PrintConfigurationException pokud nelze inicializovat
+     */
     public static DefaultPrettyPrinter create(final int indent) throws PrintConfigurationException {
         Preconditions.checkArgument(indent >= 0);
         
@@ -61,9 +85,6 @@ public class DefaultPrettyPrinter implements Printer {
         return new DefaultPrettyPrinter(transformer);
     }
     
-    /**
-     * 
-     */
     private DefaultPrettyPrinter(final Transformer transformer) {
         Preconditions.checkNotNull(transformer);
         

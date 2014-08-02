@@ -20,16 +20,23 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.SimplePatternChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 
 /**
+ * Pomocné metody pro práci se vzory jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-pattern-expression-syntax">http://www.alicebot.org/TR/2011/#section-pattern-expression-syntax</a>
  */
-public class Patterns {
+public final class Patterns {
     
+    /**
+     * Interní implementace prostého vzoru. Složený vzor není při konstrukci výpočetních prvků potřeba.
+     */
     private static final class SimplePatternImplementation implements SimplePattern {
         private final String text;
         
@@ -83,31 +90,37 @@ public class Patterns {
             }
             return true;
         }
+
+        /* (non-Javadoc)
+         * @see java.lang.Object#toString()
+         */
+        @Override
+        public String toString() {
+            return "SimplePattern [text=" + text + "]";
+        }
     }
     
     private static SimplePatternChecker checker = new DefaultSimplePatternChecker();
     
+    /**
+     * Vytvoří vzor obsahující pouze žolík hvězdičku, tj. vzor, vůči kterému projde při porovnání jakýkoli text.
+     * 
+     * @return vzor s hvězdičkou
+     */
     public static SimplePattern createUniversal() {
         return SimplePatternImplementation.create(AIML.STAR_WILDCARD.getValue()); 
     }
 
+    /**
+     * Vytvoří vzor. Text musí splňovat syntaktická pravidla prostého vzoru, tj. být neprázdný, obsahovat pouze normální znaky a žolíky.
+     * 
+     * @param text text vzoru
+     * @return vrátí vzor s daným popisem
+     */
     public static SimplePattern create(final String text) {
         Preconditions.checkNotNull(text);
-        Preconditions.checkArgument(checker.check(text, text).isValid());
+        Preconditions.checkArgument(checker.check(new Source() {}, text, text).isValid());
         
         return SimplePatternImplementation.create(text);
-    }
-    
-    public static SimplePattern join(final SimplePattern... patterns) {
-        Preconditions.checkNotNull(patterns);
-        
-        final StringBuilder textBuilder = new StringBuilder();
-        for (final SimplePattern pattern : patterns) {
-            Preconditions.checkNotNull(pattern);
-            
-            textBuilder.append(pattern.getText());
-        }
-        
-        return Patterns.create(textBuilder.toString());
     }
 }

@@ -20,9 +20,17 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model;
 
 
 /**
+ * Procesor, který vrátí novou verzi uzlu, která má správný typ podle aktuálního umístění v grafu sítě.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface RealignmentProcessor {
+    /**
+     * Opraví typ uzlu.
+     * 
+     * @param node uzel
+     * @return opravený uzel
+     */
     Node realign(Node node);
 }

@@ -18,73 +18,85 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.translate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.category.Template;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Category;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Topic;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Patterns;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.utils.Stack;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultDispatchProcessor;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultProceedProcessor;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultStackProcessor;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultTestProcessor;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 
 /**
+ * <p>Výchozí implementace překladače.</p>
+ * <p>Užívá několika speciálních stavů, které pomáhají simulovat chod ATN, především rekurzivní zanořování, testování predikátů a nedeterminismus.</p>
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultTranslatingObserver implements TranslatingObserver {
+public final class DefaultTranslatingObserver implements TranslatingObserver {
     
     private final NormalWord pullState;
     private final NormalWord pullStopState;
     private final NormalWord randomizeState;
+    private final NormalWord successState;
+    private final NormalWord returnState;
     private final NormalWord testingPredicate;
     
     private final ListMultimap<Network, Topic> units = ArrayListMultimap.create();
     
     private Optional<Network> current;
     
+    /**
+     * Vytvoří překladač.
+     * 
+     * @param pullState slovo popisující stav, který je vložen na zásobník po průchodu sítí až do koncového uzlu, a spustí tak proceduru uvolňování nezpracovaných stavů z něj 
+     * @param pullStopState slovo popisující stav, který slouží jako zarážka při uvolňování nezpracovaných stavů úspěšně prošlé sítě ze zásobníku
+     * @param randomizeState slovo popisující stav, který provede zamíchá přechody dle jejich priority před vložením na zásobník
+     * @param successState slovo popisující stav, který indikuje úspěšné projití podsítě odkazované z následujícího stavu na zásobníku
+     * @param returnState slovo popisující stav, který indikuje zpracování podsítě
+     * @param testingPredicate rezervovaný název predikátu sloužící pro interní testy
+     * @return překladač
+     */
     public static TranslatingObserver create(final NormalWord pullState, final NormalWord pullStopState,
-            final NormalWord randomizeState, final NormalWord testingPredicate) {
-        return new DefaultTranslatingObserver(pullState, pullStopState, randomizeState, testingPredicate, Optional.<Network>absent());
+            final NormalWord randomizeState, NormalWord successState, NormalWord returnState, final NormalWord testingPredicate) {
+        Preconditions.checkNotNull(pullState);
+        Preconditions.checkNotNull(pullStopState);
+        Preconditions.checkNotNull(randomizeState);
+        Preconditions.checkNotNull(successState);
+        Preconditions.checkNotNull(returnState);
+        Preconditions.checkNotNull(testingPredicate);
+        Preconditions.checkArgument(Comparisons.allDifferent(pullState, pullStopState, randomizeState));
+        
+        return new DefaultTranslatingObserver(pullState, pullStopState, randomizeState, successState, returnState, testingPredicate, Optional.<Network>absent());
     }
     
     private DefaultTranslatingObserver(final NormalWord pullState, final NormalWord pullStopState,
-            final NormalWord randomizeState, final NormalWord testingPredicate, final Optional<Network> current) {
-        Preconditions.checkNotNull(pullState);
-        Preconditions.checkNotNull(pullStopState);
-        Preconditions.checkNotNull(testingPredicate);
-        Preconditions.checkNotNull(randomizeState);
-        Preconditions.checkNotNull(current);
-        Preconditions.checkArgument(Stack.allDifferent(pullState, pullStopState, randomizeState));
-        
+            final NormalWord randomizeState, final NormalWord successState, final NormalWord returnState, final NormalWord testingPredicate, final Optional<Network> current) {
         this.current = current;
         this.pullState = pullState;
         this.pullStopState = pullStopState;
-        this.testingPredicate = testingPredicate;
         this.randomizeState = randomizeState;
+        this.successState = successState;
+        this.returnState = returnState;
+        this.testingPredicate = testingPredicate;
     }
     
     /* (non-Javadoc)
@@ -93,8 +105,10 @@ public class DefaultTranslatingObserver implements TranslatingObserver {
     public void notifyVisit(final System system) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyVisit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>Tato implementace nastaví aktuálně zpracovanou síť.</p>
      */
     @Override
     public void notifyVisit(final Network network) {
@@ -103,8 +117,11 @@ public class DefaultTranslatingObserver implements TranslatingObserver {
         this.current = Optional.of(network);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyDiscovery(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
+    /** 
+     * {@inheritDoc}
+     * 
+     * <p>Překladač na objevení uzlu reaguje tak, že jej nechá zpracovat třemi procesory, které mají na starost vygenerování kódu pro modifikaci zásobníku, způsob a volbu přechod do dalších uzlů sítě a konečně to, zda-li takový přechod proběhne ihned, či až jako reakce na uživatelský vstup.
+     * <p>Co uzel, to téma s jedinou kategorií. Téma je označeno vzorem "Název_uzlu žolík", který je možné porovnat s aktuálním tématem a přejít tak v případě shody do tohoto uzlu. Kategorie projde vždy, neboť je označena jen žolíky.</p>
      */
     @Override
     public void notifyDiscovery(final Node node) {
@@ -119,28 +136,34 @@ public class DefaultTranslatingObserver implements TranslatingObserver {
         final DefaultProceedProcessor proceedProcessor = DefaultProceedProcessor.create();
         node.accept(proceedProcessor);
         
-        final List<TemplateElement> code = Lists.newArrayList(Iterables.concat(dispatchProcessor.getResult(), proceedProcessor.getResult()));
+        final List<TemplateElement> code = ImmutableList.copyOf(Iterables.concat(dispatchProcessor.getResult(), proceedProcessor.getResult()));
         
-        final Topic topic =
-                Topic.create(
-                        Patterns.create(node.getName() + AIML.WORD_DELIMITER.getValue() + AIML.STAR.getValue()),
-                        Lists.newArrayList(Category.create(
-                                Patterns.createUniversal(),
-                                Patterns.createUniversal(), Template.create(code))));
+        final Topic topic = createNodeTopic(node, code);
         add(topic);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyExamination(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
+    private Topic
+            createNodeTopic(final Node node, final List<TemplateElement> code) {
+        final Topic topic =
+                Topic.create(
+                        Patterns.create(node.getName() + AIML.WORD_DELIMITER.getValue() + AIML.STAR.getValue()),
+                        Category.createUniversal(Template.create(code)));
+        return topic;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>Překladač podle toho, o jaký typ hrany jde vygeneruje kód pro daný typ testu.</p>
+     * <p>Hrana stejně jako uzel tvoří vlastní témata, v nichž se nachází určitě množství kategorií podle typu testu.</p>
      */
     @Override
     public void notifyExamination(final Arc arc) {
-        final DefaultTestProcessor testProcessor = DefaultTestProcessor.create(this.testingPredicate);
+        final DefaultTestProcessor testProcessor = DefaultTestProcessor.create(this.testingPredicate, this.successState, this.returnState);
         arc.accept(testProcessor);
         
-        final List<Category> categories = testProcessor.getResult();
-        final Topic topic = Topic.create(Patterns.create(arc.getName() + AIML.WORD_DELIMITER.getValue() + AIML.STAR.getValue()), categories);
-        add(topic);
+        final List<Topic> topics = testProcessor.getResult();
+        add(topics);
     }
     
     /* (non-Javadoc)
@@ -171,13 +194,27 @@ public class DefaultTranslatingObserver implements TranslatingObserver {
     public void notifyCross(final Arc arc) {
     }
     
-    private void add(final Topic added) {
+    /**
+     * Přidá témata do aktuální sítě.
+     * 
+     * @param added nové témata
+     */
+    private void add(final Topic... added) {
+        add(ImmutableList.copyOf(added));
+    }
+    
+    /**
+     * Přidá témata do aktuální sítě.
+     * 
+     * @param added nové témata
+     */
+    private void add(final List<Topic> added) {
         if (!this.current.isPresent()) {
             throw new IllegalStateException();
         }
         
         final Network currentRaw = this.current.get();
-        this.units.put(currentRaw, added);
+        this.units.putAll(currentRaw, added);
     }
     
     /* (non-Javadoc)

@@ -19,13 +19,17 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 
 import com.google.common.base.Preconditions;
+
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 
 /**
+ * Implementace hrany, jejíž test projde pouze tehdy, pokud zadaný testovací kód má výstup odpovídající požadované hodnotě vzoru.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
@@ -33,24 +37,31 @@ public final class CodeTestArc extends AbstractTestArc {
     
     private final Code tested;
     
+    /**
+     * Vytvoří hranu.
+     * 
+     * @param parent rodičovská síť
+     * @param name název hrany
+     * @param priority priorita
+     * @param code kód k provedení v případě splnění testu
+     * @param value očekávaná hodnota testu
+     * @param tested kód generující testovanou hodnotu
+     * @return hrana
+     */
     public static CodeTestArc create(
             final Network parent,
             final NormalWord name,
-            final int priority,
+            final Priority priority,
             final Code code,
             final SimplePattern value,
             final Code tested) {
         return new CodeTestArc(parent, name, priority, code, value, tested);
     }
     
-    /**
-     * @param from
-     * @param to
-     */
     private CodeTestArc(
                final Network parent,
                final NormalWord name,
-               final int priority,
+               final Priority priority,
                final Code code,
                final SimplePattern value,
                final Code tested) {
@@ -62,7 +73,9 @@ public final class CodeTestArc extends AbstractTestArc {
     }
     
     /**
-     * @return the tested
+     * Vrátí testovací kód.
+     * 
+     * @return kód jehož výstup je porovnáván s očekávanou hodnotou
      */
     public Code getTested() {
         return this.tested;
@@ -106,5 +119,16 @@ public final class CodeTestArc extends AbstractTestArc {
             return false;
         }
         return true;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "CodeTestArc [getName()=" + getName() + ", getNetwork()="
+                + getNetwork() + ", getFrom()=" + getFrom() + ", getTo()="
+                + getTo() + ", getPriority()=" + getPriority()
+                + ", getValue()=" + getValue() + ", tested=" + tested + "]";
     }
 }

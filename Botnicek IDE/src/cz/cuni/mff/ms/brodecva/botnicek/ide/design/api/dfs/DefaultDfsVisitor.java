@@ -19,28 +19,27 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 
 /**
+ * Výchozí implementace návštěvníka procházejícího systém sítí do hloubky.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class DefaultDfsVisitor implements DfsVisitor {
     
+    /**
+     * Stavy vrcholů v algoritmu.
+     */
     private static enum State {
         FRESH, OPEN, CLOSED;
     }
@@ -50,16 +49,34 @@ public final class DefaultDfsVisitor implements DfsVisitor {
     private final Map<Node, Integer> timestamps = new HashMap<>();    
     private int nextTimestamp = 0;
     
-    private final List<DfsObserver> observers;
+    private final Set<DfsObserver> observers;
     
+    /**
+     * Vytvoří návštěvníka.
+     * 
+     * @param observers unikátní pozorovatelé
+     * @return návštěvník
+     */
     public static DefaultDfsVisitor create(final DfsObserver... observers) {
-        return new DefaultDfsVisitor(observers);
-    }
-    
-    private DefaultDfsVisitor(final DfsObserver... observers) {
         Preconditions.checkNotNull(observers);
         
-        this.observers = ImmutableList.copyOf(observers);
+        return create(ImmutableSet.copyOf(observers));
+    }
+    
+    /**
+     * Vytvoří návštěvníka.
+     * 
+     * @param observers unikátní pozorovatelé
+     * @return návštěvník
+     */
+    public static DefaultDfsVisitor create(final Set<? extends DfsObserver> observers) {
+        Preconditions.checkNotNull(observers);
+        
+        return new DefaultDfsVisitor(ImmutableSet.copyOf(observers));
+    }
+    
+    private DefaultDfsVisitor(final Set<DfsObserver> observers) {
+        this.observers = observers;
     }
     
     /* (non-Javadoc)
@@ -67,12 +84,11 @@ public final class DefaultDfsVisitor implements DfsVisitor {
      */
     @Override
     public void visit(final System system) {
+        Preconditions.checkNotNull(system);
+        
         notifyVisit(system);
     }
 
-    /**
-     * @param system
-     */
     private void notifyVisit(final System system) {
         for (final DfsObserver observer : this.observers) {
             observer.notifyVisit(system);
@@ -84,27 +100,24 @@ public final class DefaultDfsVisitor implements DfsVisitor {
      */
     @Override
     public void visit(final Network network) {
+        Preconditions.checkNotNull(network);
+        
         notifyVisit(network);
     }
     
-    /**
-     * @param network
-     */
     private void notifyVisit(final Network network) {
         for (final DfsObserver observer : this.observers) {
             observer.notifyVisit(network);
         }
     }
 
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor#visitEnter(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
+     */
     @Override
     public void visitEnter(final Node node) {        
-        if (node == null) {
-            throw new NullPointerException();
-        }        
-        
-        if (!isFresh(node)) {
-            throw new IllegalStateException();
-        }
+        Preconditions.checkNotNull(node);
+        Preconditions.checkState(isFresh(node));
         
         setOpen(node);
         setTimestamp(node);
@@ -112,27 +125,21 @@ public final class DefaultDfsVisitor implements DfsVisitor {
         notifyDiscovery(node);
     }
 
-    /**
-     * @param node
-     */
     private void notifyDiscovery(final Node node) {
         for (final DfsObserver observer : this.observers) {
             observer.notifyDiscovery(node);
         }
     }
 
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor#visitExit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
+     */
     @Override
     public void visitExit(final Node node) {
+        Preconditions.checkNotNull(node);
+        Preconditions.checkState(isOpen(node));
+        
         notifyFinish(node);
-        
-        if (node == null) {
-            throw new NullPointerException();
-        }
-        
-        if (!isOpen(node)) {
-            throw new IllegalStateException();
-        }
-        
         setClosed(node);
     }
 
@@ -145,17 +152,19 @@ public final class DefaultDfsVisitor implements DfsVisitor {
         }
     }
 
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor#visit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
+     */
     @Override
     public void visit(final Arc arc) {
+        Preconditions.checkNotNull(arc);
+        
         final Node from = arc.getFrom();
-        if (!isOpen(from)) {
-            throw new IllegalStateException();
-        }
+        Preconditions.checkState(isOpen(from));
         
         notifyExamination(arc);
         
-        final Node to = arc.getTo();
-                
+        final Node to = arc.getTo();                
         if (isFresh(to)) {
             tree(arc);
         } else if (isOpen(to)) {
@@ -176,9 +185,6 @@ public final class DefaultDfsVisitor implements DfsVisitor {
         }
     }
 
-    /**
-     * @param arc
-     */
     private void notifyExamination(final Arc arc) {
         for (final DfsObserver observer : this.observers) {
             observer.notifyExamination(arc);
@@ -189,9 +195,6 @@ public final class DefaultDfsVisitor implements DfsVisitor {
         notifyTree(arc);
     }
 
-    /**
-     * @param arc
-     */
     private void notifyTree(final Arc arc) {
         for (final DfsObserver observer : this.observers) {
             observer.notifyTree(arc);
@@ -202,9 +205,6 @@ public final class DefaultDfsVisitor implements DfsVisitor {
         notifyBack(arc);
     }
 
-    /**
-     * @param arc
-     */
     private void notifyBack(final Arc arc) {
         for (final DfsObserver observer : this.observers) {
             observer.notifyBack(arc);
@@ -215,15 +215,15 @@ public final class DefaultDfsVisitor implements DfsVisitor {
         notifyCross(arc);
     }
 
-    /**
-     * @param arc
-     */
     private void notifyCross(final Arc arc) {
         for (final DfsObserver observer : this.observers) {
             observer.notifyCross(arc);
         }
     }
 
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor#visited(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
+     */
     @Override
     public boolean visited(final Node node) {
         Preconditions.checkNotNull(node);
@@ -235,18 +235,10 @@ public final class DefaultDfsVisitor implements DfsVisitor {
         return getState(node) == State.FRESH;
     }    
 
-    /**
-     * @param node
-     * @return
-     */
     private boolean isOpen(final Node node) {
         return getState(node) == State.OPEN;
     }
     
-    /**
-     * @param to
-     * @return
-     */
     private boolean isClosed(final Node node) {
         return getState(node) == State.CLOSED;
     }
@@ -261,6 +253,7 @@ public final class DefaultDfsVisitor implements DfsVisitor {
         }
     }
     
+    @SuppressWarnings("unused")
     private void setFresh(final Node node) {
         setState(node, State.FRESH);
     }
@@ -274,16 +267,17 @@ public final class DefaultDfsVisitor implements DfsVisitor {
     }
     
     private void setState(final Node node, final State state) {
-        states.put(node, state);
+        if (state == State.FRESH) {
+            states.remove(node);
+        } else {
+            states.put(node, state);
+        }
     }
     
     private int getTimestamp(final Node node) {
         return timestamps.get(node);
     }
     
-    /**
-     * @param node
-     */
     private void setTimestamp(final Node node) {
         this.timestamps.put(node, nextTimestamp++);
     }

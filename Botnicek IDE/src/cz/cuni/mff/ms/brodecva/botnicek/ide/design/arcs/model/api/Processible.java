@@ -19,9 +19,16 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api;
 
 /**
+ * Zpracovatelná hrana.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface Processible {
+    /**
+     * Přijme procesor.
+     * 
+     * @param processor procesor
+     */
     void accept(Processor processor);
 }

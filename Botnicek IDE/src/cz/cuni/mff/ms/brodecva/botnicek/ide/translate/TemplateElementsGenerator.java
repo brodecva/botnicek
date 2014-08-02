@@ -23,9 +23,17 @@ import java.util.List;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 
 /**
+ * Rozhraní objektů, které nějakým způsobem vytvářejí seznam prvků šablony jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-template">http://www.alicebot.org/TR/2011/#section-template</a>
  */
 public interface TemplateElementsGenerator {
+    /**
+     * Vrátí seznam prvků šablony.
+     * 
+     * @return seznam prvků šablony
+     */
     List<TemplateElement> getResult();
 }

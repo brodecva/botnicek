@@ -20,12 +20,15 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 
 /**
+ * Abstraktní hrana, která obsahuje hodnotu ve formě prostého vzoru jazyka AIML, které musí specifikovaný test dosáhnout.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
@@ -34,13 +37,16 @@ public abstract class AbstractTestArc extends AbstractCodeArc implements TestArc
     private final SimplePattern value;
     
     /**
-     * @param parent
-     * @param name
-     * @param priority
-     * @param code
+     * Vytvoří hranu.
+     * 
+     * @param parent rodičovská síť
+     * @param name název hrany
+     * @param priority priorita
+     * @param code kód k provedení při posunu po hraně
+     * @param value vzor, vůči kterému je porovnáván test hrany
      */
     protected AbstractTestArc(final Network parent, final NormalWord name,
-            final int priority, final Code code, final SimplePattern value) {
+            final Priority priority, final Code code, final SimplePattern value) {
         super(parent, name, priority, code);
         
         Preconditions.checkNotNull(value);
@@ -48,6 +54,9 @@ public abstract class AbstractTestArc extends AbstractCodeArc implements TestArc
         this.value = value;
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.TestArc#getValue()
+     */
     public SimplePattern getValue() {
         return this.value;
     }

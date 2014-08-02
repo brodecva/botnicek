@@ -18,13 +18,9 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.api;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.CodeTestArc;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.PatternArc;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.PredicateTestArc;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.RecurentArc;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.TransitionArc;
-
 /**
+ * Procesor analyzující přechodové hrany a generující instrukce, které odpovídají podmínce přechodu po dané hraně.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */

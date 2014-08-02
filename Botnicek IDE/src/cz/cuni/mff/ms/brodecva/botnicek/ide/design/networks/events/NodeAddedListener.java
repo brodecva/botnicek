@@ -21,13 +21,17 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 
 /**
+ * Posluchač události přidání uzlu do sítě.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface NodeAddedListener {
 
     /**
-     * @param node
+     * Reaguje na přidání uzlu.
+     * 
+     * @param node přidaný uzel
      */
     void nodeAdded(Node node);
 

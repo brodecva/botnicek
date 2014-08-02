@@ -21,11 +21,21 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.views;
 import java.awt.Color;
 
 /**
+ * Výčet zobrazení typů posunu dle míry interakce.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public enum ProceedType {
-    INPUT(Color.RED), PROCESSING(Color.WHITE);
+enum ProceedType {
+    /**
+     * Zadávací typ.
+     */
+    INPUT(Color.RED),
+    
+    /**
+     * Procesní typ.
+     */
+    PROCESSING(Color.WHITE);
     
     private final Color background;
     
@@ -34,7 +44,9 @@ public enum ProceedType {
     }
 
     /**
-     * @return the rim
+     * Vrátí barvu pozadí.
+     * 
+     * @return barva pozadí
      */
     public final Color getBackground() {
         return background;

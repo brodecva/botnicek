@@ -18,17 +18,24 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableBiMap;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.utils.Stack;
+import com.google.common.collect.ImmutableSet;
+
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Normalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.SimpleNormalizer;
 
 /**
+ * Autorita, která uchovává normalizované názvy podle definice jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
@@ -44,18 +51,45 @@ public class NormalizedNamingAuthority implements NamingAuthority {
 
     private final Normalizer normalizer;
     
+    /**
+     * Vytvoří autoritu s výchozím nastavením.
+     * 
+     * @return autorita
+     */
     public static NormalizedNamingAuthority create() {
         return new NormalizedNamingAuthority();
     }
     
+    /**
+     * Vytvoří autoritu s výchozí implementací normalizéru řetězců.
+     * 
+     * @param initial výchozí hodnota čítače pro generování názvů 
+     * 
+     * @return autorita
+     */
     public static NormalizedNamingAuthority create(final int initial) {
         return new NormalizedNamingAuthority(initial);
     }
     
+    /**
+     * Vytvoří autoritu s výchozím nastavením čítače.
+     * 
+     * @param normalizer normalizér řetězců
+     * 
+     * @return autorita
+     */
     public static NormalizedNamingAuthority create(final Normalizer normalizer) {
         return new NormalizedNamingAuthority(normalizer);
     }
     
+    /**
+     * Vytvoří autoritu.
+     * 
+     * @param initial výchozí hodnota čítače pro generování názvů 
+     * @param normalizer normalizér řetězců
+     * 
+     * @return autorita
+     */
     public static NormalizedNamingAuthority create(final int initial, final Normalizer normalizer) {
         return new NormalizedNamingAuthority(initial, normalizer);
     }
@@ -129,7 +163,7 @@ public class NormalizedNamingAuthority implements NamingAuthority {
     
     public void tryUse(final String... names) throws IllegalArgumentException {
         Preconditions.checkNotNull(names);
-        Preconditions.checkArgument(Stack.allDifferent((Object[]) names));
+        Preconditions.checkArgument(Comparisons.allDifferent((Object[]) names));
         
         for (final String name : names) {
             Preconditions.checkArgument(isUsable(name));
@@ -140,18 +174,26 @@ public class NormalizedNamingAuthority implements NamingAuthority {
         }
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority#tryReplace(java.util.Map)
+     */
     public void tryReplace(final Map<String, String> oldToNew) {
         Preconditions.checkNotNull(oldToNew);
         
         final ImmutableBiMap<String, String> copy = ImmutableBiMap.copyOf(oldToNew);
         
-        for (final String oldName : copy.keySet()) {
-            Preconditions.checkArgument(isUsed(oldName));
+        final Set<String> oldNames = copy.keySet();
+        for (final String oldName : oldNames) {
+            Preconditions.checkArgument(isUsed(oldName), ExceptionLocalizer.print("NameNotUsed", oldName));
         }
         
         final Set<String> newNames = copy.values();
         for (final String newName : newNames) {
-            Preconditions.checkArgument(isUsable(newName));
+            Preconditions.checkArgument(isUsable(newName), ExceptionLocalizer.print("NameNotUsable", newName));
+        }
+        
+        for (final String oldName : oldNames) {
+            this.used.remove(oldName);
         }
         
         for (final String newName : newNames) {
@@ -190,5 +232,42 @@ public class NormalizedNamingAuthority implements NamingAuthority {
         
         release(oldName);
         return use(newName);
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority#getSnapshot()
+     */
+    @Override
+    public Set<String> getSnapshot() {
+        return ImmutableSet.copyOf(this.used);
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        final int maxLen = 10;
+        StringBuilder builder = new StringBuilder();
+        builder.append("NormalizedNamingAuthority [used=");
+        builder.append(used != null ? toString(used, maxLen) : null);
+        builder.append(", counter=");
+        builder.append(counter);
+        builder.append("]");
+        return builder.toString();
+    }
+
+    private String toString(Collection<?> collection, int maxLen) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("[");
+        int i = 0;
+        for (Iterator<?> iterator = collection.iterator(); iterator.hasNext()
+                && i < maxLen; i++) {
+            if (i > 0)
+                builder.append(", ");
+            builder.append(iterator.next());
+        }
+        builder.append("]");
+        return builder.toString();
     }
 }

@@ -19,9 +19,11 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template;
 
 /**
+ * Prvky vracející hodnotu čistě podle svého významu. Nemají žádné potomky.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-atomic-template-elements">http://www.alicebot.org/TR/2011/#section-atomic-template-elements</a>
  */
 public interface AtomicElement extends TemplateElement {
-
 }

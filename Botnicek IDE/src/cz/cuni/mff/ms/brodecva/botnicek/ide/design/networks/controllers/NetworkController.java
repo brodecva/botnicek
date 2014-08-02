@@ -23,16 +23,29 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.views.NetworkView;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller;
 
 /**
+ * Řadič pro správu sítě, především přidávání prvků.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface NetworkController extends Controller<NetworkView> {
+    
+    /**
+     * Přidá izolovaný uzel do sítě.
+     * 
+     * @param x souřadnice nového uzlu na ose x
+     * @param y souřadnice nového uzlu na ose y
+     */
     void addNode(int x, int y);
-    void removeNode(NormalWord nodeName);
     
-    void addArc(String proposedArcName, NormalWord firstNodeName, NormalWord secondNodeName);
     
-    void removeArc(NormalWord arcName);
-    
-    void fill(NetworkView view);
+    /**
+     * Přidá výchozí typ hrany mezi uzly sítě.
+     * 
+     * @param name název nové hrany
+     * @param fromName výchozí uzel hrany
+     * @param toName cílový uzel hrany
+     */
+    void addArc(String name, NormalWord fromName, NormalWord toName);
+
 }

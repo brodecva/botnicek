@@ -24,24 +24,25 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractRawElement;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.XML;
 
 /**
+ * CDATA sekce.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-cdata-sections">http://www.alicebot.org/TR/2011/#section-cdata-sections</a>
  */
 public class Cdata extends AbstractRawElement implements TemplateElement {
     private static final String NAME = "cdata";
     
     private final String content;
     
-    public static Cdata create() {
-        return new Cdata();
-    }
-    
+    /**
+     * Vytvoří CDATA sekci v šabloně.
+     * 
+     * @param content obsah
+     * @return CDATA
+     */
     public static Cdata create(final String content) {
         return new Cdata(content);
-    }
-    
-    private Cdata() {
-        this("");
     }
     
     private Cdata(final String content) {
@@ -54,7 +55,7 @@ public class Cdata extends AbstractRawElement implements TemplateElement {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
     

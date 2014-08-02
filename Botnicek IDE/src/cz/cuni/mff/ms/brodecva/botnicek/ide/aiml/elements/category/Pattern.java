@@ -29,20 +29,44 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
 
 /**
- * @author Václav Brodec
+ * <p>Prvek popisující vzor svým obsahem.</p>
+ * <p>Prvek je vždy obsažen v kategorii, společně se vzorem pro zmínku a šablonou.</p>
+ * 
  * @version 1.0
+ * @author Václav Brodec
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-pattern">http://www.alicebot.org/TR/2011/#section-pattern</a>
  */
 public class Pattern extends AbstractElement {
+    
+    private final class PatternTextElement extends AbstractRawElement {
+        
+        /* (non-Javadoc)
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getText()
+         */
+        @Override
+        public String getText() {
+            return Pattern.this.pattern.getText();
+        }
+    }
+
     private static final String NAME = "pattern";
     
     private final MixedPattern pattern;
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param pattern vzor
+     * @return prvek
+     */
     public static Pattern create(final MixedPattern pattern) {
+        Preconditions.checkNotNull(pattern);
+        
         return new Pattern(pattern);
     }
     
     private Pattern(final MixedPattern pattern) {
-        Preconditions.checkNotNull(pattern);
+        assert pattern != null;
         
         this.pattern = pattern;
     }
@@ -51,7 +75,7 @@ public class Pattern extends AbstractElement {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
     
@@ -60,20 +84,14 @@ public class Pattern extends AbstractElement {
      */
     @Override
     public List<Element> getChildren() {
-        return ImmutableList.<Element>of(new AbstractRawElement() {
-            
-            @Override
-            public String getName() {
-                return NAME;
-            }
-            
-            /* (non-Javadoc)
-             * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getText()
-             */
-            @Override
-            public String getText() {
-                return pattern.getText();
-            }
-        });
+        return ImmutableList.<Element>of(new PatternTextElement());
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Pattern [pattern=" + pattern + "]";
     }
 }

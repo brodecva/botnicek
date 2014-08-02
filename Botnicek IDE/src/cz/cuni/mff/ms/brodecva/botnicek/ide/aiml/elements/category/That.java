@@ -29,29 +29,53 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
 
 /**
- * @author Václav Brodec
+ * <p>Prvek popisující vzor pro zmínku svým obsahem.</p>
+ * <p>Prvek je vždy obsažen v kategorii, společně se vzorem promluvy a šablonou.</p>
+ * 
  * @version 1.0
+ * @author Václav Brodec
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-that">http://www.alicebot.org/TR/2011/#section-that</a>
  */
 public class That extends AbstractElement {
-    private static final String NAME = "pattern";
+    
+    private final class ThatTextElement extends AbstractRawElement {
+        
+        /* (non-Javadoc)
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getText()
+         */
+        @Override
+        public String getText() {
+            return That.this.pattern.getText();
+        }
+    }
+
+    private static final String NAME = "that";
     
     private final MixedPattern pattern;
     
-    public static That create(final MixedPattern pattern) {
-        return new That(pattern);
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param that vzor
+     * @return prvek
+     */
+    public static That create(final MixedPattern that) {
+        Preconditions.checkNotNull(that);
+        
+        return new That(that);
     }
     
-    private That(final MixedPattern pattern) {
-        Preconditions.checkNotNull(pattern);
+    private That(final MixedPattern that) {
+        assert that != null;
         
-        this.pattern = pattern;
+        this.pattern = that;
     }
 
     /* (non-Javadoc)
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
     
@@ -60,20 +84,14 @@ public class That extends AbstractElement {
      */
     @Override
     public List<Element> getChildren() {
-        return ImmutableList.<Element>of(new AbstractRawElement() {
-            
-            @Override
-            public String getName() {
-                return NAME;
-            }
-            
-            /* (non-Javadoc)
-             * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getText()
-             */
-            @Override
-            public String getText() {
-                return pattern.getText();
-            }
-        });
+        return ImmutableList.<Element>of(new ThatTextElement());
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "That [pattern=" + pattern + "]";
     }
 }

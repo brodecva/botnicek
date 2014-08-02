@@ -24,6 +24,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractRawElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateText;
 
 /**
+ * Neinterpretovaný prvek. Užívá se přímo textová hodnota.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
@@ -32,10 +34,21 @@ public class RawContent extends AbstractRawElement implements TemplateText {
     
     private final String content;
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @return prvek
+     */
     public static RawContent create() {
         return new RawContent();
     }
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content obsah
+     * @return prvek
+     */
     public static RawContent create(final String content) {
         return new RawContent(content);
     }
@@ -54,7 +67,7 @@ public class RawContent extends AbstractRawElement implements TemplateText {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
     

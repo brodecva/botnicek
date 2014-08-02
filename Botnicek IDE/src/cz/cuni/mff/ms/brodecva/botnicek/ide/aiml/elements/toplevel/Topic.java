@@ -26,7 +26,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.root.Toplevel;
@@ -35,10 +34,23 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.AttributeImplementation;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
 
 /**
- * @author Václav Brodec
+ * <p>
+ * Prvek tématu stromu jazyka AIML.
+ * </p>
+ * <p>
+ * Obsahuje kategorie a sám je obsažen v kořenovém prvku.
+ * </p>
+ * <p>
+ * Blíže specifikováno prostým vzorem, který popisuje probíraná témata, jež tomuto tématu odpovídají.
+ * </p>
+ * 
  * @version 1.0
+ * @author Václav Brodec
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-topic">http://www.alicebot.org/TR/2011/#section-topic</a>
  */
 public final class Topic extends AbstractProperElement implements Toplevel {
+    
     private static final String NAME = "topic";
     
     private static final String ATT_NAME = "name";
@@ -47,10 +59,27 @@ public final class Topic extends AbstractProperElement implements Toplevel {
     
     private final List<Category> categories;
     
+    /**
+     * Vytvoří téma.
+     * 
+     * @param name vzor tématu
+     * @param categories kategorie v tématu
+     * @return téma
+     */
     public static Topic create(final SimplePattern name, final Category... categories) {
+        Preconditions.checkNotNull(name);
+        Preconditions.checkNotNull(categories);
+        
         return new Topic(name, categories);
     }
     
+    /**
+     * Vytvoří téma.
+     * 
+     * @param name vzor tématu
+     * @param categories kategorie v tématu
+     * @return téma
+     */
     public static Topic create(final SimplePattern name, final List<Category> categories) {
         return new Topic(name, categories);
     }
@@ -71,16 +100,30 @@ public final class Topic extends AbstractProperElement implements Toplevel {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement#getChildren()
+     */
     @Override
     public List<Element> getChildren() {
         return ImmutableList.<Element>copyOf(this.categories);
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement#getAttributes()
+     */
     public Set<Attribute> getAttributes() {
         return ImmutableSet.<Attribute>of(AttributeImplementation.create(ATT_NAME, this.name.getText()));
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Topic [name=" + name + "]";
     }
 }

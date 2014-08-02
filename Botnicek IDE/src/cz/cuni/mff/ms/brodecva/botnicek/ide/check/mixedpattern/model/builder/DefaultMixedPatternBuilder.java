@@ -20,23 +20,21 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.builder;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.MixedPatternChecker;
 
 /**
+ * Výchozí implementace konstruktoru validního složeného vzoru dle specifikace jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultMixedPatternBuilder implements MixedPatternBuilder {
+public class DefaultMixedPatternBuilder implements MixedPatternBuilder, Source {
     
     private final static class MixedPatternImplementation implements MixedPattern {
         private final String text;
-        
-        public static MixedPatternImplementation create() {
-            return new MixedPatternImplementation("");
-        }
         
         public static MixedPatternImplementation create(final String rawContent) {
             return new MixedPatternImplementation(rawContent);
@@ -92,11 +90,18 @@ public class DefaultMixedPatternBuilder implements MixedPatternBuilder {
     private final StringBuilder contentBuilder;
     private final MixedPatternChecker checker;
     
+    /**
+     * Vytvoří konstruktor.
+     * 
+     * @param checker přímý validátor
+     * @param startContent úvodní řetězec k sestavení
+     * @return konstruktor
+     */
     public static DefaultMixedPatternBuilder create(final MixedPatternChecker checker, final String startContent) {
         return new DefaultMixedPatternBuilder(checker, startContent);
     }
     
-    public DefaultMixedPatternBuilder(final MixedPatternChecker checker, final String startContent) {
+    private DefaultMixedPatternBuilder(final MixedPatternChecker checker, final String startContent) {
         Preconditions.checkNotNull(checker);
         Preconditions.checkNotNull(startContent);
         
@@ -104,7 +109,10 @@ public class DefaultMixedPatternBuilder implements MixedPatternBuilder {
         this.contentBuilder = new StringBuilder(startContent);
     }
     
-    public void set(final String content) {
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.ContentAggregator#add(java.lang.String)
+     */
+    public void add(final String content) {
         this.contentBuilder.append(content);
     }
     
@@ -133,6 +141,6 @@ public class DefaultMixedPatternBuilder implements MixedPatternBuilder {
      */
     @Override
     public CheckResult check() {
-        return this.checker.check(this, this.contentBuilder.toString());
+        return this.checker.check(this, this, this.contentBuilder.toString());
     }
 }

@@ -23,39 +23,47 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.AbstractNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InnerNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode;
 
 /**
+ * Izolovaný procesní uzel.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class IsolatedProcessingNode extends AbstractNode implements IsolatedNode, ProcessingNode {
     
+    /**
+     * Vytvoří uzel dle parametrů.
+     * 
+     * @param name název uzlu
+     * @param parent rodičovská síť
+     * @param x umístění uzlu v souřadnici x
+     * @param y umístění uzlu v souřadnici y
+     * @return uzel
+     */
     public static IsolatedProcessingNode create(final NormalWord name, final Network parent, final int x, final int y) {
         return new IsolatedProcessingNode(name, parent, x, y);
     }
     
+    /**
+     * Zkopíruje uzel.
+     * 
+     * @param original původní uzel
+     * @return kopie
+     */
     public static IsolatedProcessingNode create(final Node original) {
         return new IsolatedProcessingNode(original);
     }
     
-    protected IsolatedProcessingNode(final Node original) {
+    private IsolatedProcessingNode(final Node original) {
         super(original);
     }
     
-    /**
-     * @param name
-     * @param y 
-     * @param x 
-     */
-    protected IsolatedProcessingNode(final NormalWord name, final Network parent, final int x, final int y) {
+    private IsolatedProcessingNode(final NormalWord name, final Network parent, final int x, final int y) {
         super(name, parent, x, y);
     }
 

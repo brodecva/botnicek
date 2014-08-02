@@ -18,8 +18,6 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations;
 
-import java.util.Iterator;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor;
@@ -27,35 +25,46 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.AbstractNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InnerNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InputNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RandomNode;
 
 /**
+ * Vstupní náhodný zadávací uzel.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class EnterRandomInputNode extends AbstractNode implements RandomNode, InputNode, EnterNode {
+public final class EnterRandomInputNode extends AbstractNode implements RandomNode, InputNode, EnterNode {
 
+    /**
+     * Vytvoří uzel dle parametrů.
+     * 
+     * @param name název uzlu
+     * @param parent rodičovská síť
+     * @param x umístění uzlu v souřadnici x
+     * @param y umístění uzlu v souřadnici y
+     * @return uzel
+     */
     public static EnterRandomInputNode create(final NormalWord name, final Network parent, final int x, final int y) {
         return new EnterRandomInputNode(name, parent, x, y);
     }
     
+    /**
+     * Zkopíruje uzel.
+     * 
+     * @param original původní uzel
+     * @return kopie
+     */
     public static EnterRandomInputNode create(final Node original) {
         return new EnterRandomInputNode(original);
     }
     
-    protected EnterRandomInputNode(final Node original) {
+    private EnterRandomInputNode(final Node original) {
         super(original);
     }
     
-    /**
-     * @param name
-     */
-    protected EnterRandomInputNode(final NormalWord name, final Network parent, final int x, final int y) {
+    private EnterRandomInputNode(final NormalWord name, final Network parent, final int x, final int y) {
         super(name, parent, x, y);
     }
 
@@ -81,5 +90,13 @@ public class EnterRandomInputNode extends AbstractNode implements RandomNode, In
     @Override
     public void accept(StackProcessor processor) {
         processor.process(this);
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return getName().getText() + " (" + getNetwork().getName() + ")[" + getX() + ", " + getY() + "]";
     }
 }

@@ -18,36 +18,42 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 
-import java.util.List;
-
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.TestProcessor;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 
 /**
+ * Implementace hrany, jejíž test projde tehdy, pokud uživatelský vstup odpovídá vzorům kategorie jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class PatternArc extends AbstractCodeArc {
     
-    private final SimplePattern pattern;
-    private final SimplePattern that;
+    private final MixedPattern pattern;
+    private final MixedPattern that;
     
-    public static PatternArc create(final Network parent, final NormalWord name, final int priority, final Code code, final SimplePattern pattern, final SimplePattern that) {
+    /**
+     * Vytvoří hranu.
+     * 
+     * @param parent rodičovská síť
+     * @param name název hrany
+     * @param priority priorita
+     * @param code kód k provedení v případě splnění testu
+     * @param pattern očekávaná hodnota testu
+     * @param that kód generující testovanou hodnotu
+     * @return hrana
+     */
+    public static PatternArc create(final Network parent, final NormalWord name, final Priority priority, final Code code, final MixedPattern pattern, final MixedPattern that) {
         return new PatternArc(parent, name, priority, code, pattern, that);
     }
     
-    /**
-     * @param from
-     * @param to
-     */
-    protected PatternArc(final Network parent, final NormalWord name, final int priority, final Code code, final SimplePattern pattern, final SimplePattern that) {
+    private PatternArc(final Network parent, final NormalWord name, final Priority priority, final Code code, final MixedPattern pattern, final MixedPattern that) {
         super(parent, name, priority, code);
         
         Preconditions.checkNotNull(pattern);
@@ -58,16 +64,20 @@ public final class PatternArc extends AbstractCodeArc {
     }
     
     /**
-     * @return
+     * Vrátí vzor.
+     * 
+     * @return vzor
      */
-    public SimplePattern getPattern() {
+    public MixedPattern getPattern() {
         return pattern;
     }
 
     /**
-     * @return
+     * Vrátí vzor zmínky.
+     * 
+     * @return vzor zmínky
      */
-    public SimplePattern getThat() {
+    public MixedPattern getThat() {
         return that;
     }
 
@@ -113,5 +123,16 @@ public final class PatternArc extends AbstractCodeArc {
             return false;
         }
         return true;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "PatternArc [getName()=" + getName() + ", getNetwork()="
+                + getNetwork() + ", getFrom()=" + getFrom() + ", getTo()="
+                + getTo() + ", getPriority()=" + getPriority() + ", pattern="
+                + pattern + ", that=" + that + "]";
     }
 }

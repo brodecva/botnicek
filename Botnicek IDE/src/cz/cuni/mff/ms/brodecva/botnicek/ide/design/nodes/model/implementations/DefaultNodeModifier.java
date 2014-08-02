@@ -28,7 +28,6 @@ import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode;
@@ -40,17 +39,25 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.NodeModifier;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.OrderedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RandomNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.TableUtils;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Tables;
 
 /**
+ * <p>Výchozí implementace modifikátoru uzlu obsahuje pro změnu typu překladovou tabulku, která podle vstupního parametru vybere validní kombinaci typů.</p>
+ * <p>Podporované implementaci musí mít přístupnou tovární statickou metodu nazvanou {@value #NODE_FACTORY_METHOD_NAME} s argumenty název uzlu, rodičovská síť, a kladnými celočíselnými koordináty.</p>
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public class DefaultNodeModifier implements NodeModifier {
     
-    private static final String NODE_FACTORY_METHOD_NAME = "create";
+    /**
+     * Název tovární metody uzlů.
+     */
+    public static final String NODE_FACTORY_METHOD_NAME = "create";
     
+    /**
+     * Překladová tabulka.
+     */
     private static final Table<Class<? extends Node>, Class<? extends Node>, Class<? extends Node>> DEFAULTS;
     
     static {
@@ -181,16 +188,27 @@ public class DefaultNodeModifier implements NodeModifier {
     
     private final Table<Class<? extends Node>, Class<? extends Node>, Class<? extends Node>> changes;
     
+    /**
+     * Vytvoří modifikátor využívající výchozí překladou tabulku.
+     * 
+     * @return modifikátor
+     */
     public static DefaultNodeModifier create() {
         return new DefaultNodeModifier(DEFAULTS);
     }
     
+    /**
+     * Vytvoří modifikátor využívající dodanou překladovou tabulku.
+     * 
+     * @param changes překladová tabulka
+     * @return modifikátor
+     */
     public static DefaultNodeModifier create(final Map< Class<? extends Node>, Map<Class<? extends Node>, Class<? extends Node>> > changes) {
         return new DefaultNodeModifier(changes);
     }
     
     private DefaultNodeModifier(final Map< Class<? extends Node>, Map<Class<? extends Node>, Class<? extends Node>> > changes) {
-        this(TableUtils.toImmutableTable(changes));
+        this(Tables.toImmutableTable(changes));
     }
     
     private DefaultNodeModifier(final Table< Class<? extends Node>, Class<? extends Node>, Class<? extends Node>> changes) {
@@ -210,8 +228,6 @@ public class DefaultNodeModifier implements NodeModifier {
         
         Preconditions.checkArgument(x >= 0);
         Preconditions.checkArgument(y >= 0);
-        
-        final NormalWord oldName = node.getName();
         
         final Class<? extends Node> nodeClass = node.getClass();
         final Class<? extends Node> mappedClass = this.changes.get(nodeClass, type);

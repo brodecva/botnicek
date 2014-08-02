@@ -19,9 +19,16 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events;
 
 /**
+ * Rozesílač událostí.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface Dispatcher {
+    /**
+     * Rozešle zprávu o události.
+     * 
+     * @param event událost k rozeslání
+     */
     public <L> void fire(Event<L> event);
 }

@@ -20,37 +20,46 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ObjectArrays;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 
 /**
+ * <p>Výchozí implementace modifikátoru hran využívá reflexi ke konstrukci hrany nové.</p>
+ * <p>U podporovaných hran se očekává existence statické tovární metody s názvem {@value #ARC_FACTORY_METHOD_NAME}, jejímiž parametry jsou rodičovská síť, název hrany, priorita a argumenty pro specifický typ.</p>
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public class DefaultArcModifier implements ArcModifier {
     
-    private final static String ARC_FACTORY_METHOD_NAME = "create";
+    /**
+     * Název tovární metody.
+     */
+    public final static String ARC_FACTORY_METHOD_NAME = "create";
     
-    public static DefaultArcModifier create(final NamingAuthority namingAuthority) {
-        return new DefaultArcModifier(namingAuthority);
+    /**
+     * Vytvoří modifikátor.
+     * 
+     * @return modifikátor
+     */
+    public static DefaultArcModifier create() {
+        return new DefaultArcModifier();
     }
 
-    private final NamingAuthority namingAuthority;
-    
-    private DefaultArcModifier(final NamingAuthority namingAuthority) {
-        Preconditions.checkNotNull(namingAuthority);
-        
-        this.namingAuthority = namingAuthority;
+    private DefaultArcModifier() {
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.ArcModifier#change(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority, java.lang.Class, java.lang.Object[])
+     */
     @Override
-    public Arc change(final Arc arc, final String newName, final int priority, final Class<? extends Arc> type, final Object... arguments) {
+    public Arc change(final Arc arc, final NormalWord newName, final Priority priority, final Class<? extends Arc> type, final Object... arguments) {
         Preconditions.checkNotNull(arc);
         Preconditions.checkNotNull(newName);
+        Preconditions.checkNotNull(priority);
         Preconditions.checkNotNull(type);
         Preconditions.checkNotNull(arguments);
         
@@ -61,18 +70,16 @@ public class DefaultArcModifier implements ArcModifier {
             throw new IllegalArgumentException(e);
         }
         
+        final Object[] allArguments = ObjectArrays.concat(new Object[] { arc.getNetwork(), newName, priority }, arguments, Object.class);
+        
         try {
-            return (Arc) factoryMethod.invoke(null, ObjectArrays.concat(new Object[] { newName, priority }, arguments, Object.class));
+            return (Arc) factoryMethod.invoke(null, allArguments);
         } catch (final IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException e) {
             throw new IllegalArgumentException(e);
         }
     }
 
-    /**
-     * @param mappedClass
-     * @throws NoSuchMethodException, SecurityException 
-     */
     private Method findCreateMethod(final Class<? extends Arc> mappedClass) throws NoSuchMethodException, SecurityException {
         final Method[] methods = mappedClass.getMethods();
         for (final Method method : methods) {

@@ -19,14 +19,10 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractCompoundElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CaptureElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
@@ -35,8 +31,12 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.AttributeImplementation;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 
 /**
+ * <p>Nastaví predikát daného názvu hodnotu určenou výstupem z vyhodnocení potomků. Samotný výstup toho predikátu je právě nastavená hodnota, za předpokladu, že není pro daný predikát specifikováno v konfiguraci jinak.</p>
+ * <p>Interpretu by totiž mělo být možné zadat, u kterých predikátů se po nastavení bude vracet nastavená hodnota, a u kterých místo ní název predikátu.</p>
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-set">http://www.alicebot.org/TR/2011/#section-set</a>
  */
 public final class Set extends AbstractCompoundElement implements CaptureElement {
     private static final String NAME = "set";
@@ -45,12 +45,26 @@ public final class Set extends AbstractCompoundElement implements CaptureElement
     
     private final NormalWord name;
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param name název nastavovaného predikátu
+     * @param content potomci (jejichž výstup bude uložen do predikátu)
+     * @return prvek
+     */
     public static Set create(final NormalWord name, final TemplateElement... content) {
         Preconditions.checkNotNull(content);
         
         return create(name, Arrays.asList(content));
     }
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param name název nastavovaného predikátu
+     * @param content potomci (jejichž výstup bude uložen do predikátu)
+     * @return prvek
+     */
     public static Set create(final NormalWord name, final List<TemplateElement> content) {
         return new Set(name, content);
     }
@@ -67,7 +81,7 @@ public final class Set extends AbstractCompoundElement implements CaptureElement
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
     

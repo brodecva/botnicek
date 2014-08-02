@@ -18,16 +18,20 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.render;
 
-import java.util.List;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.root.Toplevel;
 
 /**
+ * Generátor zdrojového kódu jazyka AIML z prvků stromu.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface Renderer {
+    /**
+     * Vygeneruje kód podstromu prvku.
+     * 
+     * @param element prvek stromu
+     * @return vygenerovaný kód
+     */
     String render(final Element element);
-    String render(final List<? extends Toplevel> documentContents);
 }

@@ -19,17 +19,23 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CompoundElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.SystemDefinedElement;
 
 /**
+ * Nahradí se podle implementace identifikátorem, který interpret přiřadil uživateli.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-system-defined-predicates">http://www.alicebot.org/TR/2011/#section-system-defined-predicates</a>
  */
 public class Id extends AbstractElement implements SystemDefinedElement {
     private static final String NAME = "id";
 
+    /**
+     * Vytvoří prvek.
+     * 
+     * @return prvek
+     */
     public static Id create() {
         return new Id();
     }
@@ -41,7 +47,7 @@ public class Id extends AbstractElement implements SystemDefinedElement {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
 }

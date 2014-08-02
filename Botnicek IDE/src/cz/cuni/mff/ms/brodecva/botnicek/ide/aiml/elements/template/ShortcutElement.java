@@ -19,9 +19,11 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template;
 
 /**
+ * Prvky, které jsou zkratkami za sled jiných.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-short-cut-elements">http://www.alicebot.org/TR/2011/#section-short-cut-elements</a>
  */
-public interface ShortcutElement {
-
+public interface ShortcutElement extends TemplateElement {
 }

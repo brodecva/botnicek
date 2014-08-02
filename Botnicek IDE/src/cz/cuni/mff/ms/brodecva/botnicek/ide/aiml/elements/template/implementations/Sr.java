@@ -19,15 +19,23 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CompoundElement;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.ShortcutElement;
 
 /**
+ * Zkratka za prvek {@link Srai} obsahující prvek {@link Star}.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-short-cut-elements">http://www.alicebot.org/TR/2011/#section-short-cut-elements</a>
  */
-public class Sr extends AbstractProperElement implements CompoundElement {
+public class Sr extends AbstractProperElement implements ShortcutElement {
     private static final String NAME = "sr";
 
+    /**
+     * Vytvoří prvek.
+     * 
+     * @return prvek
+     */
     public static Sr create() {
         return new Sr();
     }
@@ -39,7 +47,7 @@ public class Sr extends AbstractProperElement implements CompoundElement {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
 }

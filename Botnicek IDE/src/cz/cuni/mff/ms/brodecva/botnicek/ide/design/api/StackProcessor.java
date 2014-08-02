@@ -18,42 +18,43 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.api;
 
-import java.util.List;
-import java.util.Set;
-
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InnerNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.OrderedNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RandomNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.InnerOrderedInputNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.InnerOrderedProcessingNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.InnerRandomInputNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.InnerRandomProcessingNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.IsolatedProcessingNode;
 
 /**
+ * Procesor uzlů, který je analyzuje kvůli modifikaci zásobníku.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface StackProcessor {
     /**
-     * @param deterministicInputNode
+     * Zpracuje vnitřní uzel.
+     * 
+     * @param node vnitřní uzel
      */
     void process(InnerNode node);
 
     /**
-     * @param node
+     * Zpracuje výstupní uzel.
+     * 
+     * @param node výstupní uzel
      */
     void process(ExitNode node);
 
     /**
-     * @param node
+     * Zpracuje vstupní uzel.
+     * 
+     * @param node vstupní uzel
      */
     void process(EnterNode node);
     
+    /**
+     * Zpracuje izolovaný uzel.
+     * 
+     * @param node izolovaný uzel
+     */
     void process(IsolatedNode node);
 }

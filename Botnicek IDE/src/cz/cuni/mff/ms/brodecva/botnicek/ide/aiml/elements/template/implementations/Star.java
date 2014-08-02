@@ -23,16 +23,30 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.AtomicElement
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.Index;
 
 /**
+ * Vrátí hodnotu zachycenou žolíkem ve vzoru pro uživatelský vstup kategorie.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-star">http://www.alicebot.org/TR/2011/#section-star</a>
  */
 public class Star extends AbstractIndexedElement implements AtomicElement {
     private static final String NAME = "star";
 
+    /**
+     * Vytvoří prvek s implicitním indexem.
+     * 
+     * @return prvek
+     */
     public static Star create() {
         return new Star();
     }
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param index explicitní index
+     * @return prvek
+     */
     public static Star create(final Index index) {
         return new Star(index);
     }
@@ -49,7 +63,7 @@ public class Star extends AbstractIndexedElement implements AtomicElement {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
 }

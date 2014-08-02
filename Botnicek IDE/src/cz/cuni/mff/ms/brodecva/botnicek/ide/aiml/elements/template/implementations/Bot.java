@@ -29,8 +29,11 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.AttributeImplementation;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 
 /**
+ * Vrátí hodnotu uloženou v přednastaveném predikátu bota. V případě, že není predikát toho jména definován, vrací prázdný řetězec.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-get">http://www.alicebot.org/TR/2011/#section-get</a>
  */
 public final class Bot extends AbstractProperElement implements AtomicElement {
     private static final String NAME = "bot";
@@ -39,6 +42,12 @@ public final class Bot extends AbstractProperElement implements AtomicElement {
     
     private final NormalWord name;
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param name název predikátu jen pro čtení, z kterého bude odečtena uložená hodnota
+     * @return prvek
+     */
     public static Bot create(final NormalWord name) {
         return new Bot(name);
     }
@@ -53,7 +62,7 @@ public final class Bot extends AbstractProperElement implements AtomicElement {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
     

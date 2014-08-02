@@ -28,25 +28,19 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import javax.swing.JOptionPane;
-import javax.swing.event.MouseInputListener;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcUI;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.DragFinishedListener;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.graph.ArcUI;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.DispatchNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode;
@@ -66,23 +60,21 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.I
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.InnerRandomProcessingNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.IsolatedInputNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.IsolatedProcessingNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.DragListener;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.GraphComponent;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.IrregularMouseListener;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.FramedComponent;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Rendering;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.listeners.DragFinishedListener;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.listeners.DragListener;
 
 /**
+ * Komponenta reprezentující uzel v grafu sítě.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class NodeUI extends GraphComponent implements NodesView {
+public final class NodeUI extends FramedComponent implements DragFinishedListener {
     
-    /**
-     * 
-     */
-    private static final String NODE_RENAME_MESSAGE = "Zadejte nový název uzlu:";
-    private static final String NODE_RENAME_TITLE_CONTENT = "Přejmenovat uzel";
-    private static final String NODE_RENAME_ERROR_TITLE = "Neplatný formát jména uzlu";
-    private static final String NORE_RENAME_ERROR_MESSAGE = "Zadejte platné jméno uzlu!";
+    private static final long serialVersionUID = 1L;
     
     private static final Color LABEL_COLOR = Color.BLACK;
     private static final Map<Class<? extends PositionalNode>, PositionalType> TO_POSITIONAL_DEFAULTS;
@@ -92,7 +84,7 @@ public class NodeUI extends GraphComponent implements NodesView {
     private static final int SIZE = 24;
     private static final Dimension DEFAULT_DIMENSION = new Dimension(SIZE, SIZE);
     
-    private final NodesController controller;
+    private final NodesController nodesController;
     
     private NormalWord name;
     
@@ -149,10 +141,25 @@ public class NodeUI extends GraphComponent implements NodesView {
         TO_DISPATCH_DEFAULTS = toDispatchDefaultsBuilder.build();
     }
     
+    /**
+     * Vytvoří komponentu hrany a zaregistruje na ní posluchače tak, aby po poklepání na ni fungovala funkcionalita specifikovaná v popis grafu sítě (přejmenovávání, změna typů uzlů, odebírání).
+     * 
+     * @param node model uzlu
+     * @param controller řadič uzlů grafu
+     * @return komponenta uzlu v zobrazeném grafu
+     */
     public static NodeUI create(final Node node, final NodesController controller) {
         return create(node, DEFAULT_DIMENSION, controller);
     }
     
+    /**
+     * Vytvoří komponentu hrany a zaregistruje na ní posluchače tak, aby po poklepání na ni fungovala funkcionalita specifikovaná v popis grafu sítě (přejmenovávání, změna typů uzlů, odebírání).
+     * 
+     * @param node model uzlu
+     * @param dimension rozměry
+     * @param controller řadič uzlů grafu
+     * @return komponenta uzlu v zobrazeném grafu
+     */
     public static NodeUI create(final Node node, final Dimension dimension, final NodesController controller) {
         return create(node.getName(), toPositional(node), toProceed(node), toDispatch(node), new Point(node.getX(), node.getY()), DEFAULT_DIMENSION, controller);
     }
@@ -169,7 +176,7 @@ public class NodeUI extends GraphComponent implements NodesView {
         Preconditions.checkArgument(location.getY() > 0);
         Preconditions.checkArgument(dimension.getHeight() > 0);
         Preconditions.checkArgument(dimension.getWidth() > 0);    
-        
+                
         final NodeUI newInstance = new NodeUI(name, positional, proceed, dispatch, controller);
         
         final Rectangle bounds = new Rectangle(new Point((int) (location.getX() - dimension.getWidth() / 2), (int) (location.getY() -  dimension.getHeight() / 2)), dimension);
@@ -186,19 +193,12 @@ public class NodeUI extends GraphComponent implements NodesView {
         });
         
         final DragListener dragListener = DragListener.create(newInstance);
-        dragListener.addDragFinishedListener(new DragFinishedListener() {
-            
-            @Override
-            public void finished() {
-                controller.changeNode(name, Math.max(0, newInstance.getContentX()), Math.max(0, newInstance.getContentY()));
-            }
-        });
+        dragListener.addDragFinishedListener(newInstance);
         
-        final MouseInputListener irregularDragListener = IrregularMouseListener.decorate(newInstance, (MouseInputListener) dragListener);
-        newInstance.addMouseListener(irregularDragListener);
-        newInstance.addMouseMotionListener(irregularDragListener);
+        newInstance.addMouseListener(dragListener);
+        newInstance.addMouseMotionListener(dragListener);
         
-        newInstance.addMouseListener(IrregularMouseListener.decorate(newInstance, new MouseAdapter() {
+        newInstance.addMouseListener(new MouseAdapter() {
             
             @Override
             public void mouseClicked(final MouseEvent e) {
@@ -206,31 +206,54 @@ public class NodeUI extends GraphComponent implements NodesView {
                     return;
                 }
                 
-                if (e.isControlDown()) {
+                if (e.isControlDown() && e.isShiftDown()) {
+                    if (!newInstance.removalConfirmed()) {
+                        return;
+                    }
+                    
+                    newInstance.removeNode();
+                } else if (e.isControlDown()) {
                     newInstance.toggleProceedType();
                 } else if (e.isAltDown()) {
                     newInstance.toggleDispatchType();
                 } else if (e.isShiftDown()) {
-                    while (true) {
-                        final Object newNameInput = JOptionPane.showInputDialog(newInstance, NODE_RENAME_MESSAGE, NODE_RENAME_TITLE_CONTENT, JOptionPane.PLAIN_MESSAGE, null, null, newInstance.getName());
-                        if (newNameInput == null) {
-                            return;
-                        }
-                        
-                        try {
-                            newInstance.rename(newNameInput.toString());
-                            return;
-                        } catch (final IllegalArgumentException ex) {
-                            continue;
-                        }
-                    }
+                    newInstance.attemptToRename();
                 }
             }
-        }));
+        });
         
         return newInstance;
     }
     
+    private void removeNode() {
+        this.nodesController.removeNode(this.name);
+    }
+    
+    private boolean removalConfirmed() {
+        final int removalConfirmed = JOptionPane.showConfirmDialog(this, UiLocalizer.print("NODE_REMOVE_MESSAGE"), UiLocalizer.print("NODE_REMOVE_TITLE_CONTENT"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (removalConfirmed != JOptionPane.YES_OPTION) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    private void attemptToRename() {
+        while (true) {
+            final Object newNameInput = JOptionPane.showInputDialog(this, UiLocalizer.print("NODE_RENAME_MESSAGE"), UiLocalizer.print("NODE_RENAME_TITLE_CONTENT"), JOptionPane.PLAIN_MESSAGE, null, null, getName());
+            if (newNameInput == null) {
+                return;
+            }
+            
+            try {
+                rename(newNameInput.toString());
+                return;
+            } catch (final IllegalArgumentException ex) {
+                continue;
+            }
+        }
+    }
+
     private static PositionalType toPositional(final Node node) {
         final PositionalType type = TO_POSITIONAL_DEFAULTS.get(node.getClass());
         assert type != null;
@@ -269,7 +292,7 @@ public class NodeUI extends GraphComponent implements NodesView {
         Preconditions.checkNotNull(dispatch);
         Preconditions.checkNotNull(controller);
         
-        this.controller = controller;
+        this.nodesController = controller;
         
         this.positional = positional;
         this.proceed = proceed;
@@ -278,37 +301,55 @@ public class NodeUI extends GraphComponent implements NodesView {
         setNodeName(name);
     }
 
-    public final void rename(final String name) {
+    private void rename(final String name) {
         Preconditions.checkNotNull(name);
         
-        this.controller.rename(this.name, name);
+        this.nodesController.rename(this.name, name);
     }
     
-    public final void nodeRenamed(Node original, final Node newVersion) {
+    /**
+     * Změní zobrazení názvu uzlu.
+     * 
+     * @param newVersion nová verze uzlu
+     */
+    public void nodeRenamed(final Node newVersion) {
         Preconditions.checkNotNull(newVersion);
         
         setNodeName(newVersion.getName());
         this.repaint();
     }
     
-    public void setNodeName(final NormalWord name) {
+    private void setNodeName(final NormalWord name) {
         Preconditions.checkNotNull(name);
         
         this.name = name;
         super.setName(name.getText());
     }
     
+    /**
+     * Vrátí název uzlu.
+     * 
+     * @return název uzlu
+     */
     public NormalWord getNodeName() {
         return this.name;
     }
     
-    public final void nodeMoved(Node original, final Node newVersion) {
+    /**
+     * Posune komponentu podle nové verze.
+     * 
+     * @param newVersion nová verze
+     */
+    public final void nodeMoved(final Node newVersion) {
         Preconditions.checkNotNull(newVersion);
         
         setContentLocation(newVersion.getX(), newVersion.getY());
         this.invalidate();
     }
     
+    /* (non-Javadoc)
+     * @see javax.swing.JComponent#contains(int, int)
+     */
     @Override
     public boolean contains(final int x, final int y) {
         final double radius = getContentWidth() / 2d;
@@ -321,17 +362,20 @@ public class NodeUI extends GraphComponent implements NodesView {
         return xDelta * xDelta + yDelta * yDelta <= radius * radius;
     }    
     
+    /* (non-Javadoc)
+     * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+     */
     @Override
     public void paintComponent(final Graphics graphics) {
         super.paintComponent(graphics);
         
-        paintCircle((Graphics2D) graphics);
-        paintLabel(graphics);
+        final Graphics2D graphics2d = (Graphics2D) graphics;
+        Rendering.preset(graphics2d);
+        
+        paintCircle(graphics2d);
+        paintLabel(graphics2d);
     }
 
-    /**
-     * @param graphics2d
-     */
     private void paintCircle(final Graphics2D graphics2d) {
         final Ellipse2D.Double circle = new Ellipse2D.Double(getFrameWidth(), getFrameHeight(), getContentWidth(), getContentHeight());
         
@@ -343,49 +387,36 @@ public class NodeUI extends GraphComponent implements NodesView {
         graphics2d.fill(circle);
     }
 
-    /**
-     * @param graphics
-     */
-    private void paintLabel(final Graphics graphics) {
-        final String nameString = getName();
+    private void paintLabel(final Graphics2D graphics2d) {
+        final String nameString = getNodeName().getText();
         
         final Font font = this.getFont();
-        graphics.setFont(font);
-        graphics.setColor(LABEL_COLOR);
-        final FontMetrics fontMetrics = graphics.getFontMetrics();
+        graphics2d.setFont(font);
+        graphics2d.setColor(LABEL_COLOR);
+        final FontMetrics fontMetrics = graphics2d.getFontMetrics();
         final int nameStringWidth = fontMetrics.stringWidth(nameString);
         final int stringHeight = fontMetrics.getHeight();
         
         final int width = this.getWidth();
         final int height = this.getHeight();
         
-        graphics.drawString(nameString, Math.max(0, (width - nameStringWidth) / 2), Math.max(0, (height + stringHeight) / 2));
+        graphics2d.drawString(nameString, Math.max(0, (width - nameStringWidth) / 2), Math.max(0, (height + stringHeight) / 2));
+    }
+
+    private void toggleProceedType() {
+        this.nodesController.toggleNodeProceedType(this.name);
+    }
+
+    private void toggleDispatchType() {
+        this.nodesController.toggleNodeDispatchType(this.name);
     }
 
     /**
+     * Změní zobrazený typ uzlu.
      * 
+     * @param newVersion nová verze uzlu
      */
-    public void toggleProceedType() {
-        this.controller.toggleNodeProceedType(this.name);
-    }
-
-    /**
-     * 
-     */
-    public void toggleDispatchType() {
-        this.controller.toggleNodeDispatchType(this.name);
-    }
-    
-    public void removeAllComponentListeners() {
-        final ComponentListener[] listeners = getComponentListeners();
-        final ComponentListener[] listenersCopy = Arrays.copyOf(listeners, listeners.length);
-        
-        for (final ComponentListener removed : listenersCopy) {
-            this.removeComponentListener(removed);
-        }
-    }
-
-    public void nodeRetyped(Node original, final Node newVersion) {
+    public void nodeRetyped(final Node newVersion) {
         Preconditions.checkNotNull(newVersion);
         
         this.positional = toPositional(newVersion);
@@ -395,7 +426,9 @@ public class NodeUI extends GraphComponent implements NodesView {
     }
 
     /**
-     * @param newInstance
+     * Přidá výstupní hranu k uzlu, v případě že k ní existuje protisměrná, zpraví je o nutnosti vytvoření mezery mezi nimi.
+     * 
+     * @param arc komponenta hrany
      */
     public void addOut(final ArcUI arc) {
         Preconditions.checkNotNull(arc);
@@ -419,7 +452,9 @@ public class NodeUI extends GraphComponent implements NodesView {
     }
 
     /**
-     * @param newInstance
+     * Přidá vstupní hranu k uzlu, v případě že k ní existuje protisměrná, zpraví je o nutnosti vytvoření mezery mezi nimi.
+     * 
+     * @param arc komponenta hrany
      */
     public void addIn(final ArcUI arc) {
         Preconditions.checkNotNull(arc);
@@ -438,6 +473,11 @@ public class NodeUI extends GraphComponent implements NodesView {
         }
     }
     
+    /**
+     * Odebere výstupní hranu uzlu, v případě že k ní existuje protisměrná, zpraví ji o nutnosti odstranění posunu kvůli přehlednosti.
+     * 
+     * @param arc komponenta hrany
+     */
     public void removeOut(final ArcUI arc) {
         Preconditions.checkNotNull(arc);
         Preconditions.checkArgument(this.outs.contains(arc));
@@ -452,6 +492,11 @@ public class NodeUI extends GraphComponent implements NodesView {
         }
     }
     
+    /**
+     * Odebere vstupní hranu uzlu, v případě že k ní existuje protisměrná, zpraví ji o nutnosti odstranění posunu kvůli přehlednosti.
+     * 
+     * @param arc komponenta hrany
+     */
     public void removeIn(final ArcUI arc) {
         Preconditions.checkNotNull(arc);
         Preconditions.checkArgument(this.ins.contains(arc));
@@ -474,5 +519,13 @@ public class NodeUI extends GraphComponent implements NodesView {
         for (final ArcUI in : this.ins) {
             in.jointMoved();
         }
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.DragFinishedListener#finished()
+     */
+    @Override
+    public void finished() {
+        this.nodesController.changeNode(getNodeName(), Math.max(0, getContentX()), Math.max(0, getContentY()));
     }
 }

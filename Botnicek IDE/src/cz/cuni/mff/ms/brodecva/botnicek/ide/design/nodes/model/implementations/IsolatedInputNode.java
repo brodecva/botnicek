@@ -24,36 +24,46 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.AbstractNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InnerNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InputNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode;
 
 /**
+ * Izolovaný zadávací uzel.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class IsolatedInputNode extends AbstractNode implements IsolatedNode, InputNode {
     
+    /**
+     * Vytvoří uzel dle parametrů.
+     * 
+     * @param name název uzlu
+     * @param parent rodičovská síť
+     * @param x umístění uzlu v souřadnici x
+     * @param y umístění uzlu v souřadnici y
+     * @return uzel
+     */
     public static IsolatedInputNode create(final NormalWord name, final Network parent, final int x, final int y) {
         return new IsolatedInputNode(name, parent, x, y);
     }
     
+    /**
+     * Zkopíruje uzel.
+     * 
+     * @param original původní uzel
+     * @return kopie
+     */
     public static IsolatedInputNode create(final Node original) {
         return new IsolatedInputNode(original);
     }
     
-    protected IsolatedInputNode(final Node original) {
+    private IsolatedInputNode(final Node original) {
         super(original);
     }
     
-    /**
-     * @param name
-     */
-    protected IsolatedInputNode(final NormalWord name, final Network parent, final int x, final int y) {
+    private IsolatedInputNode(final NormalWord name, final Network parent, final int x, final int y) {
         super(name, parent, x, y);
     }
 

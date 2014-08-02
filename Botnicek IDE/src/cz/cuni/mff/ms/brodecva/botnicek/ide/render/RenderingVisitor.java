@@ -18,108 +18,21 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.render;
 
-import java.net.URI;
-import java.util.Collection;
-import java.util.Map;
-
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.api.Visitor;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractRawElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Attribute;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.AttributeImplementation;
-import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
-import cz.cuni.mff.ms.brodecva.botnicek.library.platform.XML;
 
 /**
+ * Návštěvník stromu objektového modelu dokumentu, který generuje zdrojový kód, jak prochází jednotlivými uzly.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class RenderingVisitor implements Visitor {
+public interface RenderingVisitor extends Visitor {
 
-    private final StringBuilder output = new StringBuilder();
-    private final Map<URI, String> namespacesToPrefixes;
-    
-    public static RenderingVisitor create(final Map<URI, String> namespacesToPrefixes) {
-        return new RenderingVisitor(namespacesToPrefixes);
-    }
-    
-    private RenderingVisitor(final Map<URI, String> namespacesToPrefixes) {
-        Preconditions.checkNotNull(namespacesToPrefixes);
-        Preconditions.checkArgument(namespacesToPrefixes.containsKey(URI.create(AIML.NAMESPACE_URI.getValue())));
-        
-        this.namespacesToPrefixes = ImmutableMap.copyOf(namespacesToPrefixes);
-    }
-    
-    @Override
-    public void visitEnter(final AbstractProperElement element) {
-        this.output.append(XML.TAG_START);
-        
-        final String aimlPrefix = this.namespacesToPrefixes.get(URI.create(AIML.NAMESPACE_URI.getValue()));
-        assert aimlPrefix != null;
-        if (!aimlPrefix.isEmpty()) {
-            this.output.append(aimlPrefix);
-            this.output.append(XML.PREFIX_DELIMITER);
-        }
-        this.output.append(element.getName());
-        
-        renderAttributes(element.getAttributes());
-        
-        if (!element.hasChildren()) {
-            this.output.append(XML.TAG_END);
-        }
-    }
-
-    private void renderAttributes(final Collection<Attribute> attributes) {
-        for (final Attribute attribute : attributes) {
-            this.output.append(XML.SPACE);
-            final String prefix = this.namespacesToPrefixes.get(attribute.getNamespace());
-            if (prefix != null && !prefix.isEmpty()) {
-                this.output.append(prefix);
-                this.output.append(XML.PREFIX_DELIMITER);
-            }
-            this.output.append(attribute.getName());
-            this.output.append(XML.EQ_SIGN);
-            this.output.append(XML.QUOTE);
-            this.output.append(attribute.getValue());
-            this.output.append(XML.QUOTE);
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.api.Visitor#visitExit(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.AbstractElement)
+    /**
+     * Vrátí výsledný kód.
+     * 
+     * @return zdrojový kód z prošlých uzlů
      */
-    @Override
-    public void visitExit(final AbstractProperElement element) {
-        if (element.hasChildren()) {
-            this.output.append(XML.EMPTY_TAG_END);
-        } else {
-            this.output.append(XML.CLOSING_TAG_START);
-            this.output.append(element.getName());
-            this.output.append(XML.TAG_END);
-        }
-    }
-    
-    String getResult() {
-        return this.output.toString();
-    }
+    String getResult();
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.api.Visitor#visitEnter(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractRawElement)
-     */
-    @Override
-    public void visitEnter(final AbstractRawElement element) {
-        output.append(element.getText());
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.api.Visitor#visitExit(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractRawElement)
-     */
-    @Override
-    public void visitExit(final AbstractRawElement element) {
-    }
 }

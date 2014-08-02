@@ -27,17 +27,25 @@ import com.google.common.collect.ImmutableList.Builder;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CompoundElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.lists.ListItem;
 
 /**
+ * Vybírá s rovnoměrným rozdělením jednu z obsažených položek, jejíž výstup vrátí jako svůj.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-random">http://www.alicebot.org/TR/2011/#section-random</a>
  */
 public class Random extends AbstractProperElement implements CompoundElement {
     private static final String NAME = "random";
     
     private final List< List<TemplateElement> > choices;
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param choices možnosti
+     * @return prvek
+     */
     public static Random create(final List< List<TemplateElement> > choices) {
         return new Random(choices);
     }
@@ -59,7 +67,16 @@ public class Random extends AbstractProperElement implements CompoundElement {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
+    }
+
+    /**
+     * Vrátí možnosti.
+     * 
+     * @return možnosti
+     */
+    public List< List<TemplateElement> > getChoices() {
+        return this.choices;
     }
 }

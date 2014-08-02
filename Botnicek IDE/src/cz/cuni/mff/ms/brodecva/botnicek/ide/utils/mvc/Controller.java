@@ -19,11 +19,42 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc;
 
 /**
+ * <p>
+ * Rozhraní řadiče modifikovaného MVC.
+ * </p>
+ * <p>
+ * Oproti kanonickému MVC se pohled neregistruje na modelu, aby získával
+ * aktualizace, ale je to řadič, který naslouchá událostem a podle změn v modelu volá vhodné metody na
+ * pohledu.
+ * </p>
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @param <V>
+ *            typ pohledu
  */
 public interface Controller<V> {
+    /**
+     * Přidá pohled.
+     * 
+     * @param view
+     *            pohled
+     */
     void addView(V view);
+
+    /**
+     * <p>Odebere pohled.</p>
+     * 
+     * @param view
+     *            pohled
+     */
     void removeView(V view);
+
+    /**
+     * Zavolá aktualizační metody na pohledu.
+     * 
+     * @param view
+     *            pohled
+     */
     void fill(V view);
 }

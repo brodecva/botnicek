@@ -20,24 +20,21 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.builder;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.RawContentElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.NormalWordChecker;
 
 /**
+ * Výchozí implementace konstruktoru validního normálního názvu dle specifikace jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultNormalWordBuilder implements NormalWordBuilder {
+public final class DefaultNormalWordBuilder implements NormalWordBuilder, Source {
     
     private final static class PredicateNameImplementation implements NormalWord {
         private final String rawContent;
-        
-        public static PredicateNameImplementation create() {
-            return new PredicateNameImplementation("");
-        }
         
         public static PredicateNameImplementation create(final String rawContent) {
             return new PredicateNameImplementation(rawContent);
@@ -66,16 +63,53 @@ public class DefaultNormalWordBuilder implements NormalWordBuilder {
             
             return this.rawContent.compareTo(other.getText());
         }
+
+        /* (non-Javadoc)
+         * @see java.lang.Object#toString()
+         */
+        @Override
+        public String toString() {
+            return "PredicateName [rawContent=" + rawContent
+                    + "]";
+        }
+        
+        /* (non-Javadoc)
+         * @see java.lang.Object#equals(java.lang.Object)
+         */
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (!(obj instanceof NormalWord)) {
+                return false;
+            }
+            NormalWord other = (NormalWord) obj;
+            if (!rawContent.equals(other.getText())) {
+                return false;
+            }
+            return true;
+        }
     }
     
     private final StringBuilder contentBuilder;
     private final NormalWordChecker checker;
     
+    /**
+     * Vytvoří konstruktor.
+     * 
+     * @param checker přímý validátor
+     * @param startContent úvodní řetězec k sestavení
+     * @return konstruktor
+     */
     public static DefaultNormalWordBuilder create(final NormalWordChecker checker, final String startContent) {
         return new DefaultNormalWordBuilder(checker, startContent);
     }
     
-    public DefaultNormalWordBuilder(final NormalWordChecker checker, final String startContent) {
+    private DefaultNormalWordBuilder(final NormalWordChecker checker, final String startContent) {
         Preconditions.checkNotNull(checker);
         Preconditions.checkNotNull(startContent);
         
@@ -112,6 +146,6 @@ public class DefaultNormalWordBuilder implements NormalWordBuilder {
      */
     @Override
     public CheckResult check() {
-        return this.checker.check(this, this.contentBuilder.toString());
+        return this.checker.check(this, this, this.contentBuilder.toString());
     }
 }

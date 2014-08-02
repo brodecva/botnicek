@@ -22,10 +22,15 @@ import java.awt.BasicStroke;
 import java.awt.Stroke;
 
 /**
+ * Výčet zobrazení typů vypravení uzlu.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public enum DispatchType {
+enum DispatchType {
+    /**
+     * Řadící typ.
+     */
     ORDERED(new BasicStroke(5.0f,
             BasicStroke.CAP_BUTT,
             BasicStroke.JOIN_MITER,
@@ -33,9 +38,15 @@ public enum DispatchType {
             new float[] { 10.0f }, 0.0f)
     ),
     
-    RANDOM(new BasicStroke()),
+    /**
+     * Náhodný typ.
+     */
+    RANDOM(new BasicStroke(3.0f)),
     
-    DEFAULT(new BasicStroke());
+    /**
+     * Výchozí typ.
+     */
+    DEFAULT(new BasicStroke(3.0f));
     
     private final Stroke stroke;
     
@@ -44,7 +55,9 @@ public enum DispatchType {
     }
 
     /**
-     * @return the rim
+     * Vrátí štětec typu.
+     * 
+     * @return štětec
      */
     public final Stroke getStroke() {
         return stroke;

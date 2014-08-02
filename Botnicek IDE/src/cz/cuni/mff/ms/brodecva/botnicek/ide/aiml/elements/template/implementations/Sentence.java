@@ -18,29 +18,38 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
-import java.util.Arrays;
 import java.util.List;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractCompoundElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CaptureElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CovertElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TextFormattingElement;
 
 /**
+ * Naformátuje textový výstup z potomků do podoby vět, tj. pro všechny úseky končící tečkou zvětší jejich první písmena dle lokálního nastavení. 
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-sentence">http://www.alicebot.org/TR/2011/#section-sentence</a>
  */
 public final class Sentence extends AbstractCompoundElement implements TextFormattingElement {
     private static final String NAME = "sentence";
 
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content potomci
+     * @return prvek
+     */
     public static Sentence create(final TemplateElement... content) {
         return new Sentence(content);
     }
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content potomci
+     * @return prvek
+     */
     public static Sentence create(final List<TemplateElement> content) {
         return new Sentence(content);
     }
@@ -57,7 +66,7 @@ public final class Sentence extends AbstractCompoundElement implements TextForma
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
 }

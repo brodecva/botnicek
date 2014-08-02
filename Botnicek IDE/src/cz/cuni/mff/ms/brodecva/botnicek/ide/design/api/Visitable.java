@@ -19,9 +19,16 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.api;
 
 /**
+ * Rozhraní pro navštívitelné prvky systému sítí.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface Visitable {
+    /**
+     * Přijme návštěvníka.
+     * 
+     * @param visitor návštěvník systému sítí
+     */
     void accept(Visitor visitor);
 }

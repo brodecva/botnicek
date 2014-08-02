@@ -18,23 +18,19 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.google.common.base.Preconditions;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.TestProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 
 /**
+ * <p>Implementace hrany, jejíž test projde tehdy, když hodnota testovaného predikátu odpovídá očekávané.</p>
+ * <p>Před samotným testem se provádí volitelný inicializační kód.</p>
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
@@ -43,10 +39,22 @@ public final class PredicateTestArc extends AbstractTestArc {
     private final Code prepareCode;
     private final NormalWord predicateName;
     
+    /**
+     * Vytvoří hranu.
+     * 
+     * @param parent rodičovská síť
+     * @param name název hrany
+     * @param priority priorita
+     * @param code kód k provedení v případě splnění testu
+     * @param value očekávaná hodnota testu
+     * @param prepareCode přípravný kód
+     * @param predicateName název testovaného predikátu
+     * @return hrana
+     */
     public static PredicateTestArc create(
             final Network parent,
             final NormalWord name,
-            final int priority,
+            final Priority priority,
             final Code code,
             final SimplePattern value,
             final Code prepareCode,
@@ -54,40 +62,36 @@ public final class PredicateTestArc extends AbstractTestArc {
         return new PredicateTestArc(parent, name, priority, code, value, prepareCode, predicateName);
     }
     
-    /**
-     * @param from
-     * @param to
-     */
     private PredicateTestArc(
                final Network parent,
                final NormalWord name,
-               final int priority,
+               final Priority priority,
                final Code code,
                final SimplePattern value,
                final Code prepareCode,
                final NormalWord predicateName) {
         super(parent, name, priority, code, value);
         
-        if (predicateName == null) {
-            throw new NullPointerException();
-        }
-        
-        if (prepareCode == null) {
-            throw new NullPointerException();
-        }
+        Preconditions.checkNotNull(prepareCode);
+        Preconditions.checkNotNull(predicateName);        
         
         this.prepareCode = prepareCode;
         this.predicateName = predicateName;
     }
+    
     /**
-     * @return the prepareCode
+     * Vrátí přípravný kód.
+     * 
+     * @return přípravný kód
      */
     public Code getPrepareCode() {
         return this.prepareCode;
     }
 
     /**
-     * @return the predicateName
+     * Vrátí název přípravného predikátu.
+     * 
+     * @return název predikátu
      */
     public NormalWord getPredicateName() {
         return this.predicateName;
@@ -141,5 +145,17 @@ public final class PredicateTestArc extends AbstractTestArc {
             return false;
         }
         return true;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "PredicateTestArc [getName()=" + getName() + ", getNetwork()="
+                + getNetwork() + ", getFrom()=" + getFrom() + ", getTo()="
+                + getTo() + ", getPriority()=" + getPriority()
+                + ", getValue()=" + getValue() + ", predicateName="
+                + predicateName + "]";
     }
 }

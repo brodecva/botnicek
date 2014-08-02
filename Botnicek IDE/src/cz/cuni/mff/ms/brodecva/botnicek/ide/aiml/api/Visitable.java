@@ -19,9 +19,16 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.api;
 
 /**
+ * Rozhraní navštěvovaného prvku stromu jazyka AIML (návrhový vzor návštěvník).
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface Visitable {
+    /**
+     * Přijímací metoda návštěvníka.
+     * 
+     * @param visitor návštěvník
+     */
     void accept(Visitor visitor);
 }

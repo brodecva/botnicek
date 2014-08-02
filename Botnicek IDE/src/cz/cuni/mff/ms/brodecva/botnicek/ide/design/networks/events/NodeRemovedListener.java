@@ -21,11 +21,18 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 
 /**
+ * Posluchač události odebrání uzlu ze sítě.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface NodeRemovedListener {
 
+    /**
+     * Reaguje na odebrání uzlu.
+     * 
+     * @param node odebraný uzel
+     */
     void nodeRemoved(Node node);
 
 }

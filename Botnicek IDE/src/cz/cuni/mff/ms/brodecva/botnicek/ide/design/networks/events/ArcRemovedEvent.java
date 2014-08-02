@@ -26,6 +26,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
 
 /**
+ * Událost odebrání hrany ze sítě.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
@@ -33,6 +35,13 @@ public class ArcRemovedEvent extends AbstractMappedEvent<Network, ArcRemovedList
     
     private final Arc arc;
     
+    /**
+     * Vytvoří událost.
+     * 
+     * @param network síť
+     * @param arc odebraná hrana sítě
+     * @return událost
+     */
     public static ArcRemovedEvent create(final Network network, final Arc arc) {
         return new ArcRemovedEvent(network, arc);
     }

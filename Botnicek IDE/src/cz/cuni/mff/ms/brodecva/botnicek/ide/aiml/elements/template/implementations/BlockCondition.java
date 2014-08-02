@@ -34,8 +34,11 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
 
 /**
+ * Podmínka, která testuje hodnotu predikátu oproti vzoru. V případě úspěchu vrátí výstup potomků.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-conditional-elements">http://www.alicebot.org/TR/2011/#section-conditional-elements</a>
  */
 public final class BlockCondition extends AbstractCompoundElement implements ConditionElement {
     private static final String NAME = "condition";
@@ -45,10 +48,26 @@ public final class BlockCondition extends AbstractCompoundElement implements Con
     private final NormalWord name;
     private final SimplePattern value;
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param name název testovaného predikátu
+     * @param value vzor hodnoty predikátu
+     * @param content potomci
+     * @return prvek
+     */
     public static BlockCondition create(final NormalWord name, final SimplePattern value, final TemplateElement... content) {
         return new BlockCondition(name, value, Arrays.asList(content));
     }
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param name název testovaného predikátu
+     * @param value vzor hodnoty predikátu
+     * @param content potomci
+     * @return prvek
+     */
     public static BlockCondition create(final NormalWord name, final SimplePattern value, final List<TemplateElement> content) {
         return new BlockCondition(name, value, content);
     }
@@ -66,7 +85,7 @@ public final class BlockCondition extends AbstractCompoundElement implements Con
     /**
      * @return the name
      */
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
 

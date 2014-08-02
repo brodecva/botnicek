@@ -19,6 +19,8 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model;
 
 /**
+ * Uzel rozlišující své umístění.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */

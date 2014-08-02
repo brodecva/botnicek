@@ -23,66 +23,102 @@ import com.google.common.base.Preconditions;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Direction;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 
 
 /**
+ * Abstraktní hrana.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public abstract class AbstractArc implements Arc {
-    protected final static int DEFAULT_PRIORITY = 1;
+    
+    /**
+     * Výchozí priorita hrany. 
+     */
+    protected final static Priority DEFAULT_PRIORITY = Priority.of(1);
     
     private final Network parent;
     private final NormalWord name;
-    private final int priority;
+    private final Priority priority;
     
-    protected AbstractArc(final Network parent, final NormalWord name, final int priority) {
+    /**
+     * Vytvoří hranu.
+     * 
+     * @param parent rodičovská síť
+     * @param name název hrany
+     * @param priority priorita
+     */
+    protected AbstractArc(final Network parent, final NormalWord name, final Priority priority) {
         Preconditions.checkNotNull(parent);
         Preconditions.checkNotNull(name);
-        
-        Preconditions.checkArgument(priority >= 0);
+        Preconditions.checkNotNull(priority);
         
         this.parent = parent;
         this.name = name;
         this.priority = priority;
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getName()
+     */
     public final NormalWord getName() {
         return this.name;
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#isFrom(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
+     */
     public final boolean isFrom(final Node node) {
         return isAttached(node, Direction.OUT);
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#isTo(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
+     */
     public final boolean isTo(final Node node) {
         return isAttached(node, Direction.IN);
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#isAttached(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
+     */
     public final boolean isAttached(final Node node, final Direction direction) {
         final Node attached = getAttached(direction);
         
         return attached.equals(node);
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getFrom()
+     */
     public final Node getFrom() {
         return getAttached(Direction.IN);
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getTo()
+     */
     public final Node getTo() {
         return getAttached(Direction.OUT);
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getAttached(cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
+     */
     public final Node getAttached(final Direction direction) {
         Preconditions.checkNotNull(direction);
         
         return this.parent.getAttached(this, direction);
     }
     
-    public final int getPriority() {
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getPriority()
+     */
+    public final Priority getPriority() {
         return this.priority;
     }
     
@@ -99,6 +135,9 @@ public abstract class AbstractArc implements Arc {
         }
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getNetwork()
+     */
     public final Network getNetwork() {
         return this.parent;
     }
@@ -112,7 +151,7 @@ public abstract class AbstractArc implements Arc {
         int result = 1;
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         result = prime * result + ((parent == null) ? 0 : parent.hashCode());
-        result = prime * result + priority;
+        result = prime * result + priority.hashCode();
         return result;
     }
 

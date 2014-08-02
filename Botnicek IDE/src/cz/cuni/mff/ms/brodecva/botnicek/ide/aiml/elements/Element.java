@@ -22,32 +22,58 @@ import java.util.List;
 import java.util.Set;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.api.Visitable;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.api.Visitor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Attribute;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.AttributeImplementation;
 
 /**
+ * Rozhraní odlehčené (oproti standardnímu DOM) reprezentace prvku stromu jazyka AIML.
+ * Poskytuje metody pro přístup k potomkům, atributům a vnitřnímu textu.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface Element extends Visitable {
+    
+    /**
+     * Vrací název prvku.
+     * 
+     * @return název prvku
+     */
+    String getLocalName();
 
     /**
-     * @return
+     * Indikuje, zda-li má prvek potomky.
+     * 
+     * @return zda-li má prvek potomky
+     */
+    boolean hasChildren();
+    
+    /**
+     * Vrací uspořádané potomky prvku.
+     * 
+     * @return potomci prvku
      */
     List<Element> getChildren();
 
+    /**
+     * Vrací množinu atributů.
+     * 
+     * @return množina atributů
+     */
     Set<Attribute> getAttributes();
 
     /**
+     * Vrací vnitřní text prvku.
      * 
+     * @return vnitřní text prvku
      */
-    String getName();
-
-    /**
-     * @return
-     */
-    boolean hasChildren();
-
     String getText();
-
+    
+    /** 
+     * {@inheritDoc}
+     * 
+     * Průchod stromem prvků je obvyklý, tj. prefixový.
+     */
+    @Override
+    public void accept(Visitor visitor);
 }

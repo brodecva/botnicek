@@ -19,11 +19,15 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 
 import com.google.common.base.Preconditions;
+
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 
 /**
+ * Abstraktní hrana s kódem, který má být proveden při posunu po ní.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
@@ -32,10 +36,14 @@ public abstract class AbstractCodeArc extends AbstractArc implements CodeArc {
     private final Code code;
 
     /**
-     * @param from
-     * @param to
+     * Vytvoří hranu.
+     * 
+     * @param parent rodičovská síť
+     * @param name název hrany
+     * @param priority priorita
+     * @param code kód k provedení při posunu po hraně
      */
-    protected AbstractCodeArc(final Network parent, final NormalWord name, final int priority, final Code code) {
+    protected AbstractCodeArc(final Network parent, final NormalWord name, final Priority priority, final Code code) {
         super(parent, name, priority);
         
         Preconditions.checkNotNull(code);

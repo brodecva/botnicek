@@ -18,26 +18,35 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractIndexedElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.AtomicElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CaptureElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.Index;
 
 /**
+ * Vrátí hodnotu zachycenou žolíkem tématu.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-topicstar">http://www.alicebot.org/TR/2011/#section-topicstar</a>
  */
 public class Topicstar extends AbstractIndexedElement implements AtomicElement {
     private static final String NAME = "topicstar";
 
+    /**
+     * Vytvoří prvek s implicitním indexem.
+     * 
+     * @return prvek
+     */
     public static Topicstar create() {
         return new Topicstar();
     }
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param index explicitní index
+     * @return prvek
+     */
     public static Topicstar create(final Index index) {
         return new Topicstar(index);
     }
@@ -54,7 +63,7 @@ public class Topicstar extends AbstractIndexedElement implements AtomicElement {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
 }

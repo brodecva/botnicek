@@ -18,44 +18,53 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations;
 
-import java.util.Iterator;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.AbstractNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InnerNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.OrderedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode;
 
 /**
+ * Vnitřní řadící procesní uzel.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class InnerOrderedProcessingNode extends AbstractNode implements OrderedNode, ProcessingNode, InnerNode {
 
+    /**
+     * Vytvoří uzel dle parametrů.
+     * 
+     * @param name název uzlu
+     * @param parent rodičovská síť
+     * @param x umístění uzlu v souřadnici x
+     * @param y umístění uzlu v souřadnici y
+     * @return uzel
+     */
     public static InnerOrderedProcessingNode create(final NormalWord name, final Network parent, final int x, final int y) {
         return new InnerOrderedProcessingNode(name, parent, x, y);
     }
     
+    /**
+     * Zkopíruje uzel.
+     * 
+     * @param original původní uzel
+     * @return kopie
+     */
     public static InnerOrderedProcessingNode create(final Node original) {
         return new InnerOrderedProcessingNode(original);
     }
     
-    /**
-     * @param name
-     */
-    protected InnerOrderedProcessingNode(final NormalWord name, final Network parent, final int x, final int y) {
+    private InnerOrderedProcessingNode(final NormalWord name, final Network parent, final int x, final int y) {
         super(name, parent, x, y);
     }
     
-    protected InnerOrderedProcessingNode(final Node original) {
+    private InnerOrderedProcessingNode(final Node original) {
         super(original);
     }
 

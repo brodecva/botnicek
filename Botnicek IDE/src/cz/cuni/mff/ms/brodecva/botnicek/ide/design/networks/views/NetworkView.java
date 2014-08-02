@@ -18,31 +18,46 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.views;
 
-import java.beans.PropertyVetoException;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcType;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.views.DispatchType;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.views.NodeUI;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.views.PositionalType;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.views.ProceedType;
 
 /**
+ * Pohled na síť.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface NetworkView {
+    
+    /**
+     * Aktualizuje zobrazení sítě tak, aby zahrnovalo přidaný uzel.
+     * 
+     * @param node přidaný uzel
+     */
     void nodeAdded(Node node);
-    void nodeRemoved(Node node);
     
+    /**
+     * Aktualizuje zobrazení sítě tak, aby zahrnovalo přidanou hranu.
+     * 
+     * @param arc přidaná hrana
+     */
     void arcAdded(Arc arc);
-    void arcRemoved(Arc arc);
-    
+        
+    /**
+     * Aktualizuje zobrazení názvu sítě.
+     * 
+     * @param network nová verze sítě
+     */
     void renamed(Network network);
     
+    /**
+     * Zpraví pohled o odebrání sítě.s
+     */
     void removed();
     
+    /**
+     * Vybere síť pro uživatele.
+     */
     void selected();
 }

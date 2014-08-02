@@ -18,18 +18,20 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.builder;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.RawContentElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.ContentAggregator;
 
 /**
+ * Konstruktor validního složeného vzoru.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public interface MixedPatternBuilder {
-    void set(String content);
-    boolean isValid();
-    CheckResult check();
+public interface MixedPatternBuilder extends ContentAggregator {
+    /**
+     * Sestaví validní složený vzor.
+     * 
+     * @return validní složený vzor
+     */
     MixedPattern build();
 }

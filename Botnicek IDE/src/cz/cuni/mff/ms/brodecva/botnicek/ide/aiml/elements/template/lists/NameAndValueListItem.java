@@ -18,61 +18,82 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.lists;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Attribute;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.AttributeImplementation;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
 
 /**
+ * Položka s názvem i hodnotou obsahuje dva významné atributy: název a hodnota. Nachází se výlučně ve vícepredikátovém podmínkovém bloku, kde je jsou procházeny jedna takováto položka po druhé a výstupem je první, u které odpovídá hodnota predikátu (uvedeného v atributu název) vzoru v atributu hodnota.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-condition">http://www.alicebot.org/TR/2011/#section-condition</a>
  */
 public final class NameAndValueListItem extends AbstractListItem {
-    private static final String ATT_NAME = null;
-    private static final String ATT_VALUE = null;
-    private final String name;
-    private final String value;
+    private static final String ATT_NAME = "name";
+    private static final String ATT_VALUE = "value";
     
-    public static NameAndValueListItem create(final String name, final String value, final TemplateElement... content) {
-        return new NameAndValueListItem(name, value, Arrays.asList(content));
+    private final NormalWord name;
+    private final SimplePattern value;
+    
+    /**
+     * Vytvoří položku.
+     * 
+     * @param name název testovaného predikátu
+     * @param value vzor očekávané hodnoty
+     * @param content potomci položky
+     * @return položka
+     */
+    public static NameAndValueListItem create(final NormalWord name, final SimplePattern value, final TemplateElement... content) {
+        return new NameAndValueListItem(name, value, ImmutableList.copyOf(content));
     }
     
-    public static NameAndValueListItem create(final String name, final String value, final List<TemplateElement> content) {
-        return new NameAndValueListItem(name, value, content);
+    /**
+     * Vytvoří položku.
+     * 
+     * @param name název testovaného predikátu
+     * @param value vzor očekávané hodnoty
+     * @param content potomci položky
+     * @return položka
+     */
+    public static NameAndValueListItem create(final NormalWord name, final SimplePattern value, final List<TemplateElement> content) {
+        return new NameAndValueListItem(name, value, ImmutableList.copyOf(content));
     }
     
-    private NameAndValueListItem(final String name, final String value, final TemplateElement... content) {
-        this(name, value, Arrays.asList(content));
-    }
-    
-    private NameAndValueListItem(final String name, final String value, final List<TemplateElement> content) {
+    private NameAndValueListItem(final NormalWord name, final SimplePattern value, final List<TemplateElement> content) {
         super(content);
         
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(value);
-        Preconditions.checkArgument(!name.isEmpty());
         
         this.name = name;
         this.value = value;
     }
 
     /**
-     * @return the name
+     * Vrátí název testovaného predikátu.
+     * 
+     * @return název testovaného predikátu
      */
-    public String getName() {
+    public NormalWord getName() {
         return name;
     }
 
     /**
-     * @return the value
+     * Vrátí vzor testující hodnotu predikátu.
+     * 
+     * @return vzor testující hodnotu predikátu
      */
-    public String getValue() {
+    public SimplePattern getValue() {
         return value;
     }
     
@@ -81,6 +102,6 @@ public final class NameAndValueListItem extends AbstractListItem {
      */
     @Override
     public Set<Attribute> getAttributes() {
-        return ImmutableSet.<Attribute>of(AttributeImplementation.create(ATT_NAME, this.name), AttributeImplementation.create(ATT_VALUE, this.value));
+        return ImmutableSet.<Attribute>of(AttributeImplementation.create(ATT_NAME, this.name.getText()), AttributeImplementation.create(ATT_VALUE, this.value.getText()));
     }
 }

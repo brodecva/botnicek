@@ -23,17 +23,45 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.views.SystemView;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller;
 
 /**
+ * Řadič pro modifikaci systému sítí. Umožňuje kromě nastavení systému přidávat a odebírat sítě, přejmenovávat je, vybírat k zobrazení.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface SystemController extends Controller<SystemView> {
-    void addNetwork(String name);
-    void removeNetwork(String name);
-    void renameNetwork(Network network, String newName);
-    void selectNetwork(Network selected);
-    void renameSystem(String newName);
     /**
-     * @param name
-     * @param newName
+     * Přidá novou síť.
+     * 
+     * @param name název nové sítě
      */
+    void addNetwork(String name);
+    
+    /**
+     * Odstraní síť.
+     * 
+     * @param name název sítě k odstranění
+     */
+    void removeNetwork(String name);
+    
+    /**
+     * Přejmenuje síť.
+     * 
+     * @param network síť
+     * @param newName nový název
+     */
+    void renameNetwork(Network network, String newName);
+    
+    /**
+     * Dá pokyn k výběru sítě.
+     * 
+     * @param selected vybraná síť.
+     */
+    void selectNetwork(Network selected);
+    
+    /**
+     * Přejmenuje systém sítí.
+     * 
+     * @param newName nový název
+     */
+    void renameSystem(String newName);
 }

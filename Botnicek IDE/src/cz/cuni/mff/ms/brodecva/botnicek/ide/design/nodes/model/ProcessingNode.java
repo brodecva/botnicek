@@ -18,13 +18,9 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model;
 
-import java.util.Iterator;
-
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessible;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessible;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor;
-
 /**
+ * Procesní uzel.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */

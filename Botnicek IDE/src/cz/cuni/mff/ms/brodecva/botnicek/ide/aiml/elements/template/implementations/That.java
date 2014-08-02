@@ -18,29 +18,46 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractDoubleIndexedElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.AtomicElement;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.Index;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.TwoDimensionalIndex;
 
 /**
+ * Vrátí předchozí výstup robota určený první (kolikátý zpět) a druhou (pořadí věty) položkou indexu.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-template-side-that">http://www.alicebot.org/TR/2011/#section-template-side-that</a>
  */
 public class That extends AbstractDoubleIndexedElement implements AtomicElement {
     private static final String NAME = "that";
     
+    /**
+     * Vytvoří prvek s implicitním indexem.
+     * 
+     * @return prvek
+     */
     public static That create() {
         return new That();
     }
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param index částečně explicitní index
+     * @return prvek
+     */
     public static That create(final Index index) {
         return new That(index);
     }
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param index2d explicitní index
+     * @return prvek
+     */
     public static That create(final TwoDimensionalIndex index2d) {
         return new That(index2d);
     }
@@ -61,7 +78,7 @@ public class That extends AbstractDoubleIndexedElement implements AtomicElement 
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
 }

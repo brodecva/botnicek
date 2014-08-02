@@ -20,6 +20,8 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model;
 
 
 /**
+ * Vnitřní uzel.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */

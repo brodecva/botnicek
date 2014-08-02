@@ -18,22 +18,27 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.api;
 
-import java.util.List;
-
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InputNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.IsolatedProcessingNode;
 
 /**
+ * Procesor, který analyzuje uzly pro míru interakce uživatele při přechodu do dalšího stavu.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface ProceedProcessor {
+    /**
+     * Zpracuje uzel čekající na uživatelský vstup.
+     * 
+     * @param node blokující uzel
+     */
     void process(InputNode node);
     
+    /**
+     * Zpracuje výpočetní uzel.
+     * 
+     * @param node uzel, který pokračuje ve výpočtu
+     */
     void process(ProcessingNode node);
 }

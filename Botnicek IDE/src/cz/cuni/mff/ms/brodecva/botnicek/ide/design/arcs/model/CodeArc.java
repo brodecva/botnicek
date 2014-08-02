@@ -18,15 +18,19 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 
-import java.util.List;
-
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
 
 /**
+ * Hrana s kódem, který má být proveden při posunu po ní.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface CodeArc {
+    /**
+     * Vrátí kód.
+     * 
+     * @return kód
+     */
     Code getCode();
 }

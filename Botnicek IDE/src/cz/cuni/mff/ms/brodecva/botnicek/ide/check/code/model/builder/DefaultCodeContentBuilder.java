@@ -20,29 +20,24 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractCompoundElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractRawElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.RawContentElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.CodeChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
 
 /**
+ * Výchozí implementace konstruktoru validního kódu šablony jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultCodeContentBuilder implements CodeContentBuilder {
+public final class DefaultCodeContentBuilder implements CodeContentBuilder, Source {
     
     private final StringBuilder contentBuilder;
     private final CodeChecker checker;
     
     private final static class CodeImplementation implements Code {
         private final String text;
-        
-        public static CodeImplementation create() {
-            return new CodeImplementation("");
-        }
         
         public static CodeImplementation create(final String rawContent) {
             return new CodeImplementation(rawContent);
@@ -92,11 +87,18 @@ public class DefaultCodeContentBuilder implements CodeContentBuilder {
         }
     }
     
+    /**
+     * Vytvoří konstruktor.
+     * 
+     * @param checker přímý validátor
+     * @param startContent úvodní řetězec k sestavení
+     * @return konstruktor
+     */
     public static DefaultCodeContentBuilder create(final CodeChecker checker, final String startContent) {
         return new DefaultCodeContentBuilder(checker, startContent);
     }
     
-    public DefaultCodeContentBuilder(final CodeChecker checker, final String startContent) {
+    private DefaultCodeContentBuilder(final CodeChecker checker, final String startContent) {
         Preconditions.checkNotNull(checker);
         Preconditions.checkNotNull(startContent);
         
@@ -104,6 +106,9 @@ public class DefaultCodeContentBuilder implements CodeContentBuilder {
         this.contentBuilder = new StringBuilder(startContent);
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.ContentAggregator#add(java.lang.String)
+     */
     public void add(final String content) {
         this.contentBuilder.append(content);
     }
@@ -133,6 +138,6 @@ public class DefaultCodeContentBuilder implements CodeContentBuilder {
      */
     @Override
     public CheckResult check() {
-        return this.checker.check(this, this.contentBuilder.toString());
+        return this.checker.check(this, this, this.contentBuilder.toString());
     }
 }

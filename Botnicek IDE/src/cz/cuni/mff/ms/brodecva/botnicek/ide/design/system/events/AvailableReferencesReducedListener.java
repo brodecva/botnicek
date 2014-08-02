@@ -23,11 +23,18 @@ import java.util.Set;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 
 /**
+ * Posluchač události zmenšení množiny dostupných uzlů.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface AvailableReferencesReducedListener {
 
+    /**
+     * Reaguje na zmenšení.
+     * 
+     * @param removedReferences odstraněné uzly
+     */
     void referencesReduced(Set<EnterNode> removedReferences);
 
 }

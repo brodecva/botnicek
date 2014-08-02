@@ -22,14 +22,17 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.controllers.NetworkController;
 
 /**
+ * Atrapa řadiče sítě.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 final class DummyNetworkController implements NetworkController {
 
-
     /**
-     * @return
+     * Vytvoří atrapu.
+     * 
+     * @return atrapa
      */
     public static DummyNetworkController create() {
         return new DummyNetworkController();
@@ -47,7 +50,6 @@ final class DummyNetworkController implements NetworkController {
      */
     @Override
     public void addView(NetworkView view) {
-
     }
 
     /*
@@ -61,7 +63,6 @@ final class DummyNetworkController implements NetworkController {
      */
     @Override
     public void removeView(NetworkView view) {
-
     }
 
     /*
@@ -73,19 +74,6 @@ final class DummyNetworkController implements NetworkController {
      */
     @Override
     public void addNode(int x, int y) {
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController
-     * #removeNode(java.lang.String)
-     */
-    @Override
-    public void removeNode(NormalWord nodeName) {
-
     }
 
     /* (non-Javadoc)
@@ -94,19 +82,6 @@ final class DummyNetworkController implements NetworkController {
     @Override
     public void addArc(String proposedArcName, NormalWord firstNodeName,
             NormalWord secondNodeName) {
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController
-     * #removeArc(java.lang.String)
-     */
-    @Override
-    public void removeArc(NormalWord arcName) {
-
     }
 
     /* (non-Javadoc)

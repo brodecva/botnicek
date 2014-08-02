@@ -18,12 +18,13 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker;
 
 /**
+ * Rozhraní pro provedení kontroly kódu šablony jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public interface CodeChecker {
-    CheckResult check(Object source, final String snippetContent);
+public interface CodeChecker extends Checker {
 }

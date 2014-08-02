@@ -18,36 +18,43 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 
-import java.util.List;
-
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.TestProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 
 /**
+ * Hrana, jež pro vyhodnocení testu provede zanoření do jiné (i vlastní) sítě přes její vstupní uzel. V případě, že výpočet projde úspěšně podsítí, test projde.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class RecurentArc extends AbstractTestArc {
+public final class RecurentArc extends AbstractCodeArc {
     
     private final EnterNode target;
     
-    public RecurentArc create(final Network parent, final NormalWord name, final int priority,
-            final Code code, final SimplePattern value, final EnterNode target) {
-        return new RecurentArc(parent, name, priority, code, value, target);
+    /**
+     * Vytvoří hranu.
+     * 
+     * @param parent rodičovská síť
+     * @param name název hrany
+     * @param priority priorita
+     * @param code kód k provedení
+     * @param target cíl zanoření
+     * @return hrana
+     */
+    public static RecurentArc create(final Network parent, final NormalWord name, final Priority priority,
+            final Code code, final EnterNode target) {
+        return new RecurentArc(parent, name, priority, code, target);
     }
     
-    protected RecurentArc(final Network parent, final NormalWord name, final int priority,
-            final Code code, final SimplePattern value, final EnterNode target) {
-        super(parent, name, priority, code, value);
+    private RecurentArc(final Network parent, final NormalWord name, final Priority priority,
+            final Code code, final EnterNode target) {
+        super(parent, name, priority, code);
         
         Preconditions.checkNotNull(target);
         
@@ -55,7 +62,9 @@ public final class RecurentArc extends AbstractTestArc {
     }
 
     /**
-     * @return the target
+     * Vstupní uzel sítě, který je cílem zanoření.
+     * 
+     * @return cíl zanoření
      */
     public EnterNode getTarget() {
         return target;
@@ -99,5 +108,16 @@ public final class RecurentArc extends AbstractTestArc {
             return false;
         }
         return true;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "RecurentArc [getName()=" + getName() + ", getNetwork()="
+                + getNetwork().getName() + ", getFrom()=" + getFrom().getName() + ", getTo()="
+                + getTo().getName() + ", getPriority()=" + getPriority().getValue() + ", target="
+                + target.getName() + "(" + target.getNetwork().getName() + ") ]";
     }
 }

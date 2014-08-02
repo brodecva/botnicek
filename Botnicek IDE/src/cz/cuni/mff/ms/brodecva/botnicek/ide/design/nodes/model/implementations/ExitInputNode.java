@@ -24,35 +24,46 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.AbstractNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InnerNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InputNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 
 /**
+ * Výstupní zadávací uzel.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class ExitInputNode extends AbstractNode implements InputNode, ExitNode {
+public final class ExitInputNode extends AbstractNode implements InputNode, ExitNode {
 
+    /**
+     * Vytvoří uzel dle parametrů.
+     * 
+     * @param name název uzlu
+     * @param parent rodičovská síť
+     * @param x umístění uzlu v souřadnici x
+     * @param y umístění uzlu v souřadnici y
+     * @return uzel
+     */
     public static ExitInputNode create(final NormalWord name, final Network parent, final int x, final int y) {
         return new ExitInputNode(name, parent, x, y);
     }
     
+    /**
+     * Zkopíruje uzel.
+     * 
+     * @param original původní uzel
+     * @return kopie
+     */
     public static ExitInputNode create(final Node original) {
         return new ExitInputNode(original);
     }
     
-    protected ExitInputNode(final Node original) {
+    private ExitInputNode(final Node original) {
         super(original);
     }
     
-    /**
-     * @param name
-     */
-    protected ExitInputNode(final NormalWord name, final Network parent, final int x, final int y) {
+    private ExitInputNode(final NormalWord name, final Network parent, final int x, final int y) {
         super(name, parent, x, y);
     }
 

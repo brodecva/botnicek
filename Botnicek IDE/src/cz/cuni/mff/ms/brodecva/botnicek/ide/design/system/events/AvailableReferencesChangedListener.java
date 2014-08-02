@@ -23,11 +23,18 @@ import java.util.Set;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 
 /**
+ * Posluchač událost změny dostupných uzlů k zanoření.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface AvailableReferencesChangedListener {
 
+    /**
+     * Reaguje na změnu.
+     * 
+     * @param references aktuální množina dostupných uzlů
+     */
     void referencesChanged(Set<EnterNode> references);
 
 }

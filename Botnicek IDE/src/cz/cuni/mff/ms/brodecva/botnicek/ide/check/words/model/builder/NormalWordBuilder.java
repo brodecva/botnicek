@@ -19,15 +19,19 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.builder;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.ContentAggregator;
 
 /**
+ * Konstruktor validního normálního slova.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public interface NormalWordBuilder {
-    void add(String content);
-    boolean isValid();
-    CheckResult check();
+public interface NormalWordBuilder extends ContentAggregator {
+    /**
+     * Sestaví validní normální slovo.
+     * 
+     * @return validní normální slovo
+     */
     NormalWord build();
 }

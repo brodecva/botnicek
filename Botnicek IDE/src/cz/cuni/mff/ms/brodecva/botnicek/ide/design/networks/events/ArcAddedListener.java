@@ -19,16 +19,19 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 
 /**
+ * Posluchač přidání hrany do sítě.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface ArcAddedListener {
 
     /**
-     * @param node
+     * Reaguje na přidání hrany do její sítě.
+     * 
+     * @param arc přidaná hrana
      */
     void arcAdded(Arc arc);
 

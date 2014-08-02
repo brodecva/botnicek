@@ -21,15 +21,23 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker;
 import java.util.regex.Pattern;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResultImplementation;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
+import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.XML;
 
 /**
+ * Výchozí implementace aplikuje vlastní implementaci normalizéru složeného vzoru jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public class DefaultMixedPatternChecker implements MixedPatternChecker {
     
+    /**
+     * Výsledek zpracování značky bot, který může být obsažena v šabloně.
+     */
     private static class TagProcessingResult {
         private final CheckResult checkResult;
         private final int indexOffset;
@@ -56,6 +64,11 @@ public class DefaultMixedPatternChecker implements MixedPatternChecker {
     
     private static Pattern botTagPattern = java.util.regex.Pattern.compile("<(?:[^:]:)?bot[^/>]+name=\"[\\p{Digit}\\p{Lu}[\\p{L}&&\\p{IsUppercase}&&\\P{IsLowercase}&&\\P{IsLowercase}]]+\"[^/>]*(?:/>|></(?:[^:]:)?bot>)");
     
+    /**
+     * Vytvoří validátor.
+     * 
+     * @return validátor
+     */
     public static DefaultMixedPatternChecker create() {
         return new DefaultMixedPatternChecker();
     }
@@ -64,9 +77,9 @@ public class DefaultMixedPatternChecker implements MixedPatternChecker {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.editor.checker.PatternChecker#check(java.lang.String)
      */
     @Override
-    public CheckResult check(final Object source, final String patternContent) {
+    public CheckResult check(final Source source, Object subject, final String patternContent) {
         if (patternContent.isEmpty()) {
-            return CheckResultImplementation.fail(source, 0, "The pattern is empty.");
+            return DefaultCheckResult.fail(0, ExceptionLocalizer.print("EmptyPattern"), source, subject);
         }
         
         boolean inWord = false;
@@ -80,7 +93,7 @@ public class DefaultMixedPatternChecker implements MixedPatternChecker {
             if (XML.TAG_START.equals(Character.toString(character))) {
                 inWord = true;
                 
-                final TagProcessingResult tagProcessingResult = processTag(source, characters, index);
+                final TagProcessingResult tagProcessingResult = processTag(source, subject, characters, index);
                 final CheckResult tagResult = tagProcessingResult.getCheckResult();
                 index = tagProcessingResult.getIndex();
                 
@@ -91,7 +104,7 @@ public class DefaultMixedPatternChecker implements MixedPatternChecker {
                 index++;
             } else if (character == ' ') {
                 if (!inWord || index == characters.length - 1) {
-                    return CheckResultImplementation.fail(source, position, "Excesive whitespace at position %1$s.", position);
+                    return DefaultCheckResult.fail(position, ExceptionLocalizer.print("ExcessiveWhitespace"), source, subject);
                 }
                 
                 inWord = false;
@@ -105,28 +118,31 @@ public class DefaultMixedPatternChecker implements MixedPatternChecker {
             } else if (Character.isLetter(character) && !Character.isLowerCase(character) && !Character.isUpperCase(character) && !Character.isTitleCase(character)) {
                 inWord = true;
                 index++;
+            } else if (AIML.STAR_WILDCARD.getValue().equals(Character.toString(character)) || AIML.UNDERSCORE_WILDCARD.getValue().equals(Character.toString(character))) {
+                inWord = true;
+                index++;
             } else {
-                return CheckResultImplementation.fail(source, position, "Invalid character at position %1$s.", position);
+                return DefaultCheckResult.fail(position, ExceptionLocalizer.print("InvalidCharacter"), source, subject);
             }
         }
         
-        return CheckResultImplementation.succeed(source);
+        return DefaultCheckResult.succeed(source, subject);
     }
 
-    private static TagProcessingResult processTag(final Object source, final char[] characters, final int index) {
+    private static TagProcessingResult processTag(final Object source, Object subject, final char[] characters, final int index) {
         int offset = index;
         final int tagInitialPosition = offset + 1;
         
         final StringBuilder tagBuilder = new StringBuilder(characters[offset]);
         while (!botTagPattern.matcher(tagBuilder).matches()) {
             if (offset >= characters.length) {
-                return new TagProcessingResult(CheckResultImplementation.fail(source, tagInitialPosition, "Invalid bot tag starting at %1$s", tagInitialPosition), offset);
+                return new TagProcessingResult(DefaultCheckResult.fail(tagInitialPosition, ExceptionLocalizer.print("InvalidBotTag"), source, subject), offset);
             }
             
             offset++;
             tagBuilder.append(characters[offset]);
         }
         
-        return new TagProcessingResult(CheckResultImplementation.succeed(source), offset);
+        return new TagProcessingResult(DefaultCheckResult.succeed(source, subject), offset);
     }
 }

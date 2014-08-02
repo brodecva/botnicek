@@ -19,6 +19,8 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events;
 
 /**
+ * Správce událostí.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */

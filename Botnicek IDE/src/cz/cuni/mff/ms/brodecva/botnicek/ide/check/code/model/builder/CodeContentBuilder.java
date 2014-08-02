@@ -18,17 +18,21 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.ContentAggregator;
 
 
 /**
+ * Konstruktor validního kódu.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public interface CodeContentBuilder {
-    void add(String content);
-    boolean isValid();
-    CheckResult check();
+public interface CodeContentBuilder extends ContentAggregator {
+    /**
+     * Sestaví validní kód.
+     * 
+     * @return validní kód
+     */
     Code build();
 }

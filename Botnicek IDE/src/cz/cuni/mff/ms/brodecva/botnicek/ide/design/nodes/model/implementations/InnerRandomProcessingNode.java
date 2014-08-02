@@ -18,45 +18,53 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations;
 
-import java.util.Iterator;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.AbstractNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InnerNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RandomNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Direction;
 
 /**
+ * Vnitřní náhodný procesní uzel.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class InnerRandomProcessingNode extends AbstractNode implements RandomNode, ProcessingNode, InnerNode {
+public final class InnerRandomProcessingNode extends AbstractNode implements RandomNode, ProcessingNode, InnerNode {
     
+    /**
+     * Vytvoří uzel dle parametrů.
+     * 
+     * @param name název uzlu
+     * @param parent rodičovská síť
+     * @param x umístění uzlu v souřadnici x
+     * @param y umístění uzlu v souřadnici y
+     * @return uzel
+     */
     public static InnerRandomProcessingNode create(final NormalWord name, final Network parent, final int x, final int y) {
         return new InnerRandomProcessingNode(name, parent, x, y);
     }
     
+    /**
+     * Zkopíruje uzel.
+     * 
+     * @param original původní uzel
+     * @return kopie
+     */
     public static InnerRandomProcessingNode create(final Node original) {
         return new InnerRandomProcessingNode(original);
     }
     
-    /**
-     * @param name
-     */
-    protected InnerRandomProcessingNode(final NormalWord name, final Network parent, final int x, final int y) {
+    private InnerRandomProcessingNode(final NormalWord name, final Network parent, final int x, final int y) {
         super(name, parent, x, y);
     }
     
-    protected InnerRandomProcessingNode(final Node original) {
+    private InnerRandomProcessingNode(final Node original) {
         super(original);
     }
 

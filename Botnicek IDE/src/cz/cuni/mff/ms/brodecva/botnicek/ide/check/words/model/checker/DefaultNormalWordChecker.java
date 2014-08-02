@@ -21,20 +21,36 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker;
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResultImplementation;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
 
 /**
+ * Výchozí implementace aplikuje vlastní implementaci normalizéru jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultNormalWordChecker implements NormalWordChecker {
+public final class DefaultNormalWordChecker implements NormalWordChecker {
     private final NamingAuthority namingAuthority;
     
+    /**
+     * Vytvoří validátor, který neomezuje výskyt normálního slova.
+     * 
+     * @return validátor
+     */
     public static DefaultNormalWordChecker create() {
         return new DefaultNormalWordChecker(new PermissiveNamingAuthority());
     }
     
+    /**
+     * Vytvoří validátor.
+     * 
+     * @param namingAuthority autorita přidělující unikátní jména 
+     * 
+     * @return validátor
+     */
     public static DefaultNormalWordChecker create(final NamingAuthority namingAuthority) {
         return new DefaultNormalWordChecker(namingAuthority);
     }
@@ -49,9 +65,9 @@ public class DefaultNormalWordChecker implements NormalWordChecker {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.editor.checker.PredicateNameChecker#check(java.lang.String)
      */
     @Override
-    public CheckResult check(final Object source, final String name) {
+    public CheckResult check(final Source source, Object subject, final String name) {
         if (name.isEmpty()) {
-            return CheckResultImplementation.fail(source, 0, "The name is empty.");
+            return DefaultCheckResult.fail(0, ExceptionLocalizer.print("EmptyName"), source, subject);
         }
         
         final char[] characters = name.toCharArray();
@@ -60,14 +76,14 @@ public class DefaultNormalWordChecker implements NormalWordChecker {
             final char character = characters[index]; 
             
             if (!Character.isDigit(character) && !Character.isUpperCase(character) && !(Character.isLetter(character) && !Character.isLowerCase(character) && !Character.isUpperCase(character) && !Character.isTitleCase(character))) {
-                return CheckResultImplementation.fail(source, position, "Invalid character at position %1$s.", position);
+                return DefaultCheckResult.fail(position, ExceptionLocalizer.print("InvalidCharacter"), source, subject);
             }
         }
         
         if (!this.namingAuthority.isUsable(name)) {
-            return CheckResultImplementation.fail(source, 0, "The name of the predicate is already assigned to another entity.");
+            return DefaultCheckResult.fail(0, ExceptionLocalizer.print("AlreadyAssigned"), source, subject);
         }
         
-        return CheckResultImplementation.succeed(source);
+        return DefaultCheckResult.succeed(source, subject);
     }
 }

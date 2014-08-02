@@ -22,9 +22,17 @@ import java.net.URI;
 import java.util.Map;
 
 /**
+ * Továrna na návštěvníky generující kód průchodem stromem objektového modelu jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface RenderingVisitorFactory {
+    /**
+     * Vytvoří návštěvníka.
+     * 
+     * @param namespacesToPrefixes nastavení prefixů pro jmenné prostory 
+     * @return návštěvník generující kód
+     */
     RenderingVisitor spawn(Map<URI, String> namespacesToPrefixes);
 }

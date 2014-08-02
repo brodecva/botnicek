@@ -27,9 +27,10 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.NodeModifier;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RealignmentProcessor;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Direction;
 
 /**
+ * Výchozí implementace procesoru pro opravu typu uzlů dle umístění v grafu po změně.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
@@ -37,8 +38,14 @@ public class DefaultRealignmentProcessor implements RealignmentProcessor {
     
     private final NodeModifier changeProcessor;
 
-    public static DefaultRealignmentProcessor create(final NodeModifier changeProcessor) {
-        return new DefaultRealignmentProcessor(changeProcessor);
+    /**
+     * Vytvoří procesor.
+     * 
+     * @param modifier modifikátor uzlů
+     * @return procesor
+     */
+    public static DefaultRealignmentProcessor create(final NodeModifier modifier) {
+        return new DefaultRealignmentProcessor(modifier);
     }
     
     private DefaultRealignmentProcessor(final NodeModifier changeProcessor) {
@@ -47,8 +54,10 @@ public class DefaultRealignmentProcessor implements RealignmentProcessor {
         this.changeProcessor = changeProcessor;
     }
     
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.nodes.RealignmentProcessor#realign(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.nodes.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.Direction)
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>Zkoumá stupně uzlu. Z toho jasně usoudí, nachází-li se po změně uzel uvnitř či na okrajích sítě.</p>
      */
     @Override
     public Node realign(final Node node) {
@@ -59,14 +68,16 @@ public class DefaultRealignmentProcessor implements RealignmentProcessor {
     }
     
     private Class<? extends Node> determineType(final Node node) {
-        if (node.getDegree(Direction.OUT) == 0) {
-            if (node.getDegree(Direction.IN) == 0) {
+        final int inDegree =  node.getInDegree();
+        
+        if (node.getOutDegree() == 0) {
+            if (inDegree == 0) {
                 return IsolatedNode.class;
             } else {
                 return ExitNode.class;
             }
         } else {
-            if (node.getDegree(Direction.IN) == 0) {
+            if (inDegree == 0) {
                 return EnterNode.class;
             } else {
                 return InnerNode.class;

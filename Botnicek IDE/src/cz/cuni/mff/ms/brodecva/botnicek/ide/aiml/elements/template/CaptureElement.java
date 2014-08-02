@@ -19,9 +19,11 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template;
 
 /**
+ * Prvek ukládající vložený vstup.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-capture-elements">http://www.alicebot.org/TR/2011/#section-capture-elements</a>
  */
 public interface CaptureElement extends TemplateElement {
-
 }

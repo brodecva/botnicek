@@ -25,16 +25,31 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CovertElement
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 
 /**
+ * Skryje výstup vyprodukovaný potomky.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-think">http://www.alicebot.org/TR/2011/#section-think</a>
  */
 public final class Think extends AbstractCompoundElement implements CovertElement {
     private static final String NAME = "think";
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content potomci
+     * @return prvek
+     */
     public static Think create(final TemplateElement... content) {
         return new Think(content);
     }
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content potomci
+     * @return prvek
+     */
     public static Think create(final List<TemplateElement> content) {
         return new Think(content);
     }
@@ -51,7 +66,7 @@ public final class Think extends AbstractCompoundElement implements CovertElemen
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
 }

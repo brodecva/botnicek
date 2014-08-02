@@ -24,13 +24,22 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
 
 /**
+ * Událost změny vlastností hrany.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class ArcChangedEvent extends AbstractMappedEvent<Arc, ArcChangedListener> {
+public final class ArcChangedEvent extends AbstractMappedEvent<Arc, ArcChangedListener> {
     
     private final Arc newArc;
     
+    /**
+     * Vytvoří událost.
+     * 
+     * @param arc původní podoba hrany
+     * @param newArc nová podoba hrany
+     * @return událost
+     */
     public static ArcChangedEvent create(final Arc arc, final Arc newArc) {
         return new ArcChangedEvent(arc, newArc);
     }

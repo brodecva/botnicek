@@ -21,6 +21,8 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element;
 
 /**
+ * Prvek šablony.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */

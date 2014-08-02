@@ -21,6 +21,8 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.api.Visitor;
 
 /**
+ * Abstraktní třída pro běžný prvek.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
@@ -30,7 +32,9 @@ public abstract class AbstractProperElement extends AbstractElement {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#visitEnter(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.api.Visitor)
      */
     @Override
-    protected void visitEnter(Visitor visitor) {
+    protected void visitEnter(final Visitor visitor) {
+        super.visitEnter(visitor);
+        
         visitor.visitEnter(this);
     }
     
@@ -38,7 +42,9 @@ public abstract class AbstractProperElement extends AbstractElement {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#visitExit(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.api.Visitor)
      */
     @Override
-    protected void visitExit(Visitor visitor) {
+    protected void visitExit(final Visitor visitor) {
+        super.visitExit(visitor);
+        
         visitor.visitExit(this);
     }
 }

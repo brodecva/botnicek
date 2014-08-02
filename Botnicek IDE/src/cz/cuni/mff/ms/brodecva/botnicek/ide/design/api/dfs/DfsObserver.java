@@ -24,16 +24,65 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 
 /**
+ * Pozorovatel průchodu grafem ATN do hloubky.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface DfsObserver {
+    /**
+     * Zpraví pozorovatele o navštívení kořene systému sítí.
+     * 
+     * @param visited navštívený kořen
+     */
     void notifyVisit(System visited);
+    
+    /**
+     * Zpraví pozorovatele o navštívení sítě.
+     * 
+     * @param visited navštívená síť
+     */
     void notifyVisit(Network visited);
+    
+    /**
+     * Zpraví pozorovatele o objevení uzlu sítě.
+     * 
+     * @param discovered objevený uzel
+     */
     void notifyDiscovery(Node discovered);
+    
+    /**
+     * Zpraví pozorovatele o ukončení zpracování uzlu sítě.
+     * 
+     * @param finished zpracovaný uzel
+     */
     void notifyFinish(Node finished);
+    
+    /**
+     * Zpraví pozorovatele o prozkoumání hrany sítě.
+     * 
+     * @param examined prozkoumaná hrana
+     */
     void notifyExamination(Arc examined);
+    
+    /**
+     * Zpraví pozorovatele o navštívení stromové hrany sítě.
+     * 
+     * @param tree stromová hrana
+     */
     void notifyTree(Arc tree);
+    
+    /**
+     * Zpraví pozorovatele o objevení zpětné hrany sítě.
+     * 
+     * @param back zpětná hrana
+     */
     void notifyBack(Arc back);
+    
+    /**
+     * Zpraví pozorovatele o křížové hrany sítě.
+     * 
+     * @param cross křížová hrana
+     */
     void notifyCross(Arc cross);
 }

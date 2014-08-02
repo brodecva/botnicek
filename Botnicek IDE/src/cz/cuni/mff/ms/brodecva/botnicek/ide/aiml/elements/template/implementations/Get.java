@@ -18,25 +18,22 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.AtomicElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CaptureElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Attribute;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.AttributeImplementation;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 
 /**
+ * Vrátí hodnotu uloženou v predikátu, v případě, že není predikát toho jména definován, vrací prázdný řetězec.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-get">http://www.alicebot.org/TR/2011/#section-get</a>
  */
 public final class Get extends AbstractProperElement implements AtomicElement {
     private static final String NAME = "get";
@@ -45,6 +42,12 @@ public final class Get extends AbstractProperElement implements AtomicElement {
     
     private final NormalWord name;
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param name název predikátu, z něhož bude odečtena uložená hodnota
+     * @return prvek
+     */
     public static Get create(final NormalWord name) {
         return new Get(name);
     }
@@ -59,7 +62,7 @@ public final class Get extends AbstractProperElement implements AtomicElement {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
     

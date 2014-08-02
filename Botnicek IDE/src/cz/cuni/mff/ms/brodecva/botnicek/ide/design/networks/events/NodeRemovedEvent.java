@@ -21,12 +21,12 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events;
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.views.NetworkInternalWindow;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.MappedEvent;
 
 /**
+ * Událost odebrání uzlu ze sítě.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
@@ -34,6 +34,13 @@ public class NodeRemovedEvent extends AbstractMappedEvent<Network, NodeRemovedLi
     
     private final Node node;
     
+    /**
+     * Vytvoří událost.
+     * 
+     * @param network síť
+     * @param node odebraný uzel
+     * @return událost
+     */
     public static NodeRemovedEvent create(final Network network, final Node node) {
         return new NodeRemovedEvent(network, node);
     }

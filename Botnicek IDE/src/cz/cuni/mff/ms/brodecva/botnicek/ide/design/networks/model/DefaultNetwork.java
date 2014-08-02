@@ -21,7 +21,6 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model;
 import java.util.Set;
 import java.util.UUID;
 
-import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
@@ -29,68 +28,84 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitable;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Direction;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 
 
 /**
+ * Výchozí implementace sítě deleguje většinu metod na systém sítí.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class DefaultNetwork implements Visitable, Network {
     
-    private final System parent;
+    private final System system;
     private final UUID id;
     
-    public static Network create(final UUID id, final DefaultSystem parent) {
+    /**
+     * Vytvoří prázdnou síť.
+     * 
+     * @param id identifikátor sítě
+     * @param parent rodičovský systém sítí
+     * @return síť
+     */
+    public static Network create(final UUID id, final System parent) {
         return new DefaultNetwork(id, parent);
     }
     
-    public static DefaultNetwork create(final DefaultSystem parent) {
+    /**
+     * Vytvoří prázdnou síť s náhodně přiděleným globálním identifikátorem.
+     * 
+     * @param parent rodičovský systém sítí
+     * @return síť
+     */
+    public static DefaultNetwork create(final System parent) {
         return new DefaultNetwork(UUID.randomUUID(), parent);
     }
     
-    private DefaultNetwork(final UUID id, final DefaultSystem parent) {
+    private DefaultNetwork(final UUID id, final System parent) {
         Preconditions.checkNotNull(id);
         Preconditions.checkNotNull(parent);
         
         this.id = id;
-        this.parent = parent;
+        this.system = parent;
     }
     
-    /**
-     * @return the id
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getId()
      */
     @Override
     public UUID getId() {
         return id;
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#setName(java.lang.String)
+     */
     @Override
     public void setName(final String name) {
         Preconditions.checkNotNull(name);
         Preconditions.checkArgument(!name.isEmpty());
         
-        this.parent.renameNetwork(this, name);
+        this.system.renameNetwork(this, name);
     }
     
-    /**
-     * @return
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.AutonomousComponent#getName()
      */
     @Override
     public String getName() {
-        return this.parent.getNetworkName(this);
+        return this.system.getNetworkName(this);
     }
 
-    /**
-     * @return the parent
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getSystem()
      */
     @Override
-    public final System getParent() {
-        return parent;
+    public final System getSystem() {
+        return system;
     }
 
     /* (non-Javadoc)
@@ -98,103 +113,112 @@ public final class DefaultNetwork implements Visitable, Network {
      */
     @Override
     public void accept(final Visitor visitor) {
+        Preconditions.checkNotNull(visitor);
+        
         visitor.visit(this);
         
-        final Set<IsolatedNode> isolatedNodes = this.parent.getIsolatedNodes(this);
-        for (final IsolatedNode isolatedNode : isolatedNodes) {
-            isolatedNode.accept(visitor);
-        }
-        
-        final Set<EnterNode> initialNodes = this.parent.getInitialNodes(this);
-        for (final EnterNode initialNode : initialNodes) {
-            initialNode.accept(visitor);
+        final Set<Node> nodes = this.system.getNodes(this);
+        for (final Node node : nodes) {
+            if (!visitor.visited(node)) {
+                node.accept(visitor);
+            }
         }
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#addNode(int, int)
+     */
     @Override
     public void addNode(final int x, final int y) {
-        this.parent.addNode(this, x, y);
+        this.system.addNode(this, x, y);
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#removeNode(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+     */
     @Override
     public void removeNode(final NormalWord name) {
-        this.parent.removeNode(name);
+        this.system.removeNode(name);
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#addArc(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+     */
     @Override
     public void addArc(final NormalWord name, final NormalWord fromName, NormalWord toName) {
-        this.parent.addArc(this, name, fromName, toName);
+        this.system.addArc(this, name, fromName, toName);
     }
 
-    /**
-     * @param name
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#removeArc(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
      */
     @Override
     public void removeArc(final NormalWord name) {
-        this.parent.removeArc(name);
+        this.system.removeArc(name);
     }
 
-    /**
-     * @param node
-     * @return
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getOuts(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
      */
     @Override
     public Set<Arc> getOuts(final Node node) {
-        return this.parent.getOuts(node);
+        return this.system.getOuts(node);
     }
 
-    /**
-     * @param abstractNode
-     * @return
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getIns(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
      */
     @Override
     public Set<Arc> getIns(final Node node) {
-        return this.parent.getIns(node);
+        return this.system.getIns(node);
     }
 
-    /**
-     * @param abstractArc
-     * @param direction
-     * @return
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getAttached(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
      */
     @Override
     public Node getAttached(final Arc arc, final Direction direction) {
-        return this.parent.getAttached(arc, direction);
+        return this.system.getAttached(arc, direction);
     }
 
-    /**
-     * @param direction
-     * @return
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getConnections(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
      */
     @Override
     public Set<Arc> getConnections(final Node node, final Direction direction) {
-        return this.parent.getConnections(node, direction);
+        return this.system.getConnections(node, direction);
     }
 
-    /**
-     * @param name
-     * @return
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getNode(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
      */
     @Override
     public Node getNode(NormalWord name) {
-        return this.parent.getNode(name);
+        return this.system.getNode(name);
     }
 
-    /**
-     * @param arcName
-     * @return
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getArc(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
      */
     @Override
     public Arc getArc(NormalWord arcName) {
-        return this.parent.getArc(arcName);
+        return this.system.getArc(arcName);
     }
 
-    /**
-     * @return
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getAvailableReferences()
      */
     @Override
     public Set<EnterNode> getAvailableReferences() {
-        return this.parent.getAvailableReferences();
+        return this.system.getAvailableReferences();
+    }
+    
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#adjoins(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Direction)
+     */
+    @Override
+    public boolean adjoins(Node first, Node second, Direction direction) {
+        return this.system.adjoins(first, second, direction);
     }
 
     /* (non-Javadoc)
@@ -205,7 +229,7 @@ public final class DefaultNetwork implements Visitable, Network {
         final int prime = 31;
         int result = 1;
         result = prime * result + id.hashCode();
-        result = prime * result + parent.hashCode();
+        result = prime * result + system.hashCode();
         return result;
     }
 
@@ -220,36 +244,25 @@ public final class DefaultNetwork implements Visitable, Network {
         if (obj == null) {
             return false;
         }
-        if (!(obj instanceof DefaultNetwork)) {
+        if (!(obj instanceof Network)) {
             return false;
         }
-        final DefaultNetwork other = (DefaultNetwork) obj;
-        if (!id.equals(other.id)) {
+        final Network other = (Network) obj;
+        if (!id.equals(other.getId())) {
             return false;
         }
-        if (!parent.equals(other.parent)) {
+        if (!system.equals(other.getSystem())) {
             return false;
         }
         return true;
     }
-    
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("id", this.id)
-                .add("parent", this.parent)
-                .add("name", getName())
-                .toString();
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#adjoins(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Direction)
-     */
-    @Override
-    public boolean adjoins(Node first, Node second, Direction direction) {
-        return this.parent.adjoins(first, second, direction);
+        return "DefaultNetwork [getName()=" + getName() + ", id=" + id
+                + ", system=" + system + "]";
     }
 }

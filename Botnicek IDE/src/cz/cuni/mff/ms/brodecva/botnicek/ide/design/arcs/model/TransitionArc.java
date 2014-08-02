@@ -18,32 +18,50 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Codes;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Codes;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 
 /**
+ * Hrana, jež neprovádí žádný test a v případě, že přijde na řadu, výpočet po ní projde dál.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class TransitionArc extends AbstractCodeArc {
     
+    /**
+     * Vrátí výchozí hranu sítě.
+     * 
+     * @param parent rodičovská síť
+     * @param name název hrany
+     * @return hrana
+     */
     public static TransitionArc getInitial(final Network parent, final NormalWord name) {
         return new TransitionArc(parent, name);
     }
     
-    public static TransitionArc create(final Network parent, final NormalWord name, final int priority, final Code code) {
-        return new TransitionArc(parent, name, DEFAULT_PRIORITY, code);
+    /**
+     * Vytvoří hranu.
+     * 
+     * @param parent rodičovská síť
+     * @param name název hrany
+     * @param priority priorita
+     * @param code kód, který se vždy provede
+     * @return hrana
+     */
+    public static TransitionArc create(final Network parent, final NormalWord name, final Priority priority, final Code code) {
+        return new TransitionArc(parent, name, priority, code);
     }
     
-    protected TransitionArc(final Network parent, final NormalWord name) {
+    private TransitionArc(final Network parent, final NormalWord name) {
         this(parent, name, DEFAULT_PRIORITY, Codes.createEmpty());
     }
     
-    protected TransitionArc(final Network parent, final NormalWord name, final int priority, final Code code) {
+    private TransitionArc(final Network parent, final NormalWord name, final Priority priority, final Code code) {
         super(parent, name, priority, code);
     }
 
@@ -53,5 +71,41 @@ public final class TransitionArc extends AbstractCodeArc {
     @Override
     public void accept(final Processor visitor) {
         visitor.process(this);
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int result = super.hashCode();
+        return result;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        return true;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "TransitionArc [getName()=" + getName() + ", getNetwork()="
+                + getNetwork().getName() + ", getFrom()=" + getFrom().getName() + ", getTo()="
+                + getTo().getName() + ", getPriority()=" + getPriority().getValue() + "]";
     }
 }

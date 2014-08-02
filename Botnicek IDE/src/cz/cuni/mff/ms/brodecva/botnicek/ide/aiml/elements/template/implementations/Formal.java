@@ -18,25 +18,18 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-
-import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractCompoundElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TextFormattingElement;
 
 /**
+ * Naformátuje textový výstup z potomků tak, že každé slovo začíná velkým písmenem (podle lokálního nastavení či implementace interpretu). 
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-formal">http://www.alicebot.org/TR/2011/#section-formal</a>
  */
 public final class Formal extends AbstractCompoundElement implements TextFormattingElement {
     /**
@@ -44,10 +37,22 @@ public final class Formal extends AbstractCompoundElement implements TextFormatt
      */
     private static final String NAME = "formal";
 
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content potomci
+     * @return prvek
+     */
     public static Formal create(final TemplateElement... content) {
         return new Formal(content);
     }
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content potomci
+     * @return prvek
+     */
     public static Formal create(final List<TemplateElement> content) {
         return new Formal(content);
     }
@@ -64,7 +69,7 @@ public final class Formal extends AbstractCompoundElement implements TextFormatt
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
 }

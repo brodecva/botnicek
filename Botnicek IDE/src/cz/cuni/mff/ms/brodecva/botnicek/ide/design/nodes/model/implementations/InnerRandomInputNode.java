@@ -18,44 +18,53 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations;
 
-import java.util.Iterator;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.AbstractNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InnerNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InputNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RandomNode;
 
 /**
+ * Vnitřní náhodný zadávací uzel.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public class InnerRandomInputNode extends AbstractNode implements RandomNode, InputNode, InnerNode {
 
+    /**
+     * Vytvoří uzel dle parametrů.
+     * 
+     * @param name název uzlu
+     * @param parent rodičovská síť
+     * @param x umístění uzlu v souřadnici x
+     * @param y umístění uzlu v souřadnici y
+     * @return uzel
+     */
     public static InnerRandomInputNode create(final NormalWord name, final Network parent, final int x, final int y) {
         return new InnerRandomInputNode(name, parent, x, y);
     }
     
+    /**
+     * Zkopíruje uzel.
+     * 
+     * @param original původní uzel
+     * @return kopie
+     */
     public static InnerRandomInputNode create(final Node original) {
         return new InnerRandomInputNode(original);
     }
     
-    protected InnerRandomInputNode(final Node original) {
+    private InnerRandomInputNode(final Node original) {
         super(original);
     }
     
-    /**
-     * @param name
-     */
-    protected InnerRandomInputNode(final NormalWord name, final Network parent, final int x, final int y) {
+    private InnerRandomInputNode(final NormalWord name, final Network parent, final int x, final int y) {
         super(name, parent, x, y);
     }
 

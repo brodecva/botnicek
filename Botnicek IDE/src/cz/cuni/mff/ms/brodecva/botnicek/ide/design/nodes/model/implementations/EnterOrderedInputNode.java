@@ -30,29 +30,41 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.OrderedNode;
 
 /**
+ * Vstupní řadící zadávací uzel.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class EnterOrderedInputNode extends AbstractNode implements OrderedNode, InputNode, EnterNode {
+public final class EnterOrderedInputNode extends AbstractNode implements OrderedNode, InputNode, EnterNode {
     
+    /**
+     * Vytvoří uzel dle parametrů.
+     * 
+     * @param name název uzlu
+     * @param parent rodičovská síť
+     * @param x umístění uzlu v souřadnici x
+     * @param y umístění uzlu v souřadnici y
+     * @return uzel
+     */
     public static EnterOrderedInputNode create(final NormalWord name, final Network parent, final int x, final int y) {
         return new EnterOrderedInputNode(name, parent, x, y);
     }
     
+    /**
+     * Zkopíruje uzel.
+     * 
+     * @param original původní uzel
+     * @return kopie
+     */
     public static EnterOrderedInputNode create(final Node original) {
         return new EnterOrderedInputNode(original);
     }
     
-    /**
-     * @param name
-     * @param y 
-     * @param x 
-     */
-    protected EnterOrderedInputNode(final NormalWord name, final Network parent, final int x, final int y) {
+    private EnterOrderedInputNode(final NormalWord name, final Network parent, final int x, final int y) {
         super(name, parent, x, y);
     }
     
-    protected EnterOrderedInputNode(final Node original) {
+    private EnterOrderedInputNode(final Node original) {
         super(original);
     }
 
@@ -78,5 +90,13 @@ public class EnterOrderedInputNode extends AbstractNode implements OrderedNode, 
     @Override
     public void accept(StackProcessor processor) {
         processor.process(this);
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return getName().getText() + " (" + getNetwork().getName() + ")[" + getX() + ", " + getY() + "]";
     }
 }

@@ -18,12 +18,13 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker;
 
 /**
+ * Rozhraní pro provedení kontroly složeného vzoru dle specifikace jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public interface MixedPatternChecker {
-    CheckResult check(Object source, final String patternContent);
+public interface MixedPatternChecker extends Checker {
 }

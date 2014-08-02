@@ -18,34 +18,38 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-
-import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractCompoundElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TextFormattingElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TransformationalElement;
 
 /**
+ * Prohazuje podle implementace interpreta ve výstupu potomků mužské a ženské mluvnické rody. 
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-gender">http://www.alicebot.org/TR/2011/#section-gender</a>
  */
 public final class Gender extends AbstractCompoundElement implements TransformationalElement {
     private static final String NAME = "gender";
 
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content potomci
+     * @return prvek
+     */
     public static Gender create(final TemplateElement... content) {
         return new Gender(content);
     }
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content potomci
+     * @return prvek
+     */
     public static Gender create(final List<TemplateElement> content) {
         return new Gender(content);
     }
@@ -62,7 +66,7 @@ public final class Gender extends AbstractCompoundElement implements Transformat
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
 }

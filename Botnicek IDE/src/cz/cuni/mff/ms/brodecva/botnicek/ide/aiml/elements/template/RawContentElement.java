@@ -19,6 +19,8 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template;
 
 /**
+ * Prvek, který obsahuje nerozlišený obsah.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */

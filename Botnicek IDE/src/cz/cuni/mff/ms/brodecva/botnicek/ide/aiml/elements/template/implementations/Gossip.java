@@ -18,29 +18,41 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractCompoundElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CaptureElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 
 /**
+ * Interpret uloží výstup z potomků dle implementace pro pozdější vyhodnocení administrátorem.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-gossip">http://www.alicebot.org/TR/2011/#section-gossip</a>
  */
 public final class Gossip extends AbstractCompoundElement implements CaptureElement {
     private static final String NAME = "gossip";
 
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content potomci
+     * @return prvek
+     */
     public static Gossip create(final TemplateElement... content) {
         Preconditions.checkNotNull(content);
         
         return new Gossip(content);
     }
     
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content potomci
+     * @return prvek
+     */
     public static Gossip create(final List<TemplateElement> content) {
         return new Gossip(content);
     }
@@ -57,7 +69,7 @@ public final class Gossip extends AbstractCompoundElement implements CaptureElem
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
 }

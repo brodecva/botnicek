@@ -21,11 +21,31 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.views;
 import java.awt.Color;
 
 /**
+ * Výčet zobrazení typů umístění uzlu.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public enum PositionalType {
-    ISOLATED(Color.YELLOW), INNER(Color.BLACK), ENTER(Color.BLUE), EXIT(Color.GREEN);
+enum PositionalType {
+    /**
+     * Izolovaný.
+     */
+    ISOLATED(Color.YELLOW),
+    
+    /**
+     * Vnitřní.
+     */
+    INNER(Color.BLACK),
+    
+    /**
+     * Vstupní.
+     */
+    ENTER(Color.BLUE),
+    
+    /**
+     * Výstupní.
+     */
+    EXIT(Color.GREEN);
     
     private final Color rim;
     
@@ -34,7 +54,9 @@ public enum PositionalType {
     }
 
     /**
-     * @return the rim
+     * Vrátí barvu okraje.
+     * 
+     * @return barva okraje
      */
     public final Color getRim() {
         return rim;

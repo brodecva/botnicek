@@ -18,21 +18,24 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CaptureElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.SystemDefinedElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 
 /**
+ * Vypíše datum ve formátu dle implementace interpretu.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-system-defined-predicates">http://www.alicebot.org/TR/2011/#section-system-defined-predicates</a>
  */
 public class Date extends AbstractProperElement implements SystemDefinedElement {
     private static final String NAME = "date";
 
+    /**
+     * Vytvoří prvek.
+     * 
+     * @return prvek
+     */
     public static Date create() {
         return new Date();
     }
@@ -44,7 +47,7 @@ public class Date extends AbstractProperElement implements SystemDefinedElement 
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
 }

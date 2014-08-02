@@ -25,6 +25,8 @@ import com.google.common.base.Preconditions;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 
 /**
+ * Implementace atributu stromu odlehčeného objektového modelu jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
@@ -33,18 +35,29 @@ public final class AttributeImplementation implements Attribute {
     private final String value;
     private final URI namespace;
     
+    /**
+     * Vytvoří atribut.
+     * 
+     * @param name název
+     * @param value hodnota
+     * @param namespace prostor jmen
+     * @return atribut
+     */
     public static AttributeImplementation create(final String name, final String value, final URI namespace) {
         return new AttributeImplementation(name, value, namespace);
     }
     
+    /**
+     * Vytvoří atribut podporované verze jazyka AIML.
+     * 
+     * @param name název
+     * @param value hodnota
+     * @return atribut
+     */
     public static AttributeImplementation create(final String name, final String value) {
         return new AttributeImplementation(name, value, URI.create(AIML.NAMESPACE_URI.getValue()));
     }
     
-    /**
-     * @param name
-     * @param value
-     */
     private AttributeImplementation(final String name, final String value, final URI namespace) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(value);
@@ -55,6 +68,7 @@ public final class AttributeImplementation implements Attribute {
         this.value = value;
         this.namespace = namespace;
     }
+    
     /* (non-Javadoc)
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Attribute#getName()
      */
@@ -110,13 +124,22 @@ public final class AttributeImplementation implements Attribute {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        AttributeImplementation other = (AttributeImplementation) obj;
-        if (!name.equals(other.name)) {
+        final Attribute other = (Attribute) obj;
+        if (!name.equals(other.getName())) {
             return false;
         }
-        if (!namespace.equals(other.namespace)) {
+        if (!namespace.equals(other.getNamespace())) {
             return false;
         }
         return true;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Attribute [name=" + name + ", namespace="
+                + namespace + ", value=" + value + "]";
     }
 }

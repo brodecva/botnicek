@@ -23,13 +23,17 @@ import java.util.Set;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 
 /**
+ * Posluchač události zmenšení dostupných míst zanoření.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface AvailableReferencesExtendedListener {
 
     /**
-     * @param additionalReferences
+     * Reaguje na rozšíření.
+     * 
+     * @param additionalReferences uzly navíc
      */
     void referencesExtended(Set<EnterNode> additionalReferences);
 

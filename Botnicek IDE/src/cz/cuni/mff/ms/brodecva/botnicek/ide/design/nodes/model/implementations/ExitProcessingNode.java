@@ -18,43 +18,52 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations;
 
-import java.util.Iterator;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.AbstractNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InnerNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode;
 
 /**
+ * Výstupní procesní uzel.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class ExitProcessingNode extends AbstractNode implements ProcessingNode, ExitNode {
     
+    /**
+     * Vytvoří uzel dle parametrů.
+     * 
+     * @param name název uzlu
+     * @param parent rodičovská síť
+     * @param x umístění uzlu v souřadnici x
+     * @param y umístění uzlu v souřadnici y
+     * @return uzel
+     */
     public static ExitProcessingNode create(final NormalWord name, final Network parent, final int x, final int y) {
         return new ExitProcessingNode(name, parent, x, y);
     }
     
+    /**
+     * Zkopíruje uzel.
+     * 
+     * @param original původní uzel
+     * @return kopie
+     */
     public static ExitProcessingNode create(final Node original) {
         return new ExitProcessingNode(original);
     }
     
-    /**
-     * @param name
-     */
-    protected ExitProcessingNode(final NormalWord name, final Network parent, final int x, final int y) {
+    private ExitProcessingNode(final NormalWord name, final Network parent, final int x, final int y) {
         super(name, parent, x, y);
     }
     
-    protected ExitProcessingNode(final Node original) {
+    private ExitProcessingNode(final Node original) {
         super(original);
     }
 

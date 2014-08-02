@@ -22,12 +22,20 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.SystemDefinedElement;
 
 /**
+ * Vrací verzi interpretu.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see <a href="http://www.alicebot.org/TR/2011/#section-system-defined-predicates">http://www.alicebot.org/TR/2011/#section-system-defined-predicates</a>
  */
 public class Version extends AbstractProperElement implements SystemDefinedElement {
     private static final String NAME = "version";
 
+    /**
+     * Vytvoří prvek.
+     * 
+     * @return prvek
+     */
     public static Version create() {
         return new Version();
     }
@@ -39,7 +47,7 @@ public class Version extends AbstractProperElement implements SystemDefinedEleme
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
      */
     @Override
-    public String getName() {
+    public String getLocalName() {
         return NAME;
     }
 }

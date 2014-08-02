@@ -18,12 +18,13 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker;
 
 /**
+ * Rozhraní pro provedení kontroly prostého vzoru dle specifikace jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
-public interface SimplePatternChecker {
-    CheckResult check(Object source, final String patternContent);
+public interface SimplePatternChecker extends Checker {
 }

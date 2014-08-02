@@ -25,35 +25,46 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.AbstractNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InnerNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.OrderedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode;
 
 /**
+ * Vstupní řadící procesní uzel.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class EnterOrderedProcessingNode extends AbstractNode implements OrderedNode, ProcessingNode, EnterNode {
 
+    /**
+     * Vytvoří uzel dle parametrů.
+     * 
+     * @param name název uzlu
+     * @param parent rodičovská síť
+     * @param x umístění uzlu v souřadnici x
+     * @param y umístění uzlu v souřadnici y
+     * @return uzel
+     */
     public static EnterOrderedProcessingNode create(final NormalWord name, final Network parent, final int x, final int y) {
         return new EnterOrderedProcessingNode(name, parent, x, y);
     }
     
+    /**
+     * Zkopíruje uzel.
+     * 
+     * @param original původní uzel
+     * @return kopie
+     */
     public static EnterOrderedProcessingNode create(final Node original) {
         return new EnterOrderedProcessingNode(original);
     }
     
-    /**
-     * @param name
-     */
-    protected EnterOrderedProcessingNode(final NormalWord name, final Network parent, final int x, final int y) {
+    private EnterOrderedProcessingNode(final NormalWord name, final Network parent, final int x, final int y) {
         super(name, parent, x, y);
     }
     
-    protected EnterOrderedProcessingNode(final Node original) {
+    private EnterOrderedProcessingNode(final Node original) {
         super(original);
     }
 
@@ -79,5 +90,13 @@ public final class EnterOrderedProcessingNode extends AbstractNode implements Or
     @Override
     public void accept(StackProcessor processor) {
         processor.process(this);
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return getName().getText() + " (" + getNetwork().getName() + ")[" + getX() + ", " + getY() + "]";
     }
 }

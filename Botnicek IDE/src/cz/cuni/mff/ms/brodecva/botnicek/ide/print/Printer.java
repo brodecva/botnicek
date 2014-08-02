@@ -19,9 +19,18 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.print;
 
 /**
+ * Formátovač kódu jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface Printer {
+    /**
+     * Naformátuje kód.
+     * 
+     * @param input vstupní kód
+     * @return naformátovaný kód
+     * @throws PrintException pokud nelze konverzi provést
+     */
     String print(String input) throws PrintException;
 }
