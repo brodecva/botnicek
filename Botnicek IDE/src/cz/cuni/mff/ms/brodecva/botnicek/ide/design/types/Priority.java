@@ -1,0 +1,117 @@
+/**
+ * Copyright Václav Brodec 2013.
+ * 
+ * This file is part of Botníček.
+ * 
+ * Botníček is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Botníček is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package cz.cuni.mff.ms.brodecva.botnicek.ide.design.types;
+
+import java.io.Serializable;
+
+import com.google.common.base.Preconditions;
+
+/**
+ * <p>Priorita hrany určuje pořadí, v jakém je vyzkoušena hrana při průchodu sítí.</p>
+ * <p>Podle typu výchozího uzlu je tomu tak přímo, či je při náhodném výběru následující hrany v poměru priorit znásobena pravděpodobnost výběru.</p> 
+ * 
+ * @author Václav Brodec
+ * @version 1.0
+ */
+public final class Priority implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Minimální hodnota priority.
+     */
+    public static final int MIN_VALUE = 0;
+    
+    /**
+     * Maximální hodnota priority.
+     */
+    public static final int MAX_VALUE = 5;
+    
+    /**
+     * Výchozí hodnota priority.
+     */
+    public static final int DEFAULT = 1;
+    
+    private final int value;
+    
+    /**
+     * Vytvoří míru priority.
+     * 
+     * @param value hodnota priority
+     * @return priorita
+     */
+    public static Priority of(final int value) {
+        return new Priority(value);
+    }
+    
+    private Priority(final int value) {
+        Preconditions.checkArgument(value >= 0);
+        
+        this.value = value;
+    }
+    
+    /**
+     * Vrátí hodnotu priority.
+     * 
+     * @return hodnota
+     */
+    public int getValue() {
+        return this.value;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + value;
+        return result;
+    }
+
+    /**
+     * Porovná prioritu s objektem. Shoduje se pouze s prioritou stejné hodnoty.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Priority other = (Priority) obj;
+        if (value != other.value) {
+            return false;
+        }
+        return true;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Priority [value=" + value + "]";
+    }
+}
