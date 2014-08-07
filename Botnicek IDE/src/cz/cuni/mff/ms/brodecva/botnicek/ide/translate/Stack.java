@@ -71,12 +71,16 @@ public final class Stack {
      * @param words normální slova
      * @return strom prvků šablony, který provede přidání slov na zásobník
      */
-    public static TemplateElement push(final NormalWord... words) {
+    public static TemplateElement pushWords(final NormalWord... words) {
         Preconditions.checkNotNull(words);
         
         final ImmutableList<NormalWord> wordsCopy = ImmutableList.copyOf(words);
         
-        return push(Text.create(joinWithSpaces(wordsCopy)));
+        if (wordsCopy.isEmpty()) {
+            return push(ImmutableList.<TemplateElement>of());
+        } else {
+            return push(Text.create(joinWithSpaces(wordsCopy)));
+        }
     }
     
     /**
@@ -126,7 +130,7 @@ public final class Stack {
      * Vrátí strukturu, která při provedení nastaví zásobník podle parametrů.
      * 
      * @param words nová slova na zásobník
-     * @param rest zbytek prvků, jejichž vyhodnocení bude přidáno do zásobníku
+     * @param rest zbytek prvků, jejichž vyhodnocení bude nastaveno do zásobníku
      * @return strom prvků šablony, který provede nastavení zásobníku
      */
     public static TemplateElement prepend(final List<NormalWord> words, final List<TemplateElement> rest) {
@@ -135,9 +139,12 @@ public final class Stack {
         
         final List<NormalWord> contentCopy = ImmutableList.copyOf(words);
         
-        final List<TemplateElement> pushedList = ImmutableList.<TemplateElement>of(Text.create(joinWithSpaces(contentCopy)));
-        
-        return concatenate(pushedList, rest);
+        if (contentCopy.isEmpty()) {
+            return concatenate(ImmutableList.<TemplateElement>of(), rest);
+        } else {
+            final List<TemplateElement> pushedList = ImmutableList.<TemplateElement>of(Text.create(joinWithSpaces(contentCopy)));
+            return concatenate(pushedList, rest);
+        }
     }
     
     /**
@@ -149,9 +156,15 @@ public final class Stack {
      */
     public static TemplateElement concatenate(final List<TemplateElement> first, final List<TemplateElement> second) {
         final Builder<TemplateElement> newStackBuilder = ImmutableList.builder();
-        newStackBuilder.addAll(first);
-        newStackBuilder.add(Text.create(AIML.WORD_DELIMITER.getValue()));
-        newStackBuilder.addAll(second);
+        if (!first.isEmpty()) {
+            newStackBuilder.addAll(first);
+        }
+        if (!first.isEmpty() && !second.isEmpty()) {
+            newStackBuilder.add(Text.create(AIML.WORD_DELIMITER.getValue()));
+        }
+        if (!second.isEmpty()) {
+            newStackBuilder.addAll(second);
+        }
         
         return set(newStackBuilder.build());
     }

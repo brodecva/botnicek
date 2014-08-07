@@ -26,10 +26,10 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public class DragFinishedEvent extends AbstractEvent<DragFinishedListener> {
+public final class DragFinishedEvent extends AbstractEvent<DragFinishedListener> {
     
     /**
-     * Vytvorí událost.
+     * Vytvoří událost.
      * 
      * @return událost
      */

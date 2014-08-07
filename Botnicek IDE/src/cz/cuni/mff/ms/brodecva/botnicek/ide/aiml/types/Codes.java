@@ -20,6 +20,8 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
+
 /**
  * Pomocné metody pro tvorbu kódu šablony AIML.
  * 
@@ -71,7 +73,7 @@ public class Codes {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (Objects.isNull(obj)) {
                 return false;
             }
             if (!(obj instanceof Code)) {

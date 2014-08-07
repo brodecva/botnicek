@@ -112,8 +112,7 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
             
             setCurrent(arc);
             
-            final Processor processor = new UpdateProcessor();
-            arc.accept(processor);
+            callViews(getCallbackOnCurrent());
         }
     }
     
@@ -170,13 +169,11 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
     /**
      * Aktualizuje pohledy s ohledem na typ hrany, jejíž podrobnosti zobrazují.
      */
-    private abstract class ViewProcessor implements Processor {
-        
-        public abstract void apply(final Callback<ArcView> viewCallback);
+    private final static class ViewProcessor implements Processor<Callback<ArcView>> {
         
         @Override
-        public final void process(final TransitionArc arc) {
-            apply(new Callback<ArcView>() {
+        public final Callback<ArcView> process(final TransitionArc arc) {
+            return new Callback<ArcView>() {
     
                 @Override
                 public void call(final ArcView parameter) {
@@ -189,12 +186,12 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
                     parameter.updatedCode(arc.getCode());
                 }
                 
-            });
+            };
         }
     
         @Override
-        public final void process(final PredicateTestArc arc) {
-            apply(new Callback<ArcView>() {
+        public final Callback<ArcView> process(final PredicateTestArc arc) {
+            return new Callback<ArcView>() {
     
                 @Override
                 public void call(final ArcView parameter) {
@@ -211,12 +208,12 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
                     parameter.updatedValue(arc.getValue());
                 }
                 
-            });
+            };
         }
     
         @Override
-        public final void process(final CodeTestArc arc) {
-            apply(new Callback<ArcView>() {
+        public final Callback<ArcView> process(final CodeTestArc arc) {
+            return new Callback<ArcView>() {
     
                 @Override
                 public void call(final ArcView parameter) {
@@ -232,12 +229,12 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
                     parameter.updatedValue(arc.getValue());
                 }
                 
-            });
+            };
         }
     
         @Override
-        public final void process(final RecurentArc arc) {
-            apply(new Callback<ArcView>() {
+        public final Callback<ArcView> process(final RecurentArc arc) {
+            return new Callback<ArcView>() {
     
                 @Override
                 public void call(final ArcView parameter) {
@@ -252,12 +249,12 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
                     parameter.updatedTarget(arc.getTarget());
                 }
                 
-            });
+            };
         }
     
         @Override
-        public final void process(final PatternArc arc) {
-            apply(new Callback<ArcView>() {
+        public final Callback<ArcView> process(final PatternArc arc) {
+            return new Callback<ArcView>() {
     
                 @Override
                 public void call(final ArcView parameter) {
@@ -273,50 +270,8 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
                     parameter.updatedThat(arc.getThat());
                 }
                 
-            });
+            };
         }
-    }
-    
-    /**
-     * Provádí aktualizaci pohledů.
-     */
-    private final class UpdateProcessor extends ViewProcessor {
-
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.DefaultArcController.ViewProcessor#apply(cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Callback)
-         */
-        @Override
-        public void apply(final Callback<ArcView> viewCallback) {
-            Preconditions.checkNotNull(viewCallback);
-            
-            callViews(viewCallback);
-        }
-        
-    }
-    
-    /**
-     * Provádí vyplnění pohledů.
-     */
-    private final class FillProcessor extends ViewProcessor {
-
-        private final ArcView filled;
-        
-        public FillProcessor(final ArcView filled) {
-            Preconditions.checkNotNull(filled);
-            
-            this.filled = filled;
-        }
-        
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.DefaultArcController.ViewProcessor#apply(cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Callback)
-         */
-        @Override
-        public void apply(final Callback<ArcView> viewCallback) {
-            Preconditions.checkNotNull(viewCallback);
-            
-            viewCallback.call(this.filled);
-        }
-        
     }
 
     private static final SimplePatternChecker DEFAULT_SIMPLE_PATTERN_CHECKER =
@@ -665,8 +620,7 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
     public void fill(final ArcView view) {
         Preconditions.checkNotNull(view);
         
-        final Processor processor = new FillProcessor(view);
-        this.current.accept(processor);
+        getCallbackOnCurrent().call(view);
     }
 
     private void setCurrent(final Arc arc) {
@@ -682,5 +636,9 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
         removeAllListeners(ArcChangedEvent.class, this.current);
         removeAllListeners(FromRenamedEvent.class, this.current);
         removeAllListeners(ToRenamedEvent.class, this.current);
+    }
+    
+    private Callback<ArcView> getCallbackOnCurrent() {
+        return this.current.accept(new ViewProcessor());
     }
 }

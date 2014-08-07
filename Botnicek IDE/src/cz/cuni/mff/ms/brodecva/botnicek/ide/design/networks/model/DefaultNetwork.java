@@ -30,6 +30,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 
 
@@ -241,7 +242,7 @@ public final class DefaultNetwork implements Visitable, Network {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        if (Objects.isNull(obj)) {
             return false;
         }
         if (!(obj instanceof Network)) {

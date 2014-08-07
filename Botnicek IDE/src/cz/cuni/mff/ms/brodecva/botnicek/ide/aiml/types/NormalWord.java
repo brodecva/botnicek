@@ -34,6 +34,13 @@ public interface NormalWord extends Comparable<NormalWord> {
      */
     public String getText();
     
+    /** 
+     * Porovná textové hodnoty normálních slov.
+     * @see Comparable
+     */
+    @Override
+    public int compareTo(NormalWord other);
+    
     /* (non-Javadoc)
      * @see java.lang.Object#hashCode()
      */
@@ -44,5 +51,5 @@ public interface NormalWord extends Comparable<NormalWord> {
      * Porovná objekt s normálním slovem. Shoduje se pouze s jiným normálním slovem stejného textu.
      */
     @Override
-    public boolean equals(Object obj);
+    public boolean equals(Object object);
 }

@@ -45,6 +45,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.views.NetworkDisplay
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.controllers.SystemController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
 
 /**
  * Správce plochy s vnitřními okny grafů sítí a podrobností hran.
@@ -216,7 +217,7 @@ public class SystemPane implements ArcPropertiesDisplayView, NetworkDisplayView,
     
     private void removeFromParent() {
         final Container parent = this.desktopPane.getParent();
-        Preconditions.checkState(parent != null);
+        Preconditions.checkState(Components.hasParent(parent));
         
         parent.remove(this.desktopPane);
     }

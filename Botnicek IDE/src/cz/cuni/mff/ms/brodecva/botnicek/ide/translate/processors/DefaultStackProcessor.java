@@ -30,20 +30,17 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InnerNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.TemplateElementsGenerator;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons;
 
 /**
- * Výchozí implementace procesor zpracovávající uzly tak, že podle nich vytváří instrukce pro modifikaci zásobníku pomocí prvků šablony.  
+ * Výchozí implementace procesoru zpracovávajícího uzly tak, že podle nich vytváří instrukce pro modifikaci zásobníku pomocí prvků šablony.  
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultStackProcessor implements
-        StackProcessor, TemplateElementsGenerator {
+public final class DefaultStackProcessor implements StackProcessor<List<TemplateElement>> {
     private final NormalWord pullState;
     private final NormalWord pullStopState;
-    private List<TemplateElement> code = ImmutableList.of();
 
     /**
      * Vytvoří nový procesor.
@@ -64,14 +61,6 @@ public final class DefaultStackProcessor implements
         this.pullState = pullState;
         this.pullStopState = pullStopState;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.translate.TemplateElementsGenerator#getResult()
-     */
-    @Override
-    public List<TemplateElement> getResult() {
-        return this.code;
-    }
 
     /**
      * {@inheritDoc}
@@ -79,8 +68,8 @@ public final class DefaultStackProcessor implements
      * <p>Vnitřní uzel nijak nemodifikuje zásobník.</p>
      */
     @Override
-    public void process(final InnerNode node) {
-        this.code = ImmutableList.of(Stack.pop());
+    public List<TemplateElement> process(final InnerNode node) {
+        return ImmutableList.of(Stack.pop());
     }
 
     /**
@@ -89,8 +78,8 @@ public final class DefaultStackProcessor implements
      * <p>Výstupní uzel umístí na zásobník značku pro úklid.</p>
      */
     @Override
-    public void process(final ExitNode node) {
-        this.code = ImmutableList.of(Stack.push(this.pullState));
+    public List<TemplateElement> process(final ExitNode node) {
+        return ImmutableList.of(Stack.pushWords(this.pullState));
     }
 
     /**
@@ -99,8 +88,8 @@ public final class DefaultStackProcessor implements
      * <p>Vstupní uzel umístí na zásobník zarážku úklidu nezpracovaných stavů.</p>
      */
     @Override
-    public void process(final EnterNode node) {
-        this.code = ImmutableList.of(Stack.push(this.pullStopState));
+    public List<TemplateElement> process(final EnterNode node) {
+        return ImmutableList.of(Stack.pushWords(this.pullStopState));
     }
 
     /** 
@@ -109,7 +98,7 @@ public final class DefaultStackProcessor implements
      * <p>Izolovaný uzel je nedosažitelný, tedy jím provedené úpravy zásobníku jsou irelevantní.</p>
      */
     @Override
-    public void process(final IsolatedNode node) {
-        this.code = ImmutableList.of();
+    public List<TemplateElement> process(final IsolatedNode node) {
+        return ImmutableList.of();
     }
 }

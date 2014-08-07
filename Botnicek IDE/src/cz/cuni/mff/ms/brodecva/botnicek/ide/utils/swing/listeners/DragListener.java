@@ -30,6 +30,7 @@ import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
 
 /**
  * Posluchač pro tažení komponenty myší.
@@ -75,9 +76,6 @@ public final class DragListener extends MouseAdapter implements MouseInputListen
     }
     
     private DragListener(final Component component, final EventManager eventManager) {
-        assert component != null;
-        assert eventManager != null;
-        
         this.draggedComponent = component;
         this.eventManager = eventManager;
     }
@@ -127,7 +125,7 @@ public final class DragListener extends MouseAdapter implements MouseInputListen
 
     private void placeDraggedOnTopInParent() {
         final Container parent = this.draggedComponent.getParent();
-        Preconditions.checkState(parent != null);
+        Preconditions.checkState(Components.hasParent(parent));
                 
         parent.setComponentZOrder(this.draggedComponent, 0);
     }

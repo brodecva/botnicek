@@ -60,10 +60,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
  * @version 1.0
  * @see WordNode
  */
-/**
- * @author Václav Brodec
- * @version 1.0
- */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ WordNode.class })
 @Category(UnitTest.class)

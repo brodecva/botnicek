@@ -38,7 +38,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 public final class Get extends AbstractProperElement implements AtomicElement {
     private static final String NAME = "get";
 
-    private static final String ATT_NAME = null;
+    private static final String ATT_NAME = "name";
     
     private final NormalWord name;
     

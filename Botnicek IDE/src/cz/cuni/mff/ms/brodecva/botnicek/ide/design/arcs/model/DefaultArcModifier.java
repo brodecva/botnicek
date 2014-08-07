@@ -25,6 +25,7 @@ import com.google.common.collect.ObjectArrays;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 
 /**
  * <p>Výchozí implementace modifikátoru hran využívá reflexi ke konstrukci hrany nové.</p>
@@ -73,7 +74,7 @@ public class DefaultArcModifier implements ArcModifier {
         final Object[] allArguments = ObjectArrays.concat(new Object[] { arc.getNetwork(), newName, priority }, arguments, Object.class);
         
         try {
-            return (Arc) factoryMethod.invoke(null, allArguments);
+            return (Arc) factoryMethod.invoke(Intended.nullReference(), allArguments);
         } catch (final IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException e) {
             throw new IllegalArgumentException(e);

@@ -250,7 +250,7 @@ public class NormalizedNamingAuthority implements NamingAuthority {
         final int maxLen = 10;
         StringBuilder builder = new StringBuilder();
         builder.append("NormalizedNamingAuthority [used=");
-        builder.append(used != null ? toString(used, maxLen) : null);
+        builder.append(toString(used, maxLen));
         builder.append(", counter=");
         builder.append(counter);
         builder.append("]");

@@ -24,6 +24,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.NormalWordChecker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 
 /**
  * Výchozí implementace konstruktoru validního normálního názvu dle specifikace jazyka AIML.
@@ -81,7 +82,7 @@ public final class DefaultNormalWordBuilder implements NormalWordBuilder, Source
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (Objects.isNull(obj)) {
                 return false;
             }
             if (!(obj instanceof NormalWord)) {

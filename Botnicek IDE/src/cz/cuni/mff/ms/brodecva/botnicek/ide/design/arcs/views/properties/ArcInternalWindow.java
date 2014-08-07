@@ -73,7 +73,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types.P
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types.RecurentArcPanel;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types.TransitionArcPanel;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types.TypeView;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.layouts.WrapLayout;
 
 /**
@@ -350,7 +352,7 @@ public class ArcInternalWindow extends ArcViewAdapter {
         Preconditions.checkNotNull(arcClass);
         
         final JRadioButton typeButton = this.typesToRadios.get(arcClass);
-        Preconditions.checkArgument(typeButton != null);
+        Preconditions.checkArgument(Presence.isPresent(typeButton));
         
         typeButton.setSelected(true);
         switchTypePanel(arcClass);
@@ -432,7 +434,7 @@ public class ArcInternalWindow extends ArcViewAdapter {
 
     private void removeFromParent() {
         final Container parent = this.frame.getParent();
-        Preconditions.checkState(parent != null);
+        Preconditions.checkState(Components.hasParent(parent));
         
         parent.remove(this.frame);
         parent.revalidate();

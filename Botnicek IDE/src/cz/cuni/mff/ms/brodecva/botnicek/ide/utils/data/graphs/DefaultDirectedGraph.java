@@ -35,6 +35,7 @@ import com.google.common.collect.SetMultimap;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Function;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 
 /**
  * <p>Výchozí implementace grafu.</p>
@@ -51,7 +52,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Function;
  * @param <V> typ vrcholů
  * @param <E> typ hran
  */
-public class DefaultDirectedGraph<V, E> implements DirectedMultigraph<V, E> {
+public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E> {
     
     /**
      * Spojka mezi vrcholy. Pomáhá definovat, které vrcholy jsou propojeny, aniž by se tak dělo s užitím typu hrany.
@@ -125,7 +126,7 @@ public class DefaultDirectedGraph<V, E> implements DirectedMultigraph<V, E> {
      * 
      * @return multigraf
      */
-    public static <V, E> DirectedMultigraph<V, E> create() {
+    public static <V, E> DefaultDirectedGraph<V, E> create() {
         return new DefaultDirectedGraph<>();
     }
     
@@ -303,8 +304,8 @@ public class DefaultDirectedGraph<V, E> implements DirectedMultigraph<V, E> {
     public boolean removeEdge(final E edge) {
         Preconditions.checkNotNull(edge);
         
-        final Joint<V> affected = this.edgesToEndings.get(edge);
-        if (affected == null) {
+        final Joint<V> affected = this.edgesToEndings.remove(edge);
+        if (Presence.isAbsent(affected)) {
             return false;
         }
         
@@ -342,7 +343,7 @@ public class DefaultDirectedGraph<V, E> implements DirectedMultigraph<V, E> {
         Preconditions.checkNotNull(old);
         
         final Joint<V> affected = this.edgesToEndings.get(old);
-        Preconditions.checkArgument(affected != null);
+        Preconditions.checkArgument(Presence.isPresent(affected));
         
         this.edgesToEndings.inverse().forcePut(affected, fresh);
     }
@@ -423,7 +424,7 @@ public class DefaultDirectedGraph<V, E> implements DirectedMultigraph<V, E> {
     @Override
     public V from(final E edge) {
         final Joint<V> joint = this.edgesToEndings.get(edge);
-        Preconditions.checkArgument(joint != null);
+        Preconditions.checkArgument(Presence.isPresent(joint));
         
         return joint.getStart();
     }
@@ -434,7 +435,7 @@ public class DefaultDirectedGraph<V, E> implements DirectedMultigraph<V, E> {
     @Override
     public V to(final E edge) {
         final Joint<V> joint = this.edgesToEndings.get(edge);
-        Preconditions.checkArgument(joint != null);
+        Preconditions.checkArgument(Presence.isPresent(joint));
         
         return joint.getEnd();
     }

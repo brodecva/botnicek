@@ -27,6 +27,8 @@ import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
+
 /**
  * Interní rám, který lze posunout, aby nezakrýval sourozence po vytvoření.
  * 
@@ -95,7 +97,7 @@ public class UnobscuredInternalFrame extends JInternalFrame {
      */
     public final void offset() {
         final JDesktopPane desktop = getDesktopPane();
-        if (desktop == null) {
+        if (!Components.hasParent(desktop)) {
             return;
         }
                 

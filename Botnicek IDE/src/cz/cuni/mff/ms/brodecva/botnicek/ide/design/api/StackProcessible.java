@@ -30,6 +30,7 @@ public interface StackProcessible {
      * Přijme procesor.
      * 
      * @param processor procesor pro zásobník
+     * @return výsledek zpracování
      */
-    void accept(StackProcessor processor);
+    <T> T accept(StackProcessor<T> processor);
 }

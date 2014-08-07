@@ -117,7 +117,7 @@ public abstract class AbstractElement implements Element {
      */
     @Override
     public boolean hasChildren() {
-        return getChildren().isEmpty();
+        return !getChildren().isEmpty();
     }
     
     /* (non-Javadoc)

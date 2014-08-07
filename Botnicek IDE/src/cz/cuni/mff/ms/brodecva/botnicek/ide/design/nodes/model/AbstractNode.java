@@ -26,6 +26,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 
 
@@ -210,7 +211,7 @@ public abstract class AbstractNode implements Node {
             return true;
         }
         
-        if (obj == null) {
+        if (Objects.isNull(obj)) {
             return false;
         }
         

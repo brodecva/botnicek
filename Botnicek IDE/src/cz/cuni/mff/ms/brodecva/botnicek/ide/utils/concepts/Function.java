@@ -19,7 +19,7 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts;
 
 /**
- * Funkce. Implementující třídy by se měly vystříhat postranních efektů (mimo případné běhové výjimky).
+ * Funkce. Implementující třídy by se měly vystříhat postranních efektů (včetně vyhození výjimky).
  * 
  * @author Václav Brodec
  * @version 1.0

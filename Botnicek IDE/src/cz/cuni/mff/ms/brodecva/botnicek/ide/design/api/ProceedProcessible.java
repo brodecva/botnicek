@@ -30,6 +30,7 @@ public interface ProceedProcessible {
      * Přijme procesor.
      * 
      * @param processor procesor pro míru interaktivity přechodu do dalšího stavu
+     * @return výsledek zpracování
      */
-    void accept(ProceedProcessor processor);
+    <T> T accept(ProceedProcessor<T> processor);
 }

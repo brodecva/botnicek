@@ -98,11 +98,11 @@ public final class PredicateTestArc extends AbstractTestArc {
     }
 
     /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.arcs.api.Visitable#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.arcs.api.Visitor)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor)
      */
     @Override
-    public void accept(final Processor visitor) {
-        visitor.process(this);
+    public <T> T accept(final Processor<T> processor) {
+        return processor.process(this);
     }
 
     /* (non-Javadoc)

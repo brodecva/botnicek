@@ -30,6 +30,7 @@ public interface DispatchProcessible {
      * Přijme procesor.
      * 
      * @param processor procesor pro určení míry determinismu přechodu do dalšího stavu
+     * @return výsledek zpracování
      */
-    void accept(DispatchProcessor processor);
+    <T> T accept(DispatchProcessor<T> processor);
 }

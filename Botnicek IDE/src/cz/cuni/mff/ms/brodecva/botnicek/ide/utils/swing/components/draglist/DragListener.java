@@ -63,9 +63,6 @@ final class DragListener<E> implements DragSourceListener,
     }
     
     private DragListener(final DragOrderableList<E> list, final DragSource dragSource) {
-        assert list != null;
-        assert dragSource != null;
-        
         this.list = list;
         this.dragSource = dragSource;
     }

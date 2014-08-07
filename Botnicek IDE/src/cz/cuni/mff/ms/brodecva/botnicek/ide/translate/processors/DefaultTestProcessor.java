@@ -45,7 +45,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.PatternArc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.PredicateTestArc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.RecurentArc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.TransitionArc;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.TopicsGenerator;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIMLIndex;
 import cz.cuni.mff.ms.brodecva.botnicek.library.storage.AIMLWildcard;
@@ -56,7 +55,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.storage.AIMLWildcard;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultTestProcessor implements TestProcessor, TopicsGenerator {
+public final class DefaultTestProcessor implements TestProcessor<List<Topic>> {
     
     private final static java.util.Set<Character> WILDCARD_CHARACTERS;
     
@@ -73,7 +72,6 @@ public final class DefaultTestProcessor implements TestProcessor, TopicsGenerato
     private final NormalWord testingPredicate;
     private final NormalWord successState;
     private final NormalWord returnState;
-    private List<Topic> topics = ImmutableList.of();
 
     /**
      * Vytvoří testovací procesor.
@@ -96,14 +94,6 @@ public final class DefaultTestProcessor implements TestProcessor, TopicsGenerato
         this.successState = successState;
         this.returnState = returnState;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.translate.CategoriesGenerator#getResult()
-     */
-    @Override
-    public List<Topic> getResult() {
-        return this.topics;
-    }
 
     /**
      * {@inheritDoc}
@@ -111,7 +101,7 @@ public final class DefaultTestProcessor implements TestProcessor, TopicsGenerato
      * <p>Výsledkem zpracování je téma, které je pojmenováno po hraně a které obsahuje dvě kategorie. První kategorie slouží k samotnému porovnání se vzorem, druhá pak v případě neúspěchu předá zpracování dál.</p>
      */
     @Override
-    public void process(final PatternArc arc) {                
+    public List<Topic> process(final PatternArc arc) {                
         Preconditions.checkNotNull(arc);
         
         final MixedPattern pattern = arc.getPattern();
@@ -119,14 +109,14 @@ public final class DefaultTestProcessor implements TestProcessor, TopicsGenerato
         
         final TemplateElement popArc = Stack.pop();
         final TemplateElement doCode = RawContent.create(arc.getCode().getText());
-        final TemplateElement pushTarget = Stack.push(arc.getTo().getName());
+        final TemplateElement pushTarget = Stack.pushWords(arc.getTo().getName());
         final TemplateElement passCopy = Srai.create(patternCopy);
         final TemplateElement pass = Sr.create();
         
         final List<TemplateElement> successCode = ImmutableList.of(doCode, popArc, pushTarget, passCopy);
         final List<TemplateElement> failCode = ImmutableList.of(popArc, pass);
         
-        this.topics = ImmutableList.of(createArcTopic(arc,
+        return ImmutableList.of(createArcTopic(arc,
                         Category.create(pattern, arc.getThat(), Template.create(successCode)),
                         Category.createUniversal(Template.create(failCode))));
     }
@@ -175,12 +165,12 @@ public final class DefaultTestProcessor implements TestProcessor, TopicsGenerato
      * <p>Výsledkem zpracování je téma, které je pojmenováno po hraně a které obsahuje jednu kategorii. V té je kód šablony, který porovná hodnotu predikátu s očekávanou a podle toho přidá cíl hrany na zásobník či nikoli.</p> 
      */
     @Override
-    public void process(final PredicateTestArc arc) {        
+    public List<Topic> process(final PredicateTestArc arc) {        
         Preconditions.checkNotNull(arc);
         
         final TemplateElement popArc = Stack.pop();
         final TemplateElement doCode = RawContent.create(arc.getCode().getText());
-        final TemplateElement pushTarget = Stack.push(arc.getTo().getName());
+        final TemplateElement pushTarget = Stack.pushWords(arc.getTo().getName());
         
         final ValueOnlyListItem success = ValueOnlyListItem.create(arc.getValue(), doCode, popArc, pushTarget);
         final DefaultListItem fail = DefaultListItem.create(popArc);
@@ -190,7 +180,7 @@ public final class DefaultTestProcessor implements TestProcessor, TopicsGenerato
         
         final List<TemplateElement> code = ImmutableList.of(choose, pass);
         
-        this.topics = ImmutableList.of(createArcTopic(arc, code));
+        return ImmutableList.of(createArcTopic(arc, code));
     }
     
     /**
@@ -199,7 +189,7 @@ public final class DefaultTestProcessor implements TestProcessor, TopicsGenerato
      * <p>Výsledkem zpracování je téma, které je pojmenováno po hraně a které obsahuje jednu kategorii. V té je kód šablony, který porovná výstup testovaného kódu s očekávanou hodnotou a podle toho přidá cíl hrany na zásobník či nikoli.</p> 
      */
     @Override
-    public void process(final CodeTestArc arc) {
+    public List<Topic> process(final CodeTestArc arc) {
         Preconditions.checkNotNull(arc);
         
         final TemplateElement doTested = RawContent.create(arc.getTested().getText());
@@ -209,7 +199,7 @@ public final class DefaultTestProcessor implements TestProcessor, TopicsGenerato
         final TemplateElement hideResult = Think.create(saveResult);
         final TemplateElement popArc = Stack.pop();
         final TemplateElement doCode = RawContent.create(arc.getCode().getText());
-        final TemplateElement pushTarget = Stack.push(arc.getTo().getName());
+        final TemplateElement pushTarget = Stack.pushWords(arc.getTo().getName());
         
         final ValueOnlyListItem success = ValueOnlyListItem.create(arc.getValue(), doCode, popArc, pushTarget);
         final DefaultListItem fail = DefaultListItem.create(popArc);
@@ -222,7 +212,7 @@ public final class DefaultTestProcessor implements TestProcessor, TopicsGenerato
         
         List<TemplateElement> code = ImmutableList.of(hideResult, choose, hideClear, pass);
         
-        this.topics = ImmutableList.of(createArcTopic(arc, code));
+        return ImmutableList.of(createArcTopic(arc, code));
     }
 
     /**
@@ -231,19 +221,19 @@ public final class DefaultTestProcessor implements TestProcessor, TopicsGenerato
      * <p>Výsledkem zpracování jsou dvě témata. První téma zavede cíl zanoření na zásobník, na který před tím uložilo jako návratovou hodnotu název druhého tématu, které se pak provede v případě úspěšného průchodu podsítí.</p> 
      */
     @Override
-    public void process(final RecurentArc arc) {
+    public List<Topic> process(final RecurentArc arc) {
         Preconditions.checkNotNull(arc);
         
         final TemplateElement popArc = Stack.pop();
         final TemplateElement doCode = RawContent.create(arc.getCode().getText());
-        final TemplateElement pushTarget = Stack.push(arc.getTo().getName());
-        final TemplateElement dive = Stack.push(arc.getTarget().getName(), this.returnState, arc.getName());
+        final TemplateElement pushTarget = Stack.pushWords(arc.getTo().getName());
+        final TemplateElement dive = Stack.pushWords(arc.getTarget().getName(), this.returnState, arc.getName());
         final TemplateElement pass = Sr.create();
         
         final List<TemplateElement> diveCode = ImmutableList.of(popArc, dive, pass);
         final List<TemplateElement> successCode = ImmutableList.of(doCode, popArc, pushTarget, pass);
         
-        this.topics = ImmutableList.of(
+        return ImmutableList.of(
                 createArcTopic(arc, diveCode),
                 Stack.createState(this.successState, Category.createUniversal(Template.create(successCode)))
         );
@@ -255,15 +245,15 @@ public final class DefaultTestProcessor implements TestProcessor, TopicsGenerato
      * <p>Výsledkem zpracování jsou dvě témata. První téma zavede cíl zanoření na zásobník, na který před tím uložilo jako návratovou hodnotu název druhého tématu, které se pak provede v případě úspěšného průchodu podsítí.</p> 
      */
     @Override
-    public void process(final TransitionArc arc) {
+    public List<Topic> process(final TransitionArc arc) {
         final TemplateElement doCode = RawContent.create(arc.getCode().getText());
         final TemplateElement popArc = Stack.pop();
-        final TemplateElement pushTarget = Stack.push(arc.getTo().getName());
+        final TemplateElement pushTarget = Stack.pushWords(arc.getTo().getName());
         final TemplateElement pass = Sr.create();
         
         final List<TemplateElement> code = ImmutableList.of(doCode, popArc, pushTarget, pass);
         
-        this.topics = ImmutableList.of(createArcTopic(arc, code));
+        return ImmutableList.of(createArcTopic(arc, code));
     }
     
     private static Topic createArcTopic(final Arc arc, final List<TemplateElement> code) {

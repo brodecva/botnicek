@@ -20,6 +20,8 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
+
 
 /**
  * Výchozí implementace výsledku kontroly.
@@ -156,7 +158,7 @@ public final class DefaultCheckResult implements
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        if (Objects.isNull(obj)) {
             return false;
         }
         if (!(obj instanceof CheckResult)) {

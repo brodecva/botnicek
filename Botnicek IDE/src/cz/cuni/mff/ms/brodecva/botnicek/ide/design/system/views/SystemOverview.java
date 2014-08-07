@@ -18,6 +18,7 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.views;
 
+import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
@@ -36,7 +37,10 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.controllers.NetworkD
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.controllers.SystemController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
 
 /**
  * Přehled struktury systému v podobě plochého stromu.
@@ -94,7 +98,7 @@ public class SystemOverview implements SystemView {
             
             final TreePath selectionPath = tree.getPathForLocation(x, y);
             final Object selected = selectionPath.getLastPathComponent();
-            if (selected == null) {
+            if (Presence.isAbsent(selected)) {
                 return;
             }
             
@@ -103,8 +107,8 @@ public class SystemOverview implements SystemView {
                 final Object root = model.getRoot();
                 
                 if (selected.equals(root)) {
-                    final Object addedNetworkNameInput = JOptionPane.showInputDialog(null, UiLocalizer.print("NewNetworkName"), UiLocalizer.print("NewNetworkNameTitle"), JOptionPane.QUESTION_MESSAGE);
-                    if (addedNetworkNameInput == null) {
+                    final Object addedNetworkNameInput = JOptionPane.showInputDialog(Intended.<Component>nullReference(), UiLocalizer.print("NewNetworkName"), UiLocalizer.print("NewNetworkNameTitle"), JOptionPane.QUESTION_MESSAGE);
+                    if (Components.hasUserCanceledInput(addedNetworkNameInput)) {
                         return;
                     }
                     
@@ -112,7 +116,7 @@ public class SystemOverview implements SystemView {
                     try {
                         systemController.addNetwork((String) addedNetworkNameInput);
                     } catch (final IllegalArgumentException ex) {
-                        JOptionPane.showMessageDialog(null,
+                        JOptionPane.showMessageDialog(Intended.<Component>nullReference(),
                                 UiLocalizer.print("NetworkNameImpossibleMessage"),
                                         UiLocalizer.print("NetworkNameImpossibleTitle"),
                                 JOptionPane.ERROR_MESSAGE);
@@ -135,7 +139,7 @@ public class SystemOverview implements SystemView {
         
         public void valueChanged(final TreeSelectionEvent e) {
             final Object selected = tree.getLastSelectedPathComponent();
-            if (selected == null) {
+            if (Presence.isAbsent(selected)) {
                 return;
             }
             
@@ -270,9 +274,9 @@ public class SystemOverview implements SystemView {
     
     private void removeFromParent() {
         final JViewport parent = (JViewport) this.tree.getParent();
-        Preconditions.checkState(parent != null);
+        Preconditions.checkState(Components.hasParent(parent));
         
-        parent.setView(null);
+        parent.setView(Intended.<Component>nullReference());
     }
     
     private void unsubscribe() {

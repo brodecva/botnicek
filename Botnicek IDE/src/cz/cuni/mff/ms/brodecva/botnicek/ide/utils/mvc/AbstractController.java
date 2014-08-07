@@ -30,6 +30,7 @@ import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.MappedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event;
@@ -59,7 +60,7 @@ public abstract class AbstractController<V> implements Controller<V> {
     }
     
     /**
-     * Vrátí užitý spráce událostí.
+     * Vrátí užitý správce událostí.
      * 
      * @return užitý správce událostí
      */
@@ -125,7 +126,7 @@ public abstract class AbstractController<V> implements Controller<V> {
     private <K, L> void addListenerStrongReference(final Class<? extends MappedEvent<K, L>> type, final K key, final L listener) {
         @SuppressWarnings("unchecked")
         final Set<L> listeners = (Set<L>) this.eventsAndKeysToStrongListenerRefs.get(type, key);
-        if (listeners == null) {
+        if (Presence.isAbsent(listeners)) {
             @SuppressWarnings("unchecked")
             final Set<L> newListeners = Sets.newHashSet(listener); 
             this.eventsAndKeysToStrongListenerRefs.put(type, key, newListeners);
@@ -138,7 +139,7 @@ public abstract class AbstractController<V> implements Controller<V> {
     private <K, L> void removeListenerStrongReference(final Class<? extends MappedEvent<K, L>> type, final K key, final L listener) {
         @SuppressWarnings("unchecked")
         final Set<L> listeners = (Set<L>) this.eventsAndKeysToStrongListenerRefs.get(type, key);
-        Preconditions.checkArgument(listeners != null);
+        Preconditions.checkArgument(Presence.isPresent(listeners));
         
         final boolean contained = listeners.remove(listener);
         Preconditions.checkArgument(contained);
@@ -236,7 +237,7 @@ public abstract class AbstractController<V> implements Controller<V> {
         
         @SuppressWarnings("unchecked")
         final Set<L> listeners = (Set<L>) this.eventsAndKeysToStrongListenerRefs.get(type, key);
-        Preconditions.checkArgument(listeners != null);
+        Preconditions.checkArgument(Presence.isPresent(listeners));
         
         final Iterator<L> listenerIterator = listeners.iterator();
         while (listenerIterator.hasNext()) {
@@ -255,7 +256,7 @@ public abstract class AbstractController<V> implements Controller<V> {
         
         @SuppressWarnings("unchecked")
         final Set<L> listeners = (Set<L>) this.eventsToStrongListenerRefs.get(type);
-        Preconditions.checkArgument(listeners != null);
+        Preconditions.checkArgument(Presence.isPresent(listeners));
         
         final Iterator<L> listenerIterator = listeners.iterator();
         while (listenerIterator.hasNext()) {

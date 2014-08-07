@@ -75,6 +75,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.NetworkAddedEve
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.SystemRenamedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.Update.NodeSwitch;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
@@ -388,7 +389,7 @@ public class DefaultSystem implements System {
         Preconditions.checkNotNull(name);
         
         final Node removed = this.graph.getVertex(name);
-        Preconditions.checkArgument(removed != null);
+        Preconditions.checkArgument(Presence.isPresent(removed));
         
         removeNode(removed);
     }
@@ -401,7 +402,7 @@ public class DefaultSystem implements System {
         checkForReferences(removed, network, "RemovalForbidden");
         
         final Set<EnterNode> initials = initial(network);
-        assert initials != null;
+        assert Presence.isPresent(initials);
         final Update removeUpdate = this.graph.removeAndRealign(removed, this.realignmentProcessor, ImmutableMap.copyOf(this.references.asMap()), ImmutableSet.copyOf(initials));
         
         this.statesNamingAuthority.release(removed.getName().getText());
@@ -483,10 +484,10 @@ public class DefaultSystem implements System {
         Preconditions.checkArgument(contains(network));
         
         final Node from = this.graph.getVertex(fromNodeName);
-        Preconditions.checkArgument(from != null);
+        Preconditions.checkArgument(Presence.isPresent(from));
                 
         final Node to = this.graph.getVertex(toNodeName);
-        Preconditions.checkArgument(to != null);
+        Preconditions.checkArgument(Presence.isPresent(to));
         
         Preconditions.checkArgument(from.getNetwork().equals(network));
         Preconditions.checkArgument(to.getNetwork().equals(network));        
@@ -523,7 +524,7 @@ public class DefaultSystem implements System {
         Preconditions.checkNotNull(name);
         
         final Arc removed = this.graph.getEdge(name);
-        Preconditions.checkArgument(removed != null);
+        Preconditions.checkArgument(Presence.isPresent(removed));
     
         removeArc(removed);
     }
@@ -578,7 +579,7 @@ public class DefaultSystem implements System {
         Preconditions.checkArgument(type.equals(InputNode.class) || type.equals(ProcessingNode.class) || type.equals(RandomNode.class) || type.equals(OrderedNode.class));
         
         final Node oldVersion = this.graph.getVertex(name);
-        Preconditions.checkArgument(oldVersion != null);
+        Preconditions.checkArgument(Presence.isPresent(oldVersion));
         
         if (type.isAssignableFrom(oldVersion.getClass())) {
             return;
@@ -604,7 +605,7 @@ public class DefaultSystem implements System {
         Preconditions.checkNotNull(newName);        
         
         final Node oldVersion = this.graph.getVertex(name);
-        Preconditions.checkArgument(oldVersion != null);
+        Preconditions.checkArgument(Presence.isPresent(oldVersion));
         
         if (name.equals(newName)) {
             return;
@@ -650,7 +651,7 @@ public class DefaultSystem implements System {
         Preconditions.checkArgument(y >= 0);
         
         final Node oldVersion = this.graph.getVertex(name);
-        Preconditions.checkArgument(oldVersion != null);
+        Preconditions.checkArgument(Presence.isPresent(oldVersion));
         
         if (oldVersion.getX() == x && oldVersion.getY() == y) {
             return;
@@ -840,7 +841,7 @@ public class DefaultSystem implements System {
         Preconditions.checkNotNull(network);
         
         final String name = this.networksNames.get(network);
-        Preconditions.checkArgument(name != null);
+        Preconditions.checkArgument(Presence.isPresent(name));
         
         return name;
     }

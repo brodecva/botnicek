@@ -27,17 +27,14 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementatio
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InputNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.TemplateElementsGenerator;
 
 /**
- * Procesor, který generuje rekurzivní značky do šablony podle toho, zda-li má výpočet probíhat dál, či čekat na vstup.
+ * Výchozí implementace procesoru, který generuje rekurzivní značky do šablony podle toho, zda-li má výpočet probíhat dál, či čekat na vstup.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultProceedProcessor implements ProceedProcessor, TemplateElementsGenerator {
-    
-    private List<TemplateElement> code = ImmutableList.of();
+public final class DefaultProceedProcessor implements ProceedProcessor<List<TemplateElement>> {
     
     /**
      * Vytvoří procesor.
@@ -50,27 +47,22 @@ public final class DefaultProceedProcessor implements ProceedProcessor, Template
     
     private DefaultProceedProcessor() {
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.translate.TemplateElementsGenerator#getResult()
-     */
-    public List<TemplateElement> getResult() {
-        return this.code;
-    }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode)
+    /** 
+     * {@inheritDoc}
+     * 
+     * <p>Procesní uzel přidá do šablony instrukci pro rekurzivní zanoření výpočtu nad vstupem ze vzoru.</p>
      */
-    @Override
-    public void process(final ProcessingNode node) {
-        this.code = ImmutableList.<TemplateElement>of(Sr.create());
+    public List<TemplateElement> process(final ProcessingNode node) {
+        return ImmutableList.<TemplateElement>of(Sr.create());
     }
     
-    /**
+    /** 
+     * {@inheritDoc}
      * 
+     * <p>Zadávací uzel nepřidá do šablony žádný kód. Výpočet se tedy přeruší v daném tématu a bude vyčkávat na zadání od uživatele.</p>
      */
-    @Override
-    public void process(final InputNode node) {
-        this.code = ImmutableList.of();
+    public List<TemplateElement> process(final InputNode node) {
+        return ImmutableList.of();
     }
 }

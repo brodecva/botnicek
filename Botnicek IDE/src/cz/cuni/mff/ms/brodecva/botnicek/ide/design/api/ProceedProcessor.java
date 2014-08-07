@@ -26,19 +26,22 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode;
  * 
  * @author Václav Brodec
  * @version 1.0
+ * @param <T> typ výsledku zpracování
  */
-public interface ProceedProcessor {
+public interface ProceedProcessor<T> {
     /**
      * Zpracuje uzel čekající na uživatelský vstup.
      * 
      * @param node blokující uzel
+     * @return výsledek zpracování
      */
-    void process(InputNode node);
+    T process(InputNode node);
     
     /**
      * Zpracuje výpočetní uzel.
      * 
      * @param node uzel, který pokračuje ve výpočtu
+     * @return výsledek zpracování
      */
-    void process(ProcessingNode node);
+    T process(ProcessingNode node);
 }

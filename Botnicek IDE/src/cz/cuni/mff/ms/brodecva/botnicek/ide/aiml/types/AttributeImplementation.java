@@ -22,6 +22,7 @@ import java.net.URI;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 
 /**
@@ -118,9 +119,11 @@ public final class AttributeImplementation implements Attribute {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        
+        if (Objects.isNull(obj)) {
             return false;
         }
+        
         if (getClass() != obj.getClass()) {
             return false;
         }

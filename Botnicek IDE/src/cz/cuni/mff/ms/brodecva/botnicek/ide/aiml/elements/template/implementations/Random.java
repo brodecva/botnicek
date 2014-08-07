@@ -25,8 +25,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CompoundElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.lists.DefaultListItem;
 
 /**
  * Vybírá s rovnoměrným rozdělením jednu z obsažených položek, jejíž výstup vrátí jako svůj.
@@ -78,5 +80,18 @@ public class Random extends AbstractProperElement implements CompoundElement {
      */
     public List< List<TemplateElement> > getChoices() {
         return this.choices;
+    }
+    
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement#getChildren()
+     */
+    @Override
+    public List<Element> getChildren() {
+        final ImmutableList.Builder<Element> listBuilder = ImmutableList.builder();
+        for (final List<TemplateElement> choice : this.choices) {
+            listBuilder.add(DefaultListItem.create(choice));
+        }
+        
+        return listBuilder.build();
     }
 }

@@ -38,7 +38,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
  * @see <a href="http://www.alicebot.org/TR/2011/#section-condition">http://www.alicebot.org/TR/2011/#section-condition</a>
  */
 public final class ValueOnlyListItem extends AbstractListItem {
-    private static final String ATT_VALUE = null;
+    private static final String ATT_VALUE = "value";
     private final SimplePattern value;
     
     /**

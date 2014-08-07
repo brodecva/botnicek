@@ -43,6 +43,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.tables.DefaultPredicat
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.tables.PredicatesTableModel;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.tables.PredicatesTableModelFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.draglist.DragOrderableList;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.AIMLBotConfiguration;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration;
@@ -179,7 +180,7 @@ public final class BotSettingsDialog implements BotSettingsView {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 final String input = JOptionPane.showInputDialog(newInstance.dialog, UiLocalizer.print("LOADING_ORDER_NEW_ITEM_MESSAGE"), UiLocalizer.print("LOADING_ORDER_NEW_ITEM_TITLE"), JOptionPane.QUESTION_MESSAGE);
-                if (input == null || input.isEmpty()) {
+                if (Components.hasUserCanceledInput(input) || input.isEmpty()) {
                     return;
                 }
                 
@@ -195,7 +196,7 @@ public final class BotSettingsDialog implements BotSettingsView {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 final String input = JOptionPane.showInputDialog(newInstance.dialog, UiLocalizer.print("LOADING_ORDER_NEW_ITEM_MESSAGE"), UiLocalizer.print("LOADING_ORDER_NEW_ITEM_TITLE"), JOptionPane.QUESTION_MESSAGE);
-                if (input == null || input.isEmpty()) {
+                if (Components.hasUserCanceledInput(input) || input.isEmpty()) {
                     return;
                 }
                 

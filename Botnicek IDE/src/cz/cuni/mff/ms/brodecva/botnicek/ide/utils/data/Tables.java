@@ -28,7 +28,7 @@ import com.google.common.collect.Table;
 import com.google.common.collect.ImmutableTable.Builder;
 
 /**
- * Tabulky.
+ * Pomocné metody pro práci s tabulkami.
  * 
  * @author Václav Brodec
  * @version 1.0

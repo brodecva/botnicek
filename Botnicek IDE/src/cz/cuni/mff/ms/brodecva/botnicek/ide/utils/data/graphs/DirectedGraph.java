@@ -24,14 +24,14 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Function;
 
 /**
- * Orientovaný multigraf.
+ * Orientovaný graf.
  * 
  * @author Václav Brodec
  * @version 1.0
  * @param <V> typu vrcholu
  * @param <E> typ hrany
  */
-public interface DirectedMultigraph<V, E> {
+public interface DirectedGraph<V, E> {
     /**
      * Indikuje přítomnost vrcholu v grafu.
      * 

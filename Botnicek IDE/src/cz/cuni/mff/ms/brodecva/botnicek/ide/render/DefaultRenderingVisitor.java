@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableMap;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractRawElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Attribute;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.XML;
 
@@ -69,7 +70,8 @@ public final class DefaultRenderingVisitor implements RenderingVisitor {
         this.output.append(XML.TAG_START);
         
         final String aimlPrefix = this.namespacesToPrefixes.get(URI.create(AIML.NAMESPACE_URI.getValue()));
-        assert aimlPrefix != null;
+        Preconditions.checkState(Presence.isPresent(aimlPrefix));
+        
         if (!aimlPrefix.isEmpty()) {
             this.output.append(aimlPrefix);
             this.output.append(XML.PREFIX_DELIMITER);
@@ -78,7 +80,7 @@ public final class DefaultRenderingVisitor implements RenderingVisitor {
         
         renderAttributes(element.getAttributes());
         
-        if (!element.hasChildren()) {
+        if (element.hasChildren()) {
             this.output.append(XML.TAG_END);
         }
     }
@@ -87,7 +89,7 @@ public final class DefaultRenderingVisitor implements RenderingVisitor {
         for (final Attribute attribute : attributes) {
             this.output.append(XML.SPACE);
             final String prefix = this.namespacesToPrefixes.get(attribute.getNamespace());
-            if (prefix != null && !prefix.isEmpty()) {
+            if (Presence.isPresent(prefix) && !prefix.isEmpty()) {
                 this.output.append(prefix);
                 this.output.append(XML.PREFIX_DELIMITER);
             }
@@ -107,11 +109,11 @@ public final class DefaultRenderingVisitor implements RenderingVisitor {
     @Override
     public void visitExit(final AbstractProperElement element) {
         if (element.hasChildren()) {
-            this.output.append(XML.EMPTY_TAG_END);
-        } else {
             this.output.append(XML.CLOSING_TAG_START);
             this.output.append(element.getLocalName());
             this.output.append(XML.TAG_END);
+        } else {
+            this.output.append(XML.EMPTY_TAG_END);
         }
     }
     
@@ -120,7 +122,7 @@ public final class DefaultRenderingVisitor implements RenderingVisitor {
      */
     @Override
     public void visitEnter(final AbstractRawElement element) {
-        output.append(element.getText());
+        this.output.append(element.getText());
     }
 
     /* (non-Javadoc)

@@ -70,8 +70,6 @@ public abstract class AbstractDoubleIndexedElement extends AbstractProperElement
     }
     
     private AbstractDoubleIndexedElement(final Optional<Index> index, final Optional<TwoDimensionalIndex> index2d) {
-        assert index != null;
-        assert index2d != null;
         assert !(this.index.isPresent() && this.index2d.isPresent());
         
         this.index = index;

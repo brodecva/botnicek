@@ -32,6 +32,8 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
+
 /**
  * <p>Model se dvěma sloupci, které mohou mít libovolný typ (ne nutně stejný) - název a hodnota.</p>
  * <p>V případě, že typ názvu neimplementuje rozhraní {@link Comparable} a není sám vůči sobě porovnatelný, musí dědící třída dodat vlastní {@link Comparator} v konstruktoru.</p>
@@ -54,8 +56,6 @@ public abstract class AbstractNameValueTableModel<N, V> extends AbstractTableMod
         private final Comparator<? super N> comparator;
 
         private OptionalLastComparator(final Comparator<? super N> keyComparator) {
-            assert keyComparator != null;
-            
             this.comparator = keyComparator;
         }
 
@@ -239,7 +239,7 @@ public abstract class AbstractNameValueTableModel<N, V> extends AbstractTableMod
      */
     @Override
     public void setValueAt(final Object aValue, final int rowIndex, final int columnIndex) {
-        if (aValue == null) {
+        if (Presence.isAbsent(aValue)) {
             return;
         }
         

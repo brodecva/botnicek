@@ -28,33 +28,38 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
  * 
  * @author Václav Brodec
  * @version 1.0
+ * @param <T> typ výsledku zpracování
  */
-public interface StackProcessor {
+public interface StackProcessor<T> {
     /**
      * Zpracuje vnitřní uzel.
      * 
      * @param node vnitřní uzel
+     * @return výsledek zpracování
      */
-    void process(InnerNode node);
+    T process(InnerNode node);
 
     /**
      * Zpracuje výstupní uzel.
      * 
      * @param node výstupní uzel
+     * @return výsledek zpracování
      */
-    void process(ExitNode node);
+    T process(ExitNode node);
 
     /**
      * Zpracuje vstupní uzel.
      * 
      * @param node vstupní uzel
+     * @return výsledek zpracování
      */
-    void process(EnterNode node);
+    T process(EnterNode node);
     
     /**
      * Zpracuje izolovaný uzel.
      * 
      * @param node izolovaný uzel
+     * @return výsledek zpracování
      */
-    void process(IsolatedNode node);
+    T process(IsolatedNode node);
 }

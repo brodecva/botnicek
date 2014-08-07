@@ -22,6 +22,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.LayoutManager;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -43,7 +44,10 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesContro
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.views.NodeUI;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.views.NodesView;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.logging.LocalizedLogger;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.FramedComponent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.UnobscuredInternalFrame;
 
@@ -78,7 +82,7 @@ public final class NetworkInternalWindow implements NetworkView, NodesView, Arcs
 
     private final UnobscuredInternalFrame frame = UnobscuredInternalFrame.create();    
     
-    private final JPanel designPanel = new JPanel(null) {
+    private final JPanel designPanel = new JPanel(Intended.<LayoutManager>nullReference()) {
         
         private static final long serialVersionUID = 1L;
 
@@ -211,7 +215,6 @@ public final class NetworkInternalWindow implements NetworkView, NodesView, Arcs
         this.arcPropertiesController = arcPropertiesController;
         this.arcDesignListener = arcDesignListenerFactory.produce(this.designPanel, this.nodes.values(), this.arcs.values(), networkController);
         
-        this.designPanel.setLayout(null);
         this.designPanel.setBackground(Color.GRAY);
         
         this.designScrollPane.setViewportView(this.designPanel);
@@ -257,7 +260,7 @@ public final class NetworkInternalWindow implements NetworkView, NodesView, Arcs
         Preconditions.checkNotNull(node);
         
         final NodeUI present = this.nodes.remove(node.getName());
-        Preconditions.checkArgument(present != null);
+        Preconditions.checkArgument(Presence.isPresent(present));
         
         this.designPanel.remove(present);
         this.designPanel.repaint();
@@ -273,7 +276,7 @@ public final class NetworkInternalWindow implements NetworkView, NodesView, Arcs
         Preconditions.checkNotNull(newVersion);
         
         final NodeUI present = this.nodes.remove(oldVersion.getName());
-        Preconditions.checkArgument(present != null);
+        Preconditions.checkArgument(Presence.isPresent(present));
         
         present.nodeRenamed(newVersion);
         
@@ -290,7 +293,7 @@ public final class NetworkInternalWindow implements NetworkView, NodesView, Arcs
         Preconditions.checkNotNull(newVersion);
         
         final NodeUI present = this.nodes.remove(oldVersion.getName());
-        Preconditions.checkArgument(present != null);
+        Preconditions.checkArgument(Presence.isPresent(present));
         
         present.nodeMoved(newVersion);
         
@@ -307,7 +310,7 @@ public final class NetworkInternalWindow implements NetworkView, NodesView, Arcs
         Preconditions.checkNotNull(newVersion);
         
         final NodeUI present = this.nodes.remove(oldVersion.getName());
-        Preconditions.checkArgument(present != null);
+        Preconditions.checkArgument(Presence.isPresent(present));
         
         present.nodeRetyped(newVersion);
         
@@ -325,10 +328,10 @@ public final class NetworkInternalWindow implements NetworkView, NodesView, Arcs
         Preconditions.checkArgument(!this.arcs.containsKey(arc.getName()));
         
         final NodeUI from = this.nodes.get(arc.getFrom().getName());
-        Preconditions.checkArgument(from != null);
+        Preconditions.checkArgument(Presence.isPresent(from));
         
         final NodeUI to = this.nodes.get(arc.getTo().getName());
-        Preconditions.checkArgument(to != null);
+        Preconditions.checkArgument(Presence.isPresent(to));
         
         final ArcUI added = ArcUI.create(arc, from, to, this.arcsController, this.arcPropertiesController);
         added.addMouseListener(this.arcDesignListener);
@@ -351,7 +354,7 @@ public final class NetworkInternalWindow implements NetworkView, NodesView, Arcs
         Preconditions.checkNotNull(arc);
         
         final FramedComponent present = this.arcs.remove(arc.getName());
-        Preconditions.checkArgument(present != null);
+        Preconditions.checkArgument(Presence.isPresent(present));
         
         this.designPanel.remove(present);
     }
@@ -385,7 +388,7 @@ public final class NetworkInternalWindow implements NetworkView, NodesView, Arcs
 
     private void removeFromParent() {
         final Container parent = this.frame.getParent();
-        Preconditions.checkState(parent != null);
+        Preconditions.checkState(Components.hasParent(parent));
         
         parent.remove(this.frame);
         parent.revalidate();
@@ -421,7 +424,7 @@ public final class NetworkInternalWindow implements NetworkView, NodesView, Arcs
         Preconditions.checkNotNull(newVersion);
         
         final ArcUI present = this.arcs.remove(oldVersion.getName());
-        Preconditions.checkArgument(present != null);
+        Preconditions.checkArgument(Presence.isPresent(present));
         
         present.arcRenamed(newVersion);
         
@@ -438,7 +441,7 @@ public final class NetworkInternalWindow implements NetworkView, NodesView, Arcs
         Preconditions.checkNotNull(newVersion);
         
         final ArcUI present = this.arcs.remove(oldVersion.getName());
-        Preconditions.checkArgument(present != null);
+        Preconditions.checkArgument(Presence.isPresent(present));
         
         present.arcReprioritized(newVersion);
         
@@ -455,7 +458,7 @@ public final class NetworkInternalWindow implements NetworkView, NodesView, Arcs
         Preconditions.checkNotNull(newVersion);
         
         final ArcUI present = this.arcs.remove(oldVersion.getName());
-        Preconditions.checkArgument(present != null);
+        Preconditions.checkArgument(Presence.isPresent(present));
         
         present.arcRetyped(newVersion);
         

@@ -29,6 +29,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
+
 /**
  * <p>Výchozí implementace správce událostí.</p>
  * <p>Kromě toho, že realizuje odesílání zpráv o události tak, aby klient nemusel rozlišovat, jaký typ odesílá, tak dovoluje v případě potřeby neodebírat posluchač, aniž by docházelo k unikání paměti.</p>
@@ -49,13 +51,13 @@ public final class DefaultEventManager implements EventManager, Serializable {
         private <K, L> void visitMapped(final MappedEvent<K, L> event) {
             @SuppressWarnings("unchecked")
             final Map<K, Set<?>> keysTolisteners = (Map<K, Set<?>>) eventsAndKeysToListeners.get(event.getClass());
-            if (keysTolisteners == null) {
+            if (Presence.isAbsent(keysTolisteners)) {
                 return;
             }
             
             @SuppressWarnings("unchecked")
             final Set<L> mappedListeners = (Set<L>) keysTolisteners.get(event.getKey());
-            if (mappedListeners == null) {
+            if (Presence.isAbsent(mappedListeners)) {
                 return;
             }
             
@@ -68,7 +70,7 @@ public final class DefaultEventManager implements EventManager, Serializable {
         private <L> void visitCommon(final Event<L> event) {
             @SuppressWarnings("unchecked")
             final Set<L> listeners = (Set<L>) eventsToListeners.get(event.getClass());
-            if (listeners == null) {
+            if (Presence.isAbsent(listeners)) {
                 return;
             }
             
@@ -120,7 +122,7 @@ public final class DefaultEventManager implements EventManager, Serializable {
         @SuppressWarnings("unchecked")
         final Map<K, Set<?>> keysTolisteners = (Map<K, Set<?>>) this.eventsAndKeysToListeners.get(type);
         final Map<K, Set<?>> usedKeysToListeners;
-        if (keysTolisteners == null) {
+        if (Presence.isAbsent(keysTolisteners)) {
             usedKeysToListeners = new WeakHashMap<>();
             this.eventsAndKeysToListeners.put(type, usedKeysToListeners);
         } else {
@@ -130,7 +132,7 @@ public final class DefaultEventManager implements EventManager, Serializable {
         @SuppressWarnings("unchecked")
         final Set<L> listeners = (Set<L>) usedKeysToListeners.get(key);
         final Set<L> usedListeners;
-        if (listeners == null) {
+        if (Presence.isAbsent(listeners)) {
             usedListeners = Collections.newSetFromMap(new WeakHashMap<L, Boolean>());
             usedKeysToListeners.put(key, usedListeners);
         } else {
@@ -153,11 +155,11 @@ public final class DefaultEventManager implements EventManager, Serializable {
         
         @SuppressWarnings("unchecked")
         final Map<K, Set<?>> keysTolisteners = (Map<K, Set<?>>) this.eventsAndKeysToListeners.get(type);
-        Preconditions.checkArgument(keysTolisteners != null);
+        Preconditions.checkArgument(Presence.isPresent(keysTolisteners));
         
         @SuppressWarnings("unchecked")
         final Set<L> listeners = (Set<L>) keysTolisteners.get(key);
-        Preconditions.checkArgument(listeners != null);
+        Preconditions.checkArgument(Presence.isPresent(listeners));
         
         final boolean contained = listeners.remove(listener);
         Preconditions.checkArgument(contained);
@@ -182,7 +184,7 @@ public final class DefaultEventManager implements EventManager, Serializable {
         @SuppressWarnings("unchecked")
         final Set<L> listeners = (Set<L>) this.eventsToListeners.get(type);
         final Set<L> usedListeners;
-        if (listeners == null) {
+        if (Presence.isAbsent(listeners)) {
             usedListeners = Sets.newSetFromMap(new WeakHashMap<L, Boolean>());
             this.eventsToListeners.put(type, usedListeners);
         } else {
@@ -204,7 +206,7 @@ public final class DefaultEventManager implements EventManager, Serializable {
         
         @SuppressWarnings("unchecked")
         final Set<L> listeners = (Set<L>) this.eventsToListeners.get(type);
-        Preconditions.checkArgument(listeners != null);
+        Preconditions.checkArgument(Presence.isPresent(listeners));
         
         final boolean contained = listeners.remove(listener);
         Preconditions.checkArgument(contained);
@@ -238,7 +240,7 @@ public final class DefaultEventManager implements EventManager, Serializable {
         
         @SuppressWarnings("unchecked")
         final Map<K, Set<?>> keysTolisteners = (Map<K, Set<?>>) this.eventsAndKeysToListeners.get(type);
-        Preconditions.checkArgument(keysTolisteners != null);
+        Preconditions.checkArgument(Presence.isPresent(keysTolisteners));
         
         keysTolisteners.remove(key);
         

@@ -34,6 +34,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.ArcPropertiesDisplayView;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.AbstractController;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration;
@@ -181,7 +182,7 @@ public class DefaultArcPropertiesDisplayController extends
         Preconditions.checkNotNull(name);
 
         final Arc arc = this.system.getArc(name);
-        Preconditions.checkArgument(arc != null);
+        Preconditions.checkArgument(Presence.isPresent(arc));
         
         fire(ArcPropertiesDisplayedEvent.create(this.system, arc));
     }

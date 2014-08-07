@@ -60,8 +60,6 @@ public abstract class AbstractIndexedElement extends AbstractProperElement imple
     }
     
     private AbstractIndexedElement(final Optional<Index> index) {
-        assert index != null;
-        
         this.index = index;
     }
 

@@ -27,12 +27,13 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.category.Template;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Category;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Topic;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Patterns;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessor;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessor;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.TestProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
@@ -42,30 +43,28 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultProceedP
 import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultStackProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultTestProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons;
-import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 
 /**
  * <p>Výchozí implementace překladače.</p>
- * <p>Užívá několika speciálních stavů, které pomáhají simulovat chod ATN, především rekurzivní zanořování, testování predikátů a nedeterminismus.</p>
+ * <p>Užívá několika speciálních stavů, které pomáhají simulovat chod systému ATN, především rekurzivní zanořování, testování predikátů a nedeterminismus.</p>
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class DefaultTranslatingObserver implements TranslatingObserver {
     
-    private final NormalWord pullState;
-    private final NormalWord pullStopState;
-    private final NormalWord randomizeState;
-    private final NormalWord successState;
-    private final NormalWord returnState;
-    private final NormalWord testingPredicate;
+    private final NodeTopicFactory nodeTopicFactory;
+    private final StackProcessor<List<TemplateElement>> stackProcessor;
+    private final DispatchProcessor<List<TemplateElement>> dispatchProcessor;
+    private final ProceedProcessor<List<TemplateElement>> proceedProcessor;
+    private final TestProcessor<List<Topic>> testProcessor;
     
     private final ListMultimap<Network, Topic> units = ArrayListMultimap.create();
     
-    private Optional<Network> current;
+    private Optional<Network> current = Optional.absent();
     
     /**
-     * Vytvoří překladač.
+     * Vytvoří překladač s výchozími procesory.
      * 
      * @param pullState slovo popisující stav, který je vložen na zásobník po průchodu sítí až do koncového uzlu, a spustí tak proceduru uvolňování nezpracovaných stavů z něj 
      * @param pullStopState slovo popisující stav, který slouží jako zarážka při uvolňování nezpracovaných stavů úspěšně prošlé sítě ze zásobníku
@@ -75,7 +74,7 @@ public final class DefaultTranslatingObserver implements TranslatingObserver {
      * @param testingPredicate rezervovaný název predikátu sloužící pro interní testy
      * @return překladač
      */
-    public static TranslatingObserver create(final NormalWord pullState, final NormalWord pullStopState,
+    public static DefaultTranslatingObserver create(final NormalWord pullState, final NormalWord pullStopState,
             final NormalWord randomizeState, NormalWord successState, NormalWord returnState, final NormalWord testingPredicate) {
         Preconditions.checkNotNull(pullState);
         Preconditions.checkNotNull(pullStopState);
@@ -83,24 +82,56 @@ public final class DefaultTranslatingObserver implements TranslatingObserver {
         Preconditions.checkNotNull(successState);
         Preconditions.checkNotNull(returnState);
         Preconditions.checkNotNull(testingPredicate);
-        Preconditions.checkArgument(Comparisons.allDifferent(pullState, pullStopState, randomizeState));
+        Preconditions.checkArgument(Comparisons.allDifferent(pullState, pullStopState, randomizeState, successState, returnState));
         
-        return new DefaultTranslatingObserver(pullState, pullStopState, randomizeState, successState, returnState, testingPredicate, Optional.<Network>absent());
+        return new DefaultTranslatingObserver(
+                DefaultNodeTopicFactory.create(),
+                DefaultStackProcessor.create(pullState, pullStopState),
+                DefaultDispatchProcessor.create(randomizeState),
+                DefaultProceedProcessor.create(),
+                DefaultTestProcessor.create(testingPredicate, successState, returnState)
+        );
     }
     
-    private DefaultTranslatingObserver(final NormalWord pullState, final NormalWord pullStopState,
-            final NormalWord randomizeState, final NormalWord successState, final NormalWord returnState, final NormalWord testingPredicate, final Optional<Network> current) {
-        this.current = current;
-        this.pullState = pullState;
-        this.pullStopState = pullStopState;
-        this.randomizeState = randomizeState;
-        this.successState = successState;
-        this.returnState = returnState;
-        this.testingPredicate = testingPredicate;
+    /**
+     * Vytvoří překladač.
+     * 
+     * @param nodeTopicFactory továrna na témata reprezentující uzel
+     * @param stackProcessor instance {@link StackProcessor}
+     * @param dispatchProcessor instance {@link DispatchProcessor}
+     * @param proceedProcessor instance {@link ProceedProcessor}
+     * @param testProcessor instance {@link TestProcessor} 
+     * @return překladač
+     */
+    public static DefaultTranslatingObserver create(
+            final NodeTopicFactory nodeTopicFactory,
+            final StackProcessor<List<TemplateElement>> stackProcessor,
+            final DispatchProcessor<List<TemplateElement>> dispatchProcessor,
+            final ProceedProcessor<List<TemplateElement>> proceedProcessor,
+            final TestProcessor<List<Topic>> testProcessor) {
+        Preconditions.checkNotNull(stackProcessor);
+        Preconditions.checkNotNull(dispatchProcessor);
+        Preconditions.checkNotNull(proceedProcessor);
+        Preconditions.checkNotNull(testProcessor);
+        
+        return new DefaultTranslatingObserver(nodeTopicFactory, stackProcessor, dispatchProcessor, proceedProcessor, testProcessor);
     }
     
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyVisit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System)
+    private DefaultTranslatingObserver(final NodeTopicFactory nodeTopicFactory, final StackProcessor<List<TemplateElement>> stackProcessor,
+            final DispatchProcessor<List<TemplateElement>> dispatchProcessor,
+            final ProceedProcessor<List<TemplateElement>> proceedProcessor,
+            final TestProcessor<List<Topic>> testProcessor) {
+        this.nodeTopicFactory = nodeTopicFactory;
+        this.stackProcessor = stackProcessor;
+        this.dispatchProcessor = dispatchProcessor;
+        this.proceedProcessor = proceedProcessor;
+        this.testProcessor = testProcessor;
+    }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>Systém nehraje při překladu žádnou roli, a tak je v této implementaci ignorován.</p>
      */
     public void notifyVisit(final System system) {
     }
@@ -125,30 +156,13 @@ public final class DefaultTranslatingObserver implements TranslatingObserver {
      */
     @Override
     public void notifyDiscovery(final Node node) {
-        final DefaultStackProcessor stackProcessor = DefaultStackProcessor.create(this.pullState, this.pullStopState);
-        node.accept(stackProcessor);
+        final List<TemplateElement> stackProcessorResult = node.accept(this.stackProcessor);
+        final List<TemplateElement> dispatchProcessorResult = node.accept(this.dispatchProcessor);
+        final List<TemplateElement> proceedProcessorResult = node.accept(this.proceedProcessor);
         
-        final List<TemplateElement> processedStack = stackProcessor.getResult();
+        final List<TemplateElement> code = ImmutableList.copyOf(Iterables.concat(stackProcessorResult, dispatchProcessorResult, proceedProcessorResult));
         
-        final DefaultDispatchProcessor dispatchProcessor = DefaultDispatchProcessor.create(this.randomizeState, processedStack);
-        node.accept(dispatchProcessor);
-        
-        final DefaultProceedProcessor proceedProcessor = DefaultProceedProcessor.create();
-        node.accept(proceedProcessor);
-        
-        final List<TemplateElement> code = ImmutableList.copyOf(Iterables.concat(dispatchProcessor.getResult(), proceedProcessor.getResult()));
-        
-        final Topic topic = createNodeTopic(node, code);
-        add(topic);
-    }
-
-    private Topic
-            createNodeTopic(final Node node, final List<TemplateElement> code) {
-        final Topic topic =
-                Topic.create(
-                        Patterns.create(node.getName() + AIML.WORD_DELIMITER.getValue() + AIML.STAR.getValue()),
-                        Category.createUniversal(Template.create(code)));
-        return topic;
+        add(this.nodeTopicFactory.produce(node, code));
     }
 
     /**
@@ -159,11 +173,9 @@ public final class DefaultTranslatingObserver implements TranslatingObserver {
      */
     @Override
     public void notifyExamination(final Arc arc) {
-        final DefaultTestProcessor testProcessor = DefaultTestProcessor.create(this.testingPredicate, this.successState, this.returnState);
-        arc.accept(testProcessor);
+        final List<Topic> testProcessorResult = arc.accept(this.testProcessor);
         
-        final List<Topic> topics = testProcessor.getResult();
-        add(topics);
+        add(testProcessorResult);
     }
     
     /* (non-Javadoc)

@@ -23,6 +23,7 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.api;
  * 
  * @author Václav Brodec
  * @version 1.0
+ * @param <T> výsledek zpracování
  */
-public interface TestProcessor extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor {
+public interface TestProcessor<T> extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor<T> {
 }

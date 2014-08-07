@@ -28,6 +28,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.utils.DefaultDisplayStrategyFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.utils.DisplayStrategyFactory;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.models.AbstractNameValueTableModel;
 import cz.cuni.mff.ms.brodecva.botnicek.library.processor.set.DisplayStrategy;
@@ -142,7 +143,7 @@ public class DisplayStrategyTableModel extends AbstractNameValueTableModel<Norma
         Preconditions.checkNotNull(value);
         
         final String result = supported.inverse().get(value);
-        Preconditions.checkArgument(result != null);
+        Preconditions.checkArgument(Presence.isPresent(result));
         
         return result;
     }

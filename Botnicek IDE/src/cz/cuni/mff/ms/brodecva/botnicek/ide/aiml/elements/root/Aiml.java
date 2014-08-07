@@ -123,10 +123,6 @@ public class Aiml extends AbstractProperElement {
     private Aiml(final List<Toplevel> content,
             final BiMap<URI, String> namespacesToPrefixes,
             final URI schemaLocation) {
-        assert content != null;
-        assert namespacesToPrefixes != null;
-        assert schemaLocation != null;
-
         this.content = content;
         this.namespacesToPrefixes = namespacesToPrefixes;
         this.schemaLocation = schemaLocation;

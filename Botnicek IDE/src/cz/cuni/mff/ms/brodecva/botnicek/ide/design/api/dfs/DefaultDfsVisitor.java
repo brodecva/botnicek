@@ -28,6 +28,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 
 /**
  * Výchozí implementace návštěvníka procházejícího systém sítí do hloubky.
@@ -246,7 +247,7 @@ public final class DefaultDfsVisitor implements DfsVisitor {
     private State getState(final Node node) {
         final State result = states.get(node);
         
-        if (result == null) {
+        if (Presence.isAbsent(result)) {
             return State.FRESH;
         } else {
             return result;

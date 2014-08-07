@@ -33,6 +33,8 @@ import com.google.common.base.Preconditions;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.controllers.SystemController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 
 /**
  * Výchozí implementace modelu stromu systému řadí ve výchozí podobě sítě podle názvu. Umožňuje je přejmenovat, stejně jako samotný systém.
@@ -54,7 +56,7 @@ final class DefaultSystemTreeModel implements SystemTreeModel {
 
     private final SystemController systemController;
     
-    private System root = null;
+    private System root = Intended.nullReference();
     private final List<Network> children = new ArrayList<>();
     
     private final Collection<TreeModelListener> listeners = new Vector<>();
@@ -111,11 +113,11 @@ final class DefaultSystemTreeModel implements SystemTreeModel {
     public Object getChild(final Object parent, final int index) {
         Preconditions.checkNotNull(parent);
         if (!parent.equals(this.root)) {
-            return null;
+            return Intended.nullReference();
         }
         
         if (index < 0 || index >= this.children.size()) {
-            return null;
+            return Intended.nullReference();
         }
         
         return this.children.get(index);
@@ -139,7 +141,7 @@ final class DefaultSystemTreeModel implements SystemTreeModel {
      */
     @Override
     public int getIndexOfChild(final Object parent, final Object child) {
-        if (parent == null || child == null) {
+        if (parent == Intended.nullReference() || child == Intended.nullReference()) {
             return -1;
         }
         
@@ -197,7 +199,7 @@ final class DefaultSystemTreeModel implements SystemTreeModel {
         }
                             
         final Object replaced = path.getLastPathComponent();
-        Preconditions.checkState(replaced != null);
+        Preconditions.checkState(Presence.isPresent(replaced));
         if (pathCount == 1) {
             Preconditions.checkState(replaced.equals(root));
             
@@ -221,7 +223,7 @@ final class DefaultSystemTreeModel implements SystemTreeModel {
         Preconditions.checkNotNull(system);
         Preconditions.checkArgument(this.root.equals(system));
         
-        final TreeModelEvent event = new TreeModelEvent(this, new Object[] { this.root }, null, null);
+        final TreeModelEvent event = new TreeModelEvent(this, new Object[] { this.root }, Intended.intArrayNull(), Intended.arrayNull());
         
         for (final TreeModelListener listener : this.listeners) {
             listener.treeNodesChanged(event);
@@ -284,7 +286,7 @@ final class DefaultSystemTreeModel implements SystemTreeModel {
         Preconditions.checkNotNull(system);
         
         this.root = system;
-        final TreeModelEvent event = new TreeModelEvent(this, new Object[] { this.root }, null, null);
+        final TreeModelEvent event = new TreeModelEvent(this, new Object[] { this.root }, Intended.intArrayNull(), Intended.arrayNull());
         
         for (final TreeModelListener listener : this.listeners) {
             listener.treeNodesChanged(event);

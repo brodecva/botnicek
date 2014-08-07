@@ -56,8 +56,6 @@ final class DropHandler<E> extends TransferHandler {
     }
     
     private DropHandler(final DragOrderableList<E> moved) {
-        assert moved != null;
-        
         this.moved = moved;
     }
     

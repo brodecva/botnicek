@@ -40,7 +40,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.OrderedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RandomNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.TemplateElementsGenerator;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 
 /**
@@ -49,8 +48,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultDispatchProcessor implements
-        DispatchProcessor, TemplateElementsGenerator {
+public final class DefaultDispatchProcessor implements DispatchProcessor<List<TemplateElement>> {
     
     private static final class PrioritizedFirstComparator implements Comparator<Arc> {
         @Override
@@ -60,34 +58,21 @@ public final class DefaultDispatchProcessor implements
     }
     
     private final NormalWord randomizeState;
-    private final List<TemplateElement> oldStack;
-    private List<TemplateElement> code = ImmutableList.of();
 
     /**
      * Vytvoří procesor, který vytváří kód pro (ne)deterministický přechod do dalších stavů. 
      * 
      * @param randomizeState stav pro zamíchání stavů při náhodném výběru
-     * @param stack stav zásobníku před výběrem dalšího postupu
      * @return nový procesor
      */
-    public static DefaultDispatchProcessor create(final NormalWord randomizeState, final List<TemplateElement> stack) {
-        return new DefaultDispatchProcessor(randomizeState, stack);
-    }
-    
-    private DefaultDispatchProcessor(final NormalWord randomizeState, final List<TemplateElement> stack) {
+    public static DefaultDispatchProcessor create(final NormalWord randomizeState) {
         Preconditions.checkNotNull(randomizeState);
-        Preconditions.checkNotNull(stack);
         
-        this.randomizeState = randomizeState;
-        this.oldStack = ImmutableList.copyOf(stack);
+        return new DefaultDispatchProcessor(randomizeState);
     }
     
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.translate.TemplateElementsGenerator#getResult()
-     */
-    @Override
-    public List<TemplateElement> getResult() {
-        return ImmutableList.of(Stack.concatenate(this.code, this.oldStack));
+    private DefaultDispatchProcessor(final NormalWord randomizeState) {
+        this.randomizeState = randomizeState;
     }
 
     /**
@@ -95,13 +80,12 @@ public final class DefaultDispatchProcessor implements
      * 
      * <p>Uzel s uspořádaným další výběrem je interpretován tak, že se při zpracování seřadí hrany podle priority od největší po nejmenší a zařadí v daném pořadí do zásobníku.</p>
      */
-    @Override
-    public void process(final OrderedNode node) {
+    public List<TemplateElement> process(final OrderedNode node) {
         final java.util.Set<Arc> targets = node.getOuts();
         final List<Arc> sortedTargets = Ordering.from(new PrioritizedFirstComparator()).sortedCopy(targets);
         final List<NormalWord> targetNames = extractNames(sortedTargets);
         
-        this.code = ImmutableList.<TemplateElement>of(Text.create(Stack.joinWithSpaces(targetNames)));
+        return ImmutableList.<TemplateElement>of(Text.create(Stack.joinWithSpaces(targetNames)));
     }
 
     
@@ -118,8 +102,7 @@ public final class DefaultDispatchProcessor implements
      * 
      * <p>Náhodný uzel musí být za běhu interpretovaný tak, že vybere náhodně jednu z hran. Šance hrany na výběr při průchodu je ovlivněna její prioritou, která poměrně vůči ostatním odchozím hranám zvyšuje pravděpodobnost výběru.</p>
      */
-    @Override
-    public void process(final RandomNode node) {
+    public List<TemplateElement> process(final RandomNode node) {
         Preconditions.checkNotNull(node);
         
         final java.util.Set<Arc> targets = node.getOuts();
@@ -129,7 +112,7 @@ public final class DefaultDispatchProcessor implements
         final Set enterRandomizerState = Set.create(NormalWords.of(AIML.TOPIC_PREDICATE.getValue()), Text.create(this.randomizeState.getText()));
         final Srai randomize = Srai.create(Text.create(this.randomizeState.getText() + AIML.WORD_DELIMITER), Text.create(statesToRandomize));
         
-        this.code = ImmutableList.<TemplateElement>of(enterRandomizerState, randomize);
+        return ImmutableList.<TemplateElement>of(enterRandomizerState, randomize);
     }
 
     /**
@@ -159,11 +142,10 @@ public final class DefaultDispatchProcessor implements
      * 
      * <p>Výstupní uzel nemá žádné odchozí hrany, tedy neovlivňuje způsob dalšího postupu.</p>
      */
-    @Override
-    public void process(final ExitNode node) {
+    public List<TemplateElement> process(final ExitNode node) {
         Preconditions.checkNotNull(node);
         
-        this.code = ImmutableList.of();
+        return ImmutableList.of();
     }
 
     /** 
@@ -171,10 +153,9 @@ public final class DefaultDispatchProcessor implements
      * 
      * <p>Izolovaný uzel je nedosažitelný, tedy jím provedené úpravy zásobníku jsou irelevantní.</p>
      */
-    @Override
-    public void process(final IsolatedNode node) {
+    public List<TemplateElement> process(final IsolatedNode node) {
         Preconditions.checkNotNull(node);
         
-        this.code = ImmutableList.of();
+        return ImmutableList.of();
     }
 }

@@ -32,6 +32,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.NormalWordChecker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Normalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.SimpleNormalizer;
@@ -91,7 +92,7 @@ public final class NormalWords {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((text == null) ? 0 : text.hashCode());
+            result = prime * result + text.hashCode();
             return result;
         }
 
@@ -103,7 +104,7 @@ public final class NormalWords {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (Objects.isNull(obj)) {
                 return false;
             }
             if (!(obj instanceof NormalWord)) {

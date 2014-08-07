@@ -39,6 +39,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.NodeModifier;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.OrderedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RandomNode;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Tables;
 
 /**
@@ -232,7 +234,7 @@ public class DefaultNodeModifier implements NodeModifier {
         final Class<? extends Node> nodeClass = node.getClass();
         final Class<? extends Node> mappedClass = this.changes.get(nodeClass, type);
         final Class<? extends Node> usedMappedClass;
-        if (mappedClass == null) {
+        if (Presence.isAbsent(mappedClass)) {
             usedMappedClass = nodeClass;
         } else {
             usedMappedClass = mappedClass;
@@ -246,7 +248,7 @@ public class DefaultNodeModifier implements NodeModifier {
         }
         
         try {
-            return (Node) factoryMethod.invoke(null, name, node.getNetwork(), x, y);
+            return (Node) factoryMethod.invoke(Intended.nullReference(), name, node.getNetwork(), x, y);
         } catch (final IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException e) {
             throw new IllegalArgumentException(e);

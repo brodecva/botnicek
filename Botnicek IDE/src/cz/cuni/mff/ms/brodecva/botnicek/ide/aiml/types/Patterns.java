@@ -23,6 +23,7 @@ import com.google.common.base.Preconditions;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.SimplePatternChecker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 
 /**
@@ -78,7 +79,7 @@ public final class Patterns {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (Objects.isNull(obj)) {
                 return false;
             }
             if (!(obj instanceof SimplePattern)) {

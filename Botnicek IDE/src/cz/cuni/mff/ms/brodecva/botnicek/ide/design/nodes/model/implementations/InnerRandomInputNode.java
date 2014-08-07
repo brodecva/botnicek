@@ -72,23 +72,23 @@ public class InnerRandomInputNode extends AbstractNode implements RandomNode, In
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.DispatchProcessible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.DispatchProcessor)
      */
     @Override
-    public void accept(final DispatchProcessor processor) {
-        processor.process(this);
+    public <T> T accept(final DispatchProcessor<T> processor) {
+        return processor.process(this);
     }
 
     /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.ProceedProcessible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.ProceedProcessor)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor)
      */
     @Override
-    public void accept(final ProceedProcessor processor) {
-        processor.process(this);
+    public <T> T accept(ProceedProcessor<T> processor) {
+        return processor.process(this);
     }
 
     /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.StackProcessible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.StackProcessor)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessor)
      */
     @Override
-    public void accept(final StackProcessor processor) {
-        processor.process(this);
+    public <T> T accept(StackProcessor<T> processor) {
+        return processor.process(this);
     }
 }

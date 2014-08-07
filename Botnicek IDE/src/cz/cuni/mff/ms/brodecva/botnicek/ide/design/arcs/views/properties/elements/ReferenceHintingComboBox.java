@@ -33,6 +33,7 @@ import com.google.common.collect.Ordering;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.AvailableReferencesView;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.hinters.HintingComboBox;
 
 /**
@@ -111,13 +112,17 @@ public final class ReferenceHintingComboBox extends HintingComboBox<EnterNode> i
         final List<EnterNode> update = REFERENCE_ORDERING.immutableSortedCopy(references);
         setDataList(update);
         
-        if (selected != null) {
+        if (isSomeItemSelected(selected)) {
             if (references.contains(selected)) {
                 setSelectedItem(selected);
             } else {                
                 setSelectedIndex(-1);
             }
         }
+    }
+    
+    private boolean isSomeItemSelected(final Object selectedItemResult) {
+        return selectedItemResult != Intended.nullReference();
     }
     
     /* (non-Javadoc)
@@ -133,7 +138,7 @@ public final class ReferenceHintingComboBox extends HintingComboBox<EnterNode> i
         final Object selected = getSelectedItem();
         setDataList(REFERENCE_ORDERING.immutableSortedCopy(updated));
         
-        if (selected != null) {
+        if (isSomeItemSelected(selected)) {
             assert updated.contains(selected);
             
             setSelectedItem(selected);
@@ -153,7 +158,7 @@ public final class ReferenceHintingComboBox extends HintingComboBox<EnterNode> i
         final Object selected = getSelectedItem();
         setDataList(REFERENCE_ORDERING.immutableSortedCopy(updated));
         
-        if (selected != null) {
+        if (isSomeItemSelected(selected)) {
             if (updated.contains(selected)) {
                 setSelectedItem(selected);
             } else {                

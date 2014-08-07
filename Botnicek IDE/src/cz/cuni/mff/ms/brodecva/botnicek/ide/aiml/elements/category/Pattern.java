@@ -23,7 +23,7 @@ import java.util.List;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractRawElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
@@ -36,7 +36,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
  * @author Václav Brodec
  * @see <a href="http://www.alicebot.org/TR/2011/#section-pattern">http://www.alicebot.org/TR/2011/#section-pattern</a>
  */
-public class Pattern extends AbstractElement {
+public class Pattern extends AbstractProperElement {
     
     private final class PatternTextElement extends AbstractRawElement {
         
@@ -66,8 +66,6 @@ public class Pattern extends AbstractElement {
     }
     
     private Pattern(final MixedPattern pattern) {
-        assert pattern != null;
-        
         this.pattern = pattern;
     }
 

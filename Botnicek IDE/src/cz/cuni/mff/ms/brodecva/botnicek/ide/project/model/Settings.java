@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableMap;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.XML;
 
@@ -213,38 +214,37 @@ public final class Settings {
         int result = 1;
         result =
                 prime * result
-                        + ((failState == null) ? 0 : failState.hashCode());
+                        + failState.hashCode();
         result =
                 prime
                         * result
-                        + ((namespacesToPrefixes == null) ? 0
-                                : namespacesToPrefixes.hashCode());
-        result = prime * result + ((prefix == null) ? 0 : prefix.hashCode());
+                        + namespacesToPrefixes.hashCode();
+        result = prime * result + prefix.hashCode();
         result =
                 prime * result
-                        + ((pullState == null) ? 0 : pullState.hashCode());
+                        + pullState.hashCode();
         result =
                 prime
                         * result
-                        + ((pullStopState == null) ? 0 : pullStopState
-                                .hashCode());
+                        + pullStopState
+                                .hashCode();
         result =
                 prime
                         * result
-                        + ((randomizeState == null) ? 0 : randomizeState
-                                .hashCode());
+                        + randomizeState
+                                .hashCode();
         result =
                 prime * result
-                        + ((returnState == null) ? 0 : returnState.hashCode());
+                        + returnState.hashCode();
         result =
                 prime
                         * result
-                        + ((successState == null) ? 0 : successState.hashCode());
+                        + successState.hashCode();
         result =
                 prime
                         * result
-                        + ((testingPredicate == null) ? 0 : testingPredicate
-                                .hashCode());
+                        + testingPredicate
+                                .hashCode();
         return result;
     }
 
@@ -256,7 +256,7 @@ public final class Settings {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        if (Objects.isNull(obj)) {
             return false;
         }
         if (getClass() != obj.getClass()) {
@@ -301,8 +301,7 @@ public final class Settings {
         final int maxLen = 10;
         StringBuilder builder = new StringBuilder();
         builder.append("Settings [namespacesToPrefixes=");
-        builder.append(namespacesToPrefixes != null ? toString(
-                namespacesToPrefixes.entrySet(), maxLen) : null);
+        builder.append(toString(namespacesToPrefixes.entrySet(), maxLen));
         builder.append(", prefix=");
         builder.append(prefix);
         builder.append(", pullState=");

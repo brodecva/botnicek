@@ -29,16 +29,21 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.util.Set;
 
+import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.graph.ArcUI;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.controllers.NetworkController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.views.NodeUI;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Rendering;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment;
 
@@ -70,7 +75,9 @@ public final class DefaultArcDesignListener extends MouseAdapter implements ArcD
             final int offsetX = getX();
             final int offsetY = getY();
             
-            final Line2D line = new Line2D.Float(segment.getFromX() - offsetX, segment.getFromY() - offsetY, segment.getToX() - offsetX, segment.getToY() - offsetY);
+            assert segment.isPresent();
+            final Segment rawSegment = segment.get();
+            final Line2D line = new Line2D.Float(rawSegment.getFromX() - offsetX, rawSegment.getFromY() - offsetY, rawSegment.getToX() - offsetX, rawSegment.getToY() - offsetY);
             graphics2d.draw(line);
         };
         
@@ -83,8 +90,8 @@ public final class DefaultArcDesignListener extends MouseAdapter implements ArcD
     private final Set<ArcUI> arcs;
     
     private volatile boolean connecting = false;
-    private Segment segment = null;
-    private NodeUI from = null;
+    private Optional<Segment> segment = Optional.<Segment>absent();
+    private Optional<NodeUI> from = Optional.<NodeUI>absent();
     
     /**
      * Vytvoří posluchače.
@@ -119,7 +126,7 @@ public final class DefaultArcDesignListener extends MouseAdapter implements ArcD
         final Object source = e.getSource();
         
         if (!this.connecting) {
-            assert this.from == null;
+            assert !this.from.isPresent();
             
             if (this.nodes.contains(source)) {
                 if (e.getClickCount() != 2) {
@@ -130,11 +137,14 @@ public final class DefaultArcDesignListener extends MouseAdapter implements ArcD
                     return;
                 }
                 
-                this.from = (NodeUI) source;
+                final NodeUI newRawFrom = (NodeUI) source;
+                this.from = Optional.of(newRawFrom);
                 
-                final Rectangle fromBounds = this.from.getBounds();
-                this.segment = Segment.create((int) fromBounds.getCenterX(), (int) fromBounds.getCenterY(), (int) fromBounds.getX() + e.getX(), (int) fromBounds.getY() + e.getY());
-                this.lineComponent.setBounds(this.segment.toBounds());
+                final Rectangle fromBounds = newRawFrom.getBounds();
+                
+                final Segment newRawSegment = Segment.create((int) fromBounds.getCenterX(), (int) fromBounds.getCenterY(), (int) fromBounds.getX() + e.getX(), (int) fromBounds.getY() + e.getY()); 
+                this.segment = Optional.of(newRawSegment);
+                this.lineComponent.setBounds(newRawSegment.toBounds());
                 
                 this.designPanel.add(this.lineComponent);
                 placeOnBottom(this.lineComponent);
@@ -142,9 +152,9 @@ public final class DefaultArcDesignListener extends MouseAdapter implements ArcD
                 this.connecting = true; 
             }
         } else {
-            assert this.from != null;
+            assert this.from.isPresent();
             
-            this.segment = null;
+            this.segment = Optional.absent();
             this.connecting = false;
             this.designPanel.remove(this.lineComponent);
             this.designPanel.repaint();
@@ -153,13 +163,13 @@ public final class DefaultArcDesignListener extends MouseAdapter implements ArcD
                 final NodeUI to = (NodeUI) source;
                 
                 while (true) {
-                    final Object newNameInput = JOptionPane.showInputDialog(to, UiLocalizer.print("ARC_NAME_MESSAGE"), UiLocalizer.print("ARC_NAME_TITLE_CONTENT"), JOptionPane.PLAIN_MESSAGE, null, null, ARC_NAME_INITIAL_VALUE);
-                    if (newNameInput == null) {
+                    final Object newNameInput = JOptionPane.showInputDialog(to, UiLocalizer.print("ARC_NAME_MESSAGE"), UiLocalizer.print("ARC_NAME_TITLE_CONTENT"), JOptionPane.PLAIN_MESSAGE, Intended.<Icon>nullReference(), Intended.arrayNull(), ARC_NAME_INITIAL_VALUE);
+                    if (Components.hasUserCanceledInput(newNameInput)) {
                         return;
                     }
                     
                     try {
-                        this.controller.addArc(newNameInput.toString(), this.from.getNodeName(), to.getNodeName());
+                        this.controller.addArc(newNameInput.toString(), this.from.get().getNodeName(), to.getNodeName());
                         return;
                     } catch (final IllegalArgumentException ex) {
                         JOptionPane.showMessageDialog(to, ExceptionLocalizer.print("ArcCreationError") + ex.getMessage(), UiLocalizer.print("ARC_NAME_ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
@@ -176,18 +186,21 @@ public final class DefaultArcDesignListener extends MouseAdapter implements ArcD
     @Override
     public void mouseMoved(MouseEvent e) {
         if (this.connecting) {
-            assert this.segment != null;
+            assert this.segment.isPresent();
+            final Segment rawSegment = this.segment.get();
             
             final Object source = e.getSource();
             
             if (this.nodes.contains(source) || this.arcs.contains(source)) {
                 final Component component = (Component) source;
                 
-                this.segment = this.segment.moveTo(component.getX() + e.getX(), component.getY() + e.getY());
-                this.lineComponent.setBounds(this.segment.toBounds());
+                final Segment newRawSegment = rawSegment.moveTo(component.getX() + e.getX(), component.getY() + e.getY());
+                this.segment = Optional.of(newRawSegment);
+                this.lineComponent.setBounds(newRawSegment.toBounds());
             } else if (source == this.designPanel) {
-                this.segment = this.segment.moveTo(e.getX(), e.getY());
-                this.lineComponent.setBounds(this.segment.toBounds());
+                final Segment newRawSegment = rawSegment.moveTo(e.getX(), e.getY());
+                this.segment = Optional.of(newRawSegment);
+                this.lineComponent.setBounds(newRawSegment.toBounds());
             }
             
             this.lineComponent.repaint();
@@ -201,7 +214,7 @@ public final class DefaultArcDesignListener extends MouseAdapter implements ArcD
      */
     private void placeOnBottom(final Component component) {
         final Container parent = component.getParent();
-        Preconditions.checkState(parent != null);
+        Preconditions.checkState(Components.hasParent(parent));
                 
         parent.setComponentZOrder(component, parent.getComponentCount() - 1);
     }

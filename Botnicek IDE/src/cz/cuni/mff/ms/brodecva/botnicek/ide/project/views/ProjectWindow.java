@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.AbstractAction;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -60,10 +61,13 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.BotSettingsDialog;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.ConversationSettingsDialog;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.LanguageSettingsDialog;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.TestPanel;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.logging.LocalizedLogger;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -134,7 +138,7 @@ public final class ProjectWindow implements ProjectView {
         public void actionPerformed(final ActionEvent e) {
             final Object nameInput =
                     JOptionPane.showInputDialog(frame, UiLocalizer.print("NAME_INPUT_MESSAGE"), UiLocalizer.print("NAME_INPUT_TITLE"), JOptionPane.PLAIN_MESSAGE);
-            if (nameInput == null) {
+            if (Components.hasUserCanceledInput(nameInput)) {
                 return;
             }
 
@@ -150,7 +154,7 @@ public final class ProjectWindow implements ProjectView {
                                         UiLocalizer.print("SAVE_CONFIRMATION_MESSAGE"),
                                                 UiLocalizer.print("SAVE_CONFIRMATION_TITLE"),
                                         JOptionPane.YES_NO_CANCEL_OPTION,
-                                        JOptionPane.QUESTION_MESSAGE, null,
+                                        JOptionPane.QUESTION_MESSAGE, Intended.<Icon>nullReference(),
                                         new Object[] { UiLocalizer.print("SAVE_OPTION"),
                                                 UiLocalizer.print("FORFEIT_SAVE_OPTION"),
                                                         UiLocalizer.print("CANCEL_SAVE_OPTION") },
@@ -225,7 +229,7 @@ public final class ProjectWindow implements ProjectView {
                                     UiLocalizer.print("SAVE_CONFIRMATION_MESSAGE"),
                                             UiLocalizer.print("SAVE_CONFIRMATION_TITLE"),
                                     JOptionPane.YES_NO_CANCEL_OPTION,
-                                    JOptionPane.QUESTION_MESSAGE, null,
+                                    JOptionPane.QUESTION_MESSAGE, Intended.<Icon>nullReference(),
                                     new Object[] { UiLocalizer.print("SAVE_OPTION"),
                                             UiLocalizer.print("FORFEIT_SAVE_OPTION"),
                                                     UiLocalizer.print("CANCEL_SAVE_OPTION") }, UiLocalizer.print("SAVE_OPTION"));
@@ -289,7 +293,7 @@ public final class ProjectWindow implements ProjectView {
                     JOptionPane.showOptionDialog(frame,
                             UiLocalizer.print("SAVE_CONFIRMATION_MESSAGE"), UiLocalizer.print("SAVE_CONFIRMATION_TITLE"),
                             JOptionPane.YES_NO_CANCEL_OPTION,
-                            JOptionPane.QUESTION_MESSAGE, null, new Object[] {
+                            JOptionPane.QUESTION_MESSAGE, Intended.<Icon>nullReference(), new Object[] {
                                     UiLocalizer.print("SAVE_OPTION"), UiLocalizer.print("FORFEIT_SAVE_OPTION"),
                                             UiLocalizer.print("CANCEL_SAVE_OPTION") }, UiLocalizer.print("SAVE_OPTION"));
 
@@ -513,7 +517,7 @@ public final class ProjectWindow implements ProjectView {
 
     private void initializeIcon() {
         final URL iconUrl = getClass().getResource(PATH_TO_ICON);
-        if (iconUrl != null) {
+        if (Presence.isPresent(iconUrl)) {
             this.icon = new ImageIcon(iconUrl);
         } else {
             LOGGER.warning("MissingIcon");
@@ -532,7 +536,7 @@ public final class ProjectWindow implements ProjectView {
         this.mainSplitPane.setResizeWeight(1);
         this.systemSplitPane.setResizeWeight(0);
         
-        if (this.icon != null) {
+        if (Presence.isPresent(this.icon)) {
             this.frame.setIconImage(icon.getImage());
         }
         
@@ -555,8 +559,8 @@ public final class ProjectWindow implements ProjectView {
     }
 
     private void initializeMainTab() {
-        this.tabbedPane.addTab(UiLocalizer.print("Problems"), null, this.resultsScrollPane, null);
-        this.tabbedPane.addTab(UiLocalizer.print("TestShow"), null, this.runtimePanel, null);
+        this.tabbedPane.addTab(UiLocalizer.print("Problems"), Intended.<Icon>nullReference(), this.resultsScrollPane, UiLocalizer.print("ProblemsTip"));
+        this.tabbedPane.addTab(UiLocalizer.print("TestShow"), Intended.<Icon>nullReference(), this.runtimePanel, UiLocalizer.print("TestTip"));
     }
 
     private void initializeHelpMenu() {

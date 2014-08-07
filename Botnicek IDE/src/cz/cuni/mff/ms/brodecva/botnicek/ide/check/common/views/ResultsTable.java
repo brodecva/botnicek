@@ -18,6 +18,7 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views;
 
+import java.awt.Component;
 import java.util.List;
 import java.util.Set;
 
@@ -31,6 +32,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
 
 /**
  * <p>Správce tabulky s výsledky neúspěšných kontrol.</p>
@@ -128,9 +131,9 @@ public final class ResultsTable implements CheckView {
     
     private void removeFromParent() {
         final JViewport parent = (JViewport) this.table.getParent();
-        Preconditions.checkState(parent != null);
+        Preconditions.checkState(Components.hasParent(parent));
         
-        parent.setView(null);
+        parent.setView(Intended.<Component>nullReference());
     }
     
     private void subscribe(final Set<CheckController> checkControllers) {

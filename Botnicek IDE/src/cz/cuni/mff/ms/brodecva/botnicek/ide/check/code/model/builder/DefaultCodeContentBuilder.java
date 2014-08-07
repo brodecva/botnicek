@@ -24,6 +24,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.CodeChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 
 /**
  * Výchozí implementace konstruktoru validního kódu šablony jazyka AIML.
@@ -73,7 +74,7 @@ public final class DefaultCodeContentBuilder implements CodeContentBuilder, Sour
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (Objects.isNull(obj)) {
                 return false;
             }
             if (!(obj instanceof Code)) {

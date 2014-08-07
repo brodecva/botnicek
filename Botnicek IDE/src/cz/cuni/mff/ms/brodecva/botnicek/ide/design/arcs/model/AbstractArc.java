@@ -25,6 +25,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 
 
@@ -149,8 +150,8 @@ public abstract class AbstractArc implements Arc {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((parent == null) ? 0 : parent.hashCode());
+        result = prime * result + name.hashCode();
+        result = prime * result + parent.hashCode();
         result = prime * result + priority.hashCode();
         return result;
     }
@@ -164,7 +165,7 @@ public abstract class AbstractArc implements Arc {
             return true;
         }
         
-        if (obj == null) {
+        if (Objects.isNull(obj)) {
             return false;
         }
         
@@ -173,18 +174,10 @@ public abstract class AbstractArc implements Arc {
         }
         
         final AbstractArc other = (AbstractArc) obj;
-        if (name == null) {
-            if (other.name != null) {
-                return false;
-            }
-        } else if (!name.equals(other.name)) {
+        if (!name.equals(other.name)) {
             return false;
         }
-        if (parent == null) {
-            if (other.parent != null) {
-                return false;
-            }
-        } else if (!parent.equals(other.parent)) {
+        if (!parent.equals(other.parent)) {
             return false;
         }
         if (priority != other.priority) {

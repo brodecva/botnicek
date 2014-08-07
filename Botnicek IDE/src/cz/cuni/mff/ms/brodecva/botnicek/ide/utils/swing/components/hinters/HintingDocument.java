@@ -24,9 +24,12 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
 
@@ -80,10 +83,6 @@ final class HintingDocument<E> extends PlainDocument {
     }
         
     private HintingDocument(final List<E> list, final boolean caseSensitive, final boolean strict, final SelectionBoundsProvider selectionStartProvider, final EventManager eventManager) {
-        assert list != null;
-        assert selectionStartProvider != null;
-        assert eventManager != null;
-        
         this.list = list;
         this.strict = strict;
         this.caseSensitive = caseSensitive;
@@ -164,17 +163,17 @@ final class HintingDocument<E> extends PlainDocument {
     @Override
     public void insertString(final int offset, final String string, final AttributeSet attributes)
             throws BadLocationException {
-        if (string == null || string.isEmpty()) {
+        if (Presence.isAbsent(string) || string.isEmpty()) {
             return;
         }
         
         final String textFromStartToOffset = getText(0, offset);
-        final E matched = match(textFromStartToOffset + string);
+        final Optional<E> matched = match(textFromStartToOffset + string);
         final int selectionStart = offset + string.length() - 1;
         
-        final E ultimateMatched;
+        final Optional<E> ultimateMatched;
         final int ultimateSelectionStart;
-        if (matched == null) {
+        if (!matched.isPresent()) {
             if (this.strict) {
                 ultimateMatched = match(textFromStartToOffset);
                 ultimateSelectionStart = selectionStart - 1;
@@ -186,11 +185,11 @@ final class HintingDocument<E> extends PlainDocument {
             ultimateMatched = matched;
             ultimateSelectionStart = selectionStart;
             
-            fireHintEvent(ultimateMatched);
+            fireHintEvent(ultimateMatched.get());
         }
         
         super.remove(0, getLength());
-        super.insertString(0, (ultimateMatched == null ? null : ultimateMatched.toString()), attributes);
+        super.insertString(0, (ultimateMatched.isPresent() ? ultimateMatched.get().toString() : Intended.<String>nullReference()), attributes);
         
         fireSelectionChangedEvent(ultimateSelectionStart + 1, getLength());
     }
@@ -207,8 +206,8 @@ final class HintingDocument<E> extends PlainDocument {
             ultimateSelectionStart = selectionStart;
         }
         
-        final E matched = match(getText(0, ultimateSelectionStart));
-        if (matched == null) {
+        final Optional<E> matched = match(getText(0, ultimateSelectionStart));
+        if (!matched.isPresent()) {
             if (this.strict) {
                 super.remove(0, getLength());
             } else {
@@ -216,29 +215,26 @@ final class HintingDocument<E> extends PlainDocument {
             }
         } else {
             super.remove(0, getLength());
-            super.insertString(0, matched.toString(), null);
+            super.insertString(0, matched.toString(), Intended.<AttributeSet>nullReference());
             
-            fireHintEvent(matched);
+            fireHintEvent(matched.get());
         }
         
         fireSelectionChangedEvent(ultimateSelectionStart, getLength());
     }
     
-    private E match(final String value) {
+    private Optional<E> match(final String value) {
         final String normalizedValue = normalize(value);
         
         for (final E item : this.list) {
-            final String itemValue = item.toString();
-            if (itemValue == null) {
-                continue;
-            }
+            final String itemValue = String.valueOf(item);
             
             if (normalize(itemValue).startsWith(normalizedValue)) {
-                return item;
+                return Optional.of(item);
             }
         }
 
-        return null;
+        return Optional.absent();
     }
 
     private String normalize(final String string) {

@@ -24,6 +24,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.MixedPatternChecker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 
 /**
  * Výchozí implementace konstruktoru validního složeného vzoru dle specifikace jazyka AIML.
@@ -73,7 +74,7 @@ public class DefaultMixedPatternBuilder implements MixedPatternBuilder, Source {
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+            if (Objects.isNull(obj)) {
                 return false;
             }
             if (!(obj instanceof MixedPattern)) {

@@ -33,6 +33,7 @@ import com.google.common.collect.Iterables;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration;
 import cz.cuni.mff.ms.brodecva.botnicek.library.language.AIMLLanguage;
@@ -141,7 +142,7 @@ public final class DefaultCodeChecker implements CodeChecker {
      * Nejlepší snaha o odstranění implementačních podrobnost a zachování pouze samotného těla zprávy.
      */
     private static String cutMessage(final String message) {
-        if (message == null) {
+        if (message == Intended.nullReference()) {
             return "";
         }
         

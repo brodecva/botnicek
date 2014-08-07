@@ -29,40 +29,46 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.TransitionArc;
  * 
  * @author Václav Brodec
  * @version 1.0
+ * @param <T> typ výsledku zpracování
  */
-public interface Processor {
+public interface Processor<T> {
     /**
      * Zpracuje hranu testující shodu na vzor.
      * 
      * @param arc hrana
+     * @return výsledek zpracování
      */
-    void process(PatternArc arc);
+    T process(PatternArc arc);
     
     /**
      * Zpracuje hranu testující shodu na výstup ze zanořeného výpočtu.
      * 
      * @param arc hrana
+     * @return výsledek zpracování
      */
-    void process(RecurentArc arc);
+    T process(RecurentArc arc);
     
     /**
      * Zpracuje hranu testující shodu výstupu zadaného kódu oproti zadané hodnotě.
      * 
-     * @param arc hrana
+    * @param arc hrana
+     * @return výsledek zpracování
      */
-    void process(CodeTestArc arc);
+    T process(CodeTestArc arc);
     
     /**
      * Zpracuje hranu testující shodu hodnoty predikátu se zadanou hodnotou.
      * 
      * @param arc hrana
+     * @return výsledek zpracování
      */
-    void process(PredicateTestArc arc);
+    T process(PredicateTestArc arc);
     
     /**
      * Zpracuje hranu, která přesouvá do koncového stavu bez podmínky.
      * 
      * @param arc hrana
+     * @return výsledek zpracování
      */
-    void process(TransitionArc arc);
+    T process(TransitionArc arc);
 }

@@ -22,6 +22,8 @@ import java.io.Serializable;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
+
 /**
  * <p>Priorita hrany určuje pořadí, v jakém je vyzkoušena hrana při průchodu sítí.</p>
  * <p>Podle typu výchozího uzlu je tomu tak přímo, či je při náhodném výběru následující hrany v poměru priorit znásobena pravděpodobnost výběru.</p> 
@@ -94,7 +96,7 @@ public final class Priority implements Serializable {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        if (Objects.isNull(obj)) {
             return false;
         }
         if (getClass() != obj.getClass()) {

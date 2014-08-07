@@ -68,26 +68,26 @@ public final class IsolatedProcessingNode extends AbstractNode implements Isolat
     }
 
     /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.api.DispatchProcessible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.api.DispatchProcessor)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessor)
      */
     @Override
-    public void accept(DispatchProcessor processor) {
-        processor.process(this);
+    public <T> T accept(DispatchProcessor<T> processor) {
+        return processor.process(this);
     }
 
     /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.api.ProceedProcessible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.api.ProceedProcessor)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor)
      */
     @Override
-    public void accept(ProceedProcessor processor) {
-        processor.process(this);
+    public <T> T accept(ProceedProcessor<T> processor) {
+        return processor.process(this);
     }
 
     /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.api.StackProcessible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.api.StackProcessor)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessor)
      */
     @Override
-    public void accept(StackProcessor processor) {
-        processor.process(this);
+    public <T> T accept(StackProcessor<T> processor) {
+        return processor.process(this);
     }
 }

@@ -24,6 +24,7 @@ import java.awt.Window;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -43,6 +44,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.LanguageSettings
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.tables.DefaultSubstitutionsTableModelFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.tables.SubstitutionsTableModel;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.tables.SubstitutionsTableModelFactory;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.AIMLLanguageConfiguration;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration;
@@ -361,7 +363,7 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         );
         this.settingsPane.setLayout(this.settingsLayout);
         this.settingsPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("SETTINGS_TAB_TITLE"), null, this.settingsPane, null, tabIndex++);
+        this.tabbedPane.insertTab(UiLocalizer.print("SETTINGS_TAB_TITLE"), Intended.<Icon>nullReference(), this.settingsPane, UiLocalizer.print("LanguageSettingsTabTip"), tabIndex++);
         
         this.genderLayout.setHorizontalGroup(this.genderLayout
                 .createParallelGroup(Alignment.LEADING)
@@ -381,7 +383,7 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         );
         this.genderPane.setLayout(this.genderLayout);
         this.genderPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("GENDER_SUBS_TAB_TITLE"), null, this.genderPane, null, tabIndex++);
+        this.tabbedPane.insertTab(UiLocalizer.print("GENDER_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.genderPane, UiLocalizer.print("GenderSubsTabTip"), tabIndex++);
         
         this.personLayout.setHorizontalGroup(this.personLayout
                 .createParallelGroup(Alignment.LEADING)
@@ -401,7 +403,7 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         );
         this.personPane.setLayout(this.personLayout);
         this.personPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("PERSON_SUBS_TAB_TITLE"), null, this.personPane, null, tabIndex++);
+        this.tabbedPane.insertTab(UiLocalizer.print("PERSON_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.personPane, UiLocalizer.print("PersonSubsTabTip"), tabIndex++);
         
         this.person2Layout.setHorizontalGroup(this.person2Layout
                 .createParallelGroup(Alignment.LEADING)
@@ -421,7 +423,7 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         );
         this.person2Pane.setLayout(this.person2Layout);
         this.person2Pane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("PERSON2_SUBS_TAB_TITLE"), null, this.person2Pane, null, tabIndex++);
+        this.tabbedPane.insertTab(UiLocalizer.print("PERSON2_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.person2Pane, UiLocalizer.print("Person2SubsTabTip"), tabIndex++);
         
         this.abbsLayout.setHorizontalGroup(this.abbsLayout
                 .createParallelGroup(Alignment.LEADING)
@@ -441,7 +443,7 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         );
         this.abbsPane.setLayout(this.abbsLayout);
         this.abbsPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("ABBS_SUBS_TAB_TITLE"), null, this.abbsPane, null, tabIndex++);
+        this.tabbedPane.insertTab(UiLocalizer.print("ABBS_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.abbsPane, UiLocalizer.print("AbbsSubsTabTip"), tabIndex++);
         
         this.spellingLayout.setHorizontalGroup(this.spellingLayout
                 .createParallelGroup(Alignment.LEADING)
@@ -461,7 +463,7 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         );
         this.spellingPane.setLayout(this.spellingLayout);
         this.spellingPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("SPELLING_SUBS_TAB_TITLE"), null, this.spellingPane, null, tabIndex++);
+        this.tabbedPane.insertTab(UiLocalizer.print("SPELLING_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.spellingPane, UiLocalizer.print("SpellingSubsTabTip"), tabIndex++);
         
         this.emoLayout.setHorizontalGroup(this.emoLayout
                 .createParallelGroup(Alignment.LEADING)
@@ -481,7 +483,7 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         );
         this.emoPane.setLayout(this.emoLayout);
         this.emoPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("EMOTICONS_SUBS_TAB_TITLE"), null, this.emoPane, null, tabIndex++);
+        this.tabbedPane.insertTab(UiLocalizer.print("EMOTICONS_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.emoPane, UiLocalizer.print("EmoSubsTabTip"), tabIndex++);
         
         this.punctuationLayout.setHorizontalGroup(this.punctuationLayout
                 .createParallelGroup(Alignment.LEADING)
@@ -501,7 +503,7 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         );
         this.punctuationPane.setLayout(this.punctuationLayout);
         this.punctuationPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("PUNCTUATION_SUBS_TAB_TITLE"), null, this.punctuationPane, null, tabIndex++);
+        this.tabbedPane.insertTab(UiLocalizer.print("PUNCTUATION_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.punctuationPane, UiLocalizer.print("PunctuationSubsTabTip"), tabIndex++);
         
         this.contentPaneLayout.setHorizontalGroup(
                 contentPaneLayout.createParallelGroup(Alignment.LEADING)

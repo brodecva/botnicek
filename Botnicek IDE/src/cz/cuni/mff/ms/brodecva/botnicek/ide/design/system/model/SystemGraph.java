@@ -35,8 +35,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RealignmentProces
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.Update.NodeSwitch;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Function;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DirectedMultigraph;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DirectedGraph;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
 
@@ -48,9 +49,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class SystemGraph implements DirectedMultigraph<Node, Arc> {
+public final class SystemGraph implements DirectedGraph<Node, Arc> {
     
-    private final DirectedMultigraph<Node, Arc> innerGraph = DefaultDirectedGraph.create();
+    private final DirectedGraph<Node, Arc> innerGraph = DefaultDirectedGraph.create();
     private final Map<NormalWord, Node> namesToNodes = new HashMap<>();
     private final Map<NormalWord, Arc> namesToArcs = new HashMap<>();
     
@@ -70,7 +71,7 @@ public final class SystemGraph implements DirectedMultigraph<Node, Arc> {
      * Vrátí uzel daného názvu.
      * 
      * @param name název uzlu
-     * @return uzel
+     * @return uzel či {@code null}, pokud uzel daného názvu neexistuje
      */
     public Node getVertex(final NormalWord name) {
         Preconditions.checkNotNull(name);
@@ -82,7 +83,7 @@ public final class SystemGraph implements DirectedMultigraph<Node, Arc> {
      * Vrátí hranu uzlu.
      * 
      * @param name název hrany
-     * @return hrana
+     * @return hrana či {@code null}, pokud hrana daného názvu neexistuje
      */
     public Arc getEdge(final NormalWord name) {
         Preconditions.checkNotNull(name);
@@ -124,7 +125,7 @@ public final class SystemGraph implements DirectedMultigraph<Node, Arc> {
                 
                 if (!realigned.equals(input)) {
                     final Collection<? extends RecurentArc> referring = references.get(input);
-                    if (referring != null) {
+                    if (Presence.isPresent(referring)) {
                         throw new IllegalArgumentException(ExceptionLocalizer.print("NodeRemovalForbidden", input.getName(), removed.getName(), removed.getNetwork(), referring.iterator().next().getName(), referring.iterator().next().getNetwork().getName()));
                     }
                     
@@ -179,7 +180,7 @@ public final class SystemGraph implements DirectedMultigraph<Node, Arc> {
         final Node newTo = processor.realign(to);
         final Collection<? extends RecurentArc> referring = references.get(from);
         try {            
-            Preconditions.checkArgument(referring == null || newFrom.equals(from) || (referring.size() == 1 && referring.contains(removed)), ExceptionLocalizer.print("ArcRemovalForbidden", from.getName(), removed.getName(), from.getNetwork().getName(), referring.iterator().next().getName(), referring.iterator().next().getNetwork().getName()));
+            Preconditions.checkArgument(Presence.isAbsent(referring) || newFrom.equals(from) || (referring.size() == 1 && referring.contains(removed)), ExceptionLocalizer.print("ArcRemovalForbidden", from.getName(), removed.getName(), from.getNetwork().getName(), referring.iterator().next().getName(), referring.iterator().next().getNetwork().getName()));
         } catch (final Exception e) {
             add(removed, from, to);
             

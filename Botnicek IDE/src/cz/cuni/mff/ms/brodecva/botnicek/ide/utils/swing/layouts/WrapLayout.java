@@ -32,6 +32,8 @@ import java.awt.*;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
+
 /**
  * FlowLayout subclass that fully supports wrapping of components.
  * 
@@ -189,7 +191,7 @@ public final class WrapLayout extends FlowLayout {
                     SwingUtilities
                             .getAncestorOfClass(JScrollPane.class, target);
 
-            if (scrollPane != null && target.isValid()) {
+            if (Components.hasParent(scrollPane) && target.isValid()) {
                 dim.width -= (hgap + 1);
             }
 

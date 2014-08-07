@@ -23,7 +23,7 @@ import java.util.List;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractRawElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
@@ -36,7 +36,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
  * @author Václav Brodec
  * @see <a href="http://www.alicebot.org/TR/2011/#section-that">http://www.alicebot.org/TR/2011/#section-that</a>
  */
-public class That extends AbstractElement {
+public class That extends AbstractProperElement {
     
     private final class ThatTextElement extends AbstractRawElement {
         
@@ -66,8 +66,6 @@ public class That extends AbstractElement {
     }
     
     private That(final MixedPattern that) {
-        assert that != null;
-        
         this.pattern = that;
     }
 

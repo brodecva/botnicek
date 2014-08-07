@@ -34,6 +34,8 @@ import java.awt.geom.Ellipse2D;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import javax.swing.Icon;
 import javax.swing.JOptionPane;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
@@ -60,7 +62,10 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.I
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.InnerRandomProcessingNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.IsolatedInputNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.IsolatedProcessingNode;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.FramedComponent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Rendering;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.listeners.DragFinishedListener;
@@ -240,8 +245,8 @@ public final class NodeUI extends FramedComponent implements DragFinishedListene
     
     private void attemptToRename() {
         while (true) {
-            final Object newNameInput = JOptionPane.showInputDialog(this, UiLocalizer.print("NODE_RENAME_MESSAGE"), UiLocalizer.print("NODE_RENAME_TITLE_CONTENT"), JOptionPane.PLAIN_MESSAGE, null, null, getName());
-            if (newNameInput == null) {
+            final Object newNameInput = JOptionPane.showInputDialog(this, UiLocalizer.print("NODE_RENAME_MESSAGE"), UiLocalizer.print("NODE_RENAME_TITLE_CONTENT"), JOptionPane.PLAIN_MESSAGE, Intended.<Icon>nullReference(), Intended.arrayNull(), getName());
+            if (Components.hasUserCanceledInput(newNameInput)) {
                 return;
             }
             
@@ -256,14 +261,14 @@ public final class NodeUI extends FramedComponent implements DragFinishedListene
 
     private static PositionalType toPositional(final Node node) {
         final PositionalType type = TO_POSITIONAL_DEFAULTS.get(node.getClass());
-        assert type != null;
+        assert Presence.isPresent(type);
         
         return type;
     }
     
     private static ProceedType toProceed(final Node node) {
         final ProceedType type = TO_PROCEED_DEFAULTS.get(node.getClass());
-        assert type != null;
+        assert Presence.isPresent(type);
         
         return type;
     }
@@ -272,7 +277,7 @@ public final class NodeUI extends FramedComponent implements DragFinishedListene
         final DispatchType type = TO_DISPATCH_DEFAULTS.get(node.getClass());
         
         final DispatchType usedType;
-        if (type == null) {
+        if (Presence.isAbsent(type)) {
             assert node instanceof ExitNode || node instanceof IsolatedNode;
             
             usedType = DispatchType.DEFAULT;

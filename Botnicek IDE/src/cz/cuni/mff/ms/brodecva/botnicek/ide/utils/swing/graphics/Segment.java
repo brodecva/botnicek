@@ -22,8 +22,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.Serializable;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
+
 /**
- * Orientovaná úsečka.
+ * Orientovaná úsečka s celočíselnými koordináty.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -95,7 +97,7 @@ public final class Segment implements Serializable {
     }
 
     /**
-     * Vrátí úsečku, která je oproti původní posunuta o daný offset kolmo doprava oproti směru orientace.
+     * Vrátí úsečku (s koordináty zaokrouhlenými an nejbližší celé číslo), která je oproti původní posunuta o danou vzdálenost kolmo doprava oproti směru orientace.
      * 
      * @param offset vzdálenost posunutí
      * @return posunutá kopie úsečky
@@ -163,7 +165,7 @@ public final class Segment implements Serializable {
      * @return úsečka s jiným počátkem
      */
     public Segment moveFrom(final Point newFrom) {
-        return moveFrom((int) newFrom.getX(), (int) newFrom.getY());
+        return moveFrom(newFrom.x, newFrom.y);
     }
     
     /**
@@ -184,7 +186,7 @@ public final class Segment implements Serializable {
      * @return úsečka s jiným koncem
      */
     public Segment moveTo(final Point newTo) {
-        return moveTo((int) newTo.getX(), (int) newTo.getY());
+        return moveTo(newTo.x, newTo.y);
     }
     
     /**
@@ -265,7 +267,7 @@ public final class Segment implements Serializable {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        if (Objects.isNull(obj)) {
             return false;
         }
         if (getClass() != obj.getClass()) {

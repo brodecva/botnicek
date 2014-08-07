@@ -56,18 +56,18 @@ public final class DefaultTranslatorFactory implements TranslatorFactory, Serial
      */
     public static DefaultTranslatorFactory create(final NormalWord pullState, final NormalWord pullStopState, final NormalWord randomizeState,
             NormalWord successState, NormalWord returnState, final NormalWord testingPredicate) {
+        Preconditions.checkNotNull(pullState);
+        Preconditions.checkNotNull(pullStopState);
+        Preconditions.checkNotNull(randomizeState);
+        Preconditions.checkNotNull(testingPredicate);
+        Preconditions.checkArgument(Comparisons.allDifferent(pullState, pullStopState, randomizeState, successState, returnState));
+        
         return new DefaultTranslatorFactory(pullState, pullStopState, randomizeState, successState, returnState, testingPredicate);
     }
 
     
     private DefaultTranslatorFactory(final NormalWord pullState, final NormalWord pullStopState, final NormalWord randomizeState,
             NormalWord successState, NormalWord returnState, final NormalWord testingPredicate) {
-        Preconditions.checkNotNull(pullState);
-        Preconditions.checkNotNull(pullStopState);
-        Preconditions.checkNotNull(randomizeState);
-        Preconditions.checkNotNull(testingPredicate);
-        Preconditions.checkNotNull(Comparisons.allDifferent(pullState, pullStopState, randomizeState));
-        
         this.pullState = pullState;
         this.pullStopState = pullStopState;
         this.randomizeState = randomizeState;

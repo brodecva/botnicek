@@ -91,7 +91,7 @@ public final class Recursion {
                 Patterns.create(join(pull, pullStop, reTurn, star)),
                 Category.createUniversal(
                         Template.create(
-                                Stack.push(successState),
+                                Stack.pushWords(successState),
                                 Sr.create()))));
         
         // PULL PULLSTOP * -> *

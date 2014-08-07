@@ -24,6 +24,8 @@ import javax.swing.text.*;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
+
 /**
  * Napovídající textové pole.
  * 
@@ -114,7 +116,7 @@ public class HintingTextField<E> extends JTextField implements SelectionChangedL
             final int dotMarkMax = Math.max(dot, mark);
 
             getCastDocument().replace(dotMarkMin, dotMarkMax - dotMarkMin,
-                    content, null);
+                    content, Intended.<AttributeSet>nullReference());
         } catch (final BadLocationException e) {
             return;
         }
