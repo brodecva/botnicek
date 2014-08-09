@@ -30,5 +30,11 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/Botnicek/lib/easymock-3.1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/Botnicek/lib/powermock-easymock-1.5-full.jar" sourcepath="/Botnicek/lib/powermock-easymock-1.5-full.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://powermock.googlecode.com/svn/docs/powermock-1.5.1/apidocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Botnicek/lib/cpsuite-1.2.6.jar" sourcepath="/Botnicek/lib/cpsuite-1.2.6-src.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

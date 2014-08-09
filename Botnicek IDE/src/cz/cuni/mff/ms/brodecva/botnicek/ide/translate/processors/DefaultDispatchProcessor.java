@@ -18,7 +18,6 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors;
 
-import java.util.Comparator;
 import java.util.List;
 
 import com.google.common.base.Function;
@@ -28,11 +27,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Set;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Srai;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Text;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode;
@@ -50,12 +47,15 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
  */
 public final class DefaultDispatchProcessor implements DispatchProcessor<List<TemplateElement>> {
     
-    private static final class PrioritizedFirstComparator implements Comparator<Arc> {
+    private static final class PrioritizedFirstOrdering extends Ordering<Arc> {
+        
         @Override
         public int compare(final Arc first, final Arc second) {
             return -Integer.compare(first.getPriority().getValue(), second.getPriority().getValue());
         }
     }
+    
+    private static final Ordering<Arc> DISPATCH_ORDERING = new PrioritizedFirstOrdering();
     
     private final NormalWord randomizeState;
 
@@ -82,12 +82,15 @@ public final class DefaultDispatchProcessor implements DispatchProcessor<List<Te
      */
     public List<TemplateElement> process(final OrderedNode node) {
         final java.util.Set<Arc> targets = node.getOuts();
-        final List<Arc> sortedTargets = Ordering.from(new PrioritizedFirstComparator()).sortedCopy(targets);
+        assert !targets.isEmpty();
+        
+        final List<Arc> sortedTargets = DISPATCH_ORDERING.sortedCopy(targets);
         final List<NormalWord> targetNames = extractNames(sortedTargets);
         
-        return ImmutableList.<TemplateElement>of(Text.create(Stack.joinWithSpaces(targetNames)));
+        final TemplateElement pushTargets = Text.create(Stack.joinWithSpaces(targetNames));
+        
+        return ImmutableList.<TemplateElement>of(pushTargets);
     }
-
     
     private static List<NormalWord> extractNames(final List<Arc> targets) {
         return ImmutableList.copyOf(Lists.transform(targets, new Function<Arc, NormalWord>() {
@@ -106,11 +109,17 @@ public final class DefaultDispatchProcessor implements DispatchProcessor<List<Te
         Preconditions.checkNotNull(node);
         
         final java.util.Set<Arc> targets = node.getOuts();
-        final String statesToRandomize = concatenateMultiplied(targets);
+        assert !targets.isEmpty();
         
-        // Vstup do knihovního tématu
-        final Set enterRandomizerState = Set.create(NormalWords.of(AIML.TOPIC_PREDICATE.getValue()), Text.create(this.randomizeState.getText()));
-        final Srai randomize = Srai.create(Text.create(this.randomizeState.getText() + AIML.WORD_DELIMITER), Text.create(statesToRandomize));
+        final List<NormalWord> multipliedTargetNames = multiplyByPriority(targets);
+        
+        // Přidá knihovní téma na vrchol zásobníku (ovšem jen pro následující zanoření).
+        final TemplateElement enterRandomizerState = Stack.popAndPushWords(this.randomizeState);
+        
+        // Nastavení klíčového slova dle specifikace knihovní funkce (shoduje se s názvem stavu) a rekurzivní spuštění nad znásobenými názvy.
+        final String randomizeDirectiveStart = this.randomizeState.getText() + AIML.WORD_DELIMITER;
+        final String multipliedNamesJoined = Stack.joinWithSpaces(multipliedTargetNames);
+        final TemplateElement randomize = Srai.create(Text.create(randomizeDirectiveStart), Text.create(multipliedNamesJoined));
         
         return ImmutableList.<TemplateElement>of(enterRandomizerState, randomize);
     }
@@ -119,22 +128,20 @@ public final class DefaultDispatchProcessor implements DispatchProcessor<List<Te
      * Prioritní hrany se násobí pro zvětšení jejich pravděpodobnosti výběru dle jejich významu.
      * 
      * @param targets odchozí hrany
-     * @return konkatenace názvů odchozích hran, kde priorita odpovídá počtu kopií
+     * @return znásobené výskyty názvů hran
      */
-    private static String concatenateMultiplied(final java.util.Set<Arc> targets) {
-        final StringBuilder pushedStates = new StringBuilder();
+    private static List<NormalWord> multiplyByPriority(final java.util.Set<Arc> targets) {
+        final ImmutableList.Builder<NormalWord> resultBuilder = ImmutableList.builder();
         for (final Arc target : targets) {
             final NormalWord name = target.getName();
             final int repetitions = target.getPriority().getValue();
             
             for (int copyIndex = 0; copyIndex < repetitions; copyIndex++) {
-                pushedStates.append(name.getText() + AIML.WORD_DELIMITER.getValue());
+                resultBuilder.add(name);
             }
         }
-        pushedStates.setLength(Math.max(0, pushedStates.length() - AIML.WORD_DELIMITER.getValue().length()));
         
-        final String statesToRandomize = pushedStates.toString();
-        return statesToRandomize;
+        return resultBuilder.build();
     }
 
     /** 

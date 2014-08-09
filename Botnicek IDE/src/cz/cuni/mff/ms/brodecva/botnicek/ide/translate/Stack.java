@@ -66,20 +66,32 @@ public final class Stack {
     }
     
     /**
-     * Vrátí strukturu, která přidá slova na vrchol zásobníku, pokud je provedena.
+     * Vrátí strukturu, která přidá slova na uvolněný vrchol zásobníku, pokud je provedena.
      * 
      * @param words normální slova
      * @return strom prvků šablony, který provede přidání slov na zásobník
      */
-    public static TemplateElement pushWords(final NormalWord... words) {
+    public static TemplateElement popAndPushWords(final NormalWord... words) {
+        Preconditions.checkNotNull(words);
+        
+        return popAndPushWords(ImmutableList.copyOf(words));
+    }
+    
+    /**
+     * Vrátí strukturu, která přidá slova na uvolněný vrchol zásobníku, pokud je provedena.
+     * 
+     * @param words normální slova
+     * @return strom prvků šablony, který provede přidání slov na zásobník
+     */
+    public static TemplateElement popAndPushWords(final List<NormalWord> words) {
         Preconditions.checkNotNull(words);
         
         final ImmutableList<NormalWord> wordsCopy = ImmutableList.copyOf(words);
         
         if (wordsCopy.isEmpty()) {
-            return push(ImmutableList.<TemplateElement>of());
+            return popAndPush(ImmutableList.<TemplateElement>of());
         } else {
-            return push(Text.create(joinWithSpaces(wordsCopy)));
+            return popAndPush(Text.create(joinWithSpaces(wordsCopy)));
         }
     }
     
@@ -103,15 +115,15 @@ public final class Stack {
     }
 
     /**
-     * Vrátí strukturu, která přidá výsledek zpracování prvků šablony na vrchol zásobníku, pokud je provedena.
+     * Vrátí strukturu, která přidá výsledek zpracování prvků šablony na uvolněný vrchol zásobníku, pokud je provedena.
      * 
      * @param content prvky, jež se mají zpracovat a výsledek uložit na zásobník
      * @return strom prvků šablony, který provede přidání výsledku na zásobník
      */
-    public static TemplateElement push(final TemplateElement... content) {
+    public static TemplateElement popAndPush(final TemplateElement... content) {
         Preconditions.checkNotNull(content);
         
-        return push(ImmutableList.copyOf(content));
+        return popAndPush(ImmutableList.copyOf(content));
     }
     
     /**
@@ -120,7 +132,7 @@ public final class Stack {
      * @param content prvky, jež se mají zpracovat a výsledek uložit na zásobník
      * @return strom prvků šablony, který provede přidání výsledku na zásobník
      */
-    public static TemplateElement push(final List<TemplateElement> content) {
+    public static TemplateElement popAndPush(final List<TemplateElement> content) {
         Preconditions.checkNotNull(content);
         
         return concatenate(ImmutableList.copyOf(content), ImmutableList.<TemplateElement>of(Topicstar.create()));

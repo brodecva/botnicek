@@ -109,11 +109,11 @@ public final class DefaultTestProcessor implements TestProcessor<List<Topic>> {
         
         final TemplateElement popArc = Stack.pop();
         final TemplateElement doCode = RawContent.create(arc.getCode().getText());
-        final TemplateElement pushTarget = Stack.pushWords(arc.getTo().getName());
+        final TemplateElement pushTarget = Stack.popAndPushWords(arc.getTo().getName());
         final TemplateElement passCopy = Srai.create(patternCopy);
         final TemplateElement pass = Sr.create();
         
-        final List<TemplateElement> successCode = ImmutableList.of(doCode, popArc, pushTarget, passCopy);
+        final List<TemplateElement> successCode = ImmutableList.of(doCode, pushTarget, passCopy);
         final List<TemplateElement> failCode = ImmutableList.of(popArc, pass);
         
         return ImmutableList.of(createArcTopic(arc,
@@ -170,9 +170,9 @@ public final class DefaultTestProcessor implements TestProcessor<List<Topic>> {
         
         final TemplateElement popArc = Stack.pop();
         final TemplateElement doCode = RawContent.create(arc.getCode().getText());
-        final TemplateElement pushTarget = Stack.pushWords(arc.getTo().getName());
+        final TemplateElement pushTarget = Stack.popAndPushWords(arc.getTo().getName());
         
-        final ValueOnlyListItem success = ValueOnlyListItem.create(arc.getValue(), doCode, popArc, pushTarget);
+        final ValueOnlyListItem success = ValueOnlyListItem.create(arc.getValue(), doCode, pushTarget);
         final DefaultListItem fail = DefaultListItem.create(popArc);
         
         final TemplateElement choose = SinglePredicateCondition.create(arc.getPredicateName(), fail, success);
@@ -199,9 +199,9 @@ public final class DefaultTestProcessor implements TestProcessor<List<Topic>> {
         final TemplateElement hideResult = Think.create(saveResult);
         final TemplateElement popArc = Stack.pop();
         final TemplateElement doCode = RawContent.create(arc.getCode().getText());
-        final TemplateElement pushTarget = Stack.pushWords(arc.getTo().getName());
+        final TemplateElement pushTarget = Stack.popAndPushWords(arc.getTo().getName());
         
-        final ValueOnlyListItem success = ValueOnlyListItem.create(arc.getValue(), doCode, popArc, pushTarget);
+        final ValueOnlyListItem success = ValueOnlyListItem.create(arc.getValue(), doCode, pushTarget);
         final DefaultListItem fail = DefaultListItem.create(popArc);
         
         final TemplateElement choose = SinglePredicateCondition.create(this.testingPredicate, fail, success);
@@ -224,14 +224,13 @@ public final class DefaultTestProcessor implements TestProcessor<List<Topic>> {
     public List<Topic> process(final RecurentArc arc) {
         Preconditions.checkNotNull(arc);
         
-        final TemplateElement popArc = Stack.pop();
         final TemplateElement doCode = RawContent.create(arc.getCode().getText());
-        final TemplateElement pushTarget = Stack.pushWords(arc.getTo().getName());
-        final TemplateElement dive = Stack.pushWords(arc.getTarget().getName(), this.returnState, arc.getName());
+        final TemplateElement pushTarget = Stack.popAndPushWords(arc.getTo().getName());
+        final TemplateElement dive = Stack.popAndPushWords(arc.getTarget().getName(), this.returnState, arc.getName());
         final TemplateElement pass = Sr.create();
         
-        final List<TemplateElement> diveCode = ImmutableList.of(popArc, dive, pass);
-        final List<TemplateElement> successCode = ImmutableList.of(doCode, popArc, pushTarget, pass);
+        final List<TemplateElement> diveCode = ImmutableList.of(dive, pass);
+        final List<TemplateElement> successCode = ImmutableList.of(doCode, pushTarget, pass);
         
         return ImmutableList.of(
                 createArcTopic(arc, diveCode),
@@ -247,11 +246,10 @@ public final class DefaultTestProcessor implements TestProcessor<List<Topic>> {
     @Override
     public List<Topic> process(final TransitionArc arc) {
         final TemplateElement doCode = RawContent.create(arc.getCode().getText());
-        final TemplateElement popArc = Stack.pop();
-        final TemplateElement pushTarget = Stack.pushWords(arc.getTo().getName());
+        final TemplateElement pushTarget = Stack.popAndPushWords(arc.getTo().getName());
         final TemplateElement pass = Sr.create();
         
-        final List<TemplateElement> code = ImmutableList.of(doCode, popArc, pushTarget, pass);
+        final List<TemplateElement> code = ImmutableList.of(doCode, pushTarget, pass);
         
         return ImmutableList.of(createArcTopic(arc, code));
     }

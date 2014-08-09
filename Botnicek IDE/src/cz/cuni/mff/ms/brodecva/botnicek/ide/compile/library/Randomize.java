@@ -36,16 +36,12 @@ import com.google.common.collect.Sets.SetView;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.category.Template;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Random;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Set;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Srai;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Star;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Text;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Think;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Topicstar;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Category;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Topic;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Patterns;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
@@ -104,26 +100,20 @@ public class Randomize {
         final String randomStart = RANDOM_START;
         final String randomEnd = RANDOM_END;
         final String star = AIML.STAR_WILDCARD.getValue();
-        final String space = AIML.WORD_DELIMITER.getValue();
-        final NormalWord topic = NormalWords.of(AIML.TOPIC_PREDICATE.getValue());
         
         // @formatter:off
         //    <category>
         //        <pattern>RANDOMIZE *<pattern>
         //        <that>*<that>
-        //        <template><think><set name="TOPIC"><srai>RANDOMSTART <star/> RANDOMEND</srai> <topicstar/></set></think></template>
+        //        <template><srai>RANDOMSTART <star/> RANDOMEND</srai></template>
         //    </category>
         categories.add(
                 Category.create(
                         Patterns.create(join(randomize, star)),
                         Patterns.createUniversal(),
                         Template.create(
-                                Think.create(
-                                        Set.create(
-                                                topic,
-                                                Srai.create(
-                                                        Text.create(join(randomStart, star, randomEnd) + space)),
-                                                        Topicstar.create())))));
+                                        Srai.create(
+                                                Text.create(join(randomStart, star, randomEnd))))));
         
         //    <category>
         //        <pattern>RANDOMSTART * * * * RANDOMEND<pattern>

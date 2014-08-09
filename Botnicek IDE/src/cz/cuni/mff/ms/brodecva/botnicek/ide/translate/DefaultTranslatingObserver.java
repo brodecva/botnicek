@@ -134,12 +134,13 @@ public final class DefaultTranslatingObserver implements TranslatingObserver {
      * <p>Systém nehraje při překladu žádnou roli, a tak je v této implementaci ignorován.</p>
      */
     public void notifyVisit(final System system) {
+        Preconditions.checkNotNull(system);
     }
 
     /**
      * {@inheritDoc}
      * 
-     * <p>Tato implementace nastaví aktuálně zpracovanou síť.</p>
+     * <p>Tato implementace pouze nastaví aktuálně zpracovanou síť. V případě, že její obsah nevygeneruje žádná témata, neobjeví se ve výsledku {@link #getResult()}.</p>
      */
     @Override
     public void notifyVisit(final Network network) {
@@ -156,13 +157,24 @@ public final class DefaultTranslatingObserver implements TranslatingObserver {
      */
     @Override
     public void notifyDiscovery(final Node node) {
+        Preconditions.checkNotNull(node);
+        Preconditions.checkState(this.current.isPresent());
+        
         final List<TemplateElement> stackProcessorResult = node.accept(this.stackProcessor);
         final List<TemplateElement> dispatchProcessorResult = node.accept(this.dispatchProcessor);
         final List<TemplateElement> proceedProcessorResult = node.accept(this.proceedProcessor);
         
-        final List<TemplateElement> code = ImmutableList.copyOf(Iterables.concat(stackProcessorResult, dispatchProcessorResult, proceedProcessorResult));
+        final ImmutableList.Builder<TemplateElement> codeBuilder = ImmutableList.builder();
+        codeBuilder.add(pushToStack(stackProcessorResult, dispatchProcessorResult));
+        codeBuilder.addAll(proceedProcessorResult);
         
-        add(this.nodeTopicFactory.produce(node, code));
+        add(this.nodeTopicFactory.produce(node, codeBuilder.build()));
+    }
+
+    private TemplateElement pushToStack(
+            final List<TemplateElement> stackProcessorResult,
+            final List<TemplateElement> dispatchProcessorResult) {
+        return Stack.popAndPush(ImmutableList.copyOf(Iterables.concat(dispatchProcessorResult, stackProcessorResult)));
     }
 
     /**
@@ -173,6 +185,9 @@ public final class DefaultTranslatingObserver implements TranslatingObserver {
      */
     @Override
     public void notifyExamination(final Arc arc) {
+        Preconditions.checkNotNull(arc);
+        Preconditions.checkState(this.current.isPresent());
+        
         final List<Topic> testProcessorResult = arc.accept(this.testProcessor);
         
         add(testProcessorResult);
@@ -182,7 +197,9 @@ public final class DefaultTranslatingObserver implements TranslatingObserver {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyFinish(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
      */
     @Override
-    public void notifyFinish(final Node node) {   
+    public void notifyFinish(final Node node) {
+        Preconditions.checkNotNull(node);
+        Preconditions.checkState(this.current.isPresent());
     }
 
     /* (non-Javadoc)
@@ -190,6 +207,8 @@ public final class DefaultTranslatingObserver implements TranslatingObserver {
      */
     @Override
     public void notifyTree(final Arc arc) {
+        Preconditions.checkNotNull(arc);
+        Preconditions.checkState(this.current.isPresent());
     }
 
     /* (non-Javadoc)
@@ -197,6 +216,8 @@ public final class DefaultTranslatingObserver implements TranslatingObserver {
      */
     @Override
     public void notifyBack(final Arc arc) {
+        Preconditions.checkNotNull(arc);
+        Preconditions.checkState(this.current.isPresent());
     }
 
     /* (non-Javadoc)
@@ -204,6 +225,8 @@ public final class DefaultTranslatingObserver implements TranslatingObserver {
      */
     @Override
     public void notifyCross(final Arc arc) {
+        Preconditions.checkNotNull(arc);
+        Preconditions.checkState(this.current.isPresent());
     }
     
     /**
@@ -221,9 +244,7 @@ public final class DefaultTranslatingObserver implements TranslatingObserver {
      * @param added nové témata
      */
     private void add(final List<Topic> added) {
-        if (!this.current.isPresent()) {
-            throw new IllegalStateException();
-        }
+        assert this.current.isPresent();
         
         final Network currentRaw = this.current.get();
         this.units.putAll(currentRaw, added);

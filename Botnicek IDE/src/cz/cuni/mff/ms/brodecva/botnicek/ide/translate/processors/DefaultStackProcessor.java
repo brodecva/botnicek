@@ -23,13 +23,13 @@ import java.util.List;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Text;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InnerNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons;
 
 /**
@@ -69,7 +69,7 @@ public final class DefaultStackProcessor implements StackProcessor<List<Template
      */
     @Override
     public List<TemplateElement> process(final InnerNode node) {
-        return ImmutableList.of(Stack.pop());
+        return ImmutableList.of();
     }
 
     /**
@@ -79,7 +79,7 @@ public final class DefaultStackProcessor implements StackProcessor<List<Template
      */
     @Override
     public List<TemplateElement> process(final ExitNode node) {
-        return ImmutableList.of(Stack.pushWords(this.pullState));
+        return ImmutableList.<TemplateElement>of(Text.create(this.pullState.getText()));
     }
 
     /**
@@ -89,7 +89,7 @@ public final class DefaultStackProcessor implements StackProcessor<List<Template
      */
     @Override
     public List<TemplateElement> process(final EnterNode node) {
-        return ImmutableList.of(Stack.pushWords(this.pullStopState));
+        return ImmutableList.<TemplateElement>of(Text.create(this.pullStopState.getText()));
     }
 
     /** 
