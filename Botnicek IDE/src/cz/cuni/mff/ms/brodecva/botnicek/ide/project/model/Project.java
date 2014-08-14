@@ -67,7 +67,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.ConversationSettingsC
 import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.LanguageSettingsChangedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.ProjectOpenedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.SettingsChangedEvent;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.render.DefaultRenderFactory;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.render.DefaultRendererFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.render.DefaultRenderingVisitorFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.render.Renderer;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.render.RendererFactory;
@@ -158,7 +158,7 @@ public class Project implements Serializable {
         final Settings settings = Settings.getDefault();
         final RuntimeSettings runtimeSettings = RuntimeSettings.getDefault();
         
-        final RendererFactory rendererFactory = DefaultRenderFactory.create(DefaultRenderingVisitorFactory.create());
+        final RendererFactory rendererFactory = DefaultRendererFactory.create(DefaultRenderingVisitorFactory.create());
         final Printer printer = DefaultPrettyPrinter.create();
         final CompilerFactory compilerFactory = DefaultCompilerFactory.create();
         final RuntimeFactory runtimeFactory = DefaultRuntimeFactory.create();        

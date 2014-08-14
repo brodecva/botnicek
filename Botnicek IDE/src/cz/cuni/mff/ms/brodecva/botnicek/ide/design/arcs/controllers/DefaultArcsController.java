@@ -138,6 +138,7 @@ public class DefaultArcsController extends AbstractController<ArcsView> implemen
     
     /**
      * Vytvoří řadič.
+     * 
      * @param system systém všech sítí
      * @param network síť s hranami
      * @param eventManager správce událostí

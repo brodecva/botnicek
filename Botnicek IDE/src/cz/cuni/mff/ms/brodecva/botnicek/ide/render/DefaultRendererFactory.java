@@ -29,7 +29,7 @@ import com.google.common.base.Preconditions;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultRenderFactory implements RendererFactory {
+public final class DefaultRendererFactory implements RendererFactory {
 
     private final RenderingVisitorFactory renderingVisitorFactory;
     
@@ -39,11 +39,11 @@ public final class DefaultRenderFactory implements RendererFactory {
      * @param renderingVisitorFactory továrna na návštěvníky stromu dokumentu
      * @return továrna
      */
-    public static DefaultRenderFactory create(final RenderingVisitorFactory renderingVisitorFactory) {
-        return new DefaultRenderFactory(renderingVisitorFactory);
+    public static DefaultRendererFactory create(final RenderingVisitorFactory renderingVisitorFactory) {
+        return new DefaultRendererFactory(renderingVisitorFactory);
     }
     
-    private DefaultRenderFactory(final RenderingVisitorFactory renderingVisitorFactory) {
+    private DefaultRendererFactory(final RenderingVisitorFactory renderingVisitorFactory) {
         Preconditions.checkNotNull(renderingVisitorFactory);
         
         this.renderingVisitorFactory = renderingVisitorFactory;

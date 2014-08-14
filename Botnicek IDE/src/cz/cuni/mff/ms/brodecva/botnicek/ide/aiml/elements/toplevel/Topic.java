@@ -18,7 +18,6 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -85,7 +84,7 @@ public final class Topic extends AbstractProperElement implements Toplevel {
     }
     
     private Topic(final SimplePattern name, final Category... categories) {
-        this(name, Arrays.asList(categories));
+        this(name, ImmutableList.copyOf(categories));
     }
     
     private Topic(final SimplePattern name, final List<Category> categories) {

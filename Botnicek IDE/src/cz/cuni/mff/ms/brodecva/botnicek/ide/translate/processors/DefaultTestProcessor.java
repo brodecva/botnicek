@@ -50,7 +50,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIMLIndex;
 import cz.cuni.mff.ms.brodecva.botnicek.library.storage.AIMLWildcard;
 
 /**
- * Výchozí implementace procesoru hran.
+ * <p>Výchozí implementace procesoru hran.</p>
+ * <p>Na rozdíl od procesorů pro uzly mohou hrany potřebovat pro svou implementaci i vícero témat.</p>
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -133,7 +134,7 @@ public final class DefaultTestProcessor implements TestProcessor<List<Topic>> {
         
         final ImmutableList.Builder<TemplateElement> resultBuilder = ImmutableList.builder();
         final StringBuilder stringBuilder = new StringBuilder();
-        int starIndex = 0;
+        int starIndex = 1;
         for (int characterIndex = 0; characterIndex < patternTextLength; characterIndex++) {
             final char character = patternText.charAt(characterIndex);
             
@@ -168,6 +169,8 @@ public final class DefaultTestProcessor implements TestProcessor<List<Topic>> {
     public List<Topic> process(final PredicateTestArc arc) {        
         Preconditions.checkNotNull(arc);
         
+        final TemplateElement doPrepareCode = RawContent.create(arc.getPrepareCode().getText());
+        
         final TemplateElement popArc = Stack.pop();
         final TemplateElement doCode = RawContent.create(arc.getCode().getText());
         final TemplateElement pushTarget = Stack.popAndPushWords(arc.getTo().getName());
@@ -178,7 +181,7 @@ public final class DefaultTestProcessor implements TestProcessor<List<Topic>> {
         final TemplateElement choose = SinglePredicateCondition.create(arc.getPredicateName(), fail, success);
         final TemplateElement pass = Sr.create();
         
-        final List<TemplateElement> code = ImmutableList.of(choose, pass);
+        final List<TemplateElement> code = ImmutableList.of(doPrepareCode, choose, pass);
         
         return ImmutableList.of(createArcTopic(arc, code));
     }
@@ -186,7 +189,8 @@ public final class DefaultTestProcessor implements TestProcessor<List<Topic>> {
     /**
      * {@inheritDoc}
      * 
-     * <p>Výsledkem zpracování je téma, které je pojmenováno po hraně a které obsahuje jednu kategorii. V té je kód šablony, který porovná výstup testovaného kódu s očekávanou hodnotou a podle toho přidá cíl hrany na zásobník či nikoli.</p> 
+     * <p>Výsledkem zpracování je téma, které je pojmenováno po hraně a které obsahuje jednu kategorii. V té je kód šablony, který porovná výstup testovaného kódu s očekávanou hodnotou a podle toho přidá cíl hrany na zásobník či nikoli.</p>
+     * <p>Tato implementace využívá pomocného predikátu rezervovaného názvu pro uložení dočasného hodnoty vygenerované kódem. Ta je po porovnání smazána nastavením predikátu na prázdný řetězec.</p> 
      */
     @Override
     public List<Topic> process(final CodeTestArc arc) {
@@ -234,7 +238,7 @@ public final class DefaultTestProcessor implements TestProcessor<List<Topic>> {
         
         return ImmutableList.of(
                 createArcTopic(arc, diveCode),
-                Stack.createState(this.successState, Category.createUniversal(Template.create(successCode)))
+                Stack.createState(ImmutableList.of(this.successState, arc.getName()), ImmutableList.of(Category.createUniversal(Template.create(successCode))))
         );
     }
 

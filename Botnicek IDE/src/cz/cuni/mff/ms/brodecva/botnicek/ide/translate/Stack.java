@@ -220,20 +220,23 @@ public final class Stack {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(categories);
         
-        return createState(name, ImmutableList.copyOf(categories));
+        return createState(ImmutableList.of(name), ImmutableList.copyOf(categories));
     }
     
     /**
-     * Vytvoří téma, jež bude voláno při stavu zásobníku, ve kterém se nachází název tématu na vrcholu.
+     * Vytvoří téma, jež bude voláno při stavu zásobníku, ve kterém se nachází složený název tématu na vrcholu.
      * 
-     * @param name název tématu
+     * @param composedName složený název tématu
      * @param categories kategorie tématu
      * @return téma stavu
      */
-    public static Topic createState(final NormalWord name, final List<Category> categories) {
-        Preconditions.checkNotNull(name);
+    public static Topic createState(final List<NormalWord> composedName, final List<Category> categories) {
+        Preconditions.checkNotNull(composedName);
         Preconditions.checkNotNull(categories);
         
-        return Topic.create(Patterns.create(name.getText() + AIML.WORD_DELIMITER + AIML.STAR_WILDCARD), ImmutableList.copyOf(categories));
+        final List<NormalWord> namesCopy = ImmutableList.copyOf(composedName);
+        Preconditions.checkArgument(!composedName.isEmpty());
+        
+        return Topic.create(Patterns.create(Stack.joinWithSpaces(namesCopy) + AIML.WORD_DELIMITER + AIML.STAR_WILDCARD), ImmutableList.copyOf(categories));
     }
 }

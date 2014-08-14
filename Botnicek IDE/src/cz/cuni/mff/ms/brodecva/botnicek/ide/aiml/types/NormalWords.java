@@ -29,7 +29,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.NormalWordChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
@@ -119,6 +118,7 @@ public final class NormalWords {
     }
     
     private static NormalWordChecker checker = DefaultNormalWordChecker.create();
+    private static Normalizer normalizer = new SimpleNormalizer();
     
     /**
      * Převede text vyhovující syntaxi normálního slova na normální slovo.
@@ -130,7 +130,7 @@ public final class NormalWords {
     public static NormalWord of(final String text) {
         Preconditions.checkNotNull(text);
         
-        final CheckResult result = checker.check(new Source() {}, text, text);
+        final CheckResult result = checker.check(text);
         Preconditions.checkArgument(result.isValid(), result.getMessage());
         
         return NormalWordImplementation.create(text);
@@ -146,8 +146,6 @@ public final class NormalWords {
     public static NormalWord from(final String text) {
         Preconditions.checkNotNull(text);
         Preconditions.checkArgument(!text.isEmpty(), ExceptionLocalizer.print("EmptyText"));
-        
-        final Normalizer normalizer = new SimpleNormalizer();
         
         final String converted = normalizer.convertToNormalChars(text);
         Preconditions.checkArgument(!converted.isEmpty(), ExceptionLocalizer.print("CannotBeNormalized"));
@@ -175,6 +173,7 @@ public final class NormalWords {
      */
     public static NormalWord join(final List<NormalWord> names) {
         Preconditions.checkNotNull(names);
+        Preconditions.checkArgument(!names.isEmpty());
         
         final StringBuilder textBuilder = new StringBuilder();
         for (final NormalWord name : names) {

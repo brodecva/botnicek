@@ -45,7 +45,7 @@ public final class DefaultRenderingVisitorFactory implements RenderingVisitorFac
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.render.RenderingVisitorFactory#spawn()
      */
     @Override
-    public DefaultRenderingVisitor spawn(final Map<URI, String> namespacesToPrefixes) {
+    public DefaultRenderingVisitor produce(final Map<URI, String> namespacesToPrefixes) {
         return DefaultRenderingVisitor.create(namespacesToPrefixes);
     }
 

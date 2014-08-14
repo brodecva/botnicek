@@ -32,7 +32,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultNormalWordChecker implements NormalWordChecker {
+public final class DefaultNormalWordChecker implements NormalWordChecker, Source {
     private final NamingAuthority namingAuthority;
     
     /**
@@ -85,5 +85,13 @@ public final class DefaultNormalWordChecker implements NormalWordChecker {
         }
         
         return DefaultCheckResult.succeed(source, subject);
+    }
+    
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker#check(java.lang.String)
+     */
+    @Override
+    public CheckResult check(final String content) {
+        return check(this, new Object(), content);
     }
 }

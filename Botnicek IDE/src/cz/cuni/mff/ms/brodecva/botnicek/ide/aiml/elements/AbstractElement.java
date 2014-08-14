@@ -38,6 +38,21 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Attribute;
 public abstract class AbstractElement implements Element {
 
     /**
+     * Navštíví každý element.
+     * 
+     * @param elements elementy
+     * @param visitor návštěvník
+     */
+    public static final void acceptForEach(final Iterable<? extends Element> elements, final Visitor visitor) {
+        Preconditions.checkNotNull(elements);
+        Preconditions.checkNotNull(visitor);
+        
+        for (final Element element : elements) {
+            element.accept(visitor);
+        }
+    }
+    
+    /**
      * Konstruktor abstraktní verze nepřijímá žádné parametry, neboť jím vytvořený prvek je zcela prázdný.
      */
     protected AbstractElement() {

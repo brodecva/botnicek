@@ -19,8 +19,6 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.project.model;
 
 import java.net.URI;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
@@ -31,6 +29,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.XML;
+import cz.cuni.mff.ms.brodecva.botnicek.library.utils.Text;
 
 /**
  * Nastavení projektu.
@@ -301,7 +300,7 @@ public final class Settings {
         final int maxLen = 10;
         StringBuilder builder = new StringBuilder();
         builder.append("Settings [namespacesToPrefixes=");
-        builder.append(toString(namespacesToPrefixes.entrySet(), maxLen));
+        builder.append(Text.toString(namespacesToPrefixes.entrySet(), maxLen));
         builder.append(", prefix=");
         builder.append(prefix);
         builder.append(", pullState=");
@@ -318,20 +317,6 @@ public final class Settings {
         builder.append(returnState);
         builder.append(", testingPredicate=");
         builder.append(testingPredicate);
-        builder.append("]");
-        return builder.toString();
-    }
-
-    private String toString(Collection<?> collection, int maxLen) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("[");
-        int i = 0;
-        for (Iterator<?> iterator = collection.iterator(); iterator.hasNext()
-                && i < maxLen; i++) {
-            if (i > 0)
-                builder.append(", ");
-            builder.append(iterator.next());
-        }
         builder.append("]");
         return builder.toString();
     }

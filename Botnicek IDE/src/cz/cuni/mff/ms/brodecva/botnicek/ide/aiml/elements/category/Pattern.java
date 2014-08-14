@@ -36,7 +36,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
  * @author Václav Brodec
  * @see <a href="http://www.alicebot.org/TR/2011/#section-pattern">http://www.alicebot.org/TR/2011/#section-pattern</a>
  */
-public class Pattern extends AbstractProperElement {
+public final class Pattern extends AbstractProperElement {
     
     private final class PatternTextElement extends AbstractRawElement {
         

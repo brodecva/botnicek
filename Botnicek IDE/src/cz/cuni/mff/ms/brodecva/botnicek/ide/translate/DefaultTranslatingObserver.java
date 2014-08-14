@@ -34,6 +34,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.TestProcessor;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.AbstractDfsObserver;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
@@ -51,7 +52,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultTranslatingObserver implements TranslatingObserver {
+public final class DefaultTranslatingObserver extends AbstractDfsObserver implements TranslatingObserver {
     
     private final NodeTopicFactory nodeTopicFactory;
     private final StackProcessor<List<TemplateElement>> stackProcessor;
@@ -191,42 +192,6 @@ public final class DefaultTranslatingObserver implements TranslatingObserver {
         final List<Topic> testProcessorResult = arc.accept(this.testProcessor);
         
         add(testProcessorResult);
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyFinish(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
-     */
-    @Override
-    public void notifyFinish(final Node node) {
-        Preconditions.checkNotNull(node);
-        Preconditions.checkState(this.current.isPresent());
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyTree(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
-     */
-    @Override
-    public void notifyTree(final Arc arc) {
-        Preconditions.checkNotNull(arc);
-        Preconditions.checkState(this.current.isPresent());
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyBack(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
-     */
-    @Override
-    public void notifyBack(final Arc arc) {
-        Preconditions.checkNotNull(arc);
-        Preconditions.checkState(this.current.isPresent());
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyCross(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
-     */
-    @Override
-    public void notifyCross(final Arc arc) {
-        Preconditions.checkNotNull(arc);
-        Preconditions.checkState(this.current.isPresent());
     }
     
     /**

@@ -18,16 +18,21 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.ConditionElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.lists.DefaultListItem;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.lists.ValueOnlyListItem;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Attribute;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.AttributeImplementation;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 
 /**
@@ -39,6 +44,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
  */
 public final class SinglePredicateCondition extends AbstractProperElement implements ConditionElement {
     private static final String NAME = "condition";
+
+    private static final String ATT_NAME = "name";
     
     private final NormalWord name;
     private final List<ValueOnlyListItem> items;
@@ -55,7 +62,7 @@ public final class SinglePredicateCondition extends AbstractProperElement implem
     public static SinglePredicateCondition create(final NormalWord name, final DefaultListItem defaultItem, final ValueOnlyListItem... items) {
         Preconditions.checkNotNull(items);
         
-        return create(name, defaultItem, Arrays.asList(items));
+        return create(name, defaultItem, ImmutableList.copyOf(items));
     }
     
     /**
@@ -68,7 +75,7 @@ public final class SinglePredicateCondition extends AbstractProperElement implem
     public static SinglePredicateCondition create(final NormalWord name, final ValueOnlyListItem... items) {
         Preconditions.checkNotNull(items);
         
-        return create(name, Arrays.asList(items));
+        return create(name, ImmutableList.copyOf(items));
     }
     
     /**
@@ -140,5 +147,28 @@ public final class SinglePredicateCondition extends AbstractProperElement implem
      */
     public DefaultListItem getDefaultItem() {
         return this.defaultItem.orNull();
+    }
+    
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement#getAttributes()
+     */
+    @Override
+    public Set<Attribute> getAttributes() {
+        return ImmutableSet.<Attribute>of(AttributeImplementation.create(ATT_NAME, name.getText()));
+    }
+    
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getChildren()
+     */
+    @Override
+    public List<Element> getChildren() {
+        final ImmutableList.Builder<Element> resultBuilder = ImmutableList.builder();
+        
+        resultBuilder.addAll(this.items);
+        if (this.defaultItem.isPresent()) {
+            resultBuilder.add(this.defaultItem.get());
+        }
+        
+        return resultBuilder.build();
     }
 }

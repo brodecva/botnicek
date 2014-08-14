@@ -36,4 +36,12 @@ public interface Checker {
      * @return výsledek
      */
     CheckResult check(Source source, Object subject, String content);
+    
+    /**
+     * Zkontroluje textový řetězec, zda-li odpovídá požadavkům.
+     * 
+     * @param content vstupní řetězec
+     * @return výsledek
+     */
+    CheckResult check(String content);
 }

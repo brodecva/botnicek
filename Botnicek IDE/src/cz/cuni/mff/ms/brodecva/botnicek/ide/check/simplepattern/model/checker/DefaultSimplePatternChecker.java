@@ -31,7 +31,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultSimplePatternChecker implements SimplePatternChecker {
+public final class DefaultSimplePatternChecker implements SimplePatternChecker, Source {
     
     /**
      * Vytvoří validátor.
@@ -77,5 +77,13 @@ public final class DefaultSimplePatternChecker implements SimplePatternChecker {
         }
         
         return DefaultCheckResult.succeed(source, subject);
+    }
+    
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker#check(java.lang.String)
+     */
+    @Override
+    public CheckResult check(final String content) {
+        return check(this, new Object(), content);
     }
 }

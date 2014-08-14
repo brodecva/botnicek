@@ -24,10 +24,13 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 
 /**
+ * Pomocná abstraktní třída vhodná k dědění v případech kdy implementující objekt nemusí reagovat na všechny typy událostí při průchodu.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see DfsObserver
  */
-public class AbstractDfsObserver implements DfsObserver {
+public abstract class AbstractDfsObserver implements DfsObserver {
 
     /* (non-Javadoc)
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyVisit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System)
@@ -70,6 +73,13 @@ public class AbstractDfsObserver implements DfsObserver {
     @Override
     public void notifyTree(Arc tree) {
     }
+    
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyForward(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
+     */
+    @Override
+    public void notifyForward(Arc forward) {
+    }
 
     /* (non-Javadoc)
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyBack(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
@@ -84,5 +94,4 @@ public class AbstractDfsObserver implements DfsObserver {
     @Override
     public void notifyCross(Arc cross) {
     }
-
 }

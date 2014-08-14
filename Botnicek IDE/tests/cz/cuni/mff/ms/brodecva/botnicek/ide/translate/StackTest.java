@@ -270,27 +270,47 @@ public class StackTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#createState(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, java.util.List)}.
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#createState(List, java.util.List)}.
      */
     @Test
-    public void testCreateStateNormalWordListOfCategoryWhenEmpty() {
-        Stack.createState(NormalWords.of("HEAD"),
+    public void testCreateStateListOfNormalWordListOfCategoryWhenWordsNotEmptyAndCategoriesEmpty() {
+        Stack.createState(ImmutableList.of(NormalWords.of("HEAD"), NormalWords.of("OTHER")),
                 ImmutableList.<cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Category>of()).accept(this.renderer);
         
-        assertEquals("<topic name=\"HEAD *\"/>", this.renderer.getResult());
+        assertEquals("<topic name=\"HEAD OTHER *\"/>", this.renderer.getResult());
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#createState(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, java.util.List)}.
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#createState(List, java.util.List)}.
      */
     @Test
-    public void testCreateStateNormalWordListOfCategoryWhenNotEmpty() {
-        Stack.createState(NormalWords.of("HEAD"),
+    public void testCreateStateListOfNormalWordListOfCategoryWhenWordsNotEmptyAndCategoriesNotEmpty() {
+        Stack.createState(ImmutableList.of(NormalWords.of("HEAD"), NormalWords.of("OTHER")),
                 ImmutableList.<cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Category>of(
                         cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Category.createUniversal(Template.create(Text.create("First"))),
                         cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Category.create(Patterns.create("TEST"), Patterns.create("THATTEST"), Template.create(Text.create("Second"))))).accept(this.renderer);
         
-        assertEquals("<topic name=\"HEAD *\"><category><pattern>*</pattern><that>*</that><template>First</template></category><category><pattern>TEST</pattern><that>THATTEST</that><template>Second</template></category></topic>", this.renderer.getResult());
+        assertEquals("<topic name=\"HEAD OTHER *\"><category><pattern>*</pattern><that>*</that><template>First</template></category><category><pattern>TEST</pattern><that>THATTEST</that><template>Second</template></category></topic>", this.renderer.getResult());
+    }
+    
+    /**
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#createState(List, java.util.List)}.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateStateListOfNormalWordListOfCategoryWhenWordsEmptyAndCategoriesEmpty() {
+        Stack.createState(ImmutableList.<NormalWord>of(),
+                ImmutableList.<cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Category>of()).accept(this.renderer);
+    }
+    
+    /**
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#createState(List, java.util.List)}.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateStateListOfNormalWordListOfCategoryWhenWordsEmptyAndCategoriesNotEmpty() {
+        Stack.createState(ImmutableList.<NormalWord>of(),
+                ImmutableList.<cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Category>of(
+                        cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Category.createUniversal(Template.create(Text.create("First"))),
+                        cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Category.create(Patterns.create("TEST"), Patterns.create("THATTEST"), Template.create(Text.create("Second"))))).accept(this.renderer);
     }
 
 }

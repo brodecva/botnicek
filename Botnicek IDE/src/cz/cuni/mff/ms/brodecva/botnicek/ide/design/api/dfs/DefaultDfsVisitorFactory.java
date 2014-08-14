@@ -21,6 +21,7 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Továrna na produkci výchozí implementace DFS návštěvníka systému sítí.
@@ -49,17 +50,17 @@ public final class DefaultDfsVisitorFactory implements DfsVisitorFactory {
     public DfsVisitor produce(final DfsObserver... observers) {
         Preconditions.checkNotNull(observers);
         
-        return DefaultDfsVisitor.create(observers);
+        return DefaultDfsVisitor.create(ImmutableSet.copyOf(observers));
     }
 
     /* (non-Javadoc)
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsVisitorFactory#produce(java.util.Set)
      */
     @Override
-    public DfsVisitor produce(Set<? extends DfsObserver> observers) {
+    public DfsVisitor produce(final Set<? extends DfsObserver> observers) {
         Preconditions.checkNotNull(observers);
         
-        return DefaultDfsVisitor.create(observers);
+        return DefaultDfsVisitor.create(ImmutableSet.copyOf(observers));
     }
 
 }

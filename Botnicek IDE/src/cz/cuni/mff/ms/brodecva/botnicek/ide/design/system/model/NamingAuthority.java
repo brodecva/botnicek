@@ -62,7 +62,7 @@ public interface NamingAuthority {
     String replace(String oldName, String newName);
     
     /**
-     * Pokusí se užít sérii názvu, v případě selhání nedojde k aktualizaci autority.
+     * Pokusí se užít sérii názvů, v případě selhání nedojde k aktualizaci autority.
      * 
      * @param names názvy
      * @throws IllegalArgumentException pokud je některý z názvu nepoužitelný v původní podobě

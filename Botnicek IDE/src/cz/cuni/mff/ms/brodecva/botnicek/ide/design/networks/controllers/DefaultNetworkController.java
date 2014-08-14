@@ -24,7 +24,8 @@ import com.google.common.base.Preconditions;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.AbstractDfsObserver;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitorFactory;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsVisitorFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.ArcAddedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.ArcAddedListener;
@@ -140,6 +141,7 @@ public class DefaultNetworkController extends AbstractController<NetworkView> im
     }
     
     private final Network network;
+    private final DfsVisitorFactory networkVisitorFactory;
     
     /**
      * Vytvoří řadič a zaregistruje posluchače událostí změn v síti.
@@ -149,7 +151,19 @@ public class DefaultNetworkController extends AbstractController<NetworkView> im
      * @return řadič
      */
     public static DefaultNetworkController create(final Network network, final EventManager eventManager) {
-        final DefaultNetworkController newInstance = new DefaultNetworkController(network, eventManager);
+        return create(network, eventManager, DefaultDfsVisitorFactory.create());
+    }
+    
+    /**
+     * Vytvoří řadič a zaregistruje posluchače událostí změn v síti.
+     * 
+     * @param network model sítě
+     * @param eventManager správce událostí
+     * @param networkVisitorFactory továrna na návštěvníky sítě
+     * @return řadič
+     */
+    public static DefaultNetworkController create(final Network network, final EventManager eventManager, final DfsVisitorFactory networkVisitorFactory) {
+        final DefaultNetworkController newInstance = new DefaultNetworkController(network, eventManager, networkVisitorFactory);
         
         newInstance.addListener(NodeAddedEvent.class, network, newInstance.new DefaultNodeAddedEventListener());
         newInstance.addListener(ArcAddedEvent.class, network, newInstance.new DefaultArcAddedEventListener());
@@ -161,12 +175,13 @@ public class DefaultNetworkController extends AbstractController<NetworkView> im
     }
     
     private DefaultNetworkController(final Network network,
-            final EventManager eventManager) {
+            final EventManager eventManager, final DfsVisitorFactory networkVisitorFactory) {
         super(eventManager);
         
         Preconditions.checkNotNull(network);
         
         this.network = network;
+        this.networkVisitorFactory = networkVisitorFactory;
     }
     
     /* (non-Javadoc)
@@ -202,7 +217,7 @@ public class DefaultNetworkController extends AbstractController<NetworkView> im
         
         final Collection<Node> nodes = new HashSet<>();
         final Collection<Arc> arcs = new HashSet<>();
-        this.network.accept(DefaultDfsVisitor.create(new AbstractDfsObserver() {
+        this.network.accept(this.networkVisitorFactory.produce(new AbstractDfsObserver() {
             
             @Override
             public void notifyDiscovery(final Node discovered) {

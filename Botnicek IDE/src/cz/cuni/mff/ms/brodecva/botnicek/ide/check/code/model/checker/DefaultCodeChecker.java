@@ -56,10 +56,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.storage.map.FrugalMapperFactory;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultCodeChecker implements CodeChecker {
-    /**
-     * 
-     */
+public final class DefaultCodeChecker implements CodeChecker, Source {
     private static final String MESSAGE_PARTS_SEPARATOR = ";";
     private static final String CHECK_DOCUMENT_TEMPLATE_PART_ONE = "<?xml version=\"1.0\"?>" +
             "<%1$saiml %2$s%1$sversion=\"1.0.1\" %3$sschemaLocation=\"%4$s\">"+ 
@@ -161,6 +158,14 @@ public final class DefaultCodeChecker implements CodeChecker {
         } else {
             throw new IllegalArgumentException(); 
         }
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker#check(java.lang.String)
+     */
+    @Override
+    public CheckResult check(final String content) {
+        return check(this, new Object(), content);
     }
     
 }

@@ -31,7 +31,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 
 /**
- * Výchozí implementace návštěvníka procházejícího systém sítí do hloubky.
+ * <p>Výchozí implementace návštěvníka procházejícího systém sítí do hloubky. Realizuje klasický algoritmus.</p>
+ * <p>Neumožňuje odebrat při vytvoření registrované pozorovatele. Očekává tedy podobnou dobu životnosti jako pozorovatelé.</p>
+ * <p>Systém zpravování pozorovatelů spoléhá na to, že žádný z pozorovatelů nevyhazuje při korektním užití ve svých náslechových metodách výjimky, které by narušily sekvenční průběh šíření zpráv mezi všechny registrované.</p>
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -175,14 +177,14 @@ public final class DefaultDfsVisitor implements DfsVisitor {
             final int toTimestamp = getTimestamp(to);
             
             if (fromTimestamp < toTimestamp) {
-                tree(arc);
+                forward(arc);
             } else if (fromTimestamp > toTimestamp) {
                 cross(arc);
             } else {
-                assert(false);
+                assert false;
             }
         } else {
-            assert(false);
+            assert false;
         }
     }
 
@@ -199,6 +201,16 @@ public final class DefaultDfsVisitor implements DfsVisitor {
     private void notifyTree(final Arc arc) {
         for (final DfsObserver observer : this.observers) {
             observer.notifyTree(arc);
+        }
+    }
+    
+    private void forward(final Arc arc) {
+        notifyForward(arc);
+    }
+
+    private void notifyForward(final Arc arc) {
+        for (final DfsObserver observer : this.observers) {
+            observer.notifyForward(arc);
         }
     }
 
@@ -276,7 +288,7 @@ public final class DefaultDfsVisitor implements DfsVisitor {
     }
     
     private int getTimestamp(final Node node) {
-        return timestamps.get(node);
+        return this.timestamps.get(node);
     }
     
     private void setTimestamp(final Node node) {

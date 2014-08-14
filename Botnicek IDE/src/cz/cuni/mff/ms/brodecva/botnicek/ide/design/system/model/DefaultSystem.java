@@ -37,7 +37,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.AbstractDfsObserver;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitorFactory;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsVisitorFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.ArcChangedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.ArcRenamedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.ArcReprioritizedEvent;
@@ -73,7 +74,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.AvailableRefere
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.AvailableReferencesReducedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.NetworkAddedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.SystemRenamedEvent;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.Update.NodeSwitch;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
@@ -84,7 +84,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
 
 /**
  * <p>Výchozí implementace systému ukládá všechny uzly a hrany sítí do jednoho grafu. Jejich rozložení do sítí či přítomnost ve speciálních kategoriích (vstupní uzly, referované uzly z jiných sítí) je uloženo zvlášť a udržováno v synchronizaci.</p>
- * <p>Pro přehlednost rozhraní jsou operace nad jednou sítí proveditelné zprostředkovaně přes model sítě, který ovšem deleguje všechny metody na rodičovský systém.</p>
  * <p>Pro přehlednost rozhraní jsou operace nad jednou sítí proveditelné zprostředkovaně i přes fasádu v podobě sítě, který ovšem deleguje všechny metody na rodičovský systém.</p>
  * <p>Model systému vysílá pomocí vloženého vysílače zpráv veškeré změny ve formě událostí.</p>
  * 
@@ -109,6 +108,7 @@ public class DefaultSystem implements System {
     private final SystemGraph graph;
     private final BiMap<Network, String> networksNames = HashBiMap.create();
     
+    private final DfsVisitorFactory systemVisitorFactory;
     private final Dispatcher dispatcher;
     
     private String name;
@@ -132,7 +132,7 @@ public class DefaultSystem implements System {
         
         final NodeModifier nodeModifier = DefaultNodeModifier.create();
         
-        return new DefaultSystem(name, SystemGraph.create(), statesNamingAuthority, NormalizedNamingAuthority.create(), nodeModifier, DefaultArcModifier.create(), DefaultRealignmentProcessor.create(nodeModifier), reservedNetworkNames, dispatcher);
+        return create(name, DefaultSystemGraph.create(), statesNamingAuthority, NormalizedNamingAuthority.create(), nodeModifier, DefaultArcModifier.create(), DefaultRealignmentProcessor.create(nodeModifier), reservedNetworkNames, DefaultDfsVisitorFactory.create(), dispatcher);
     }
 
     /**
@@ -146,6 +146,7 @@ public class DefaultSystem implements System {
      * @param arcModifier  modifikátor hran
      * @param realignmentProcessor opravný procesor uzlů po strukturálních změnách grafu
      * @param reservedNetworkNames rezervované názvy sítí
+     * @param systemVisitorFactory užitá továrna na návštěvníky systému
      * @param dispatcher vysílač událostí
      * @return systém
      */
@@ -154,8 +155,21 @@ public class DefaultSystem implements System {
             final NodeModifier nodeModifier,
             final ArcModifier arcModifier,
             final RealignmentProcessor realignmentProcessor,
-            final Set<String> reservedNetworkNames, final Dispatcher dispatcher) {
-        return new DefaultSystem(name, graph, statesNamingAuthority, variablesNamingAuthority, nodeModifier, arcModifier, realignmentProcessor, reservedNetworkNames, dispatcher);
+            final Set<String> reservedNetworkNames, final DfsVisitorFactory systemVisitorFactory,
+            final Dispatcher dispatcher) {
+        Preconditions.checkNotNull(name);
+        Preconditions.checkNotNull(statesNamingAuthority);
+        Preconditions.checkNotNull(variablesNamingAuthority);
+        Preconditions.checkNotNull(nodeModifier);
+        Preconditions.checkNotNull(arcModifier);
+        Preconditions.checkNotNull(realignmentProcessor);
+        Preconditions.checkNotNull(systemVisitorFactory);
+        Preconditions.checkNotNull(dispatcher);
+        Preconditions.checkNotNull(graph);
+        Preconditions.checkArgument(!name.isEmpty());
+        Preconditions.checkNotNull(reservedNetworkNames);
+        
+        return new DefaultSystem(name, graph, statesNamingAuthority, variablesNamingAuthority, nodeModifier, arcModifier, realignmentProcessor, reservedNetworkNames, systemVisitorFactory, dispatcher);
     }
     
     private DefaultSystem(final String name, final SystemGraph graph,
@@ -163,18 +177,7 @@ public class DefaultSystem implements System {
             final NodeModifier nodeModifier,
             final ArcModifier arcModifier,
             final RealignmentProcessor realignmentProcessor,
-            Set<String> reservedNetworkNames, final Dispatcher dispatcher) {
-        Preconditions.checkNotNull(name);
-        Preconditions.checkNotNull(statesNamingAuthority);
-        Preconditions.checkNotNull(variablesNamingAuthority);
-        Preconditions.checkNotNull(nodeModifier);
-        Preconditions.checkNotNull(arcModifier);
-        Preconditions.checkNotNull(realignmentProcessor);
-        Preconditions.checkNotNull(dispatcher);
-        Preconditions.checkNotNull(graph);
-        Preconditions.checkArgument(!name.isEmpty());
-        Preconditions.checkNotNull(reservedNetworkNames);
-
+            final Set<String> reservedNetworkNames, final DfsVisitorFactory systemVisitorFactory, final Dispatcher dispatcher) {
         this.name = name;
         this.statesNamingAuthority = statesNamingAuthority;
         this.predicatesNamingAuthority = variablesNamingAuthority;
@@ -183,14 +186,12 @@ public class DefaultSystem implements System {
         this.realignmentProcessor = realignmentProcessor;
         this.dispatcher = dispatcher;
         this.graph = graph;
+        this.systemVisitorFactory = systemVisitorFactory;
         this.reservedNetworkNames = ImmutableSet.copyOf(reservedNetworkNames);
     }
     
     /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.Visitable#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.Visitor)
-     */
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitable#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor)
      */
     @Override
     public void accept(final Visitor visitor) {
@@ -284,7 +285,7 @@ public class DefaultSystem implements System {
         final ImmutableSet.Builder<Node> removedNodesBuilder = ImmutableSet.builder();
         final ImmutableSet.Builder<Arc> removedArcsBuilder = ImmutableSet.builder();
         
-        removed.accept(DefaultDfsVisitor.create(new AbstractDfsObserver() {
+        removed.accept(this.systemVisitorFactory.produce(new AbstractDfsObserver() {
             
             /* (non-Javadoc)
              * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.AbstractDfsObserver#notifyDiscovery(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)

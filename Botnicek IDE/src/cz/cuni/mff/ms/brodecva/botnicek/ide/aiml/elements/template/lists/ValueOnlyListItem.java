@@ -18,11 +18,11 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.lists;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
@@ -59,12 +59,12 @@ public final class ValueOnlyListItem extends AbstractListItem {
      * @param content potomci prvku
      * @return položka
      */
-    public static ValueOnlyListItem create(final SimplePattern value, final List<TemplateElement> content) {
+    public static ValueOnlyListItem create(final SimplePattern value, final List<TemplateElement> content) {        
         return new ValueOnlyListItem(value, content);
     }
     
     private ValueOnlyListItem(final SimplePattern value, final TemplateElement... content) {
-        this(value, Arrays.asList(content));
+        this(value, ImmutableList.copyOf(content));
     }
     
     private ValueOnlyListItem(final SimplePattern value, final List<TemplateElement> content) {

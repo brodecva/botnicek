@@ -27,12 +27,10 @@ import com.google.common.collect.ImmutableList;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.category.Template;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Category;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Topic;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Set;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Sr;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Text;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Topicstar;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Patterns;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
@@ -69,7 +67,6 @@ public final class Recursion {
         final String reTurn = returnState.getText();
         final String success = successState.getText();
         final String fail = failState.getText();
-        final NormalWord topic = NormalWords.of(AIML.TOPIC_PREDICATE.getValue());
         final Index two = new AIMLIndex(2);
         
         final ImmutableList.Builder<Topic> topics = ImmutableList.builder();
@@ -80,8 +77,7 @@ public final class Recursion {
                 Patterns.create(join(pull, star, pullStop, star)),
                 Category.createUniversal(
                         Template.create(
-                                Set.create(
-                                        topic,
+                                Stack.set(
                                         Text.create(join(pull, pullStop) + space),
                                         Topicstar.create(two)),
                                 Sr.create()))));
@@ -99,9 +95,7 @@ public final class Recursion {
                 Patterns.create(join(pull, pullStop, star)),
                 Category.createUniversal(
                         Template.create(
-                                Set.create(
-                                        topic,
-                                        Topicstar.create()),
+                                Stack.pop(),
                                 Sr.create()))));
         
         // PULL PULLSTOP -> SUCCESS
@@ -109,8 +103,7 @@ public final class Recursion {
                 Patterns.create(join(pull, pullStop)),
                 Category.createUniversal(
                         Template.create(
-                                Set.create(
-                                        topic,
+                                Stack.set(
                                         Text.create(success)),
                                 Sr.create()))));
         
@@ -119,8 +112,7 @@ public final class Recursion {
                 Patterns.create(join(pullStop, reTurn, star, star)),
                 Category.createUniversal(
                         Template.create(
-                                Set.create(
-                                        topic,
+                                Stack.set(
                                         Topicstar.create(two)),
                                 Sr.create()))));
         
@@ -129,18 +121,15 @@ public final class Recursion {
                 Patterns.create(join(pullStop, star)),
                 Category.createUniversal(
                         Template.create(
-                                Set.create(
-                                        topic,
-                                        Topicstar.create()),
+                                Stack.pop(),
                                 Sr.create()))));
         
-        // PULLSTOP ->  FAIL
+        // PULLSTOP -> FAIL
         topics.add(Topic.create(
                 Patterns.create(pullStop),
                 Category.createUniversal(
                         Template.create(
-                                Set.create(
-                                        topic,
+                                Stack.set(
                                         Text.create(fail)),
                                 Sr.create()))));
         

@@ -231,6 +231,31 @@ public class DefaultNodeModifier implements NodeModifier {
         Preconditions.checkArgument(x >= 0);
         Preconditions.checkArgument(y >= 0);
         
+        final Method factoryMethod = getFactoryMethod(node, type);
+        try {
+            return (Node) factoryMethod.invoke(Intended.nullReference(), name, node.getNetwork(), x, y);
+        } catch (final IllegalAccessException
+                | IllegalArgumentException | InvocationTargetException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    private Method getFactoryMethod(final Node node,
+            final Class<? extends Node> type) {
+        final Class<? extends Node> usedMappedClass =
+                getUsedMappedClass(node, type);
+        
+        final Method factoryMethod;
+        try {
+            factoryMethod = usedMappedClass.getMethod(NODE_FACTORY_METHOD_NAME, NormalWord.class, Network.class, Integer.TYPE, Integer.TYPE);
+        } catch (final NoSuchMethodException | SecurityException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return factoryMethod;
+    }
+
+    private Class<? extends Node> getUsedMappedClass(final Node node,
+            final Class<? extends Node> type) {
         final Class<? extends Node> nodeClass = node.getClass();
         final Class<? extends Node> mappedClass = this.changes.get(nodeClass, type);
         final Class<? extends Node> usedMappedClass;
@@ -239,20 +264,7 @@ public class DefaultNodeModifier implements NodeModifier {
         } else {
             usedMappedClass = mappedClass;
         }
-        
-        final Method factoryMethod;
-        try {
-            factoryMethod = usedMappedClass.getMethod(NODE_FACTORY_METHOD_NAME, NormalWord.class, Network.class, Integer.TYPE, Integer.TYPE);
-        } catch (final NoSuchMethodException | SecurityException e) {
-            throw new IllegalArgumentException(e);
-        }
-        
-        try {
-            return (Node) factoryMethod.invoke(Intended.nullReference(), name, node.getNetwork(), x, y);
-        } catch (final IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException e) {
-            throw new IllegalArgumentException(e);
-        }
+        return usedMappedClass;
     }
 
     /* (non-Javadoc)

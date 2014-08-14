@@ -33,7 +33,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.platform.XML;
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultMixedPatternChecker implements MixedPatternChecker {
+public class DefaultMixedPatternChecker implements MixedPatternChecker, Source {
     
     /**
      * Výsledek zpracování značky bot, který může být obsažena v šabloně.
@@ -144,5 +144,13 @@ public class DefaultMixedPatternChecker implements MixedPatternChecker {
         }
         
         return new TagProcessingResult(DefaultCheckResult.succeed(source, subject), offset);
+    }
+    
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker#check(java.lang.String)
+     */
+    @Override
+    public CheckResult check(final String content) {
+        return check(this, new Object(), content);
     }
 }

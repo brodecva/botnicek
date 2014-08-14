@@ -18,10 +18,10 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractCompoundElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CaptureElement;
@@ -55,7 +55,7 @@ public final class Set extends AbstractCompoundElement implements CaptureElement
     public static Set create(final NormalWord name, final TemplateElement... content) {
         Preconditions.checkNotNull(content);
         
-        return create(name, Arrays.asList(content));
+        return create(name, ImmutableList.copyOf(content));
     }
     
     /**

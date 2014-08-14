@@ -65,7 +65,7 @@ public final class DefaultRenderer implements Renderer {
     public String render(final Element element) {
         Preconditions.checkNotNull(element);
         
-        final RenderingVisitor visitor = this.renderingVisitorFactory.spawn(this.namespacesToPrefixes);
+        final RenderingVisitor visitor = this.renderingVisitorFactory.produce(this.namespacesToPrefixes);
         element.accept(visitor);
         
         return visitor.getResult();

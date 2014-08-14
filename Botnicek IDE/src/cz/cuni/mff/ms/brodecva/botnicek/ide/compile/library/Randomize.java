@@ -100,11 +100,12 @@ public class Randomize {
         final String randomStart = RANDOM_START;
         final String randomEnd = RANDOM_END;
         final String star = AIML.STAR_WILDCARD.getValue();
+        final String space = AIML.WORD_DELIMITER.getValue();
         
         // @formatter:off
         //    <category>
-        //        <pattern>RANDOMIZE *<pattern>
-        //        <that>*<that>
+        //        <pattern>RANDOMIZE *</pattern>
+        //        <that>*</that>
         //        <template><srai>RANDOMSTART <star/> RANDOMEND</srai></template>
         //    </category>
         categories.add(
@@ -113,16 +114,41 @@ public class Randomize {
                         Patterns.createUniversal(),
                         Template.create(
                                         Srai.create(
-                                                Text.create(join(randomStart, star, randomEnd))))));
+                                                Text.create(randomStart + space),
+                                                Star.create(),
+                                                Text.create(space + randomEnd)))));
         
         //    <category>
-        //        <pattern>RANDOMSTART * * * * RANDOMEND<pattern>
-        //        <that>*<that>
+        //        <pattern>RANDOMSTART RANDOMEND</pattern>
+        //        <that>*</that>
+        //        <template></template>
+        //    </category>
+        categories.add(
+                Category.create(
+                        Patterns.create(join(randomStart, randomEnd)),
+                        Patterns.createUniversal(),
+                        Template.create()));
+        
+        //    <category>
+        //        <pattern>RANDOMSTART * RANDOMEND</pattern>
+        //        <that>*</that>
+        //        <template><star/></template>
+        //    </category>
+        categories.add(
+                Category.create(
+                        Patterns.create(join(randomStart, star, randomEnd)),
+                        Patterns.createUniversal(),
+                        Template.create(
+                                Star.create())));
+        
+        //    <category>
+        //        <pattern>RANDOMSTART * * * * RANDOMEND</pattern>
+        //        <that>*</that>
         //        <template><random>
         //            ...
-        //            <li><star index="3"> <srai>RANDOMSTART <srai>REMOVESTART <star index="3"/> <star index="1"/> <star index="2"/> <star index="4"/> REMOVEEND</srai> RANDOMEND</srai><li>
+        //            <li><star index="3"/> <srai>RANDOMSTART <srai>REMOVESTART <star index="3"/> <star index="1"/> <star index="2"/> <star index="4"/> REMOVEEND</srai> RANDOMEND</srai><li>
         //            ...
-        //            <random></template>
+        //            </random></template>
         //    </category>
         //    ...
         final int maxStarsCount = maxPriority * maxBranchFactor;
@@ -134,28 +160,6 @@ public class Randomize {
                             Template.create(
                                     Random.create(createChoices(starsCount)))));
         }
-        
-        //    <category>
-        //        <pattern>RANDOMSTART * RANDOMEND<pattern>
-        //        <that>*<that>
-        //        <template><star/></template>
-        //    </category>
-        categories.add(
-                Category.create(
-                        Patterns.create(join(randomStart, star, randomEnd)),
-                        Patterns.createUniversal(),
-                        Template.create(
-                                Star.create())));
-        //    <category>
-        //        <pattern>RANDOMSTART RANDOMEND<pattern>
-        //        <that>*<that>
-        //        <template></template>
-        //    </category>
-        categories.add(
-                Category.create(
-                        Patterns.create(join(randomStart, randomEnd)),
-                        Patterns.createUniversal(),
-                        Template.create()));
         // @formatter:on
     }
     
@@ -173,7 +177,7 @@ public class Randomize {
             final SetView<Integer> rest = Sets.difference(set, ImmutableSet.of(picked));
             
             // @formatter:off
-            // <li><star index="3"> <srai>RANDOMSTART <srai>REMOVESTART <star index="3"/> <star index="1"/> <star index="2"/> <star index="4"/> REMOVEEND</srai> RANDOMEND</srai><li>
+            // <li><star index="3"/> <srai>RANDOMSTART <srai>REMOVESTART <star index="3"/> <star index="1"/> <star index="2"/> <star index="4"/> REMOVEEND</srai> RANDOMEND</srai><li>
             builder.add(ImmutableList.<TemplateElement>of(
                     pickedStar,
                     Text.create(space),
@@ -237,8 +241,8 @@ public class Randomize {
         
         // @formatter:off
         //    <category>
-        //        <pattern>REMOVESTART A A * REMOVEEND<pattern>
-        //        <that>*<that>
+        //        <pattern>REMOVESTART A A * REMOVEEND</pattern>
+        //        <that>*</that>
         //        <template><srai>REMOVESTART A <star/> REMOVEEND</srai></template>
         //    </category>
         categories.add(
@@ -252,8 +256,8 @@ public class Randomize {
                                         Text.create(space + removeEnd)))));        
         
         //    <category>
-        //        <pattern>REMOVESTART A * * REMOVEEND<pattern>
-        //        <that>*<that>
+        //        <pattern>REMOVESTART A * * REMOVEEND</pattern>
+        //        <that>*</that>
         //        <template><star index="1"> <srai>REMOVESTART A <star index="2"> REMOVEEND</srai></template>
         //    </category>
         categories.add(
@@ -269,8 +273,8 @@ public class Randomize {
                                         Text.create(space + removeEnd)))));
         
         //    <category>
-        //        <pattern>REMOVESTART A A REMOVEEND<pattern>
-        //        <that>*<that>
+        //        <pattern>REMOVESTART A A REMOVEEND</pattern>
+        //        <that>*</that>
         //        <template></template>
         //    </category>
         categories.add(
@@ -280,8 +284,8 @@ public class Randomize {
                         Template.create()));
         
         //    <category>
-        //        <pattern>REMOVESTART A * REMOVEEND<pattern>
-        //        <that>*<that>
+        //        <pattern>REMOVESTART A * REMOVEEND</pattern>
+        //        <that>*</that>
         //        <template><star/></template>
         //    </category>
         categories.add(

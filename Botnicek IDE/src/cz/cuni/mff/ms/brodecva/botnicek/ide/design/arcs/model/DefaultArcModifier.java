@@ -21,8 +21,7 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ObjectArrays;
-
+import com.google.common.collect.ImmutableList;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
@@ -64,14 +63,9 @@ public class DefaultArcModifier implements ArcModifier {
         Preconditions.checkNotNull(type);
         Preconditions.checkNotNull(arguments);
         
-        final Method factoryMethod;
-        try {
-            factoryMethod = findCreateMethod(type);
-        } catch (final NoSuchMethodException | SecurityException e) {
-            throw new IllegalArgumentException(e);
-        }
-        
-        final Object[] allArguments = ObjectArrays.concat(new Object[] { arc.getNetwork(), newName, priority }, arguments, Object.class);
+        final Method factoryMethod = getFactoryMethod(type);
+        final Object[] allArguments =
+                composeAllArguments(arc, newName, priority, ImmutableList.copyOf(arguments));
         
         try {
             return (Arc) factoryMethod.invoke(Intended.nullReference(), allArguments);
@@ -79,6 +73,29 @@ public class DefaultArcModifier implements ArcModifier {
                 | IllegalArgumentException | InvocationTargetException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    private Object[] composeAllArguments(final Arc arc,
+            final NormalWord newName, final Priority priority,
+            final ImmutableList<Object> argumentsCopy) {
+        final ImmutableList.Builder<Object> allArgumentsBuilder = ImmutableList.builder();
+        allArgumentsBuilder.add(arc.getNetwork());
+        allArgumentsBuilder.add(newName);
+        allArgumentsBuilder.add(priority);
+        allArgumentsBuilder.addAll(argumentsCopy);
+        
+        return allArgumentsBuilder.build().toArray();
+    }
+
+    private Method getFactoryMethod(final Class<? extends Arc> type) {
+        final Method factoryMethod;
+        try {
+            factoryMethod = findCreateMethod(type);
+        } catch (final NoSuchMethodException | SecurityException e) {
+            throw new IllegalArgumentException(e);
+        }
+        
+        return factoryMethod;
     }
 
     private Method findCreateMethod(final Class<? extends Arc> mappedClass) throws NoSuchMethodException, SecurityException {

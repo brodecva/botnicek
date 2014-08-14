@@ -20,7 +20,6 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.SimplePatternChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
@@ -120,7 +119,7 @@ public final class Patterns {
      */
     public static SimplePattern create(final String text) {
         Preconditions.checkNotNull(text);
-        Preconditions.checkArgument(checker.check(new Source() {}, text, text).isValid());
+        Preconditions.checkArgument(checker.check(text).isValid());
         
         return SimplePatternImplementation.create(text);
     }

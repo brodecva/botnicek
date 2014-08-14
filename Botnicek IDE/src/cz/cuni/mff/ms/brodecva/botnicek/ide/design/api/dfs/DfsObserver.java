@@ -59,7 +59,8 @@ public interface DfsObserver {
     void notifyFinish(Node finished);
     
     /**
-     * Zpraví pozorovatele o prozkoumání hrany sítě.
+     * <p>Zpraví pozorovatele o prozkoumání hrany sítě.</p>
+     * <p>Implementace návštěvníka musí zavolat nad hranou tuto metodu před voláním metody specifikující typ hrany (stromová, zpětná, příčná).</p>
      * 
      * @param examined prozkoumaná hrana
      */
@@ -73,6 +74,13 @@ public interface DfsObserver {
     void notifyTree(Arc tree);
     
     /**
+     * Zpraví pozorovatele o navštívení dopředné hrany sítě.
+     * 
+     * @param forward dopředná hrana
+     */
+    void notifyForward(Arc forward);
+    
+    /**
      * Zpraví pozorovatele o objevení zpětné hrany sítě.
      * 
      * @param back zpětná hrana
@@ -80,9 +88,9 @@ public interface DfsObserver {
     void notifyBack(Arc back);
     
     /**
-     * Zpraví pozorovatele o křížové hrany sítě.
+     * Zpraví pozorovatele o příčné hraně sítě.
      * 
-     * @param cross křížová hrana
+     * @param cross příčná hrana
      */
     void notifyCross(Arc cross);
 }

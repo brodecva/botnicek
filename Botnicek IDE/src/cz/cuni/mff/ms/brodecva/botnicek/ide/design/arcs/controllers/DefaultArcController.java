@@ -27,20 +27,24 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder.CodeContentBuilder;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder.DefaultCodeContentBuilder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder.CodeContentBuilderFactory;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder.DefaultCodeContentBuilderFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.CodeChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.builder.DefaultMixedPatternBuilder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.builder.DefaultMixedPatternBuilderFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.builder.MixedPatternBuilder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.builder.MixedPatternBuilderFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.MixedPatternChecker;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.builder.DefaultSimplePatternBuilder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.builder.DefaultSimplePatternBuilderFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.builder.SimplePatternBuilder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.builder.SimplePatternBuilderFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.SimplePatternChecker;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.builder.DefaultNormalWordBuilder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.builder.DefaultNormalWordBuilderFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.builder.NormalWordBuilder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.builder.NormalWordBuilderFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.NormalWordChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.ArcChangedEvent;
@@ -282,11 +286,11 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
     private final System system;
     private Arc current;
     
-    private final NormalWordChecker nodeNameChecker;
-    private final CodeChecker codeChecker;
-    private final SimplePatternChecker simplePatternChecker;
-    private final MixedPatternChecker mixedPatternChecker;
-    private final NormalWordChecker predicateNameChecker;    
+    private final NormalWordBuilderFactory nodeNameBuilderFactory;
+    private final NormalWordBuilderFactory predicateNameBuilderFactory;
+    private final SimplePatternBuilderFactory simplePatternBuilderFactory;
+    private final MixedPatternBuilderFactory mixedPatternBuilderFactory;
+    private final CodeContentBuilderFactory codeBuilderFactory;
     
     /**
      * Vytvoří řadič a zaregistruje jej na modelu.
@@ -328,7 +332,48 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
             final SimplePatternChecker simplePatternChecker,
             final MixedPatternChecker mixedPatternChecker,
             final NormalWordChecker predicateNameChecker) {
-        final DefaultArcController newInstance = new DefaultArcController(system, eventManager, current, nodeNameChecker, codeChecker, simplePatternChecker, mixedPatternChecker, predicateNameChecker);
+        Preconditions.checkNotNull(system);
+        Preconditions.checkNotNull(current);
+        Preconditions.checkNotNull(eventManager);
+        Preconditions.checkNotNull(nodeNameChecker);
+        Preconditions.checkNotNull(codeChecker);
+        Preconditions.checkNotNull(simplePatternChecker);
+        Preconditions.checkNotNull(mixedPatternChecker);
+        Preconditions.checkNotNull(predicateNameChecker);
+        
+        return create(system, eventManager, current, DefaultNormalWordBuilderFactory.create(nodeNameChecker), DefaultCodeContentBuilderFactory.create(codeChecker), DefaultSimplePatternBuilderFactory.create(simplePatternChecker), DefaultMixedPatternBuilderFactory.create(mixedPatternChecker), DefaultNormalWordBuilderFactory.create(predicateNameChecker));
+    }
+    
+    /**
+     * Vytvoří řadič a zaregistruje jej na modelu.
+     * 
+     * @param system systém sítí, v kterém se hrana nachází
+     * @param eventManager správce událostí
+     * @param current aktuální podoba hrany
+     * @param nodeNameBuilderFactory továrna na konstruktor názvů stavu
+     * @param codeBuilderFactory továrna na konstruktor kódu
+     * @param simplePatternBuilderFactory továrna na konstruktor prostých vzorů
+     * @param mixedPatternBuilderFactory továrna na konstruktor složených vzorů
+     * @param predicateNameBuilderFactory továrna na konstruktor názvů predikátů
+     * @return řadič
+     */
+    public static DefaultArcController create(final System system,
+            final EventManager eventManager,
+            final Arc current,
+            final NormalWordBuilderFactory nodeNameBuilderFactory,
+            final CodeContentBuilderFactory codeBuilderFactory,
+            final SimplePatternBuilderFactory simplePatternBuilderFactory,
+            final MixedPatternBuilderFactory mixedPatternBuilderFactory,
+            final NormalWordBuilderFactory predicateNameBuilderFactory) {
+        Preconditions.checkNotNull(system);
+        Preconditions.checkNotNull(current);
+        Preconditions.checkNotNull(eventManager);
+        Preconditions.checkNotNull(nodeNameBuilderFactory);
+        Preconditions.checkNotNull(codeBuilderFactory);
+        Preconditions.checkNotNull(simplePatternBuilderFactory);
+        Preconditions.checkNotNull(predicateNameBuilderFactory);
+        
+        final DefaultArcController newInstance = new DefaultArcController(system, eventManager, current, nodeNameBuilderFactory, codeBuilderFactory, simplePatternBuilderFactory, mixedPatternBuilderFactory, predicateNameBuilderFactory);
         
         newInstance.addListeners();
         
@@ -345,27 +390,20 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
     private DefaultArcController(final System system,
             final EventManager eventManager,
             final Arc current,
-            final NormalWordChecker nodeNameChecker,
-            final CodeChecker codeChecker,
-            final SimplePatternChecker simplePatternChecker,
-            final MixedPatternChecker mixedPatternChecker,
-            final NormalWordChecker predicateNameChecker) {
+            final NormalWordBuilderFactory nodeNameBuilderFactory,
+            final CodeContentBuilderFactory codeBuilderFactory,
+            final SimplePatternBuilderFactory simplePatternBuilderFactory,
+            final MixedPatternBuilderFactory mixedPatternBuilderFactory,
+            final NormalWordBuilderFactory predicateNameBuilderFactory) {
         super(eventManager);
-        
-        Preconditions.checkNotNull(system);
-        Preconditions.checkNotNull(current);
-        Preconditions.checkNotNull(nodeNameChecker);
-        Preconditions.checkNotNull(codeChecker);
-        Preconditions.checkNotNull(simplePatternChecker);
-        Preconditions.checkNotNull(predicateNameChecker);
         
         this.system = system;
         this.current = current;
-        this.nodeNameChecker = nodeNameChecker;
-        this.codeChecker = codeChecker;
-        this.simplePatternChecker = simplePatternChecker;
-        this.mixedPatternChecker = mixedPatternChecker;
-        this.predicateNameChecker = predicateNameChecker;
+        this.nodeNameBuilderFactory = nodeNameBuilderFactory;
+        this.codeBuilderFactory = codeBuilderFactory;
+        this.simplePatternBuilderFactory = simplePatternBuilderFactory;
+        this.mixedPatternBuilderFactory = mixedPatternBuilderFactory;
+        this.predicateNameBuilderFactory = predicateNameBuilderFactory;
     }
     
     private void updatePattern(NormalWord newName, Priority priority, Code code,
@@ -411,7 +449,7 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
         if (currentName.getText().equals(newName)) {
             name = currentName;
         } else {
-            final NormalWordBuilder nameBuilder = DefaultNormalWordBuilder.create(this.nodeNameChecker, newName);
+            final NormalWordBuilder nameBuilder = this.nodeNameBuilderFactory.produce(newName);
             final CheckResult nodeNameCheckResult = nameBuilder.check();
             
             if (!nodeNameCheckResult.isValid()) {
@@ -421,19 +459,19 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
             name = nameBuilder.build();
         }
         
-        final CodeContentBuilder codeBuilder = DefaultCodeContentBuilder.create(this.codeChecker, code);
+        final CodeContentBuilder codeBuilder = this.codeBuilderFactory.produce(code);
         final CheckResult codeCheckResult = codeBuilder.check();
         if (!codeCheckResult.isValid()) {
             return;
         }
         
-        final MixedPatternBuilder patternBuilder = DefaultMixedPatternBuilder.create(this.mixedPatternChecker, pattern);
+        final MixedPatternBuilder patternBuilder = this.mixedPatternBuilderFactory.produce(pattern);
         final CheckResult patternCheckResult = patternBuilder.check();
         if (!patternCheckResult.isValid()) {
             return;
         }
         
-        final MixedPatternBuilder thatBuilder = DefaultMixedPatternBuilder.create(this.mixedPatternChecker, that);
+        final MixedPatternBuilder thatBuilder = this.mixedPatternBuilderFactory.produce(that);
         final CheckResult thatCheckResult = thatBuilder.check();
         if (!thatCheckResult.isValid()) {
             return;
@@ -459,7 +497,7 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
         if (currentName.getText().equals(newName)) {
             name = currentName;
         } else {
-            final NormalWordBuilder nameBuilder = DefaultNormalWordBuilder.create(this.nodeNameChecker, newName);
+            final NormalWordBuilder nameBuilder = this.nodeNameBuilderFactory.produce(newName);
             final CheckResult nodeNameCheckResult = nameBuilder.check();
             
             if (!nodeNameCheckResult.isValid()) {
@@ -469,19 +507,19 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
             name = nameBuilder.build();
         }
         
-        final CodeContentBuilder codeBuilder = DefaultCodeContentBuilder.create(this.codeChecker, code);
+        final CodeContentBuilder codeBuilder = this.codeBuilderFactory.produce(code);
         final CheckResult codeCheckResult = codeBuilder.check();
         if (!codeCheckResult.isValid()) {
             return;
         }
         
-        final CodeContentBuilder testedCodeBuilder = DefaultCodeContentBuilder.create(this.codeChecker, testedCode);
+        final CodeContentBuilder testedCodeBuilder = this.codeBuilderFactory.produce(testedCode);
         final CheckResult testedCodeCheckResult = testedCodeBuilder.check();
         if (!testedCodeCheckResult.isValid()) {
             return;
         }
         
-        final SimplePatternBuilder valueBuilder = DefaultSimplePatternBuilder.create(this.simplePatternChecker, value);
+        final SimplePatternBuilder valueBuilder = this.simplePatternBuilderFactory.produce(value);
         final CheckResult valueCheckResult = valueBuilder.check();
         if (!valueCheckResult.isValid()) {
             return;
@@ -508,7 +546,7 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
         if (currentName.getText().equals(newName)) {
             name = currentName;
         } else {
-            final NormalWordBuilder nameBuilder = DefaultNormalWordBuilder.create(this.nodeNameChecker, newName);
+            final NormalWordBuilder nameBuilder = this.nodeNameBuilderFactory.produce(newName);
             final CheckResult nodeNameCheckResult = nameBuilder.check();
             
             if (!nodeNameCheckResult.isValid()) {
@@ -518,25 +556,25 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
             name = nameBuilder.build();
         }
         
-        final CodeContentBuilder codeBuilder = DefaultCodeContentBuilder.create(this.codeChecker, code);
+        final CodeContentBuilder codeBuilder = this.codeBuilderFactory.produce(code);
         final CheckResult codeCheckResult = codeBuilder.check();
         if (!codeCheckResult.isValid()) {
             return;
         }
         
-        final CodeContentBuilder preparedCodeBuilder = DefaultCodeContentBuilder.create(this.codeChecker, prepareCode);
+        final CodeContentBuilder preparedCodeBuilder = this.codeBuilderFactory.produce(prepareCode);
         final CheckResult preparedCodeCheckResult = preparedCodeBuilder.check();
         if (!preparedCodeCheckResult.isValid()) {
             return;
         }
         
-        final NormalWordBuilder predicateNameBuilder = DefaultNormalWordBuilder.create(this.predicateNameChecker, predicateName);
+        final NormalWordBuilder predicateNameBuilder = this.predicateNameBuilderFactory.produce(predicateName);
         final CheckResult predicateNameCheckResult = predicateNameBuilder.check();
         if (!predicateNameCheckResult.isValid()) {
             return;
         }
         
-        final SimplePatternBuilder valueBuilder = DefaultSimplePatternBuilder.create(this.simplePatternChecker, value);
+        final SimplePatternBuilder valueBuilder = this.simplePatternBuilderFactory.produce(value);
         final CheckResult valueCheckResult = valueBuilder.check();
         if (!valueCheckResult.isValid()) {
             return;
@@ -561,7 +599,7 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
         if (currentName.getText().equals(newName)) {
             name = currentName;
         } else {
-            final NormalWordBuilder nameBuilder = DefaultNormalWordBuilder.create(this.nodeNameChecker, newName);
+            final NormalWordBuilder nameBuilder = this.nodeNameBuilderFactory.produce(newName);
             final CheckResult nodeNameCheckResult = nameBuilder.check();
             
             if (!nodeNameCheckResult.isValid()) {
@@ -571,7 +609,7 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
             name = nameBuilder.build();
         }
         
-        final CodeContentBuilder codeBuilder = DefaultCodeContentBuilder.create(this.codeChecker, code);
+        final CodeContentBuilder codeBuilder = this.codeBuilderFactory.produce(code);
         final CheckResult codeCheckResult = codeBuilder.check();
         if (!codeCheckResult.isValid()) {
             return;
@@ -594,7 +632,7 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
         if (currentName.getText().equals(newName)) {
             name = currentName;
         } else {
-            final NormalWordBuilder nameBuilder = DefaultNormalWordBuilder.create(this.nodeNameChecker, newName);
+            final NormalWordBuilder nameBuilder = this.nodeNameBuilderFactory.produce(newName);
             final CheckResult nodeNameCheckResult = nameBuilder.check();
             
             if (!nodeNameCheckResult.isValid()) {
@@ -604,7 +642,7 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
             name = nameBuilder.build();
         }
         
-        final CodeContentBuilder codeBuilder = DefaultCodeContentBuilder.create(this.codeChecker, code);
+        final CodeContentBuilder codeBuilder = this.codeBuilderFactory.produce(code);
         final CheckResult codeCheckResult = codeBuilder.check();
         if (!codeCheckResult.isValid()) {
             return;

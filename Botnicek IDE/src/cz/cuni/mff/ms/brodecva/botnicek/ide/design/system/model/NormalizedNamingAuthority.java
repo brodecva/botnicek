@@ -18,9 +18,7 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model;
 
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,6 +30,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Normalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.SimpleNormalizer;
+import cz.cuni.mff.ms.brodecva.botnicek.library.utils.Text;
 
 /**
  * Autorita, která uchovává normalizované názvy podle definice jazyka AIML.
@@ -39,17 +38,15 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.SimpleNormalizer;
  * @author Václav Brodec
  * @version 1.0
  */
-public class NormalizedNamingAuthority implements NamingAuthority {
+public final class NormalizedNamingAuthority implements NamingAuthority {
     
     private static final String EMPTY_SUBMITTED_PART = "";
-
-    private static final int DEFAULT_START = 1;
-    
-    private int counter = DEFAULT_START;
+    private static final int DEFAULT_START = 2;
     
     private final Set<String> used = new HashSet<>();
-
     private final Normalizer normalizer;
+    
+    private int counter = DEFAULT_START;
     
     /**
      * Vytvoří autoritu s výchozím nastavením.
@@ -108,7 +105,7 @@ public class NormalizedNamingAuthority implements NamingAuthority {
     
     private NormalizedNamingAuthority(final int initial, final Normalizer normalizer) {
         Preconditions.checkNotNull(normalizer);
-        Preconditions.checkArgument(initial >= DEFAULT_START);
+        Preconditions.checkArgument(initial >= 0);
         
         this.counter = initial;
         this.normalizer = normalizer;
@@ -161,6 +158,9 @@ public class NormalizedNamingAuthority implements NamingAuthority {
         return true;
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority#tryUse(java.lang.String[])
+     */
     public void tryUse(final String... names) throws IllegalArgumentException {
         Preconditions.checkNotNull(names);
         Preconditions.checkArgument(Comparisons.allDifferent((Object[]) names));
@@ -250,23 +250,9 @@ public class NormalizedNamingAuthority implements NamingAuthority {
         final int maxLen = 10;
         StringBuilder builder = new StringBuilder();
         builder.append("NormalizedNamingAuthority [used=");
-        builder.append(toString(used, maxLen));
+        builder.append(Text.toString(used, maxLen));
         builder.append(", counter=");
         builder.append(counter);
-        builder.append("]");
-        return builder.toString();
-    }
-
-    private String toString(Collection<?> collection, int maxLen) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("[");
-        int i = 0;
-        for (Iterator<?> iterator = collection.iterator(); iterator.hasNext()
-                && i < maxLen; i++) {
-            if (i > 0)
-                builder.append(", ");
-            builder.append(iterator.next());
-        }
         builder.append("]");
         return builder.toString();
     }

@@ -18,7 +18,6 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
-import java.util.Arrays;
 import java.util.List;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -52,7 +51,7 @@ public final class MultiPredicateCondition extends AbstractProperElement impleme
     public static MultiPredicateCondition create(final DefaultListItem defaultItem, final NameAndValueListItem... items) {
         Preconditions.checkNotNull(items);
         
-        return new MultiPredicateCondition(Optional.of(defaultItem), Arrays.asList(items));
+        return new MultiPredicateCondition(Optional.of(defaultItem), ImmutableList.copyOf(items));
     }
     
     /**
@@ -64,7 +63,7 @@ public final class MultiPredicateCondition extends AbstractProperElement impleme
     public static MultiPredicateCondition create(final NameAndValueListItem... items) {
         Preconditions.checkNotNull(items);
         
-        return create(Arrays.asList(items));
+        return create(ImmutableList.copyOf(items));
     }
     
     /**
@@ -104,6 +103,24 @@ public final class MultiPredicateCondition extends AbstractProperElement impleme
     @Override
     public String getLocalName() {
         return NAME;
+    }
+    
+    /**
+     * Vrátí obsažené položky s názvem a vzorem.
+     * 
+     * @return obsažené položky s názvem a vzorem
+     */
+    public List<NameAndValueListItem> getItems() {
+        return items;
+    }
+
+    /**
+     * Vrátí výchozí položku, pokud je obsažena, jinak {@code null}.
+     * 
+     * @return výchozí položka
+     */
+    public DefaultListItem getDefaultItem() {
+        return this.defaultItem.orNull();
     }
     
     /* (non-Javadoc)

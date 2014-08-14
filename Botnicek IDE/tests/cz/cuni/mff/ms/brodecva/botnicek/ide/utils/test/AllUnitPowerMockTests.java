@@ -22,11 +22,15 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWordsTest;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.PatternsTest;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.DefaultArcModifierTest;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultNodeTopicFactoryTest;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserverTest;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultDispatchProcessorTest;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultProceedProcessorTest;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultStackProcessorTest;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultTestProcessorTest;
 
 /**
  * Provede všechny jednotkové testy spouštěné pomocí
@@ -36,6 +40,10 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultStackPro
  * @version 1.0
  */
 @RunWith(Suite.class)
-@SuiteClasses({ DefaultTranslatingObserverTest.class, DefaultNodeTopicFactoryTest.class, DefaultDispatchProcessorTest.class, DefaultProceedProcessorTest.class, DefaultStackProcessorTest.class })
+@SuiteClasses({ DefaultTranslatingObserverTest.class,
+        DefaultNodeTopicFactoryTest.class, DefaultDispatchProcessorTest.class,
+        DefaultProceedProcessorTest.class, DefaultStackProcessorTest.class,
+        DefaultTestProcessorTest.class, NormalWordsTest.class,
+        PatternsTest.class, DefaultArcModifierTest.class })
 public final class AllUnitPowerMockTests {
 }

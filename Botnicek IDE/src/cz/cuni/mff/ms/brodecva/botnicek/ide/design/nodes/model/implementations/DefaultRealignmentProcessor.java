@@ -57,7 +57,7 @@ public class DefaultRealignmentProcessor implements RealignmentProcessor {
     /**
      * {@inheritDoc}
      * 
-     * <p>Zkoumá stupně uzlu. Z toho jasně usoudí, nachází-li se po změně uzel uvnitř či na okrajích sítě.</p>
+     * <p>Zkoumá stupně uzlu. Z toho usoudí, nachází-li se po změně uzel uvnitř či na okrajích sítě.</p>
      */
     @Override
     public Node realign(final Node node) {

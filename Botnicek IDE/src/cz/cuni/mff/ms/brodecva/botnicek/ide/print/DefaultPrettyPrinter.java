@@ -69,10 +69,10 @@ public final class DefaultPrettyPrinter implements Printer {
     public static DefaultPrettyPrinter create(final int indent) throws PrintConfigurationException {
         Preconditions.checkArgument(indent >= 0);
         
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        final TransformerFactory transformerFactory = TransformerFactory.newInstance();
         transformerFactory.setAttribute(INDENT_NUMBER_OPTION_NAME, indent);
         
-        Transformer transformer;
+        final Transformer transformer;
         try {
             transformer = transformerFactory.newTransformer();
         } catch (final TransformerConfigurationException e) {
