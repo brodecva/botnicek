@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model;
+package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.updates;
 
 import java.util.Map;
 import java.util.Set;
@@ -28,62 +28,63 @@ import com.google.common.collect.ImmutableSet;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.RecurentArc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 
 /**
- * Implemenace {@link Update}.
+ * Implementace {@link Update}.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class DefaultUpdate implements Update {
     
-    private final Map<EnterNode, RecurentArc> referencesRemoved;
+    private final Set<RecurentArc> referencesRemoved;
     private final Set<EnterNode> initialsAdded;
     private final Set<EnterNode> initialsRemoved;
-    private final Set<NodeSwitch> affected;
+    private final Map<Node, Node> switched;
     private final Set<Arc> edgesRemoved;
     
     /**
      * Vytvoří výzvu k provedení aktualizace.
      * 
-     * @param referencesRemoved odblokované uzly, které byly dříve blokované odkazy z odstraněných uzlů
+     * @param referencesRemoved odstraněné odkazující hrany
      * @param initialsAdded nově přidané vstupní uzly
      * @param initialsRemoved nově odebrané vstupní uzly
-     * @param affected náhrady uzlu za uzel
+     * @param swithed náhrady uzlu za uzel
      * @param edgesRemoved odstraněné hrany
      * @return výzva k provedení aktualizace
      */
-    public static Update of(final Map<? extends EnterNode, ? extends RecurentArc> referencesRemoved,
+    public static Update of(final Set<? extends RecurentArc> referencesRemoved,
             final Set<? extends EnterNode> initialsAdded,
             final Set<? extends EnterNode> initialsRemoved,
-            final Set<? extends DefaultNodeSwitch> affected,
+            final Map<? extends Node, ? extends Node> swithed,
             final Set<? extends Arc> edgesRemoved) {
-        return new DefaultUpdate(referencesRemoved, initialsAdded, initialsRemoved, affected, edgesRemoved);
+        return new DefaultUpdate(referencesRemoved, initialsAdded, initialsRemoved, swithed, edgesRemoved);
     }
     
-    private DefaultUpdate(final Map<? extends EnterNode, ? extends RecurentArc> referencesRemoved,
+    private DefaultUpdate(final Set<? extends RecurentArc> referencesRemoved,
             final Set<? extends EnterNode> initialsAdded,
             final Set<? extends EnterNode> initialsRemoved,
-            final Set<? extends NodeSwitch> affected,
+            final Map<? extends Node, ? extends Node> swithed,
             final Set<? extends Arc> edgesRemoved) {
         Preconditions.checkNotNull(referencesRemoved);
         Preconditions.checkNotNull(initialsAdded);
         Preconditions.checkNotNull(initialsRemoved);
-        Preconditions.checkNotNull(affected);
+        Preconditions.checkNotNull(swithed);
         Preconditions.checkNotNull(edgesRemoved);
         
-        this.referencesRemoved = ImmutableMap.copyOf(referencesRemoved);
+        this.referencesRemoved = ImmutableSet.copyOf(referencesRemoved);
         this.initialsAdded = ImmutableSet.copyOf(initialsAdded);
         this.initialsRemoved = ImmutableSet.copyOf(initialsRemoved);
-        this.affected = ImmutableSet.copyOf(affected);
+        this.switched = ImmutableMap.copyOf(swithed);
         this.edgesRemoved = ImmutableSet.copyOf(edgesRemoved);
     }
 
     /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.Update#getReferencesRemoved()
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.updates.Update#getReferencesRemoved()
      */
     @Override
-    public Map<EnterNode, RecurentArc> getReferencesRemoved() {
+    public Set<RecurentArc> getReferencesRemoved() {
         return referencesRemoved;
     }
 
@@ -107,8 +108,8 @@ public final class DefaultUpdate implements Update {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.Update#getAffected()
      */
     @Override
-    public Set<NodeSwitch> getAffected() {
-        return affected;
+    public Map<Node, Node> getSwitched() {
+        return switched;
     }
 
     /* (non-Javadoc)

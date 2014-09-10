@@ -18,6 +18,10 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
@@ -33,6 +37,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
  */
 public abstract class AbstractCodeArc extends AbstractArc implements CodeArc {
 
+    private static final long serialVersionUID = 1L;
+    
     private final Code code;
 
     /**
@@ -86,5 +92,17 @@ public abstract class AbstractCodeArc extends AbstractArc implements CodeArc {
             return false;
         }
         return true;
+    }
+    
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+        
+        Preconditions.checkNotNull(this.code);
+    }
+
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
     }
 }

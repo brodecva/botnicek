@@ -34,7 +34,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.NormalWordChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Normalizer;
@@ -105,7 +104,7 @@ public class NormalWordsTest {
         EasyMock.replay(validCheckResultStub);
         
         final NormalWordChecker checkerStub = EasyMock.createStrictMock(NormalWordChecker.class);
-        EasyMock.expect(checkerStub.check(EasyMock.notNull(Source.class), EasyMock.notNull(), EasyMock.eq(CREATED_WORD_VALID_NAME))).andStubReturn(validCheckResultStub);
+        EasyMock.expect(checkerStub.check(CREATED_WORD_VALID_NAME)).andStubReturn(validCheckResultStub);
         EasyMock.replay(checkerStub);
         Whitebox.setInternalState(NormalWords.class, "checker", checkerStub);
         
@@ -126,14 +125,16 @@ public class NormalWordsTest {
         EasyMock.replay(invalidCheckResultStub);
         
         final NormalWordChecker checkerStub = EasyMock.createStrictMock(NormalWordChecker.class);
-        EasyMock.expect(checkerStub.check(EasyMock.notNull(Source.class), EasyMock.notNull(), EasyMock.eq(CREATED_WORD_NOT_FIXABLE_NAME))).andStubReturn(invalidCheckResultStub);
+        EasyMock.expect(checkerStub.check(CREATED_WORD_NOT_FIXABLE_NAME)).andStubReturn(invalidCheckResultStub);
         EasyMock.replay(checkerStub);
         Whitebox.setInternalState(NormalWords.class, "checker", checkerStub);
         
-        NormalWords.of(CREATED_WORD_NOT_FIXABLE_NAME);
-        
-        EasyMock.verify(invalidCheckResultStub);
-        EasyMock.verify(checkerStub);
+        try {
+            NormalWords.of(CREATED_WORD_NOT_FIXABLE_NAME);
+        } finally {
+            EasyMock.verify(invalidCheckResultStub);
+            EasyMock.verify(checkerStub);
+        }
     }
     
     /**
@@ -176,9 +177,11 @@ public class NormalWordsTest {
         EasyMock.replay(normalizerStub);
         Whitebox.setInternalState(NormalWords.class, "normalizer", normalizerStub);
         
-        NormalWords.from(CREATED_WORD_NOT_FIXABLE_NAME);
-        
-        EasyMock.verify(normalizerStub);
+        try {
+            NormalWords.from(CREATED_WORD_NOT_FIXABLE_NAME);
+        } finally {
+            EasyMock.verify(normalizerStub);
+        }
     }
 
     /**
@@ -197,7 +200,7 @@ public class NormalWordsTest {
         final NormalWord resultDummy = EasyMock.createMock(NormalWord.class);
         EasyMock.replay(resultDummy);
         
-        PowerMock.mockStaticPartial(NormalWords.class, "of");
+        PowerMock.mockStaticPartialStrict(NormalWords.class, "of");
         EasyMock.expect(NormalWords.of("FIRSTSECOND")).andReturn(resultDummy);
         PowerMock.replay(NormalWords.class);
         

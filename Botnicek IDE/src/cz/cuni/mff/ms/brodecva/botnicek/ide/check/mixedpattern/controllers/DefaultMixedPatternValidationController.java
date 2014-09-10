@@ -20,6 +20,7 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.controllers;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.CodeChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.DefaultCheckController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
@@ -41,11 +42,13 @@ public class DefaultMixedPatternValidationController implements MixedPatternVali
     /**
      * Vytvoří řadič.
      * 
+     * @param codeChecker validátor kódu šablony, slouží pro validaci prvků bot ve vzoru, které se jinak vyskytují i v šablonách
      * @param eventManager správce událostí
+     * 
      * @return řadič
      */
-    public static DefaultMixedPatternValidationController create(final EventManager eventManager) {
-        return create(DefaultMixedPatternValidator.create(DefaultMixedPatternChecker.create(), eventManager), eventManager);
+    public static DefaultMixedPatternValidationController create(final CodeChecker codeChecker, final EventManager eventManager) {
+        return create(DefaultMixedPatternValidator.create(DefaultMixedPatternChecker.create(codeChecker), eventManager), eventManager);
     }
     
     /**

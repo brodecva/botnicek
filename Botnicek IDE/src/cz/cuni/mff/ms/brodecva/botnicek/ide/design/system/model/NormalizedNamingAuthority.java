@@ -18,14 +18,20 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableSet;
-
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Normalizer;
@@ -38,7 +44,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.Text;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class NormalizedNamingAuthority implements NamingAuthority {
+public final class NormalizedNamingAuthority implements NamingAuthority, Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     private static final String EMPTY_SUBMITTED_PART = "";
     private static final int DEFAULT_START = 2;
@@ -182,16 +190,16 @@ public final class NormalizedNamingAuthority implements NamingAuthority {
         
         final ImmutableBiMap<String, String> copy = ImmutableBiMap.copyOf(oldToNew);
         
-        final Set<String> oldNames = copy.keySet();
-        for (final String oldName : oldNames) {
+        for (final Map.Entry<String, String> replacementPair : copy.entrySet()) {
+            final String oldName = replacementPair.getKey();
+            final String newName = replacementPair.getValue();
+            
             Preconditions.checkArgument(isUsed(oldName), ExceptionLocalizer.print("NameNotUsed", oldName));
+            Preconditions.checkArgument(oldName.equals(newName) || isUsable(newName), ExceptionLocalizer.print("NameNotUsable", newName));
         }
         
+        final Set<String> oldNames = copy.keySet();
         final Set<String> newNames = copy.values();
-        for (final String newName : newNames) {
-            Preconditions.checkArgument(isUsable(newName), ExceptionLocalizer.print("NameNotUsable", newName));
-        }
-        
         for (final String oldName : oldNames) {
             this.used.remove(oldName);
         }
@@ -229,6 +237,8 @@ public final class NormalizedNamingAuthority implements NamingAuthority {
     public String replace(final String oldName, final String newName) {
         Preconditions.checkNotNull(oldName);
         Preconditions.checkNotNull(newName);
+        Preconditions.checkArgument(isUsed(oldName), ExceptionLocalizer.print("NameNotUsed", oldName));
+        Preconditions.checkArgument(oldName.equals(newName) || isUsable(newName), ExceptionLocalizer.print("NameNotUsable", newName));
         
         release(oldName);
         return use(newName);
@@ -255,5 +265,23 @@ public final class NormalizedNamingAuthority implements NamingAuthority {
         builder.append(counter);
         builder.append("]");
         return builder.toString();
+    }
+    
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+
+        Preconditions.checkNotNull(normalizer);
+        Preconditions.checkArgument(this.counter >= 0);
+        Preconditions.checkNotNull(this.used);
+        
+        final Collection<String> nonNullUsed = Collections2
+                .filter(this.used, Predicates.notNull());
+        Preconditions.checkArgument(nonNullUsed.size() == this.used.size());
+    }
+    
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
     }
 }

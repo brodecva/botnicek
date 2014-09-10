@@ -66,6 +66,10 @@ public final class DefaultNormalWordChecker implements NormalWordChecker, Source
      */
     @Override
     public CheckResult check(final Source source, Object subject, final String name) {
+        Preconditions.checkNotNull(source);
+        Preconditions.checkNotNull(subject);
+        Preconditions.checkNotNull(name);
+        
         if (name.isEmpty()) {
             return DefaultCheckResult.fail(0, ExceptionLocalizer.print("EmptyName"), source, subject);
         }

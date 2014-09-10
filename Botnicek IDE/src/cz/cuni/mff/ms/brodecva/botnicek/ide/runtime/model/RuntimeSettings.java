@@ -18,6 +18,10 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
@@ -39,7 +43,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.processor.set.DisplayStrategy;
  * @author Václav Brodec
  * @version 1.0
  */
-public class RuntimeSettings {
+public class RuntimeSettings implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     private static final RuntimeSettings DEFAULT;
     
@@ -51,9 +57,9 @@ public class RuntimeSettings {
         DEFAULT = create(defaultBotConfiguration, defaultLanguageConfiguration, defaultConversationConfiguration);
     }
     
-    private BotConfiguration botConfiguration;
-    private LanguageConfiguration languageConfiguration;
-    private ConversationConfiguration conversationConfiguration;
+    private final BotConfiguration botConfiguration;
+    private final LanguageConfiguration languageConfiguration;
+    private final ConversationConfiguration conversationConfiguration;
     
     /**
      * Vytvoří nastavení běhového prostředí sjednocením dílčích.
@@ -111,5 +117,19 @@ public class RuntimeSettings {
      */
     public static RuntimeSettings getDefault() {
         return DEFAULT;
+    }
+    
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+        
+        Preconditions.checkNotNull(this.botConfiguration);
+        Preconditions.checkNotNull(this.languageConfiguration);
+        Preconditions.checkNotNull(this.conversationConfiguration);
+    }
+
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
     }
 }

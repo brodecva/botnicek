@@ -37,6 +37,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode;
  */
 public final class InnerOrderedProcessingNode extends AbstractNode implements OrderedNode, ProcessingNode, InnerNode {
 
+    private static final long serialVersionUID = 1L;
+    
     /**
      * Vytvoří uzel dle parametrů.
      * 

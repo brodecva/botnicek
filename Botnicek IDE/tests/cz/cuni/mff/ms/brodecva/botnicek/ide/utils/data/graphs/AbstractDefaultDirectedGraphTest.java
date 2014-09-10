@@ -40,12 +40,98 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
  */
 public abstract class AbstractDefaultDirectedGraphTest<V, E> {
 
+    /**
+     * Třída k testování toho, zda-li jsou dle specifikace volány chráněné metody.
+     * 
+     * @author Václav Brodec
+     * @version 1.0
+     * @param <V> typ vrcholu
+     * @param <E> typ hrany
+     */
+    public final static class HookCountingDirectedGraph<V, E> extends DefaultDirectedGraph<V, E> {
+        
+        private static final long serialVersionUID = 1L;
+        
+        private int vertexRemovalHookCallCounter = 0;
+        private int edgeRemovalHookCallCounter = 0;
+        private int vertexReplacementHookCallCounter = 0;
+        private int edgeReplacementHookCallCounter = 0;
+        
+        protected void vertexRemovalHook(V removed) {
+            vertexRemovalHookCallCounter++;
+        }
+        
+        protected void edgeRemovalHook(E removed) {
+            edgeRemovalHookCallCounter++;
+        }
+        
+        protected void vertexReplacementHook(V old, V fresh) {
+            vertexReplacementHookCallCounter++;
+        }
+        
+        protected void edgeReplacementHook(E old, E fresh) {
+            edgeReplacementHookCallCounter++;
+        }
+        
+        /**
+         * Vrátí počet volání dané metody.
+         * 
+         * @return počet volání
+         */
+        public int getVertexRemovalHookCallCounter() {
+            return vertexRemovalHookCallCounter;
+        }
+
+        /**
+         * Vrátí počet volání dané metody.
+         * 
+         * @return počet volání
+         */
+        public int getEdgeRemovalHookCallCounter() {
+            return edgeRemovalHookCallCounter;
+        }
+
+        /**
+         * Vrátí počet volání dané metody.
+         * 
+         * @return počet volání
+         */
+        public int getVertexReplacementHookCallCounter() {
+            return vertexReplacementHookCallCounter;
+        }
+
+        /**
+         * Vrátí počet volání dané metody.
+         * 
+         * @return počet volání
+         */
+        public int getEdgeReplacementHookCallCounter() {
+            return edgeReplacementHookCallCounter;
+        }
+    }
+    
+    /**
+     * Počet vygenerovaných unikátních testovacích objektů.
+     */
+    protected static final int GENERATED_COUNT = 10;
+
+    /**
+     * Index prvního vybraného.
+     */
+    protected static final int FIRST_PICK = 3;
+
+    /**
+     * Index druhého vybraného.
+     */
+    protected static final int SECOND_PICK = 8;    
+    
     private DefaultDirectedGraph<V, E> tested = Intended.nullReference();
     private DefaultDirectedGraph<V, E> testedWithVertices = Intended.nullReference();
     private V firstPresentVertex = Intended.nullReference();
     private V secondPresentVertex = Intended.nullReference();
     private DefaultDirectedGraph<V, E> testedWithVerticesAndEdge = Intended.nullReference();
     private E edgeBetweenPresentVertices = Intended.nullReference();
+    private HookCountingDirectedGraph<V, E> hookCounterWithVerticesAndEdge = Intended.nullReference();
     
     /**
      * Vytvoří testované grafy (prázdný, graf se dvěma izolovanými vrcholy) a označí vložené vrcholy.
@@ -54,22 +140,28 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
      */
     @Before
     public void setUp() throws Exception {
-        this.tested = DefaultDirectedGraph.create();
+        this.tested = createEmpty();
         
-        this.testedWithVertices = DefaultDirectedGraph.create();
-        final V[] presentVertices = createUniqueVertices(10);
+        this.testedWithVertices = createEmpty();
+        final V[] presentVertices = createUniqueVertices(GENERATED_COUNT);
         for (final V present : presentVertices) {
             this.testedWithVertices.add(present);
         }
-        this.firstPresentVertex = presentVertices[3];
-        this.secondPresentVertex = presentVertices[8];
+        this.firstPresentVertex = presentVertices[FIRST_PICK];
+        this.secondPresentVertex = presentVertices[SECOND_PICK];
         
-        this.testedWithVerticesAndEdge = DefaultDirectedGraph.create();
+        this.testedWithVerticesAndEdge = createEmpty();
         for (final V present : presentVertices) {
             this.testedWithVerticesAndEdge.add(present);
         }
         this.edgeBetweenPresentVertices = createEdge();
         this.testedWithVerticesAndEdge.add(this.edgeBetweenPresentVertices, this.firstPresentVertex, this.secondPresentVertex);
+        
+        this.hookCounterWithVerticesAndEdge = createHookCounter();
+        for (final V present : presentVertices) {
+            this.hookCounterWithVerticesAndEdge.add(present);
+        }
+        this.hookCounterWithVerticesAndEdge.add(this.edgeBetweenPresentVertices, this.firstPresentVertex, this.secondPresentVertex);
     }
 
     /**
@@ -85,7 +177,22 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
         this.secondPresentVertex = Intended.nullReference();
         this.testedWithVerticesAndEdge = Intended.nullReference();
         this.edgeBetweenPresentVertices = Intended.nullReference();
+        hookCounterWithVerticesAndEdge = Intended.nullReference();
     }
+    
+    /**
+     * Vytvoří prázdnou realizaci generického typu.
+     * 
+     * @return prázdná instance
+     */
+    protected abstract DefaultDirectedGraph<V, E> createEmpty();
+    
+    /**
+     * Vytvoří prázdnou realizaci generického typu.
+     * 
+     * @return prázdná instance
+     */
+    protected abstract HookCountingDirectedGraph<V, E> createHookCounter();
     
     /**
      * Vytvoří instanci vrcholu.
@@ -197,7 +304,7 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
         final V[] added = createUniqueVertices(2);
         
         this.tested.add(added[0]);
-        this.tested.replaceVertex(added[1], added[0]);
+        this.tested.replaceVertex(added[0], added[1]);
         
         assertFalse(this.tested.containsVertex(added[0]));
         assertTrue(this.tested.containsVertex(added[1]));
@@ -479,7 +586,7 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
         final E[] added = createUniqueEdges(2);
         
         this.testedWithVertices.add(added[0], this.firstPresentVertex, this.secondPresentVertex);
-        this.testedWithVertices.replaceEdge(added[1], added[0]);
+        this.testedWithVertices.replaceEdge(added[0], added[1]);
         
         assertFalse(this.testedWithVertices.containsEdge(added[0]));
         assertTrue(this.testedWithVertices.containsEdge(added[1]));
@@ -525,6 +632,60 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
     
     /**
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#removeVertex(java.lang.Object)}.
+     */
+    @Test
+    public void testRemoveVertexExpectVertexRemovalHookCalled() {
+        this.hookCounterWithVerticesAndEdge.removeVertex(this.firstPresentVertex);
+        
+        assertEquals(1, this.hookCounterWithVerticesAndEdge.getVertexRemovalHookCallCounter());
+    }
+    
+    /**
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#removeVertex(java.lang.Object)}.
+     */
+    @Test
+    public void testRemoveVertexExpectAdjoinedEdgeRemovalHookCalled() {
+        this.hookCounterWithVerticesAndEdge.removeVertex(this.firstPresentVertex);
+        
+        assertEquals(1, this.hookCounterWithVerticesAndEdge.getEdgeRemovalHookCallCounter());
+    }
+    
+    /**
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#replaceVertex(java.lang.Object, java.lang.Object)}.
+     */
+    @Test
+    public void testReplaceVertexExpectVertexReplacementHookCalled() {
+        final V replacement = createVertex();
+        
+        this.hookCounterWithVerticesAndEdge.replaceVertex(firstPresentVertex, replacement);
+        
+        assertEquals(1, this.hookCounterWithVerticesAndEdge.getVertexReplacementHookCallCounter());
+    }
+    
+    /**
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#removeEdge(java.lang.Object)}.
+     */
+    @Test
+    public void testRemoveEdgeExpectEdgeRemovalHookCalleEdgeVertex() {
+        this.hookCounterWithVerticesAndEdge.removeEdge(this.edgeBetweenPresentVertices);
+        
+        assertEquals(1, this.hookCounterWithVerticesAndEdge.getEdgeRemovalHookCallCounter());
+    }
+    
+    /**
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#replaceEdge(java.lang.Object, java.lang.Object)}.
+     */
+    @Test
+    public void testReplaceEdgeExpectEdgeReplacementHookCalled() {
+        final E replacement = createEdge();
+        
+        this.hookCounterWithVerticesAndEdge.replaceEdge(this.edgeBetweenPresentVertices, replacement);
+        
+        assertEquals(1, this.hookCounterWithVerticesAndEdge.getEdgeReplacementHookCallCounter());
+    }
+    
+    /**
      * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#replaceVertex(Object, Object)} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#from(Object)} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#to(Object)}.
      */
     @Test
@@ -535,8 +696,8 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
         
         final V newFirst = createVertex();
         final V newSecond = createVertex();
-        this.testedWithVertices.replaceVertex(newFirst, this.firstPresentVertex);
-        this.testedWithVertices.replaceVertex(newSecond, this.secondPresentVertex);
+        this.testedWithVertices.replaceVertex(this.firstPresentVertex, newFirst);
+        this.testedWithVertices.replaceVertex(this.secondPresentVertex, newSecond);
         
         assertEquals(newFirst, this.testedWithVertices.from(added));
         assertEquals(newSecond, this.testedWithVertices.to(added));
@@ -552,7 +713,7 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
         this.testedWithVertices.add(added, this.firstPresentVertex, this.secondPresentVertex);
         
         final E newAdded = createEdge();
-        this.testedWithVertices.replaceEdge(newAdded, added);
+        this.testedWithVertices.replaceEdge(added, newAdded);
         
         assertEquals(ImmutableSet.of(newAdded), this.testedWithVertices.outs(this.firstPresentVertex));
         assertEquals(ImmutableSet.of(newAdded), this.testedWithVertices.ins(this.secondPresentVertex));
@@ -568,7 +729,7 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
         this.testedWithVertices.add(added, this.firstPresentVertex, this.secondPresentVertex);
         
         final E newAdded = createEdge();
-        this.testedWithVertices.replaceEdge(newAdded, added);
+        this.testedWithVertices.replaceEdge(added, newAdded);
         
         assertEquals(this.firstPresentVertex, this.testedWithVertices.from(newAdded));
         assertEquals(this.secondPresentVertex, this.testedWithVertices.to(newAdded));
@@ -585,8 +746,8 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
         
         final V newFirst = createVertex();
         final V newSecond = createVertex();
-        this.testedWithVertices.replaceVertex(newFirst, this.firstPresentVertex);
-        this.testedWithVertices.replaceVertex(newSecond, this.secondPresentVertex);
+        this.testedWithVertices.replaceVertex(this.firstPresentVertex, newFirst);
+        this.testedWithVertices.replaceVertex(this.secondPresentVertex, newSecond);
         
         assertEquals(ImmutableSet.of(added), this.testedWithVertices.outs(newFirst));
         assertEquals(ImmutableSet.of(added), this.testedWithVertices.ins(newSecond));

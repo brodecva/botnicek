@@ -32,6 +32,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 public final class DefaultCheckResult implements
         CheckResult {
     
+    private static final String DEFAULT_OK_MESSAGE = "OK";
+    
     private final boolean valid;
     private final int errorColumnNumber;
     private final int errorRowNumber;
@@ -47,7 +49,7 @@ public final class DefaultCheckResult implements
      * @return výsledek
      */
     public static DefaultCheckResult succeed(final Object source, final Object subject) {
-        return new DefaultCheckResult(true, OK_NUMBER, OK_NUMBER, "OK", source, subject);
+        return new DefaultCheckResult(true, OK_NUMBER, OK_NUMBER, DEFAULT_OK_MESSAGE, source, subject);
     }
     
     /**
@@ -66,6 +68,7 @@ public final class DefaultCheckResult implements
     
     /**
      * Vytvoří výsledek indikující neúspěšný výsledek kontroly řetězce bez více řádků.
+     * 
      * @param columnNumber číslo sloupce s chybou
      * @param message chybová zpráva
      * @param source zdroj kontrolovaného řetězce
@@ -83,7 +86,7 @@ public final class DefaultCheckResult implements
         Preconditions.checkNotNull(message);
         Preconditions.checkArgument(rowNumber >= -1);
         Preconditions.checkArgument(columnNumber >= -1);
-        Preconditions.checkArgument(!valid || (rowNumber == OK_NUMBER && columnNumber == OK_NUMBER));
+        assert !valid || (rowNumber == OK_NUMBER && columnNumber == OK_NUMBER);
         
         this.source = source;
         this.subject = subject;

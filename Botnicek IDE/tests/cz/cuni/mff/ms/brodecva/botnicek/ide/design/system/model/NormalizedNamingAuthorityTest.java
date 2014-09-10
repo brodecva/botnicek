@@ -26,9 +26,7 @@ import java.util.Set;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -38,8 +36,11 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Normalizer;
 
 /**
+ * Testuje autoritu, která uchovává normalizované názvy podle definice jazyka AIML.
+ * 
  * @author Václav Brodec
  * @version 1.0
+ * @see NormalizedNamingAuthority
  */
 public class NormalizedNamingAuthorityTest {
 
@@ -49,23 +50,10 @@ public class NormalizedNamingAuthorityTest {
     private static final int INITIAL_VALUE = 0;
     
     private Normalizer copyNormalizerStub = Intended.nullReference();
+    private NormalizedNamingAuthority tested = Intended.nullReference();
 
     /**
-     * @throws java.lang.Exception
-     */
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-    }
-
-    /**
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception pokud dojde k vyhození výjimky
      */
     @Before
     public void setUp() throws Exception {
@@ -84,14 +72,18 @@ public class NormalizedNamingAuthorityTest {
             
         });
         EasyMock.replay(copyNormalizerStub);
+        
+        tested = NormalizedNamingAuthority.create(INITIAL_VALUE, copyNormalizerStub);       
     }
 
     /**
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception pokud dojde k vyhození výjimky
      */
     @After
     public void tearDown() throws Exception {
         copyNormalizerStub = Intended.nullReference();
+        
+        tested = Intended.nullReference();
     }
 
     /**
@@ -112,8 +104,6 @@ public class NormalizedNamingAuthorityTest {
      */
     @Test
     public void testGenerate() {
-        final NormalizedNamingAuthority tested = NormalizedNamingAuthority.create(INITIAL_VALUE, copyNormalizerStub);       
-        
         final Set<String> generated = new HashSet<>();
         for (int i = 0; i < MAX_GENERATION_ATTEMPTS; i++) {
             assertTrue(generated.add(tested.generate()));
@@ -127,8 +117,6 @@ public class NormalizedNamingAuthorityTest {
      */
     @Test
     public void testUseWhenWhenConflicting() {
-        final NormalizedNamingAuthority tested = NormalizedNamingAuthority.create(INITIAL_VALUE, copyNormalizerStub);       
-        
         final Set<String> generated = new HashSet<>();
         for (int i = 0; i < MAX_GENERATION_ATTEMPTS; i++) {
             assertTrue(generated.add(tested.use(NAME)));
@@ -142,8 +130,6 @@ public class NormalizedNamingAuthorityTest {
      */
     @Test
     public void testUseWhenWhenInappropriate() {
-        final NormalizedNamingAuthority tested = NormalizedNamingAuthority.create(INITIAL_VALUE, copyNormalizerStub);       
-        
         final Set<String> generated = new HashSet<>();
         for (int i = 0; i < MAX_GENERATION_ATTEMPTS; i++) {
             assertTrue(generated.add(tested.use(INVALID_NAME)));
@@ -157,8 +143,6 @@ public class NormalizedNamingAuthorityTest {
      */
     @Test
     public void testUseWhenValid() {
-        final NormalizedNamingAuthority tested = NormalizedNamingAuthority.create(INITIAL_VALUE, copyNormalizerStub);       
-                
         assertEquals(NAME, tested.use(NAME));
         
         EasyMock.verify(copyNormalizerStub);
@@ -169,9 +153,8 @@ public class NormalizedNamingAuthorityTest {
      */
     @Test
     public void testIsUsableWhenConflicting() {
-        final NormalizedNamingAuthority tested = NormalizedNamingAuthority.create(INITIAL_VALUE, copyNormalizerStub);       
-        
         tested.use(NAME);
+        
         assertFalse(tested.isUsable(NAME));
         
         EasyMock.verify(copyNormalizerStub);
@@ -182,8 +165,6 @@ public class NormalizedNamingAuthorityTest {
      */
     @Test
     public void testIsUsableWhenInappropriate() {
-        final NormalizedNamingAuthority tested = NormalizedNamingAuthority.create(INITIAL_VALUE, copyNormalizerStub);       
-        
         assertFalse(tested.isUsable(INVALID_NAME));
         
         EasyMock.verify(copyNormalizerStub);
@@ -194,8 +175,6 @@ public class NormalizedNamingAuthorityTest {
      */
     @Test
     public void testIsUsableWhenValid() {
-        final NormalizedNamingAuthority tested = NormalizedNamingAuthority.create(INITIAL_VALUE, copyNormalizerStub);       
-        
         assertTrue(tested.isUsable(NAME));
         
         EasyMock.verify(copyNormalizerStub);
@@ -206,8 +185,6 @@ public class NormalizedNamingAuthorityTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testTryUseWhenAllInappropriateExpectNotChanged() {
-        final NormalizedNamingAuthority tested = NormalizedNamingAuthority.create(INITIAL_VALUE, copyNormalizerStub);       
-        
         try {
             tested.tryUse(INVALID_NAME, INVALID_NAME, INVALID_NAME);
         } finally {
@@ -222,9 +199,8 @@ public class NormalizedNamingAuthorityTest {
      */
     @Test
     public void testTryUseWhenAllValidExpectUsed() {
-        final NormalizedNamingAuthority tested = NormalizedNamingAuthority.create(INITIAL_VALUE, copyNormalizerStub);       
-        
         tested.tryUse("FIRST", "SECOND", "THIRD");
+        
         assertEquals(ImmutableSet.of("FIRST", "SECOND", "THIRD"), tested.getSnapshot());
         
         EasyMock.verify(copyNormalizerStub);
@@ -235,8 +211,6 @@ public class NormalizedNamingAuthorityTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testTryUseWhenSomeInappropriateExpectNotChanged() {
-        final NormalizedNamingAuthority tested = NormalizedNamingAuthority.create(INITIAL_VALUE, copyNormalizerStub);       
-        
         try {
             tested.tryUse("FIRST", INVALID_NAME, "SECOND");
         } finally {
@@ -251,8 +225,6 @@ public class NormalizedNamingAuthorityTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testTryUseWhenRepeatedExpectNotChanged() {
-        final NormalizedNamingAuthority tested = NormalizedNamingAuthority.create(INITIAL_VALUE, copyNormalizerStub);       
-        
         try {
             tested.tryUse(NAME, NAME);
         } finally {
@@ -267,10 +239,9 @@ public class NormalizedNamingAuthorityTest {
      */
     @Test
     public void testTryReplaceWhenAllValidExpectReplaced() {
-        final NormalizedNamingAuthority tested = NormalizedNamingAuthority.create(INITIAL_VALUE, copyNormalizerStub);       
-        
         tested.tryUse("FIRST", "SECOND");
         tested.tryReplace(ImmutableMap.of("FIRST", "NEWFIRST", "SECOND", "NEWSECOND"));
+        
         assertEquals(ImmutableSet.of("NEWFIRST", "NEWSECOND"), tested.getSnapshot());
         
         EasyMock.verify(copyNormalizerStub);
@@ -279,13 +250,57 @@ public class NormalizedNamingAuthorityTest {
     /**
      * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryReplace(java.util.Map)}, {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryUse(String...)} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#getSnapshot()}.
      */
-    @Test
-    public void testTryReplaceWhenAllNotPresentValidExpectReplaced() {
-        final NormalizedNamingAuthority tested = NormalizedNamingAuthority.create(INITIAL_VALUE, copyNormalizerStub);       
-        
+    @Test(expected = IllegalArgumentException.class)
+    public void testTryReplaceWhenAllNotPresentExpectUnchaned() {
         tested.tryUse("FIRST", "SECOND");
-        tested.tryReplace(ImmutableMap.of("FIRST", "NEWFIRST", "SECOND", "NEWSECOND"));
-        assertEquals(ImmutableSet.of("NEWFIRST", "NEWSECOND"), tested.getSnapshot());
+        try {
+            tested.tryReplace(ImmutableMap.of("FIRST", "NEWFIRST", "NOTPRESENT", "NEWSECOND"));
+        } finally {
+            assertEquals(ImmutableSet.of("FIRST", "SECOND"), tested.getSnapshot());
+        }
+        
+        EasyMock.verify(copyNormalizerStub);
+    }
+    
+    /**
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryReplace(java.util.Map)}, {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryUse(String...)} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#getSnapshot()}.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testTryReplaceWhenSomeReplacementNotValidExpectUnchaned() {
+        tested.tryUse("FIRST", "SECOND");
+        try {
+            tested.tryReplace(ImmutableMap.of("FIRST", "NEWFIRST", "SECOND", INVALID_NAME));
+        } finally {
+            assertEquals(ImmutableSet.of("FIRST", "SECOND"), tested.getSnapshot());
+        }
+        
+        EasyMock.verify(copyNormalizerStub);
+    }
+    
+    /**
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryReplace(java.util.Map)}, {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryUse(String...)} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#getSnapshot()}.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testTryReplaceWhenSomeReplacementRepeatedExpectUnchaned() {
+        tested.tryUse("FIRST", "SECOND");
+        try {
+            tested.tryReplace(ImmutableMap.of("FIRST", NAME, "SECOND", NAME));
+        } finally {
+            assertEquals(ImmutableSet.of("FIRST", "SECOND"), tested.getSnapshot());
+        }
+        
+        EasyMock.verify(copyNormalizerStub);
+    }
+    
+    /**
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryReplace(java.util.Map)}, {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryUse(String...)} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#getSnapshot()}.
+     */
+    @Test
+    public void testTryReplaceWhenSomeReplacementsEqual() {
+        tested.tryUse("FIRST", NAME);
+        tested.tryReplace(ImmutableMap.of("FIRST", "REPLACEMENT", NAME, NAME));
+        
+        assertEquals(ImmutableSet.of("REPLACEMENT", NAME), tested.getSnapshot());
         
         EasyMock.verify(copyNormalizerStub);
     }
@@ -293,41 +308,97 @@ public class NormalizedNamingAuthorityTest {
     /**
      * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#release(java.lang.String)}.
      */
+    @Test(expected = IllegalArgumentException.class)
+    public void testReleaseWhenNotPresent() {
+        tested.release(NAME);
+        
+        EasyMock.verify(copyNormalizerStub);
+    }
+    
+    /**
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#release(java.lang.String)}, {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#use(String)} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#isUsed(java.lang.String)}.
+     */
     @Test
-    public void testRelease() {
-        fail("Not yet implemented"); // TODO
+    public void testReleaseWhenPresent() {
+        tested.use(NAME);
+        tested.release(NAME);
+        
+        assertFalse(tested.isUsed(NAME));
+        
+        EasyMock.verify(copyNormalizerStub);
     }
 
+    /**
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#isUsed(java.lang.String)} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#use(String)}.
+     */
+    @Test
+    public void testIsUsedWhenUsedReturnsTrue() {
+        tested.use(NAME);
+        
+        assertTrue(tested.isUsed(NAME));
+        
+        EasyMock.verify(copyNormalizerStub);
+    }
+    
     /**
      * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#isUsed(java.lang.String)}.
      */
     @Test
-    public void testIsUsed() {
-        fail("Not yet implemented"); // TODO
+    public void testIsUsedWhenNotUsedReturnsFalse() {
+        assertFalse(tested.isUsed(NAME));
+        
+        EasyMock.verify(copyNormalizerStub);
     }
 
     /**
      * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#replace(java.lang.String, java.lang.String)}.
      */
-    @Test
-    public void testReplace() {
-        fail("Not yet implemented"); // TODO
+    @Test(expected = IllegalArgumentException.class)
+    public void testReplaceWhenReplacedNotPresent() {
+        tested.replace("FIRST", "SECOND");
+        
+        EasyMock.verify(copyNormalizerStub);
     }
-
+    
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#getSnapshot()}.
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#replace(java.lang.String, java.lang.String)}, {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#use(String)} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#getSnapshot()}.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testReplaceWhenReplacementInappropriateExpectUnchanged() {
+        tested.use(NAME);
+        
+        try {
+            tested.replace(NAME, INVALID_NAME);
+        } finally {
+            assertEquals(ImmutableSet.of(NAME), tested.getSnapshot());
+        }
+        
+        EasyMock.verify(copyNormalizerStub);
+    }
+    
+    /**
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#replace(java.lang.String, java.lang.String)}, {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#use(String)} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#isUsed(String)}.
      */
     @Test
-    public void testGetSnapshot() {
-        fail("Not yet implemented"); // TODO
+    public void testReplaceWhenValidExpectReplacedNotPresent() {
+        tested.use(NAME);
+        tested.replace(NAME, "REPLACEMENT");
+        
+        assertFalse(tested.isUsed(NAME));
+        
+        EasyMock.verify(copyNormalizerStub);
     }
-
+    
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#toString()}.
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#replace(java.lang.String, java.lang.String)}, {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#use(String)} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#isUsed(String)}.
      */
     @Test
-    public void testToString() {
-        fail("Not yet implemented"); // TODO
+    public void testReplaceWhenValidExpectReplacementPresent() {
+        tested.use(NAME);
+        tested.replace(NAME, "REPLACEMENT");
+        
+        assertTrue(tested.isUsed("REPLACEMENT"));
+        
+        EasyMock.verify(copyNormalizerStub);
     }
-
 }

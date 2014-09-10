@@ -18,6 +18,11 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
@@ -29,7 +34,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.api.SessionException;
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultRuntimeFactory implements RuntimeFactory {
+public class DefaultRuntimeFactory implements RuntimeFactory, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Vytvoří instanci.
@@ -54,4 +61,13 @@ public class DefaultRuntimeFactory implements RuntimeFactory {
         return DefaultRuntime.create(settings, dispatcher);
     }
 
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+    }
+
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
+    }
 }

@@ -18,6 +18,10 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
@@ -34,6 +38,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
  * @version 1.0
  */
 public final class CodeTestArc extends AbstractTestArc {
+    
+    private static final long serialVersionUID = 1L;
     
     private final Code tested;
     
@@ -130,5 +136,17 @@ public final class CodeTestArc extends AbstractTestArc {
                 + getNetwork() + ", getFrom()=" + getFrom() + ", getTo()="
                 + getTo() + ", getPriority()=" + getPriority()
                 + ", getValue()=" + getValue() + ", tested=" + tested + "]";
+    }
+    
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+        
+        Preconditions.checkNotNull(this.tested);
+    }
+
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
     }
 }

@@ -280,8 +280,6 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
 
     private static final SimplePatternChecker DEFAULT_SIMPLE_PATTERN_CHECKER =
             DefaultSimplePatternChecker.create();
-    private static final MixedPatternChecker DEFAULT_MIXED_PATTERN_CHECKER =
-            DefaultMixedPatternChecker.create();
     
     private final System system;
     private Arc current;
@@ -308,7 +306,7 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
         final NormalWordChecker predicatesChecker = DefaultNormalWordChecker.create(system.getPredicatesNamingAuthority());
         final CodeChecker codeChecker = DefaultCodeChecker.create(botSettings, languageSettings, namespacesToPrefixes);
         
-        return create(system, eventManager, current, nameChecker, codeChecker, DEFAULT_SIMPLE_PATTERN_CHECKER, DEFAULT_MIXED_PATTERN_CHECKER, predicatesChecker);
+        return create(system, eventManager, current, nameChecker, codeChecker, DEFAULT_SIMPLE_PATTERN_CHECKER, DefaultMixedPatternChecker.create(codeChecker), predicatesChecker);
     }
     
     /**

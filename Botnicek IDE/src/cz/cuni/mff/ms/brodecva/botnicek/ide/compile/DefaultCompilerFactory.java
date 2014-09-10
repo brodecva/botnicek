@@ -18,6 +18,11 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.compile;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 
 /**
@@ -26,7 +31,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultCompilerFactory implements CompilerFactory {
+public class DefaultCompilerFactory implements CompilerFactory, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Vytvoří továrnu.
@@ -48,5 +55,14 @@ public class DefaultCompilerFactory implements CompilerFactory {
             final NormalWord randomizeState, NormalWord successState, NormalWord returnState, final NormalWord testingPredicate) {
         return DefaultCompiler.create(pullState, pullStopState, successState, returnState, randomizeState, testingPredicate);
     }
+    
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+    }
 
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
+    }
 }

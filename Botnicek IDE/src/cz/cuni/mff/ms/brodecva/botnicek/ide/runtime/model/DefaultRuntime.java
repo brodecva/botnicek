@@ -21,12 +21,12 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 
@@ -50,9 +50,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.SimpleSplitter;
 import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Splitter;
 import cz.cuni.mff.ms.brodecva.botnicek.library.processor.set.DisplayStrategy;
 import cz.cuni.mff.ms.brodecva.botnicek.library.responder.AIMLBot;
-import cz.cuni.mff.ms.brodecva.botnicek.library.responder.AIMLConversation;
 import cz.cuni.mff.ms.brodecva.botnicek.library.responder.Bot;
-import cz.cuni.mff.ms.brodecva.botnicek.library.responder.Conversation;
 import cz.cuni.mff.ms.brodecva.botnicek.library.storage.MatchingStructure;
 import cz.cuni.mff.ms.brodecva.botnicek.library.storage.WordTree;
 import cz.cuni.mff.ms.brodecva.botnicek.library.storage.map.FrugalMapperFactory;
@@ -75,6 +73,8 @@ public class DefaultRuntime implements Runtime {
     private final TemplateParserFactory parserFactory;
     private final Map<String, String> defaultPredicates;
     private final Map<String, DisplayStrategy> predicatesSetBehavior;
+    
+    private final RunFactory runFactory;
     
     /**
      * Vytvoří instanci běhového prostředí dle nastavení v projektu.
@@ -163,7 +163,7 @@ public class DefaultRuntime implements Runtime {
         final Map<String, DisplayStrategy> predicatesSetBehavior =
                 ImmutableMap.copyOf(conversationConfiguration.getDisplayStrategies());
         
-        return new DefaultRuntime(loader, splitter, normalizer, parserFactory, language, defaultPredicates, predicatesSetBehavior, dispatcher);
+        return new DefaultRuntime(loader, splitter, normalizer, parserFactory, language, defaultPredicates, predicatesSetBehavior, DefaultRunFactory.create(), dispatcher);
     }
     
     /**
@@ -176,14 +176,15 @@ public class DefaultRuntime implements Runtime {
      * @param language definici jazyka
      * @param defaultPredicates výchozí predikáty
      * @param predicatesSetBehavior nastavení chování nastavování predikátů (zobrazit výstup či jméno)
+     * @param runFactory továrna na testovací konverzace
      * @param dispatcher rozesílač událostí
      * @return běhové prostředí
      */
-    static Runtime create(final Loader loader, final Splitter splitter, final Normalizer normalizer, final TemplateParserFactory parserFactory, final Language language, final Map<String, String> defaultPredicates, final Map<String, DisplayStrategy> predicatesSetBehavior, final Dispatcher dispatcher) {
-        return new DefaultRuntime(loader, splitter, normalizer, parserFactory, language, defaultPredicates, predicatesSetBehavior, dispatcher);
+    public static Runtime create(final Loader loader, final Splitter splitter, final Normalizer normalizer, final TemplateParserFactory parserFactory, final Language language, final Map<String, String> defaultPredicates, final Map<String, DisplayStrategy> predicatesSetBehavior, final RunFactory runFactory, final Dispatcher dispatcher) {
+        return new DefaultRuntime(loader, splitter, normalizer, parserFactory, language, defaultPredicates, predicatesSetBehavior, runFactory, dispatcher);
     }
     
-    private DefaultRuntime(final Loader loader, final Splitter splitter, final Normalizer normalizer, final TemplateParserFactory parserFactory, final Language language, final Map<String, String> defaultPredicates, final Map<String, DisplayStrategy> predicatesSetBehavior, final Dispatcher dispatcher) {
+    private DefaultRuntime(final Loader loader, final Splitter splitter, final Normalizer normalizer, final TemplateParserFactory parserFactory, final Language language, final Map<String, String> defaultPredicates, final Map<String, DisplayStrategy> predicatesSetBehavior, final RunFactory runFactory, final Dispatcher dispatcher) {
         Preconditions.checkNotNull(loader);
         Preconditions.checkNotNull(splitter);
         Preconditions.checkNotNull(normalizer);
@@ -191,6 +192,7 @@ public class DefaultRuntime implements Runtime {
         Preconditions.checkNotNull(language);
         Preconditions.checkNotNull(defaultPredicates);
         Preconditions.checkNotNull(predicatesSetBehavior);
+        Preconditions.checkNotNull(runFactory);
         Preconditions.checkNotNull(dispatcher);
         
         this.loader = loader;
@@ -201,6 +203,7 @@ public class DefaultRuntime implements Runtime {
         this.defaultPredicates = ImmutableMap.copyOf(defaultPredicates);
         this.predicatesSetBehavior = ImmutableMap.copyOf(predicatesSetBehavior);
         this.dispatcher = dispatcher;
+        this.runFactory = runFactory;
     }
     
     /* (non-Javadoc)
@@ -211,7 +214,7 @@ public class DefaultRuntime implements Runtime {
         Preconditions.checkNotNull(documentName);
         Preconditions.checkNotNull(text);
         
-        final InputStream textStream = new ByteArrayInputStream(text.getBytes(Charsets.UTF_8));
+        final InputStream textStream = new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8));
         
         this.loader.loadFromStream(textStream, documentName);
     }
@@ -221,11 +224,6 @@ public class DefaultRuntime implements Runtime {
      */
     @Override
     public Run run() {
-        final Conversation conversation =
-                    new AIMLConversation(this.loader, this.splitter, this.normalizer,
-                            this.language, this.parserFactory, this.defaultPredicates,
-                            this.predicatesSetBehavior);
-
-        return Run.create(conversation, this.dispatcher);
+        return this.runFactory.produce(loader, splitter, normalizer, language, parserFactory, defaultPredicates, predicatesSetBehavior, dispatcher);
     }
 }

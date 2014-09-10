@@ -20,6 +20,10 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker;
 
 import java.util.regex.Pattern;
 
+import com.google.common.base.Preconditions;
+
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.CodeChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
@@ -32,9 +36,12 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.platform.XML;
  * 
  * @author Václav Brodec
  * @version 1.0
+ * @see MixedPattern
  */
 public class DefaultMixedPatternChecker implements MixedPatternChecker, Source {
     
+    private static final String TAG_PATTERN_TEXT = "<(?:[^:]+:)?bot[^/>]+(?:/>|></(?:[^:]+:)?bot>)";
+
     /**
      * Výsledek zpracování značky bot, který může být obsažena v šabloně.
      */
@@ -62,15 +69,25 @@ public class DefaultMixedPatternChecker implements MixedPatternChecker, Source {
         }
     }
     
-    private static Pattern botTagPattern = java.util.regex.Pattern.compile("<(?:[^:]:)?bot[^/>]+name=\"[\\p{Digit}\\p{Lu}[\\p{L}&&\\p{IsUppercase}&&\\P{IsLowercase}&&\\P{IsLowercase}]]+\"[^/>]*(?:/>|></(?:[^:]:)?bot>)");
+    private static Pattern botTagPattern = java.util.regex.Pattern.compile(TAG_PATTERN_TEXT);
     
+    private final CodeChecker codeChecker;
+
+    private DefaultMixedPatternChecker(final CodeChecker codeChecker) {
+        this.codeChecker = codeChecker;
+    }
+
     /**
      * Vytvoří validátor.
      * 
+     * @param codeChecker validátor kódu šablony, slouží pro validaci prvků bot ve vzoru, které se jinak vyskytují i v šablonách
+     * 
      * @return validátor
      */
-    public static DefaultMixedPatternChecker create() {
-        return new DefaultMixedPatternChecker();
+    public static DefaultMixedPatternChecker create(final CodeChecker codeChecker) {
+        Preconditions.checkNotNull(codeChecker);
+        
+        return new DefaultMixedPatternChecker(codeChecker);
     }
 
     /* (non-Javadoc)
@@ -90,7 +107,7 @@ public class DefaultMixedPatternChecker implements MixedPatternChecker, Source {
             final int position = index + 1;
             final char character = characters[index];
             
-            if (XML.TAG_START.equals(Character.toString(character))) {
+            if (XML.TAG_START.getValue().equals(Character.toString(character))) {
                 inWord = true;
                 
                 final TagProcessingResult tagProcessingResult = processTag(source, subject, characters, index);
@@ -129,18 +146,24 @@ public class DefaultMixedPatternChecker implements MixedPatternChecker, Source {
         return DefaultCheckResult.succeed(source, subject);
     }
 
-    private static TagProcessingResult processTag(final Object source, Object subject, final char[] characters, final int index) {
+    private TagProcessingResult processTag(final Object source, Object subject, final char[] characters, final int index) {
         int offset = index;
         final int tagInitialPosition = offset + 1;
         
-        final StringBuilder tagBuilder = new StringBuilder(characters[offset]);
+        final StringBuilder tagBuilder = new StringBuilder();
+        tagBuilder.append(characters[offset]);
         while (!botTagPattern.matcher(tagBuilder).matches()) {
-            if (offset >= characters.length) {
+            if (offset >= characters.length - 1) {
                 return new TagProcessingResult(DefaultCheckResult.fail(tagInitialPosition, ExceptionLocalizer.print("InvalidBotTag"), source, subject), offset);
             }
             
             offset++;
             tagBuilder.append(characters[offset]);
+        }
+        
+        final CheckResult parseResult = this.codeChecker.check(tagBuilder.toString());
+        if (!parseResult.isValid()) {
+            return new TagProcessingResult(DefaultCheckResult.fail(tagInitialPosition, ExceptionLocalizer.print("InvalidBotTag"), source, subject), offset);
         }
         
         return new TagProcessingResult(DefaultCheckResult.succeed(source, subject), offset);

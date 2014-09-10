@@ -18,6 +18,10 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -47,7 +51,9 @@ public final class NormalWords {
     /**
      * Interní implementace.
      */
-    private static final class NormalWordImplementation implements NormalWord {
+    private static final class NormalWordImplementation implements NormalWord, Serializable {
+        private static final long serialVersionUID = 1L;
+        
         private final String text;
         
         public static NormalWordImplementation create(final String text) {
@@ -114,6 +120,21 @@ public final class NormalWords {
                 return false;
             }
             return true;
+        }
+        
+        private void readObject(final ObjectInputStream objectInputStream)
+                throws ClassNotFoundException, IOException {
+            objectInputStream.defaultReadObject();
+            
+            Preconditions.checkNotNull(this.text);
+            
+            final CheckResult result = checker.check(text);
+            Preconditions.checkArgument(result.isValid(), result.getMessage());
+        }
+
+        private void writeObject(final ObjectOutputStream objectOutputStream)
+                throws IOException {
+            objectOutputStream.defaultWriteObject();
         }
     }
     

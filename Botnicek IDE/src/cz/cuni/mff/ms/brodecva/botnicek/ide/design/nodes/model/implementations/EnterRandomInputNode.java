@@ -37,6 +37,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RandomNode;
  */
 public final class EnterRandomInputNode extends AbstractNode implements RandomNode, InputNode, EnterNode {
 
+    private static final long serialVersionUID = 1L;
+    
     /**
      * Vytvoří uzel dle parametrů.
      * 

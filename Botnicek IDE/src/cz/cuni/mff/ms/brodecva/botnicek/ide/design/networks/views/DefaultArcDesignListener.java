@@ -159,23 +159,20 @@ public final class DefaultArcDesignListener extends MouseAdapter implements ArcD
             this.designPanel.remove(this.lineComponent);
             this.designPanel.repaint();
             
-            if (this.nodes.contains(source) && !this.from.equals(source)) {
-                final NodeUI to = (NodeUI) source;
-                
-                while (true) {
-                    final Object newNameInput = JOptionPane.showInputDialog(to, UiLocalizer.print("ARC_NAME_MESSAGE"), UiLocalizer.print("ARC_NAME_TITLE_CONTENT"), JOptionPane.PLAIN_MESSAGE, Intended.<Icon>nullReference(), Intended.arrayNull(), ARC_NAME_INITIAL_VALUE);
-                    if (Components.hasUserCanceledInput(newNameInput)) {
-                        return;
-                    }
-                    
-                    try {
-                        this.controller.addArc(newNameInput.toString(), this.from.get().getNodeName(), to.getNodeName());
-                        return;
-                    } catch (final IllegalArgumentException ex) {
-                        JOptionPane.showMessageDialog(to, ExceptionLocalizer.print("ArcCreationError") + ex.getMessage(), UiLocalizer.print("ARC_NAME_ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
-                        continue;
-                    }
-                }
+            if (!this.nodes.contains(source) || this.from.get().equals(source)) {
+                return;
+            }
+            
+            final NodeUI to = (NodeUI) source;
+            final Object newNameInput = JOptionPane.showInputDialog(to, UiLocalizer.print("ARC_NAME_MESSAGE"), UiLocalizer.print("ARC_NAME_TITLE_CONTENT"), JOptionPane.PLAIN_MESSAGE, Intended.<Icon>nullReference(), Intended.arrayNull(), ARC_NAME_INITIAL_VALUE);
+            if (Components.hasUserCanceledInput(newNameInput)) {
+                return;
+            }
+            
+            try {
+                this.controller.addArc(newNameInput.toString(), this.from.get().getNodeName(), to.getNodeName());
+            } catch (final IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(to, ExceptionLocalizer.print("ArcCreationError") + " " + ex.getMessage(), UiLocalizer.print("ARC_NAME_ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
             }
         }
     }

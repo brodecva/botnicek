@@ -18,6 +18,11 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.builder;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
@@ -34,7 +39,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
  */
 public final class DefaultNormalWordBuilder implements NormalWordBuilder, Source {
     
-    private final static class PredicateNameImplementation implements NormalWord {
+    private final static class PredicateNameImplementation implements NormalWord, Serializable {
+        private static final long serialVersionUID = 1L;
+        
         private final String rawContent;
         
         public static PredicateNameImplementation create(final String rawContent) {
@@ -93,6 +100,19 @@ public final class DefaultNormalWordBuilder implements NormalWordBuilder, Source
                 return false;
             }
             return true;
+        }
+        
+        private void readObject(final ObjectInputStream objectInputStream)
+                throws ClassNotFoundException, IOException {
+            objectInputStream.defaultReadObject();
+            
+            Preconditions.checkNotNull(this.rawContent);
+            //TODO: Validace.
+        }
+
+        private void writeObject(final ObjectOutputStream objectOutputStream)
+                throws IOException {
+            objectOutputStream.defaultWriteObject();
         }
     }
     

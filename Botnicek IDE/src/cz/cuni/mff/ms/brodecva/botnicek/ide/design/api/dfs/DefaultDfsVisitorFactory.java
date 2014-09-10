@@ -18,6 +18,10 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
@@ -29,7 +33,9 @@ import com.google.common.collect.ImmutableSet;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultDfsVisitorFactory implements DfsVisitorFactory {
+public final class DefaultDfsVisitorFactory implements DfsVisitorFactory, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Vytvoří továrnu.
@@ -62,5 +68,14 @@ public final class DefaultDfsVisitorFactory implements DfsVisitorFactory {
         
         return DefaultDfsVisitor.create(ImmutableSet.copyOf(observers));
     }
+    
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+    }
 
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
+    }
 }

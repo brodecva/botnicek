@@ -25,9 +25,11 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.AutonomousComponent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.FunctionalNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
 
 /**
  * Rozhraní systému sítí zapouzdřuje všechny operace nad sítěmi.
@@ -42,21 +44,29 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * 
      * @param name název sítě
      */
-    void addNetwork(final String name);
+    void addNetwork(String name);
 
+    /**
+     * Přidá síť.
+     * 
+     * @param added přidávaná síť
+     * @param name název přidávané sítě
+     */
+    void addNetwork(Network added, String name);
+    
     /**
      * Odstraní síť.
      * 
      * @param name název sítě
      */
-    void removeNetwork(final String name);
+    void removeNetwork(String name);
 
     /**
      * Odstraní síť.
      * 
      * @param removed síť
      */
-    void removeNetwork(final Network removed);
+    void removeNetwork(Network removed);
 
     /**
      * Přidá výchozí typ uzlu do sítě.
@@ -65,7 +75,7 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * @param x souřadnice umístění na ose x
      * @param y souřadnice umístění na ose y
      */
-    void addNode(final Network network, final int x, final int y);
+    void addNode(Network network, int x, int y);
 
     /**
      * Vrátí uzly v síti.
@@ -73,14 +83,14 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * @param network síť
      * @return všechny uzly v síti
      */
-    Set<Node> getNodes(final Network network);
+    Set<Node> getNodes(Network network);
 
     /**
      * Odstraní uzel ze systému.
      * 
      * @param name název uzlu
      */
-    void removeNode(final NormalWord name);
+    void removeNode(NormalWord name);
 
     /**
      * Odstraní uzel ze systému.
@@ -97,15 +107,26 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * @param fromNodeName název výchozího uzlu
      * @param toNodeName název cílového uzlu
      */
-    void addArc(final Network network, final NormalWord name,
-            final NormalWord fromNodeName, final NormalWord toNodeName);
+    void addArc(Network network, NormalWord name,
+            NormalWord fromNodeName, NormalWord toNodeName);
 
+    /**
+     * Přidá do sítě hranu mezi uzly. 
+     * 
+     * @param network síť
+     * @param name název nové hrany
+     * @param from název výchozí uzel
+     * @param to název cílový uzel
+     */
+    void addArc(Network network, NormalWord name, Node from,
+            Node to);
+    
     /**
      * Odstraní hranu ze systému.
      * 
      * @param name název hrany
      */
-    void removeArc(final NormalWord name);
+    void removeArc(NormalWord name);
     
 
     /**
@@ -121,7 +142,7 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * @param node uzel
      * @return množina hran směřujících do uzlu
      */
-    Set<Arc> getIns(final Node node);
+    Set<Arc> getIns(Node node);
 
     /**
      * Vrátí hrany směřující ven z uzlu.
@@ -129,15 +150,23 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * @param node uzel
      * @return množina hran směřujících z uzlu
      */
-    Set<Arc> getOuts(final Node node);
+    Set<Arc> getOuts(Node node);
 
     /**
-     * Změní typ uzlu.
+     * Změní (nestrukturální, tj. nezávislý na umístění v grafu) typ uzlu.
      * 
      * @param name název uzlu
      * @param type nový typ uzlu
      */
-    void changeNode(NormalWord name, Class<? extends Node> type);
+    void changeNode(NormalWord name, Class<? extends FunctionalNode> type);
+    
+    /**
+     * Změní (nestrukturální, tj. nezávislý na umístění v grafu) typ uzlu.
+     * 
+     * @param node uzel
+     * @param type nový typ uzlu
+     */
+    void changeNode(final Node node, final Class<? extends FunctionalNode> type);
 
     /**
      * Změní název uzlu.
@@ -145,7 +174,15 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * @param name název uzlu
      * @param newName nový název
      */
-    void changeNode(final NormalWord name, NormalWord newName);
+    void changeNode(NormalWord name, NormalWord newName);
+    
+    /**
+     * Změní název uzlu.
+     * 
+     * @param node uzel
+     * @param newName nový název
+     */
+    void changeNode(final Node node, final NormalWord newName);
 
     /**
      * Změní umístění uzlu.
@@ -156,6 +193,15 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      */
     void changeNode(NormalWord name, int x, int y);
 
+    /**
+     * Změní umístění uzlu.
+     * 
+     * @param node uzel
+     * @param x souřadnice x
+     * @param y souřadnice y
+     */
+    void changeNode(Node node, final int x, final int y);
+    
     /**
      * Změní hranu.
      * 
@@ -175,7 +221,7 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * @param direction místo připojení hran
      * @return hrany
      */
-    Set<Arc> getConnections(final Node node, final Direction direction);
+    Set<Arc> getConnections(Node node, Direction direction);
 
     /**
      * Vrátí uzel na daném konci hrany.
@@ -184,7 +230,7 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * @param direction konec hrany
      * @return uzel
      */
-    Node getAttached(final Arc arc, final Direction direction);
+    Node getAttached(Arc arc, Direction direction);
 
     /**
      * Vrátí uzel daného názvu.
@@ -192,7 +238,7 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * @param name název uzlu
      * @return uzel
      */
-    Node getNode(final NormalWord name);
+    Node getNode(NormalWord name);
 
     /**
      * Vrátí hranu s daným názvem.
@@ -200,7 +246,7 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * @param name název hrany
      * @return hrana
      */
-    Arc getArc(final NormalWord name);
+    Arc getArc(NormalWord name);
 
     /**
      * Vrátí užitou autoritu pro přidělování názvů predikátů.
@@ -228,7 +274,7 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * 
      * @param newName nový název systému
      */
-    void setName(final String newName);
+    void setName(String newName);
 
     /**
      * Přejmenuje síť.
@@ -236,7 +282,7 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * @param network síť
      * @param newName nový název sítě
      */
-    void renameNetwork(final Network network, final String newName);
+    void renameNetwork(Network network, String newName);
 
     /**
      * Vrátí název sítě.
@@ -244,7 +290,7 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * @param network síť
      * @return síť
      */
-    String getNetworkName(final Network network);
+    String getNetworkName(Network network);
 
     /**
      * Indikuje, zda-li systém obsahuje zadanou síť.
@@ -252,7 +298,7 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * @param network síť
      * @return zda-li systém obsahuje zadanou síť
      */
-    boolean contains(final Network network);
+    boolean contains(Network network);
 
     /**
      * Vrátí síť daného názvu.
@@ -260,7 +306,7 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * @param name název sítě
      * @return síť
      */
-    Network getNetwork(final String name);
+    Network getNetwork(String name);
 
     /**
      * Indikuje, zda-li je první uzel spojen s druhým hranou dané orientace. 
@@ -294,5 +340,12 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
     /* (non-Javadoc)
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    boolean equals(final Object obj);
+    boolean equals(Object obj);
+
+    /**
+     * Nastaví rozesílač událostí.
+     * 
+     * @param dispatcher rozesílač událostí
+     */
+    void setDispatcher(Dispatcher dispatcher);
 }

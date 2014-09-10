@@ -18,6 +18,11 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
@@ -35,8 +40,10 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
  * @author Václav Brodec
  * @version 1.0
  */
-public abstract class AbstractArc implements Arc {
+public abstract class AbstractArc implements Arc, Serializable {
     
+    private static final long serialVersionUID = 1L;
+
     /**
      * Výchozí priorita hrany. 
      */
@@ -184,5 +191,19 @@ public abstract class AbstractArc implements Arc {
             return false;
         }
         return true;
+    }
+    
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+        
+        Preconditions.checkNotNull(this.name);
+        Preconditions.checkNotNull(this.parent);
+        Preconditions.checkNotNull(this.priority);
+    }
+
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
     }
 }

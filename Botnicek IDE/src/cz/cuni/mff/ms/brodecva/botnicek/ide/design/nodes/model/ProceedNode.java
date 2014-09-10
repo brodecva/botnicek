@@ -24,6 +24,5 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model;
  * @author Václav Brodec
  * @version 1.0
  */
-public interface ProceedNode extends Node {
-
+public interface ProceedNode extends FunctionalNode {
 }

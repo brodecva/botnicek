@@ -18,6 +18,11 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
@@ -32,7 +37,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultCodeContentBuilder implements CodeContentBuilder, Source {
+public final class DefaultCodeContentBuilder implements CodeContentBuilder, Source, Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     private final StringBuilder contentBuilder;
     private final CodeChecker checker;
@@ -85,6 +92,18 @@ public final class DefaultCodeContentBuilder implements CodeContentBuilder, Sour
                 return false;
             }
             return true;
+        }
+        
+        private void readObject(final ObjectInputStream objectInputStream)
+                throws ClassNotFoundException, IOException {
+            objectInputStream.defaultReadObject();
+            
+            Preconditions.checkNotNull(this.text);
+        }
+
+        private void writeObject(final ObjectOutputStream objectOutputStream)
+                throws IOException {
+            objectOutputStream.defaultWriteObject();
         }
     }
     

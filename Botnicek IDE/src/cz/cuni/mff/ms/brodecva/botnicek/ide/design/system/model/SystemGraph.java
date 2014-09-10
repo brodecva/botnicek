@@ -18,7 +18,6 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,9 +25,12 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.RecurentArc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.FunctionalNode;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.PositionalNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RealignmentProcessor;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DirectedGraph;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.updates.Update;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 
 /**
@@ -38,21 +40,21 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
  * @author Václav Brodec
  * @version 1.0
  */
-public interface SystemGraph extends DirectedGraph<Node, Arc> {
+public interface SystemGraph {
 
     /**
      * Vrátí uzel daného názvu.
      * 
      * @param name název uzlu
-     * @return uzel či {@code null}, pokud uzel daného názvu neexistuje
+     * @return uzel
      */
     Node getVertex(final NormalWord name);
 
     /**
-     * Vrátí hranu uzlu.
+     * Vrátí hranu daného názvu.
      * 
      * @param name název hrany
-     * @return hrana či {@code null}, pokud hrana daného názvu neexistuje
+     * @return hrana
      */
     Arc getEdge(final NormalWord name);
 
@@ -70,7 +72,7 @@ public interface SystemGraph extends DirectedGraph<Node, Arc> {
             removeAndRealign(
                     final Node removed,
                     final RealignmentProcessor processor,
-                    final Map<? extends EnterNode, ? extends Collection<? extends RecurentArc>> references,
+                    final Map<? extends EnterNode, ? extends Set<? extends RecurentArc>> references,
                     final Set<? extends EnterNode> initialNodes)
                     throws IllegalArgumentException;
 
@@ -88,7 +90,7 @@ public interface SystemGraph extends DirectedGraph<Node, Arc> {
             removeAndRealign(
                     final Arc removed,
                     final RealignmentProcessor processor,
-                    final Map<? extends EnterNode, ? extends Collection<? extends RecurentArc>> references,
+                    final Map<? extends EnterNode, ? extends Set<? extends RecurentArc>> references,
                     Set<? extends EnterNode> initials)
                     throws IllegalArgumentException;
 
@@ -134,4 +136,50 @@ public interface SystemGraph extends DirectedGraph<Node, Arc> {
      */
     boolean adjoins(final Node first, final Node second,
             final Direction direction);
+
+    /**
+     * Přidá nový uzel do grafu.
+     * 
+     * @param node uzel
+     */
+    void add(IsolatedNode node);
+
+    /**
+     * Indikuje přítomnost uzlu v grafu.
+     * 
+     * @param node vrchol
+     * @return zda-li graf obsahuje vrchol
+     */
+    boolean containsVertex(Node node);
+    
+    /**
+     * Indikuje přítomnost hrany v grafu.
+     * 
+     * @param arc hrana
+     * @return zda-li graf obsahuje hranu
+     */
+    boolean containsEdge(Arc arc);
+
+    /**
+     * <p>Zamění uzly.</p>
+     * <p>Pro zachování smyslu grafu je nutné, aby se stará a nová verze nelišily v pozici ({@link PositionalNode}), ale jen funkčně ({@link FunctionalNode})!</p>
+     * @param oldVersion stará verze
+     * @param newVersion nová verze
+     */
+    void replaceVertex(Node oldVersion, Node newVersion);
+
+    /**
+     * Zamění hrany.
+     * @param oldVersion stará verze
+     * @param newVersion nová verze
+     */
+    void replaceEdge(Arc oldVersion, Arc newVersion);
+
+    /**
+     * <p>Odstraní uzly a přilehlé hrany.</p>
+     * <p>Pro zachování konzistence grafu je nutné, aby byly odstraněny všechny související uzly!</p>
+     * 
+     * @param purged odstraněné uzly
+     */
+    void purge(Set<? extends Node> purged);
 }

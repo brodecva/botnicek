@@ -25,41 +25,17 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.AutonomousComponent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitable;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 
 /**
- * Rozhraní sítě dovoluje kromě přístupu k jejím částem (hrany a uzly) též tyto části přidávat a odebírat. Též poskytuje odkaz na rodičovský systém.
+ * Rozhraní sítě dovoluje přidávat nové prvky a dotazovat se na jejich okolí. Též poskytuje odkaz na rodičovský systém.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface Network extends AutonomousComponent, Visitable {
-
-    /**
-     * Vrátí dostupné vstupní uzly této sítě pro zanoření výpočtu do ní.
-     * 
-     * @return dostupné vstupní uzly této sítě pro zanoření výpočtu do ní
-     */
-    Set<EnterNode> getAvailableReferences();
-
-    /**
-     * Vrátí hranu v síti daného názvu.
-     * 
-     * @param name název hrany 
-     * @return hrana
-     */
-    Arc getArc(NormalWord name);
-
-    /**
-     * Vrátí uzel v síti daného názvu.
-     * 
-     * @param name název uzlu 
-     * @return uzel
-     */
-    Node getNode(NormalWord name);
 
     /**
      * Vrátí hrany napojené na uzel v síti.
@@ -110,13 +86,6 @@ public interface Network extends AutonomousComponent, Visitable {
     UUID getId();
 
     /**
-     * Odebere hranu sítě.
-     * 
-     * @param name název odebírané hrany
-     */
-    void removeArc(final NormalWord name);
-
-    /**
      * Přidá výchozí typ hrany mezi uzly sítě.
      * 
      * @param name název nové hrany
@@ -126,26 +95,12 @@ public interface Network extends AutonomousComponent, Visitable {
     void addArc(final NormalWord name, final NormalWord fromName, NormalWord toName);
 
     /**
-     * Odebere uzel sítě.
-     * 
-     * @param name název odebraného uzlu
-     */
-    void removeNode(final NormalWord name);
-
-    /**
      * Přidá izolovaný uzel do sítě.
      * 
      * @param x souřadnice nového uzlu na ose x
      * @param y souřadnice nového uzlu na ose y
      */
     void addNode(final int x, final int y);
-
-    /**
-     * Přejmenuje síť.
-     * 
-     * @param name název sítě
-     */
-    void setName(final String name);
 
     /**
      * Indikuje, zda-li první uzel v daném směru sousedí s druhým.

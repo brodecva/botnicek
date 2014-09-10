@@ -18,6 +18,9 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.types;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import com.google.common.base.Preconditions;
@@ -115,5 +118,17 @@ public final class Priority implements Serializable {
     @Override
     public String toString() {
         return "Priority [value=" + value + "]";
+    }
+    
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+        
+        Preconditions.checkArgument(this.value >= 0);
+    }
+
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
     }
 }

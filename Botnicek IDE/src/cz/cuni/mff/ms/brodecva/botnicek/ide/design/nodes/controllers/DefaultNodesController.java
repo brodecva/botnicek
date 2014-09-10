@@ -37,6 +37,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.events.NodeRenamedListe
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.events.NodeTypeChangedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.events.NodeTypeChangedListener;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.DispatchNode;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.FunctionalNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InputNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.OrderedNode;
@@ -48,6 +49,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.AbstractController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
 
 /**
  * Výchozí implementace řadiče.
@@ -182,10 +184,10 @@ public class DefaultNodesController extends AbstractController<NodesView> implem
         toggleNodeType(nodeName, CYCLIC_NODE_DISPATCH_TYPES);
     }
     
-    private void toggleNodeType(final NormalWord name, final Iterable<? extends Class<? extends Node>> types) {
+    private void toggleNodeType(final NormalWord name, final Iterable<? extends Class<? extends FunctionalNode>> types) {
         final Node node = this.system.getNode(name);
         
-        final UnmodifiableIterator<? extends Class<? extends Node>> cyclicUnmodifiableIterator = Iterators.unmodifiableIterator(types.iterator());
+        final UnmodifiableIterator<? extends Class<? extends FunctionalNode>> cyclicUnmodifiableIterator = Iterators.unmodifiableIterator(types.iterator());
         Optional<?> visited = Optional.absent();
         while (cyclicUnmodifiableIterator.hasNext()) {
             final Class<? extends Node> type = cyclicUnmodifiableIterator.next();
@@ -209,7 +211,7 @@ public class DefaultNodesController extends AbstractController<NodesView> implem
     public void rename(final NormalWord nodeName, final String proposedName) {
         Preconditions.checkNotNull(nodeName);
         Preconditions.checkNotNull(proposedName);
-        Preconditions.checkArgument(!proposedName.isEmpty());
+        Preconditions.checkArgument(!proposedName.isEmpty(), ExceptionLocalizer.print("ProposedNodeNameEmpty"));
         
         final NormalWord normalName = NormalWords.from(proposedName);
         

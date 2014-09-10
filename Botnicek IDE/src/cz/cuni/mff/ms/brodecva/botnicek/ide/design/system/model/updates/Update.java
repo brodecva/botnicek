@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model;
+package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.updates;
 
 import java.util.Map;
 import java.util.Set;
@@ -24,9 +24,10 @@ import java.util.Set;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.RecurentArc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 
 /**
- * Reprezentace nutné aktualizace prvků systému po strukturální změně (přidání, odebrání uzlu či hrany).
+ * Reprezentace nutné aktualizace prvků systému po strukturální změně (přidání, odebrání uzlu či hrany), jež byla vyvolána jinou strukturální změnou.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -34,11 +35,11 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 public interface Update {
 
     /**
-     * Vrátí odblokované uzly, které byly dříve blokované odkazy z odstraněných uzlů.
+     * Vrátí odstraněné odkazující hrany.
      * 
-     * @return odblokované uzly, které byly dříve blokované odkazy z odstraněných uzlů
+     * @return odstraněné odkazující hrany
      */
-    Map<EnterNode, RecurentArc> getReferencesRemoved();
+    Set<RecurentArc> getReferencesRemoved();
 
     /**
      * Vrátí nově přidané vstupní uzly.
@@ -59,10 +60,12 @@ public interface Update {
      * 
      * @return náhrady uzlu za uzel
      */
-    Set<NodeSwitch> getAffected();
+    Map<Node, Node> getSwitched();
 
     /**
-     * @return odstranění nepořádku
+     * Vrátí odebrané hrany.
+     * 
+     * @return odebrané hrany
      */
     Set<Arc> getEdgesRemoved();
 

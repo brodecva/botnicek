@@ -64,6 +64,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.I
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.IsolatedProcessingNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.FramedComponent;
@@ -244,18 +245,15 @@ public final class NodeUI extends FramedComponent implements DragFinishedListene
     }
     
     private void attemptToRename() {
-        while (true) {
-            final Object newNameInput = JOptionPane.showInputDialog(this, UiLocalizer.print("NODE_RENAME_MESSAGE"), UiLocalizer.print("NODE_RENAME_TITLE_CONTENT"), JOptionPane.PLAIN_MESSAGE, Intended.<Icon>nullReference(), Intended.arrayNull(), getName());
-            if (Components.hasUserCanceledInput(newNameInput)) {
-                return;
-            }
-            
-            try {
-                rename(newNameInput.toString());
-                return;
-            } catch (final IllegalArgumentException ex) {
-                continue;
-            }
+        final Object newNameInput = JOptionPane.showInputDialog(this, UiLocalizer.print("NODE_RENAME_MESSAGE"), UiLocalizer.print("NODE_RENAME_TITLE_CONTENT"), JOptionPane.PLAIN_MESSAGE, Intended.<Icon>nullReference(), Intended.arrayNull(), getName());
+        if (Components.hasUserCanceledInput(newNameInput)) {
+            return;
+        }
+        
+        try {
+            rename(newNameInput.toString());
+        } catch (final IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ExceptionLocalizer.print("NodeRenameError") + " " + ex.getMessage(), UiLocalizer.print("NodeRenameErrorTitle"), JOptionPane.ERROR_MESSAGE);
         }
     }
 

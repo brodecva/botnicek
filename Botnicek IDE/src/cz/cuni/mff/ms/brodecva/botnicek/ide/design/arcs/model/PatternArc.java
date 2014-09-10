@@ -18,6 +18,10 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
@@ -34,6 +38,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
  * @version 1.0
  */
 public final class PatternArc extends AbstractCodeArc {
+    
+    private static final long serialVersionUID = 1L;
     
     private final MixedPattern pattern;
     private final MixedPattern that;
@@ -134,5 +140,18 @@ public final class PatternArc extends AbstractCodeArc {
                 + getNetwork() + ", getFrom()=" + getFrom() + ", getTo()="
                 + getTo() + ", getPriority()=" + getPriority() + ", pattern="
                 + pattern + ", that=" + that + "]";
+    }
+    
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+        
+        Preconditions.checkNotNull(this.pattern);
+        Preconditions.checkNotNull(this.that);
+    }
+
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
     }
 }

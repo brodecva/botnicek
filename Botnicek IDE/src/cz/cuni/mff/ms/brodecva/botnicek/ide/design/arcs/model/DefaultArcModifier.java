@@ -18,8 +18,13 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
@@ -33,7 +38,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultArcModifier implements ArcModifier {
+public class DefaultArcModifier implements ArcModifier, Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     /**
      * Název tovární metody.
@@ -107,5 +114,15 @@ public class DefaultArcModifier implements ArcModifier {
         }
         
         throw new NoSuchMethodException();
+    }
+    
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+    }
+
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
     }
 }

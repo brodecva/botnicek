@@ -25,6 +25,8 @@ import org.junit.runners.Suite.SuiteClasses;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWordsTest;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.PatternsTest;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.DefaultArcModifierTest;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraphTest;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemTest;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultNodeTopicFactoryTest;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserverTest;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultDispatchProcessorTest;
@@ -44,6 +46,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultTestProc
         DefaultNodeTopicFactoryTest.class, DefaultDispatchProcessorTest.class,
         DefaultProceedProcessorTest.class, DefaultStackProcessorTest.class,
         DefaultTestProcessorTest.class, NormalWordsTest.class,
-        PatternsTest.class, DefaultArcModifierTest.class })
+        PatternsTest.class, DefaultArcModifierTest.class,
+        DefaultSystemGraphTest.class, DefaultSystemTest.class })
 public final class AllUnitPowerMockTests {
 }

@@ -18,12 +18,15 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations;
 
+import java.io.ObjectStreamException;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableTable.Builder;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
 
@@ -50,8 +53,26 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Tables;
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultNodeModifier implements NodeModifier {
+public class DefaultNodeModifier implements NodeModifier, Serializable {
     
+    private static final class DefaultNodeModifiterSerializationProxy implements Serializable {
+        private static final long serialVersionUID = 1L;
+        
+        private final Map< Class<? extends Node>, Map<Class<? extends Node>, Class<? extends Node>> > changes;
+        
+        public DefaultNodeModifiterSerializationProxy(final Map< Class<? extends Node>, Map<Class<? extends Node>, Class<? extends Node>> > changes) {
+            this.changes = changes;
+        }
+        
+        private Object readResolve() throws ObjectStreamException {
+            Preconditions.checkNotNull(this.changes);
+            
+            return new DefaultNodeModifier(this.changes);
+        }
+    }
+    
+    private static final long serialVersionUID = 1L;
+
     /**
      * Název tovární metody uzlů.
      */
@@ -289,5 +310,9 @@ public class DefaultNodeModifier implements NodeModifier {
     @Override
     public Node change(Node node, int x, int y) {
         return change(node, node.getName(), x, y, node.getClass());
+    }
+
+    private Object writeReplace() throws ObjectStreamException {
+        return new DefaultNodeModifiterSerializationProxy(ImmutableMap.copyOf(changes.rowMap()));
     }
 }

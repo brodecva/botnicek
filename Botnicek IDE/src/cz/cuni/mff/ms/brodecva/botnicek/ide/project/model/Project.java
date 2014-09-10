@@ -20,11 +20,9 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.project.model;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInput;
@@ -32,6 +30,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.io.Writer;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -94,16 +93,90 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.SimpleNormalizer;
  * @author Václav Brodec
  * @version 1.0
  */
-public class Project implements Serializable {
+public final class Project {
+    
+    private final static class ProjectSerializationProxy implements Serializable {
+        private static final long serialVersionUID = 1L;
+        
+        private final NamingAuthority statesNamingAuthority;
+        private final NamingAuthority predicatesNamingAuthority;
+        private final RendererFactory rendererFactory;
+        private final CompilerFactory compilerFactory;
+        private final RuntimeFactory runtimeFactory;
+        private final Printer printer;
+        private final System system;
+        private final WriterFactory unitWriterFactory; 
+        private final Settings settings;
+        private final RuntimeSettings runtimeSettings;
+        
+        public ProjectSerializationProxy(final NamingAuthority statesNamingAuthority,
+                final NamingAuthority predicatesNamingAuthority,
+                final RendererFactory rendererFactory,
+                final CompilerFactory compilerFactory,
+                final RuntimeFactory runtimeFactory,
+                final Printer printer,
+                final System system,
+                final WriterFactory unitWriterFactory,                
+                final Settings settings,
+                final RuntimeSettings runtimeSettings) {
+            this.system = system;
+            this.statesNamingAuthority = statesNamingAuthority;
+            this.predicatesNamingAuthority = predicatesNamingAuthority;
+            this.settings = settings;
+            this.runtimeSettings = runtimeSettings;
+            this.compilerFactory = compilerFactory;
+            this.rendererFactory = rendererFactory;
+            this.runtimeFactory = runtimeFactory;
+            this.printer = printer;
+            this.unitWriterFactory = unitWriterFactory;
+        }
 
-    private static final long serialVersionUID = 1L;
+        public NamingAuthority getStatesNamingAuthority() {
+            return statesNamingAuthority;
+        }
 
+        public NamingAuthority getPredicatesNamingAuthority() {
+            return predicatesNamingAuthority;
+        }
+
+        public RendererFactory getRendererFactory() {
+            return rendererFactory;
+        }
+
+        public CompilerFactory getCompilerFactory() {
+            return compilerFactory;
+        }
+
+        public RuntimeFactory getRuntimeFactory() {
+            return runtimeFactory;
+        }
+
+        public Printer getPrinter() {
+            return printer;
+        }
+
+        public System getSystem() {
+            return system;
+        }
+
+        public WriterFactory getUnitWriterFactory() {
+            return unitWriterFactory;
+        }
+
+        public Settings getSettings() {
+            return settings;
+        }
+
+        public RuntimeSettings getRuntimeSettings() {
+            return runtimeSettings;
+        }
+    }
+    
     /**
      * Rezervovaný název exportního souboru knihovny.
      */
     public static final String RESERVED_LIBRARY_NAME = "botnicek";
     
-    private final Dispatcher dispatcher;
     private final NamingAuthority statesNamingAuthority;
     private final NamingAuthority predicatesNamingAuthority;
     private final RendererFactory rendererFactory;
@@ -111,9 +184,13 @@ public class Project implements Serializable {
     private final RuntimeFactory runtimeFactory;
     private final Printer printer;
     private final System system;
+    private final WriterFactory unitWriterFactory; 
+    
+    private final Dispatcher dispatcher;
     
     private Settings settings;
-    private RuntimeSettings runtimeSettings;    
+    private RuntimeSettings runtimeSettings;
+    
 
     /**
      * Vytvoří projekt z daných závislostí.
@@ -128,14 +205,11 @@ public class Project implements Serializable {
      * @param printer formátovač kódu
      * @param compilerFactory  továrna na překlad systému sítí do jazyka AIML
      * @param runtimeFactory továrna na běhové prostředí botů
+     * @param unitWriterFactory továrna na zapisovače jednotek s generovaným kódem
      * @return projekt
      */
-    static Project create(final System system, final NamingAuthority statesNamingAuthority, final NamingAuthority predicatesNamingAuthority, final Dispatcher dispatcher, final Settings settings, final RuntimeSettings runtimeSettings, final RendererFactory rendererFactory, final Printer printer, final CompilerFactory compilerFactory, final RuntimeFactory runtimeFactory) {
-        final Project newInstance = new Project(system, statesNamingAuthority, predicatesNamingAuthority, dispatcher, settings, runtimeSettings, rendererFactory, printer, compilerFactory, runtimeFactory);
-        
-        dispatcher.fire(ProjectOpenedEvent.create(newInstance));
-        
-        return newInstance;
+    public static Project create(final System system, final NamingAuthority statesNamingAuthority, final NamingAuthority predicatesNamingAuthority, final Dispatcher dispatcher, final Settings settings, final RuntimeSettings runtimeSettings, final RendererFactory rendererFactory, final Printer printer, final CompilerFactory compilerFactory, final RuntimeFactory runtimeFactory, WriterFactory unitWriterFactory) {
+        return new Project(system, statesNamingAuthority, predicatesNamingAuthority, dispatcher, settings, runtimeSettings, rendererFactory, printer, compilerFactory, runtimeFactory, unitWriterFactory);
     }
     
     /**
@@ -145,7 +219,7 @@ public class Project implements Serializable {
      * @param dispatcher vysílač událostí
      * @return výchozí projekt
      */
-    public static Project create(final String name, final Dispatcher dispatcher) {        
+    public static Project createAndOpen(final String name, final Dispatcher dispatcher) {        
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(dispatcher);
         Preconditions.checkArgument(!name.isEmpty());
@@ -172,22 +246,26 @@ public class Project implements Serializable {
         
         predicatesNamingAuthority.use(NormalWords.join(settings.getPrefix(), settings.getTestingPredicate()).getText());
         
-        return create(system, statesNamingAuthority, predicatesNamingAuthority, dispatcher, settings, runtimeSettings, rendererFactory, printer, compilerFactory, runtimeFactory);
+        final Project newInstance = create(system, statesNamingAuthority, predicatesNamingAuthority, dispatcher, settings, runtimeSettings, rendererFactory, printer, compilerFactory, runtimeFactory, BufferedFileWriterFactory.create());
+        dispatcher.fire(ProjectOpenedEvent.create(newInstance));
+        return newInstance;
     }
     
     /**
      * Načte projekt z umístění.
      * 
      * @param projectPath cesta k souboru s projektem
+     * @param dispatcher TODO
      * @return načtený projekt
      * @throws IOException pokud dojde k chybě při otevírání či načítání
      * @throws ClassNotFoundException pokud je otevřená definice projektu nekompatibilní
      */
-    public static Project open(final Path projectPath) throws IOException, ClassNotFoundException {
-        Preconditions.checkNotNull(projectPath.toFile());
+    public static Project open(final Path projectPath, final Dispatcher dispatcher) throws IOException, ClassNotFoundException {
+        Preconditions.checkNotNull(projectPath);
+        Preconditions.checkNotNull(dispatcher);
         
         try (final InputStream fileInput = new FileInputStream(projectPath.toFile())) {
-            return open(fileInput);
+            return open(fileInput, dispatcher);
         } catch (final FileNotFoundException e) {
             throw e;
         }
@@ -197,23 +275,27 @@ public class Project implements Serializable {
      * Načte projekt ze vstupního proudu.
      * 
      * @param inputStream vstupní proud
+     * @param dispatcher rozesílač událostí
      * @return načtený projekt
      * @throws IOException pokud dojde k chybě při otevírání či načítání
      * @throws ClassNotFoundException pokud je otevřená definice projektu nekompatibilní
      */
-    public static Project open(final InputStream inputStream) throws IOException, ClassNotFoundException {
+    public static Project open(final InputStream inputStream, final Dispatcher dispatcher) throws IOException, ClassNotFoundException {
         Preconditions.checkNotNull(inputStream);
+        Preconditions.checkNotNull(dispatcher);
         
         try (final InputStream inputBuffer = new BufferedInputStream(inputStream);
             final ObjectInput objectInput = new ObjectInputStream(inputBuffer)) {
             
-            final Project loaded = (Project) objectInput.readObject();
+            final ProjectSerializationProxy loadedProxy = (ProjectSerializationProxy) objectInput.readObject();
+            final Project loaded = new Project(loadedProxy, dispatcher);
+            
             loaded.dispatcher.fire(ProjectOpenedEvent.create(loaded));
             return loaded;
         }
     }
 
-    private Project(final System system, final NamingAuthority statesNamingAuthority, final NamingAuthority predicatesNamingAuthority, final Dispatcher dispatcher, final Settings settings, final RuntimeSettings runtimeSettings, final RendererFactory rendererFactory, final Printer printer, final CompilerFactory compilerFactory, final RuntimeFactory runtimeFactory) {
+    private Project(final System system, final NamingAuthority statesNamingAuthority, final NamingAuthority predicatesNamingAuthority, final Dispatcher dispatcher, final Settings settings, final RuntimeSettings runtimeSettings, final RendererFactory rendererFactory, final Printer printer, final CompilerFactory compilerFactory, final RuntimeFactory runtimeFactory, final WriterFactory unitWriterFactory) {
         Preconditions.checkNotNull(system);
         Preconditions.checkNotNull(statesNamingAuthority);
         Preconditions.checkNotNull(predicatesNamingAuthority);
@@ -233,7 +315,7 @@ public class Project implements Serializable {
         Preconditions.checkArgument(statesNamingAuthority.isUsed(NormalWords.join(settings.getPrefix(), settings.getFailState()).getText()));
         
         Preconditions.checkArgument(predicatesNamingAuthority.isUsed(NormalWords.join(settings.getPrefix(), settings.getTestingPredicate()).getText()));
-
+        
         this.system = system;
         this.statesNamingAuthority = statesNamingAuthority;
         this.predicatesNamingAuthority = predicatesNamingAuthority;
@@ -244,6 +326,23 @@ public class Project implements Serializable {
         this.rendererFactory = rendererFactory;
         this.runtimeFactory = runtimeFactory;
         this.printer = printer;
+        this.unitWriterFactory = unitWriterFactory;
+    }
+
+    private Project(final ProjectSerializationProxy loadedProxy, final Dispatcher dispatcher) {
+        this(loadedProxy.getSystem(),
+                loadedProxy.getStatesNamingAuthority(),
+                loadedProxy.getPredicatesNamingAuthority(),
+                dispatcher,
+                loadedProxy.getSettings(),
+                loadedProxy.getRuntimeSettings(),
+                loadedProxy.getRendererFactory(),
+                loadedProxy.getPrinter(),
+                loadedProxy.getCompilerFactory(),
+                loadedProxy.getRuntimeFactory(),
+                loadedProxy.getUnitWriterFactory());
+        
+        this.system.setDispatcher(dispatcher);
     }
 
     /**
@@ -276,7 +375,7 @@ public class Project implements Serializable {
         
         try (final ObjectOutputStream objectOutput =
                         new ObjectOutputStream(outputStream)) {
-            objectOutput.writeObject(this);
+            objectOutput.writeObject(new ProjectSerializationProxy(statesNamingAuthority, predicatesNamingAuthority, rendererFactory, compilerFactory, runtimeFactory, printer, system, unitWriterFactory, settings, runtimeSettings));
         } catch (final IOException e) {
             throw e;
         }
@@ -324,24 +423,15 @@ public class Project implements Serializable {
         return result;
     }
 
-    /**
-     * Vygeneruje kód z obsahu a uloží pod daným popisem jako soubor do adresáře.
-     * 
-     * @param description popis souboru
-     * @param content zdroj obsahu souboru
-     * @param render generátor kódu ze zdroje
-     * @param directory umístění souboru
-     * @throws IOException pokud dojde k chybě při zápisu
-     */
-    void exportUnit(final String description, final List<Topic> content,
+    private void exportUnit(final String description, final List<Topic> content,
             final Renderer render, final Path directory) throws IOException {
         final String text = render(render, content);
         final String formatted = format(text);
         
-        final String fileName =
+        final String unitName =
                 String.format("%1s$.%2s$", description, AIML.FILE_SUFFIX);
         
-        writeUnit(directory, fileName, formatted);
+        writeUnit(directory, unitName, formatted);
     }
 
     /**
@@ -365,19 +455,14 @@ public class Project implements Serializable {
      * Zapíše do adresáře soubor daného jména s dodaným obsahem.
      * 
      * @param directory adresář
-     * @param fileName jméno souboru
+     * @param unitName jméno souboru
      * @param text obsah
      * @throws IOException pokud dojde k chybě při zápisu
      */
-    void writeUnit(final Path directory, final String fileName,
+    private void writeUnit(final Path directory, final String unitName,
             final String text) throws IOException {
-        final Path filePath = directory.resolve(fileName);
-        try (final FileWriter fileOutput = new FileWriter(filePath.toFile());
-                final BufferedWriter outputBuffer =
-                        new BufferedWriter(fileOutput)) {
+        try (final Writer outputBuffer = this.unitWriterFactory.produce(directory, unitName)) {
             outputBuffer.write(text);
-        } catch (final IOException e) {
-            throw e;
         }
     }
     
@@ -400,17 +485,17 @@ public class Project implements Serializable {
      * Načte příslušná témata sítí z objektového modelu a knihoven do běhového prostředí.
      * 
      * @param runtime běhové prostředí
-     * @param metastructure sítě a jejich témata, která budou zpracována generátorem kódu
+     * @param metaStructure sítě a jejich témata, která budou zpracována generátorem kódu
      * @throws RunException pokud dojde k chybě při inicializaci
      */
     private void loadToRuntime(final Runtime runtime,
-            final Map<Network, List<Topic>> metastructure) throws RunException {
+            final Map<Network, List<Topic>> metaStructure) throws RunException {
         final Renderer renderer = this.rendererFactory.produce(this.settings.getNamespacesToPrefixes());
         
         try {
-            for (final Entry<Network, List<Topic>> unit : metastructure.entrySet()) {
+            for (final Entry<Network, List<Topic>> unit : metaStructure.entrySet()) {
                 final Network network = unit.getKey(); 
-                final List<? extends Toplevel> content = unit.getValue();
+                final List<Topic> content = unit.getValue();
     
                 loadUnit(network.getName(), content, renderer, runtime);
             }
@@ -462,7 +547,9 @@ public class Project implements Serializable {
      */
     private String render(final Renderer renderer,
             final List<? extends Toplevel> content) {
-        final String text = renderer.render(Aiml.create(content, this.settings.getNamespacesToPrefixes()));
+        final Aiml root = Aiml.create(content, this.settings.getNamespacesToPrefixes());
+        final String text = renderer.render(root);
+        
         return text;
     }
 

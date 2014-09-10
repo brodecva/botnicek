@@ -31,6 +31,8 @@ import com.google.common.collect.ImmutableSet;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.controllers.CodeValidationController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.controllers.DefaultCodeValidationController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.CodeChecker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.controllers.DefaultMixedPatternValidationController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.controllers.MixedPatternValidationController;
@@ -124,6 +126,8 @@ public class DefaultProjectController extends AbstractController<ProjectView>
             final Map<URI, String> namespacesToPrefixes =
                     opened.getSettings().getNamespacesToPrefixes();
 
+            final CodeChecker codeChecker = DefaultCodeChecker.create(botSettings, languageSettings, namespacesToPrefixes);
+            
             final AvailableReferencesController availableReferencesController =
                     DefaultAvailableReferencesController.create(system,
                             eventManager);
@@ -131,15 +135,14 @@ public class DefaultProjectController extends AbstractController<ProjectView>
                     DefaultNormalWordValidationController.create(
                             system.getStatesNamingAuthority(), eventManager);
             final CodeValidationController codeValidationController =
-                    DefaultCodeValidationController.create(botSettings,
-                            languageSettings, namespacesToPrefixes,
+                    DefaultCodeValidationController.create(codeChecker,
                             eventManager);
             final SimplePatternValidationController simplePatternValidationController =
                     DefaultSimplePatternValidationController
                             .create(eventManager);
             final MixedPatternValidationController mixedPatternValidationController =
                     DefaultMixedPatternValidationController
-                            .create(eventManager);
+                            .create(codeChecker, eventManager);
             final NormalWordValidationController predicateValidationController =
                     DefaultNormalWordValidationController
                             .create(system.getPredicatesNamingAuthority(),
@@ -428,7 +431,7 @@ public class DefaultProjectController extends AbstractController<ProjectView>
             ClassNotFoundException, IOException {
         Preconditions.checkNotNull(projectPath);
 
-        this.currentProject = Optional.of(Project.open(projectPath));
+        this.currentProject = Optional.of(Project.open(projectPath, getEventManager()));
     }
 
     /*
@@ -476,7 +479,7 @@ public class DefaultProjectController extends AbstractController<ProjectView>
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(name.isEmpty());
 
-        final Project newProject = Project.create(name, getEventManager());
+        final Project newProject = Project.createAndOpen(name, getEventManager());
         this.currentProject = Optional.of(newProject);
     }
 

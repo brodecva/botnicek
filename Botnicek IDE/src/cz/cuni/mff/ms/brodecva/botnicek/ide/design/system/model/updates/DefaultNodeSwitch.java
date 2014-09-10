@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model;
+package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.updates;
 
 import com.google.common.base.Preconditions;
 
@@ -28,7 +28,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
  * @author Václav Brodec
  * @version 1.0
  */
-final class DefaultNodeSwitch implements NodeSwitch {
+public final class DefaultNodeSwitch implements NodeSwitch {
     private final Node from;
     private final Node to;
     

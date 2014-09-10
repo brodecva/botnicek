@@ -28,7 +28,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.SimplePatternChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 
@@ -57,7 +56,7 @@ public class PatternsTest {
         EasyMock.replay(validCheckResultStub);
         
         final SimplePatternChecker checkerStub = EasyMock.createStrictMock(SimplePatternChecker.class);
-        EasyMock.expect(checkerStub.check(EasyMock.notNull(Source.class), EasyMock.notNull(), EasyMock.eq(VALID_PATTERN_TEXT))).andStubReturn(validCheckResultStub);
+        EasyMock.expect(checkerStub.check(VALID_PATTERN_TEXT)).andStubReturn(validCheckResultStub);
         EasyMock.replay(checkerStub);
         Whitebox.setInternalState(Patterns.class, "checker", checkerStub);
         
@@ -78,14 +77,16 @@ public class PatternsTest {
         EasyMock.replay(invalidCheckResultStub);
         
         final SimplePatternChecker checkerStub = EasyMock.createStrictMock(SimplePatternChecker.class);
-        EasyMock.expect(checkerStub.check(EasyMock.notNull(Source.class), EasyMock.notNull(), EasyMock.eq(INVALID_PATTERN_TEXT))).andStubReturn(invalidCheckResultStub);
+        EasyMock.expect(checkerStub.check(INVALID_PATTERN_TEXT)).andStubReturn(invalidCheckResultStub);
         EasyMock.replay(checkerStub);
         Whitebox.setInternalState(Patterns.class, "checker", checkerStub);
         
-        Patterns.create(INVALID_PATTERN_TEXT);
-        
-        EasyMock.verify(invalidCheckResultStub);
-        EasyMock.verify(checkerStub);
+        try {
+            Patterns.create(INVALID_PATTERN_TEXT);
+        } finally {
+            EasyMock.verify(invalidCheckResultStub);
+            EasyMock.verify(checkerStub);
+        }
     }
     
     /**

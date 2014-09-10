@@ -18,6 +18,8 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.print;
 
+import java.io.ObjectStreamException;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -27,6 +29,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -38,7 +41,24 @@ import com.google.common.base.Preconditions;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultPrettyPrinter implements Printer {
+public final class DefaultPrettyPrinter implements Printer, Serializable {
+    
+    private static final class DefaultPrettyPrinterSerializationProxy implements Serializable {
+        private static final long serialVersionUID = 1L;
+        
+        private final int indentation;
+        
+        public DefaultPrettyPrinterSerializationProxy(final int indentation) {
+            this.indentation = indentation;
+        }
+        
+        private Object readResolve() throws ObjectStreamException {
+            return DefaultPrettyPrinter.create(indentation);
+        }
+    }
+    
+    private static final long serialVersionUID = 1L;
+
     /**
      * Výchozí velikost odsazení ve znacích.
      */
@@ -48,6 +68,7 @@ public final class DefaultPrettyPrinter implements Printer {
     private static final String INDENT_NUMBER_OPTION_NAME = "indent-number";
     
     private final Transformer transformer;
+    private final int indentation;
     
     /**
      * Vytvoří formátovač s výchozím nastavením velikost odsazení.
@@ -69,6 +90,13 @@ public final class DefaultPrettyPrinter implements Printer {
     public static DefaultPrettyPrinter create(final int indent) throws PrintConfigurationException {
         Preconditions.checkArgument(indent >= 0);
         
+        final Transformer transformer = initializeTransformer(indent);
+        
+        return new DefaultPrettyPrinter(transformer, indent);
+    }
+
+    private static Transformer initializeTransformer(final int indent)
+            throws TransformerFactoryConfigurationError {
         final TransformerFactory transformerFactory = TransformerFactory.newInstance();
         transformerFactory.setAttribute(INDENT_NUMBER_OPTION_NAME, indent);
         
@@ -81,14 +109,12 @@ public final class DefaultPrettyPrinter implements Printer {
         
         transformer.setOutputProperty(OutputKeys.INDENT, ENABLE_OPTION_VALUE);
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, ENABLE_OPTION_VALUE);
-        
-        return new DefaultPrettyPrinter(transformer);
+        return transformer;
     }
     
-    private DefaultPrettyPrinter(final Transformer transformer) {
-        Preconditions.checkNotNull(transformer);
-        
+    private DefaultPrettyPrinter(final Transformer transformer, final int indentation) {
         this.transformer = transformer;
+        this.indentation = indentation;
     }
 
     /* (non-Javadoc)
@@ -116,4 +142,7 @@ public final class DefaultPrettyPrinter implements Printer {
         return xmlOutput.getWriter().toString();
     }
 
+    private Object writeReplace() throws ObjectStreamException {
+        return new DefaultPrettyPrinterSerializationProxy(this.indentation);
+    }
 }

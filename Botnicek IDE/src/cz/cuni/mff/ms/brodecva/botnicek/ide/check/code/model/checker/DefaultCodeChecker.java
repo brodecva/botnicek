@@ -20,16 +20,17 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker;
 
 import java.io.ByteArrayInputStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Iterables;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
@@ -55,11 +56,12 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.storage.map.FrugalMapperFactory;
  * 
  * @author Václav Brodec
  * @version 1.0
+ * @see Code
  */
 public final class DefaultCodeChecker implements CodeChecker, Source {
     private static final String MESSAGE_PARTS_SEPARATOR = ";";
     private static final String CHECK_DOCUMENT_TEMPLATE_PART_ONE = "<?xml version=\"1.0\"?>" +
-            "<%1$saiml %2$s%1$sversion=\"1.0.1\" %3$sschemaLocation=\"%4$s\">"+ 
+            "<%1$saiml %2$sversion=\"1.0.1\" %3$sschemaLocation=\"%4$s\">"+ 
             "<%1$scategory><%1$spattern>CHECK</%1$spattern><%1$sthat>CHECK</%1$sthat>\n";
     private static final String TEMPLATE = "<%1$stemplate>";
     private static final String CHECK_DOCUMENT_TEMPLATE_PART_TWO = "%5$s</%1$stemplate></%1$scategory></%1$saiml>";
@@ -97,10 +99,10 @@ public final class DefaultCodeChecker implements CodeChecker, Source {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.editor.checker.CodeChecker#check(java.lang.String)
      */
     @Override
-    public CheckResult check(final Source source, Object subject, final String snippetContent) {
+    public CheckResult check(final Source source, Object subject, final String content) {
         Preconditions.checkNotNull(source);
         Preconditions.checkNotNull(subject);
-        Preconditions.checkNotNull(snippetContent);
+        Preconditions.checkNotNull(content);
         
         final String aimlPrefix = this.namespacesToPrefixes.get(URI.create(AIML.NAMESPACE_URI.getValue()));
         final String aimlPrefixSeparated = aimlPrefix + (aimlPrefix.isEmpty() ? "" : ":");
@@ -116,9 +118,9 @@ public final class DefaultCodeChecker implements CodeChecker, Source {
             prefixDefinitions.append("xmlns" + (prefix.isEmpty() ? "" : ":") + prefix + "=\"" + namespace + "\" ");
         }
                 
-        final String testedDocumentPartOne = String.format(CHECK_DOCUMENT_TEMPLATE_PART_ONE, aimlPrefixSeparated, prefixDefinitions.toString(), aimlSchemaPrefixSeparated, AIML.BACKUP_SCHEMA_LOCATION.getValue(), snippetContent);
-        final String template = String.format(TEMPLATE, aimlPrefixSeparated, prefixDefinitions.toString(), aimlSchemaPrefixSeparated, AIML.BACKUP_SCHEMA_LOCATION.getValue(), snippetContent);
-        final String testedDocumentPartTwo = String.format(CHECK_DOCUMENT_TEMPLATE_PART_TWO, aimlPrefixSeparated, prefixDefinitions.toString(), aimlSchemaPrefixSeparated, AIML.BACKUP_SCHEMA_LOCATION.getValue(), snippetContent);
+        final String testedDocumentPartOne = String.format(CHECK_DOCUMENT_TEMPLATE_PART_ONE, aimlPrefixSeparated, prefixDefinitions.toString(), aimlSchemaPrefixSeparated, AIML.BACKUP_SCHEMA_LOCATION.getValue(), content);
+        final String template = String.format(TEMPLATE, aimlPrefixSeparated, prefixDefinitions.toString(), aimlSchemaPrefixSeparated, AIML.BACKUP_SCHEMA_LOCATION.getValue(), content);
+        final String testedDocumentPartTwo = String.format(CHECK_DOCUMENT_TEMPLATE_PART_TWO, aimlPrefixSeparated, prefixDefinitions.toString(), aimlSchemaPrefixSeparated, AIML.BACKUP_SCHEMA_LOCATION.getValue(), content);
         final String combined = testedDocumentPartOne + template + testedDocumentPartTwo;
         
         final Language language = new AIMLLanguage(languageSettings.getName(), languageSettings.getSentenceDelim(), languageSettings.getGenderSubs(), languageSettings.getPersonSubs(), languageSettings.getPerson2Subs(), languageSettings.getAbbreviationsSubs(), languageSettings.getSpellingSubs(), languageSettings.getEmoticonsSubs(), languageSettings.getInnerPunctuationSubs());
@@ -127,9 +129,13 @@ public final class DefaultCodeChecker implements CodeChecker, Source {
         try {
             final MatchingStructure filledStructure =
                     new WordTree(new FrugalMapperFactory());
-            parser.parse(new ByteArrayInputStream(combined.getBytes(Charsets.UTF_8)), "Test", filledStructure, bot);
+            parser.parse(new ByteArrayInputStream(combined.getBytes(StandardCharsets.UTF_8)), "Test", filledStructure, bot);
         } catch (final SourceParserException e) {
-            return DefaultCheckResult.fail(adjustLineNumber(e.getLineNumber()), adjustColumnNumber(e.getColumnNumber(), e.getLineNumber(), template), cutMessage(e.getMessage()), source, subject);
+            final int lineNumber = e.getLineNumber();
+            final int columnNumber = e.getColumnNumber();
+            final String message = e.getMessage();
+            
+            return DefaultCheckResult.fail(adjustLineNumber(lineNumber), adjustColumnNumber(columnNumber, lineNumber, template), cutMessage(message), source, subject);
         }
         
         return DefaultCheckResult.succeed(source, subject);

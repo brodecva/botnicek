@@ -18,6 +18,10 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
@@ -36,7 +40,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
  * @author Václav Brodec
  * @version 1.0
  */
-public abstract class AbstractNode implements Node {
+public abstract class AbstractNode implements Node, Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private final NormalWord name;
     private final Network parent;
     
@@ -253,5 +259,20 @@ public abstract class AbstractNode implements Node {
         builder.append(getClass());
         builder.append("]");
         return builder.toString();
+    }
+    
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+        
+        Preconditions.checkNotNull(this.name);
+        Preconditions.checkNotNull(this.parent);
+        Preconditions.checkArgument(x >= 0);
+        Preconditions.checkArgument(y >= 0);
+    }
+
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
     }
 }

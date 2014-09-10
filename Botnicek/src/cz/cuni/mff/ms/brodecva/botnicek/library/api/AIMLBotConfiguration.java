@@ -19,7 +19,9 @@
 package cz.cuni.mff.ms.brodecva.botnicek.library.api;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -96,12 +98,12 @@ public final class AIMLBotConfiguration implements BotConfiguration,
     /**
      * Cesta k souborům robota.
      */
-    private final Path filesLocation;
+    private final URI filesLocation;
 
     /**
      * Cesta k souboru pro zápis promluv.
      */
-    private final Path gossipPath;
+    private final URI gossipPath;
 
     /**
      * Pevné predikáty robota.
@@ -268,8 +270,8 @@ public final class AIMLBotConfiguration implements BotConfiguration,
             final List<String> beforeLoadingOrder,
             final List<String> afterLoadingOrder) {
         this.name = name;
-        this.filesLocation = filesLocation;
-        this.gossipPath = gossipPath;
+        this.filesLocation = filesLocation.toUri();
+        this.gossipPath = gossipPath.toUri();
         this.predicates = new HashMap<>(predicates);
         this.beforeLoadingOrder = new ArrayList<>(beforeLoadingOrder);
         this.afterLoadingOrder = new ArrayList<>(afterLoadingOrder);
@@ -294,7 +296,7 @@ public final class AIMLBotConfiguration implements BotConfiguration,
      */
     @Override
     public Path getFilesLocation() {
-        return filesLocation;
+        return Paths.get(filesLocation);
     }
 
     /*
@@ -305,7 +307,7 @@ public final class AIMLBotConfiguration implements BotConfiguration,
      */
     @Override
     public Path getGossipPath() {
-        return gossipPath;
+        return Paths.get(gossipPath);
     }
 
     /*

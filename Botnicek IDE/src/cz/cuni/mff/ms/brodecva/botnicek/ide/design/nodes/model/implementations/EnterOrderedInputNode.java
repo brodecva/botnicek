@@ -37,6 +37,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.OrderedNode;
  */
 public final class EnterOrderedInputNode extends AbstractNode implements OrderedNode, InputNode, EnterNode {
     
+    private static final long serialVersionUID = 1L;
+
     /**
      * Vytvoří uzel dle parametrů.
      * 

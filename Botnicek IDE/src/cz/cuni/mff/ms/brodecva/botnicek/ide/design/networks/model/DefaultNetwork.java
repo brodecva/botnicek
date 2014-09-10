@@ -18,6 +18,10 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,7 +31,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitable;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
@@ -40,7 +43,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultNetwork implements Visitable, Network {
+public final class DefaultNetwork implements Visitable, Network, Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     private final System system;
     private final UUID id;
@@ -80,17 +85,6 @@ public final class DefaultNetwork implements Visitable, Network {
     @Override
     public UUID getId() {
         return id;
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#setName(java.lang.String)
-     */
-    @Override
-    public void setName(final String name) {
-        Preconditions.checkNotNull(name);
-        Preconditions.checkArgument(!name.isEmpty());
-        
-        this.system.renameNetwork(this, name);
     }
     
     /* (non-Javadoc)
@@ -135,27 +129,11 @@ public final class DefaultNetwork implements Visitable, Network {
     }
     
     /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#removeNode(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
-     */
-    @Override
-    public void removeNode(final NormalWord name) {
-        this.system.removeNode(name);
-    }
-    
-    /* (non-Javadoc)
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#addArc(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
      */
     @Override
     public void addArc(final NormalWord name, final NormalWord fromName, NormalWord toName) {
         this.system.addArc(this, name, fromName, toName);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#removeArc(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
-     */
-    @Override
-    public void removeArc(final NormalWord name) {
-        this.system.removeArc(name);
     }
 
     /* (non-Javadoc)
@@ -188,30 +166,6 @@ public final class DefaultNetwork implements Visitable, Network {
     @Override
     public Set<Arc> getConnections(final Node node, final Direction direction) {
         return this.system.getConnections(node, direction);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getNode(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
-     */
-    @Override
-    public Node getNode(NormalWord name) {
-        return this.system.getNode(name);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getArc(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
-     */
-    @Override
-    public Arc getArc(NormalWord arcName) {
-        return this.system.getArc(arcName);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getAvailableReferences()
-     */
-    @Override
-    public Set<EnterNode> getAvailableReferences() {
-        return this.system.getAvailableReferences();
     }
     
     /* (non-Javadoc)
@@ -265,5 +219,18 @@ public final class DefaultNetwork implements Visitable, Network {
     public String toString() {
         return "DefaultNetwork [getName()=" + getName() + ", id=" + id
                 + ", system=" + system + "]";
+    }
+    
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+        
+        Preconditions.checkNotNull(this.system);
+        Preconditions.checkNotNull(this.id);
+    }
+
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
     }
 }

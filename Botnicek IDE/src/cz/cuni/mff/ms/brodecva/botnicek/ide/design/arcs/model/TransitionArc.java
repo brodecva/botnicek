@@ -18,6 +18,11 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Codes;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
@@ -31,8 +36,10 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class TransitionArc extends AbstractCodeArc {
+public final class TransitionArc extends AbstractCodeArc implements Serializable {
     
+    private static final long serialVersionUID = 1L;
+
     /**
      * Vrátí výchozí hranu sítě.
      * 
@@ -107,5 +114,15 @@ public final class TransitionArc extends AbstractCodeArc {
         return "TransitionArc [getName()=" + getName() + ", getNetwork()="
                 + getNetwork().getName() + ", getFrom()=" + getFrom().getName() + ", getTo()="
                 + getTo().getName() + ", getPriority()=" + getPriority().getValue() + "]";
+    }
+    
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+    }
+
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
     }
 }

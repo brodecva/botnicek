@@ -18,6 +18,10 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.render;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Map;
 
@@ -29,8 +33,10 @@ import com.google.common.base.Preconditions;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultRendererFactory implements RendererFactory {
+public final class DefaultRendererFactory implements RendererFactory, Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     private final RenderingVisitorFactory renderingVisitorFactory;
     
     /**
@@ -59,4 +65,15 @@ public final class DefaultRendererFactory implements RendererFactory {
         return DefaultRenderer.create(this.renderingVisitorFactory, namespacesToPrefixes);
     }
 
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+
+        Preconditions.checkNotNull(this.renderingVisitorFactory);
+    }
+
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
+    }
 }

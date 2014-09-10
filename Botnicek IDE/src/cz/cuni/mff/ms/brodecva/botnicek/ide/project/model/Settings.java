@@ -18,6 +18,11 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.project.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamException;
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Map;
 
@@ -37,8 +42,10 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.Text;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class Settings {
+public final class Settings implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     private static final Map<URI, String> DEFAULT_NAMESACES_TO_PREFIXES = ImmutableMap.of(URI.create(AIML.NAMESPACE_URI.getValue()), AIML.DEFAULT_PREFIX.getValue(), URI.create(XML.SCHEMA_NAMESPACE_URI.getValue()), XML.DEFAULT_SCHEMA_PREFIX.getValue());
     private static final NormalWord DEFAULT_PREFIX = NormalWords.of("BOTNICEK");
     private static final NormalWord DEFAULT_PULL_STATE = NormalWords.of("PULL");
@@ -261,7 +268,7 @@ public final class Settings {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        Settings other = (Settings) obj;
+        final Settings other = (Settings) obj;
         if (!failState.equals(other.failState)) {
             return false;
         }
@@ -319,5 +326,19 @@ public final class Settings {
         builder.append(testingPredicate);
         builder.append("]");
         return builder.toString();
+    }
+    
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+    }
+    
+    private Object readResolve() throws ObjectStreamException {
+        return new Settings(namespacesToPrefixes, DEFAULT_PREFIX, pullState, pullStopState, successState, failState, returnState, testingPredicate, randomizeState);
+    }
+
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
     }
 }

@@ -18,6 +18,11 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
@@ -34,7 +39,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RealignmentProces
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultRealignmentProcessor implements RealignmentProcessor {
+public class DefaultRealignmentProcessor implements RealignmentProcessor, Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     private final NodeModifier changeProcessor;
 
@@ -83,5 +90,17 @@ public class DefaultRealignmentProcessor implements RealignmentProcessor {
                 return InnerNode.class;
             }
         }
+    }
+    
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+        
+        Preconditions.checkNotNull(this.changeProcessor);
+    }
+
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
     }
 }

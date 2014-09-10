@@ -18,6 +18,10 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.HashSet;
@@ -52,8 +56,10 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
  * @param <V> typ vrcholů
  * @param <E> typ hran
  */
-public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E> {
+public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E>, Serializable {
     
+    private static final long serialVersionUID = 1L;
+
     /**
      * Spojka mezi vrcholy. Pomáhá definovat, které vrcholy jsou propojeny, aniž by se tak dělo s užitím typu hrany.
      * 
@@ -61,7 +67,9 @@ public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E> {
      * @version 1.0
      * @param <T> typ konců spojky
      */
-    private static final class Joint<T> {
+    private static final class Joint<T> implements Serializable {
+        private static final long serialVersionUID = 1L;
+        
         private T start;
         private T end;
         
@@ -115,6 +123,20 @@ public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E> {
         public String toString() {
             return "Joint [start=" + start + ", end=" + end + "]";
         }
+        
+        private void readObject(final ObjectInputStream objectInputStream)
+                throws ClassNotFoundException, IOException {
+            objectInputStream.defaultReadObject();
+            
+            Preconditions.checkNotNull(start);
+            Preconditions.checkNotNull(end);
+            Preconditions.checkArgument(!start.equals(end));
+        }
+
+        private void writeObject(final ObjectOutputStream objectOutputStream)
+                throws IOException {
+            objectOutputStream.defaultWriteObject();
+        }
     }
     
     private final Set<V> vertices = new HashSet<V>();
@@ -130,14 +152,17 @@ public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E> {
         return new DefaultDirectedGraph<>();
     }
     
-    private DefaultDirectedGraph() {
+    /**
+     * Vytvoří prázdný multigraf.
+     */
+    protected DefaultDirectedGraph() {
     }
     
     /* (non-Javadoc)
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.utils.DirectedMultigraph#add(java.lang.Object)
      */
     @Override
-    public void add(final V vertex) {
+    public final void add(final V vertex) {
         Preconditions.checkNotNull(vertex);
         
         Preconditions.checkArgument(!this.vertices.contains(vertex));
@@ -149,7 +174,7 @@ public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E> {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.utils.DirectedMultigraph#add(java.lang.Object, java.lang.Object, java.lang.Object)
      */
     @Override
-    public void add(final E edge, final V from, final V to) {
+    public final void add(final E edge, final V from, final V to) {
         Preconditions.checkNotNull(edge);
         Preconditions.checkNotNull(from);
         Preconditions.checkNotNull(to);
@@ -170,24 +195,27 @@ public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E> {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.utils.DirectedMultigraph#removeVertex(java.lang.Object)
      */
     @Override
-    public boolean removeVertex(final V vertex) {
+    public final void removeVertex(final V vertex) {
         Preconditions.checkNotNull(vertex);
         
-        final boolean contained = this.vertices.remove(vertex);
-        if (!contained) {
-            return false;
-        }
+        Preconditions.checkArgument(this.vertices.remove(vertex));
+        
+        vertexRemovalHook(vertex);
         
         final Set<Joint<V>> joints = removeJointsForRemoved(vertex);
         for (final Joint<V> affected : joints) {
-            this.edgesToEndings.inverse().remove(affected);
+            final E removed = this.edgesToEndings.inverse().remove(affected);
+            
+            assert Presence.isPresent(removed);
+            edgeRemovalHook(removed);
         }
-        
-        return true;
     }
     
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DirectedGraph#extractVertex(java.lang.Object, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Function, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback)
+     */
     @Override
-    public void extractVertex(final V vertex, final Function<V, V> neighboursRepair, final Callback<V> neighboursCall, final Callback<E> connectionsCall) throws IllegalArgumentException {
+    public final void extractVertex(final V vertex, final Function<V, V> neighboursRepair, final Callback<V> neighboursCall, final Callback<E> connectionsCall) throws IllegalArgumentException {
         Preconditions.checkNotNull(vertex);
         Preconditions.checkNotNull(neighboursCall);
         Preconditions.checkNotNull(connectionsCall);
@@ -217,9 +245,14 @@ public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E> {
             throw e;
         }
         
+        vertexRemovalHook(vertex);
+        for (final Entry<Joint<V>, E> jointEntry : jointEntries) {
+            edgeRemovalHook(jointEntry.getValue());
+        }
+        
         // Oprava sousedů
         for (final V neighbour : neighbours) {
-            replaceVertex(neighboursRepair.apply(neighbour), neighbour);
+            replaceVertex(neighbour, neighboursRepair.apply(neighbour));
         }
     }
 
@@ -301,25 +334,26 @@ public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E> {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.utils.DirectedMultigraph#removeEdge(java.lang.Object)
      */
     @Override
-    public boolean removeEdge(final E edge) {
+    public final void removeEdge(final E edge) {
         Preconditions.checkNotNull(edge);
         
         final Joint<V> affected = this.edgesToEndings.remove(edge);
-        if (Presence.isAbsent(affected)) {
-            return false;
-        }
+        Preconditions.checkArgument(Presence.isPresent(affected));
         
-        this.verticesToEndings.remove(affected.getStart(), affected);
-        this.verticesToEndings.remove(affected.getEnd(), affected);
+        final boolean startContained = this.verticesToEndings.remove(affected.getStart(), affected);
+        assert startContained;
         
-        return true;
+        final boolean endContained = this.verticesToEndings.remove(affected.getEnd(), affected);
+        assert endContained;
+        
+        edgeRemovalHook(edge);
     }
 
     /* (non-Javadoc)
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.utils.DirectedMultigraph#replaceVertex(java.lang.Object, java.lang.Object)
      */
     @Override
-    public void replaceVertex(final V fresh, final V old) {
+    public final void replaceVertex(final V old, final V fresh) {
         Preconditions.checkNotNull(fresh);
         Preconditions.checkNotNull(old);
         
@@ -332,13 +366,15 @@ public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E> {
         }
         restoreJointsForRemoved(joints, fresh);
         this.vertices.add(fresh);
+        
+        vertexReplacementHook(old, fresh);
     }
 
     /* (non-Javadoc)
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.utils.DirectedMultigraph#replaceEdge(java.lang.Object, java.lang.Object)
      */
     @Override
-    public void replaceEdge(final E fresh, final E old) {
+    public final void replaceEdge(final E old, final E fresh) {
         Preconditions.checkNotNull(fresh);
         Preconditions.checkNotNull(old);
         
@@ -346,13 +382,15 @@ public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E> {
         Preconditions.checkArgument(Presence.isPresent(affected));
         
         this.edgesToEndings.inverse().forcePut(affected, fresh);
+        
+        edgeReplacementHook(old, fresh);
     }
 
     /* (non-Javadoc)
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.utils.DirectedMultigraph#containsVertex(java.lang.Object)
      */
     @Override
-    public boolean containsVertex(final V vertex) {
+    public final boolean containsVertex(final V vertex) {
         Preconditions.checkNotNull(vertex);
         
         return this.vertices.contains(vertex);
@@ -362,7 +400,7 @@ public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E> {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.utils.DirectedMultigraph#containsEdge(java.lang.Object)
      */
     @Override
-    public boolean containsEdge(final E edge) {
+    public final boolean containsEdge(final E edge) {
         Preconditions.checkNotNull(edge);
         
         return this.edgesToEndings.containsKey(edge);
@@ -372,7 +410,7 @@ public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E> {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.utils.DirectedMultigraph#vertices()
      */
     @Override
-    public Set<V> vertices() {
+    public final Set<V> vertices() {
         return ImmutableSet.copyOf(this.vertices);
     }
 
@@ -380,11 +418,14 @@ public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E> {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.utils.DirectedMultigraph#edges()
      */
     @Override
-    public Set<E> edges() {
+    public final Set<E> edges() {
         return ImmutableSet.copyOf(this.edgesToEndings.keySet());
     }
     
-    public Set<E> outs(final V vertex) {
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DirectedGraph#outs(java.lang.Object)
+     */
+    public final Set<E> outs(final V vertex) {
         return connections(vertex, new Predicate<Joint<V>>() {
             @Override
             public boolean apply(final Joint<V> input) {
@@ -393,7 +434,7 @@ public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E> {
         });
     }
     
-    public Set<E> ins(final V vertex) {
+    public final Set<E> ins(final V vertex) {
         return connections(vertex, new Predicate<Joint<V>>() {
             @Override
             public boolean apply(final Joint<V> input) {
@@ -422,7 +463,7 @@ public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E> {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.utils.DirectedMultigraph#from(java.lang.Object)
      */
     @Override
-    public V from(final E edge) {
+    public final V from(final E edge) {
         final Joint<V> joint = this.edgesToEndings.get(edge);
         Preconditions.checkArgument(Presence.isPresent(joint));
         
@@ -433,10 +474,58 @@ public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E> {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.utils.DirectedMultigraph#to(java.lang.Object)
      */
     @Override
-    public V to(final E edge) {
+    public final V to(final E edge) {
         final Joint<V> joint = this.edgesToEndings.get(edge);
         Preconditions.checkArgument(Presence.isPresent(joint));
         
         return joint.getEnd();
+    }
+    
+    /**
+     * Metoda volaná při odstraňování vrcholu.
+     * 
+     * @param removed odstraňovaný vrchol
+     */
+    protected void vertexRemovalHook(V removed) {
+    }
+    
+    /**
+     * Metoda volaná při odstraňování hrany.
+     * 
+     * @param removed odstraňovaná hrana
+     */
+    protected void edgeRemovalHook(E removed) {
+    }
+    
+    /**
+     * Metoda volaná při nahrazování vrcholu.
+     * 
+     * @param old stará verze
+     * @param fresh nová verze
+     */
+    protected void vertexReplacementHook(V old, V fresh) {
+    }
+    
+    /**
+     * Metoda volaná při nahrazování hrany.
+     * 
+     * @param old stará verze
+     * @param fresh nová verze
+     */
+    protected void edgeReplacementHook(E old, E fresh) {
+    }
+    
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+        
+        Preconditions.checkNotNull(this.edgesToEndings);
+        Preconditions.checkNotNull(this.vertices);
+        Preconditions.checkNotNull(this.verticesToEndings);
+    }
+
+    private void writeObject(final ObjectOutputStream objectOutputStream)
+            throws IOException {
+        objectOutputStream.defaultWriteObject();
     }
 }

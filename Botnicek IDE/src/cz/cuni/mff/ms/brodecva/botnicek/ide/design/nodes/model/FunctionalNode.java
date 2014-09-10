@@ -16,30 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model;
-
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
+package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model;
 
 /**
- * Náhrada uzlu za uzel.
+ * Funkční uzel.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-interface NodeSwitch {
-
-    /**
-     * Vrátí výchozí uzel.
-     * 
-     * @return výchozí uzel
-     */
-    Node getFrom();
-
-    /**
-     * Vrátí nový uzel.
-     * 
-     * @return nový uzel
-     */
-    Node getTo();
-
+public interface FunctionalNode extends Node {
 }

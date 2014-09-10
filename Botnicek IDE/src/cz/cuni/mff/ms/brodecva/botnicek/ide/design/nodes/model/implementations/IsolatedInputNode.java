@@ -35,6 +35,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
  * @version 1.0
  */
 public final class IsolatedInputNode extends AbstractNode implements IsolatedNode, InputNode {
+
+    private static final long serialVersionUID = 1L;
     
     /**
      * Vytvoří uzel dle parametrů.

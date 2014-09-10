@@ -18,6 +18,11 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
@@ -32,7 +37,9 @@ public class Codes {
     /**
      * Interní implementace kódu.
      */
-    private static final class CodeImplementation implements Code {
+    private static final class CodeImplementation implements Code, Serializable {
+        
+        private static final long serialVersionUID = 1L;
         
         private final String text;
         
@@ -84,6 +91,18 @@ public class Codes {
                 return false;
             }
             return true;
+        }
+        
+        private void readObject(final ObjectInputStream objectInputStream)
+                throws ClassNotFoundException, IOException {
+            objectInputStream.defaultReadObject();
+            
+            Preconditions.checkNotNull(this.text);
+        }
+
+        private void writeObject(final ObjectOutputStream objectOutputStream)
+                throws IOException {
+            objectOutputStream.defaultWriteObject();
         }
     }
     

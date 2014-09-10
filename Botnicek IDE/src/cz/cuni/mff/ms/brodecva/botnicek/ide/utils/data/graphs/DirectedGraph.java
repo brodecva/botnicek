@@ -65,12 +65,11 @@ public interface DirectedGraph<V, E> {
     void add(E edge, V from, V to);
     
     /**
-     * Odstraní vrchol a související hrany. Lze užít i v případě, že vrchol se v grafu nenachází
+     * Odstraní vrchol a související hrany.
      * 
      * @param vertex vrchol
-     * @return zda-li byl graf změněn
      */
-    boolean removeVertex(V vertex);
+    void removeVertex(V vertex);
     
     /**
      * Odebere vrchol z grafu a opraví okolí.
@@ -83,28 +82,27 @@ public interface DirectedGraph<V, E> {
     void extractVertex(V vertex, Function<V, V> neighboursRepair, Callback<V> neighbours, Callback<E> connections);
     
     /**
-     * Odstraní hranu. Lze užít i v případě, že vrchol se v grafu nenachází
+     * Odstraní hranu.
      * 
      * @param edge hrana
-     * @return zda-li byl graf změněn
      */
-    boolean removeEdge(E edge);
+    void removeEdge(E edge);
     
     /**
      * Nahradí vrchol.
      * 
-     * @param fresh nový vrchol
      * @param old starý vrchol
+     * @param fresh nový vrchol
      */
-    void replaceVertex(V fresh, V old);
+    void replaceVertex(V old, V fresh);
     
     /**
      * Nahradí hranu.
      * 
-     * @param fresh nová hrana
      * @param old stará hrana
+     * @param fresh nová hrana
      */
-    void replaceEdge(E fresh, E old);
+    void replaceEdge(E old, E fresh);
     
     /**
      * Vrátí množinu vrcholů grafu.

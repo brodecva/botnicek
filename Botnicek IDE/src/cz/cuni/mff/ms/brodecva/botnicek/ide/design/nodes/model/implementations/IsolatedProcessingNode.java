@@ -35,6 +35,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode;
  * @version 1.0
  */
 public final class IsolatedProcessingNode extends AbstractNode implements IsolatedNode, ProcessingNode {
+
+    private static final long serialVersionUID = 1L;
     
     /**
      * Vytvoří uzel dle parametrů.

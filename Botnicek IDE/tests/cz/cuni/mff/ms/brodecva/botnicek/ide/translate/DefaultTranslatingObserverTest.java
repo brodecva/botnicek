@@ -375,50 +375,6 @@ public class DefaultTranslatingObserverTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyVisit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)}, {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyFinish(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#getResult()}.
-     */
-    @Test(expected = IllegalStateException.class)
-    public void testNotifyFinishWhenNetworkNotVisitedBefore() {
-        this.tested.notifyFinish(nodeDummy);
-        
-        EasyMock.verify(nodeDummy);
-        verifyNodeProcessorDummiesNotTouched();
-    }
-
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyTree(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)}.
-     */
-    @Test(expected = IllegalStateException.class)
-    public void testNotifyTreeWhenNetworkNotVisitedBefore() {
-        this.tested.notifyTree(arcDummy);
-        
-        EasyMock.verify(arcDummy);
-        verifyNodeProcessorDummiesNotTouched();
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyBack(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)}.
-     */
-    @Test(expected = IllegalStateException.class)
-    public void testNotifyBackWhenNetworkNotVisitedBefore() {
-        this.tested.notifyBack(arcDummy);
-        
-        EasyMock.verify(arcDummy);
-        verifyNodeProcessorDummiesNotTouched();
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyCross(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)}.
-     */
-    @Test(expected = IllegalStateException.class)
-    public void testNotifyCrossWhenNetworkNotVisitedBefore() {
-        this.tested.notifyCross(arcDummy);
-        
-        EasyMock.verify(arcDummy);
-        verifyNodeProcessorDummiesNotTouched();
-    }
-
-    /**
      * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#getResult()}.
      */
     @Test

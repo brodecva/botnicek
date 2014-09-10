@@ -49,15 +49,17 @@ public final class DefaultRenderingVisitor implements RenderingVisitor {
      * @param namespacesToPrefixes nastavení prefixů pro prostory jmen prvků
      * @return návštěvník
      */
-    public static DefaultRenderingVisitor create(final Map<URI, String> namespacesToPrefixes) {
+    public static DefaultRenderingVisitor create(final Map<? extends URI, ? extends String> namespacesToPrefixes) {
         return new DefaultRenderingVisitor(namespacesToPrefixes);
     }
     
-    private DefaultRenderingVisitor(final Map<URI, String> namespacesToPrefixes) {
+    private DefaultRenderingVisitor(final Map<? extends URI, ? extends String> namespacesToPrefixes) {
         Preconditions.checkNotNull(namespacesToPrefixes);
-        Preconditions.checkArgument(namespacesToPrefixes.containsKey(URI.create(AIML.NAMESPACE_URI.getValue())));
         
-        this.namespacesToPrefixes = ImmutableMap.copyOf(namespacesToPrefixes);
+        final ImmutableMap<URI, String> namespacesToPrefixesCopy = ImmutableMap.copyOf(namespacesToPrefixes);
+        Preconditions.checkArgument(namespacesToPrefixesCopy.containsKey(URI.create(AIML.NAMESPACE_URI.getValue())));
+        
+        this.namespacesToPrefixes = namespacesToPrefixesCopy;
     }
     
     /**
@@ -69,14 +71,7 @@ public final class DefaultRenderingVisitor implements RenderingVisitor {
     public void visitEnter(final AbstractProperElement element) {
         this.output.append(XML.TAG_START);
         
-        final String aimlPrefix = this.namespacesToPrefixes.get(URI.create(AIML.NAMESPACE_URI.getValue()));
-        Preconditions.checkState(Presence.isPresent(aimlPrefix));
-        
-        if (!aimlPrefix.isEmpty()) {
-            this.output.append(aimlPrefix);
-            this.output.append(XML.PREFIX_DELIMITER);
-        }
-        this.output.append(element.getLocalName());
+        appendName(element);
         
         renderAttributes(element.getAttributes());
         
@@ -85,14 +80,32 @@ public final class DefaultRenderingVisitor implements RenderingVisitor {
         }
     }
 
+    private void appendName(final AbstractProperElement element) {
+        final String aimlPrefix = this.namespacesToPrefixes.get(URI.create(AIML.NAMESPACE_URI.getValue()));
+        assert Presence.isPresent(aimlPrefix);
+        
+        if (!aimlPrefix.isEmpty()) {
+            this.output.append(aimlPrefix);
+            this.output.append(XML.PREFIX_DELIMITER);
+        }
+        this.output.append(element.getLocalName());
+    }
+
     private void renderAttributes(final Set<Attribute> attributes) {
         for (final Attribute attribute : attributes) {
             this.output.append(XML.SPACE);
-            final String prefix = this.namespacesToPrefixes.get(attribute.getNamespace());
-            if (Presence.isPresent(prefix) && !prefix.isEmpty()) {
-                this.output.append(prefix);
-                this.output.append(XML.PREFIX_DELIMITER);
+            
+            final URI namespace = attribute.getNamespace();
+            if (Presence.isPresent(namespace)) {
+                final String prefix = this.namespacesToPrefixes.get(namespace);
+                Preconditions.checkArgument(Presence.isPresent(prefix));
+                
+                if (!prefix.isEmpty()) {
+                    this.output.append(prefix);
+                    this.output.append(XML.PREFIX_DELIMITER);
+                }
             }
+            
             this.output.append(attribute.getName());
             this.output.append(XML.EQ_SIGN);
             this.output.append(XML.QUOTE);
@@ -110,7 +123,9 @@ public final class DefaultRenderingVisitor implements RenderingVisitor {
     public void visitExit(final AbstractProperElement element) {
         if (element.hasChildren()) {
             this.output.append(XML.CLOSING_TAG_START);
-            this.output.append(element.getLocalName());
+            
+            appendName(element);
+            
             this.output.append(XML.TAG_END);
         } else {
             this.output.append(XML.EMPTY_TAG_END);
