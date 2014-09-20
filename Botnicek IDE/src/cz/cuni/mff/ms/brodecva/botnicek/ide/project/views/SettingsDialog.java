@@ -28,6 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTable;
@@ -42,7 +43,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.GroupLayout;
@@ -119,7 +119,7 @@ final class SettingsDialog implements SettingsView {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                     
                     final JFrame frame = new JFrame();
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     
                     final SettingsDialog dialog = SettingsDialog.create(frame);
                     
@@ -154,8 +154,8 @@ final class SettingsDialog implements SettingsView {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 newInstance.prefixesSettingTableModel.addRow();
-                newInstance.contentPane.revalidate();
-                newInstance.dialog.pack();
+                
+                newInstance.updateSize();
             }
         });
         
@@ -180,13 +180,11 @@ final class SettingsDialog implements SettingsView {
         
         newInstance.dialog.addWindowListener(new WindowAdapter() {
             /* (non-Javadoc)
-             * @see java.awt.event.WindowAdapter#windowClosed(java.awt.event.WindowEvent)
+             * @see java.awt.event.WindowAdapter#windowClosing(java.awt.event.WindowEvent)
              */
             @Override
-            public void windowClosed(WindowEvent e) {
+            public void windowClosing(WindowEvent e) {
                 settingsController.removeView(newInstance);
-                
-                super.windowClosed(e);
             }
         });
         
@@ -216,31 +214,34 @@ final class SettingsDialog implements SettingsView {
         this.prefixesSettingTable = new JTable(prefixesSettingTableModel);
         
         this.prefixesSettingLabel.setLabelFor(this.prefixesSettingTable);
-        this.prefixesSettingLabel.setDisplayedMnemonic(KeyEvent.VK_P);
+        this.prefixesSettingLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("PrefixesMnemonics")).getKeyCode());
         
         this.pullStateLabel.setLabelFor(this.pullStateTextField);
-        this.pullStateLabel.setDisplayedMnemonic(KeyEvent.VK_U);
+        this.pullStateLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("PullMnemonics")).getKeyCode());
         
         this.pullStopStateLabel.setLabelFor(this.pullStopStateTextField);
-        this.pullStopStateLabel.setDisplayedMnemonic(KeyEvent.VK_L);
+        this.pullStopStateLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("PullStopMnemonics")).getKeyCode());
         
         this.testingPredicateLabel.setLabelFor(this.testingPredicateTextField);
-        this.testingPredicateLabel.setDisplayedMnemonic(KeyEvent.VK_T);
+        this.testingPredicateLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("TestingMnemonics")).getKeyCode());
         
         this.randomizeStateLabel.setLabelFor(this.randomizeStateTextField);
-        this.randomizeStateLabel.setDisplayedMnemonic(KeyEvent.VK_R);
+        this.randomizeStateLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("RandomizeMnemonics")).getKeyCode());
         
         this.successStateLabel.setLabelFor(this.successStateTextField);
-        this.successStateLabel.setDisplayedMnemonic(KeyEvent.VK_S);
+        this.successStateLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("SuccessMnemonics")).getKeyCode());
         
         this.failStateLabel.setLabelFor(this.failStateTextField);
-        this.failStateLabel.setDisplayedMnemonic(KeyEvent.VK_F);
+        this.failStateLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("FailMnemonics")).getKeyCode());
         
         this.returnStateLabel.setLabelFor(this.returnStateTextField);
-        this.returnStateLabel.setDisplayedMnemonic(KeyEvent.VK_E);
+        this.returnStateLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("ReturnMnemonics")).getKeyCode());
         
         this.prefixLabel.setLabelFor(this.prefixTextField);
-        this.prefixLabel.setDisplayedMnemonic(KeyEvent.VK_X);
+        this.prefixLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("PrefixMnemonics")).getKeyCode());
+        
+        this.addPrefixSettingButton.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("AddPrefixMnemonics")).getKeyCode());
+        this.setButton.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("SetMnemonics")).getKeyCode());
         
         this.contentPaneLayout.setHorizontalGroup(
                 contentPaneLayout.createParallelGroup(Alignment.LEADING)
@@ -328,7 +329,6 @@ final class SettingsDialog implements SettingsView {
         );
         this.contentPane.setLayout(this.contentPaneLayout);
         this.contentPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.contentPane.revalidate();
         
         this.dialog = new JDialog(owner, UiLocalizer.print("SETTINGS_DIALOG_TITLE"), ModalityType.APPLICATION_MODAL);
         this.dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -352,12 +352,20 @@ final class SettingsDialog implements SettingsView {
         this.returnStateTextField.setText(settings.getReturnState().getText());
         this.successStateTextField.setText(settings.getSuccessState().getText());
         this.failStateTextField.setText(settings.getFailState().getText());
+        
+        updateSize();
+    }
+    
+    private void updateSize() {
+        this.contentPane.revalidate();
+        this.dialog.pack();
     }
 
     /**
      * Zobrazí spravovaný dialog.
      */
     public void show() {
+        this.dialog.setLocationRelativeTo(this.dialog.getParent());
         this.dialog.setVisible(true);
     }
 }

@@ -63,7 +63,7 @@ public class HintingComboBox<E> extends JComboBox<E> implements HintListener {
                     contentPane.add(strictCaseSensitiveComboBox);
                     
                     final JFrame frame = new JFrame();
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     frame.setContentPane(contentPane);
                     frame.pack();
                     frame.setVisible(true);

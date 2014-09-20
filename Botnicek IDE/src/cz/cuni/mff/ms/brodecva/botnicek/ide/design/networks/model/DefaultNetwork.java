@@ -33,6 +33,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.SystemName;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 
@@ -91,7 +92,7 @@ public final class DefaultNetwork implements Visitable, Network, Serializable {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.AutonomousComponent#getName()
      */
     @Override
-    public String getName() {
+    public SystemName getName() {
         return this.system.getNetworkName(this);
     }
 
@@ -217,7 +218,7 @@ public final class DefaultNetwork implements Visitable, Network, Serializable {
      */
     @Override
     public String toString() {
-        return "DefaultNetwork [getName()=" + getName() + ", id=" + id
+        return "DefaultNetwork [id=" + id
                 + ", system=" + system + "]";
     }
     

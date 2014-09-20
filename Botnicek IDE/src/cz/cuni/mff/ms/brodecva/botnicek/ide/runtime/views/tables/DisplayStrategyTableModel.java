@@ -46,7 +46,7 @@ public class DisplayStrategyTableModel extends AbstractNameValueTableModel<Norma
 
     private static final long serialVersionUID = 1L;
     
-    private static final BiMap<String, DisplayStrategy> supported = ImmutableBiMap.<String, DisplayStrategy>of("name", new NameDisplayStretegy(), "value", new ValueDisplayStrategy());
+    private static final BiMap<String, DisplayStrategy> SUPPORTED = ImmutableBiMap.<String, DisplayStrategy>of("name", new NameDisplayStretegy(), "value", new ValueDisplayStrategy());
     
     private final DisplayStrategyFactory strategyFactory;
     
@@ -56,7 +56,7 @@ public class DisplayStrategyTableModel extends AbstractNameValueTableModel<Norma
      * @return model
      */
     public static DisplayStrategyTableModel create() {
-        return new DisplayStrategyTableModel(DefaultDisplayStrategyFactory.create(supported));
+        return new DisplayStrategyTableModel(DefaultDisplayStrategyFactory.create(SUPPORTED));
     }
     
     /**
@@ -142,7 +142,7 @@ public class DisplayStrategyTableModel extends AbstractNameValueTableModel<Norma
     protected String valueToString(final DisplayStrategy value) {
         Preconditions.checkNotNull(value);
         
-        final String result = supported.inverse().get(value);
+        final String result = ImmutableBiMap.copyOf(this.strategyFactory.getSupported()).inverse().get(value);
         Preconditions.checkArgument(Presence.isPresent(result));
         
         return result;

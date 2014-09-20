@@ -81,7 +81,7 @@ public final class CodeEditorPane extends JEditorPane implements Clearable {
                     contentPane.add(scrollPane, BorderLayout.CENTER);
                     
                     final JFrame frame = new JFrame();
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     frame.setContentPane(contentPane);
                     frame.pack();
                     frame.setVisible(true);

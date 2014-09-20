@@ -21,7 +21,6 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
@@ -83,6 +82,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.NetworkAddedEve
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.SystemRenamedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.updates.Update;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.SystemName;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
@@ -116,16 +116,16 @@ public class DefaultSystem implements System, Serializable {
     private final SetMultimap<Network, Node> networksNodes;
     
     private final SystemGraph graph;
-    private final BiMap<Network, String> networksNames;
+    private final BiMap<Network, SystemName> networksNames;
     
     private final DfsVisitorFactory systemVisitorFactory;
     private final InitialArcFactory initialArcFactory;
     private final InitialNodeFactory initialNodeFactory;
     
-    private final Set<String> reservedNetworkNames;
+    private final Set<SystemName> reservedNetworkNames;
     
     private transient Optional<Dispatcher> dispatcher;
-    private String name;
+    private SystemName name;
     
     /**
      * Vytvoří prázdný systém sítí.
@@ -137,7 +137,7 @@ public class DefaultSystem implements System, Serializable {
      * @param reservedNetworkNames rezervované názvy sítí
      * @return systém
      */
-    public static System create(final String name, final Dispatcher dispatcher, final NamingAuthority statesNamingAuthority, final NamingAuthority predicatesNamingAuthority, Set<String> reservedNetworkNames) {
+    public static System create(final SystemName name, final Dispatcher dispatcher, final NamingAuthority statesNamingAuthority, final NamingAuthority predicatesNamingAuthority, final Set<? extends SystemName> reservedNetworkNames) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(dispatcher);
         Preconditions.checkNotNull(statesNamingAuthority);
@@ -165,12 +165,12 @@ public class DefaultSystem implements System, Serializable {
      * @param dispatcher vysílač událostí
      * @return systém
      */
-    public static System create(final String name, final SystemGraph graph,
+    public static System create(final SystemName name, final SystemGraph graph,
             final NamingAuthority statesNamingAuthority, final NamingAuthority predicatesNamingAuthority,
             final NodeModifier nodeModifier,
             final ArcModifier arcModifier,
             final RealignmentProcessor realignmentProcessor,
-            final Set<String> reservedNetworkNames, final DfsVisitorFactory systemVisitorFactory,
+            final Set<? extends SystemName> reservedNetworkNames, final DfsVisitorFactory systemVisitorFactory,
             final InitialNodeFactory initialNodeFactory, final InitialArcFactory initialArcFactory,
             final Dispatcher dispatcher) {
         Preconditions.checkNotNull(name);
@@ -184,24 +184,23 @@ public class DefaultSystem implements System, Serializable {
         Preconditions.checkNotNull(initialArcFactory);
         Preconditions.checkNotNull(dispatcher);
         Preconditions.checkNotNull(graph);
-        Preconditions.checkArgument(!name.isEmpty());
         Preconditions.checkNotNull(reservedNetworkNames);
         
-        return new DefaultSystem(name, graph, statesNamingAuthority, predicatesNamingAuthority, nodeModifier, arcModifier, realignmentProcessor, ImmutableSet.copyOf(reservedNetworkNames), systemVisitorFactory, initialNodeFactory, initialArcFactory, Optional.of(dispatcher), HashMultimap.<EnterNode, RecurentArc>create(), HashMultimap.<Network, EnterNode>create(), HashMultimap.<Network, Node>create(),  HashBiMap.<Network, String>create());
+        return new DefaultSystem(name, graph, statesNamingAuthority, predicatesNamingAuthority, nodeModifier, arcModifier, realignmentProcessor, ImmutableSet.copyOf(reservedNetworkNames), systemVisitorFactory, initialNodeFactory, initialArcFactory, Optional.of(dispatcher), HashMultimap.<EnterNode, RecurentArc>create(), HashMultimap.<Network, EnterNode>create(), HashMultimap.<Network, Node>create(),  HashBiMap.<Network, SystemName>create());
     }
     
-    private DefaultSystem(final String name, final SystemGraph graph,
+    private DefaultSystem(final SystemName name, final SystemGraph graph,
             final NamingAuthority statesNamingAuthority, final NamingAuthority predicatesNamingAuthority,
             final NodeModifier nodeModifier,
             final ArcModifier arcModifier,
             final RealignmentProcessor realignmentProcessor,
-            final Set<String> reservedNetworkNames, final DfsVisitorFactory systemVisitorFactory,
+            final Set<SystemName> reservedNetworkNames, final DfsVisitorFactory systemVisitorFactory,
             final InitialNodeFactory initialNodeFactory, final InitialArcFactory initialArcFactory,
             final Optional<Dispatcher> dispatcher,
             final SetMultimap<EnterNode, RecurentArc> references,
             final SetMultimap<Network, EnterNode> initialNodes,
             final SetMultimap<Network, Node> networksNodes,
-            final BiMap<Network, String> networkNames) {
+            final BiMap<Network, SystemName> networkNames) {
         this.name = name;
         this.statesNamingAuthority = statesNamingAuthority;
         this.predicatesNamingAuthority = predicatesNamingAuthority;
@@ -256,7 +255,7 @@ public class DefaultSystem implements System, Serializable {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System#addNetwork(java.lang.String)
      */
     @Override
-    public void addNetwork(final String name) {
+    public void addNetwork(final SystemName name) {
         addNetwork(DefaultNetwork.create(this), name);
     }
     
@@ -264,7 +263,7 @@ public class DefaultSystem implements System, Serializable {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System#addNetwork(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network, java.lang.String)
      */
     @Override
-    public void addNetwork(final Network added, final String name) {
+    public void addNetwork(final Network added, final SystemName name) {
         Preconditions.checkNotNull(added);
         Preconditions.checkNotNull(name);
         Preconditions.checkArgument(added.getSystem().equals(this));
@@ -276,7 +275,7 @@ public class DefaultSystem implements System, Serializable {
         insertNetwork(added, name);
     }
     
-    private void insertNetwork(final Network network, final String name) {
+    private void insertNetwork(final Network network, final SystemName name) {
         this.networksNames.put(network, name);
         
         fire(NetworkAddedEvent.create(this, network));
@@ -661,10 +660,6 @@ public class DefaultSystem implements System, Serializable {
         
         final Node oldVersion = node;
         
-        if (type.isAssignableFrom(oldVersion.getClass())) {
-            return;
-        }
-        
         final Node newVersion = this.nodeModifier.change(oldVersion, type);
         this.graph.replaceVertex(oldVersion, newVersion);
         
@@ -692,7 +687,7 @@ public class DefaultSystem implements System, Serializable {
         
         final Set<RecurentArc> referringArcs = this.references.get(referred);
         for (final RecurentArc referringArc : referringArcs) {
-            changeArc(referringArc, referringArc.getName(), referringArc.getPriority(), RecurentArc.class, newReferred);
+            changeArc(referringArc, referringArc.getName(), referringArc.getPriority(), RecurentArc.class, referringArc.getCode(), newReferred);
         }
     }
     
@@ -720,9 +715,6 @@ public class DefaultSystem implements System, Serializable {
         
         final Node oldVersion = node;
         final NormalWord name = oldVersion.getName();
-        if (name.equals(newName)) {
-            return;
-        }        
         
         final String generatedName = this.statesNamingAuthority.replace(name.getText(), newName.getText());
                 
@@ -781,10 +773,6 @@ public class DefaultSystem implements System, Serializable {
         Preconditions.checkArgument(this.graph.containsVertex(node));
         
         final Node oldVersion = node;
-        if (oldVersion.getX() == x && oldVersion.getY() == y) {
-            return;
-        }
-        
         final Node newVersion = this.nodeModifier.change(oldVersion, x, y);
         this.graph.replaceVertex(oldVersion, newVersion);
         
@@ -947,9 +935,8 @@ public class DefaultSystem implements System, Serializable {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System#setName(java.lang.String)
      */
     @Override
-    public void setName(final String newName) {
+    public void setName(final SystemName newName) {
         Preconditions.checkNotNull(newName);
-        Preconditions.checkArgument(!newName.isEmpty());
         
         this.name = newName;
         fire(SystemRenamedEvent.create(this));
@@ -959,10 +946,9 @@ public class DefaultSystem implements System, Serializable {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System#renameNetwork(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.NetworkInfo, java.lang.String)
      */
     @Override
-    public void renameNetwork(final Network network, final String newName) {
+    public void renameNetwork(final Network network, final SystemName newName) {
         Preconditions.checkNotNull(network);
         Preconditions.checkNotNull(newName);
-        Preconditions.checkArgument(!newName.isEmpty());
         Preconditions.checkArgument(contains(network));
         
         this.networksNames.forcePut(network, newName);
@@ -975,10 +961,10 @@ public class DefaultSystem implements System, Serializable {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System#getNetworkName(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.NetworkInfo)
      */
     @Override
-    public String getNetworkName(final Network network) {
+    public SystemName getNetworkName(final Network network) {
         Preconditions.checkNotNull(network);
         
-        final String name = this.networksNames.get(network);
+        final SystemName name = this.networksNames.get(network);
         Preconditions.checkArgument(Presence.isPresent(name));
         
         return name;
@@ -998,7 +984,7 @@ public class DefaultSystem implements System, Serializable {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System#getName()
      */
     @Override
-    public String getName() {
+    public SystemName getName() {
         return this.name;
     }
 
@@ -1006,9 +992,8 @@ public class DefaultSystem implements System, Serializable {
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System#getNetwork(java.lang.String)
      */
     @Override
-    public Network getNetwork(final String name) {
+    public Network getNetwork(final SystemName name) {
         Preconditions.checkNotNull(name);
-        Preconditions.checkArgument(!name.isEmpty());
         
         final Network result = this.networksNames.inverse().get(name);
         Preconditions.checkNotNull(result);
@@ -1084,14 +1069,9 @@ public class DefaultSystem implements System, Serializable {
         Preconditions.checkNotNull(references);
         Preconditions.checkNotNull(initialNodes);
         Preconditions.checkNotNull(networksNodes);
-        Preconditions.checkArgument(!name.isEmpty());
         //TODO: Verifikace.
     }
     
-    private Object readResolve() throws ObjectStreamException {
-        return new DefaultSystem(name, graph, statesNamingAuthority, predicatesNamingAuthority, nodeModifier, arcModifier, realignmentProcessor, ImmutableSet.copyOf(reservedNetworkNames), systemVisitorFactory, initialNodeFactory, initialArcFactory, dispatcher, references, initialNodes, networksNodes, networksNames);
-    }
-
     private void writeObject(final ObjectOutputStream objectOutputStream)
             throws IOException {
         objectOutputStream.defaultWriteObject();

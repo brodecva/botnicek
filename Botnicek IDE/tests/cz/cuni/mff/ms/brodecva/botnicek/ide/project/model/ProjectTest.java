@@ -27,7 +27,7 @@ import java.io.InputStream;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Test;
-
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.SystemName;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.ProjectOpenedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.ProjectOpenedListener;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
@@ -41,8 +41,10 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
  */
 public class ProjectTest {
 
+    private static final SystemName PROJECT_NAME = SystemName.of("My_Project");
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.Project#createAndOpen(java.lang.String, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher)}.
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.Project#createAndOpen(SystemName, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher)}.
      */
     @Test
     public void testCreateAndOpenExpectAnnouncedInstanceTheSameAsReturned() {
@@ -52,7 +54,7 @@ public class ProjectTest {
         dispatcherMock.fire(EasyMock.capture(capturedEvent));
         EasyMock.replay(dispatcherMock);
         
-        final Project newInstance = Project.createAndOpen("MyProject", dispatcherMock);
+        final Project newInstance = Project.createAndOpen(PROJECT_NAME, dispatcherMock);
         
         final ProjectOpenedListener listener = new ProjectOpenedListener() {
             
@@ -80,7 +82,7 @@ public class ProjectTest {
         EasyMock.expectLastCall().times(2);
         EasyMock.replay(dispatcherMock);
         
-        final Project original = Project.createAndOpen("MyProject", dispatcherMock);
+        final Project original = Project.createAndOpen(PROJECT_NAME, dispatcherMock);
         
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         original.save(outputStream);

@@ -20,10 +20,10 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types;
 
 import java.net.URI;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
-import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 
 /**
  * Implementace atributu stromu odlehčeného objektového modelu jazyka AIML.
@@ -34,7 +34,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 public final class AttributeImplementation implements Attribute {
     private final String name;
     private final String value;
-    private final URI namespace;
+    private final Optional<URI> namespace;
     
     /**
      * Vytvoří atribut.
@@ -45,7 +45,12 @@ public final class AttributeImplementation implements Attribute {
      * @return atribut
      */
     public static AttributeImplementation create(final String name, final String value, final URI namespace) {
-        return new AttributeImplementation(name, value, namespace);
+        Preconditions.checkNotNull(name);
+        Preconditions.checkNotNull(value);
+        Preconditions.checkNotNull(namespace);
+        Preconditions.checkArgument(!name.isEmpty());
+        
+        return new AttributeImplementation(name, value, Optional.of(namespace));
     }
     
     /**
@@ -56,10 +61,14 @@ public final class AttributeImplementation implements Attribute {
      * @return atribut
      */
     public static AttributeImplementation create(final String name, final String value) {
-        return new AttributeImplementation(name, value, URI.create(AIML.NAMESPACE_URI.getValue()));
+        Preconditions.checkNotNull(name);
+        Preconditions.checkNotNull(value);
+        Preconditions.checkArgument(!name.isEmpty());
+        
+        return new AttributeImplementation(name, value, Optional.<URI>absent());
     }
     
-    private AttributeImplementation(final String name, final String value, final URI namespace) {
+    private AttributeImplementation(final String name, final String value, final Optional<URI> namespace) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(value);
         Preconditions.checkNotNull(namespace);
@@ -90,7 +99,7 @@ public final class AttributeImplementation implements Attribute {
      */
     @Override
     public URI getNamespace() {
-        return this.namespace;
+        return this.namespace.orNull();
     }
 
     /* (non-Javadoc)

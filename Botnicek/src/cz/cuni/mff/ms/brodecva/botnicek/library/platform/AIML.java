@@ -107,7 +107,7 @@ public enum AIML {
     /**
      * Prostor jmen schématu.
      */
-    BACKUP_SCHEMA_LOCATION("http://alicebot.org/2001/AIML-1.0.1 http://aitools.org/aiml/schema/AIML.xsd"),
+    BACKUP_SCHEMA_LOCATION("http://aitools.org/aiml/schema/AIML.xsd"),
     
     /**
      * Atribut name.

@@ -18,6 +18,8 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.utils;
 
+import java.util.Map;
+
 import cz.cuni.mff.ms.brodecva.botnicek.library.processor.set.DisplayStrategy;
 
 /**
@@ -36,4 +38,10 @@ public interface DisplayStrategyFactory {
      */
     DisplayStrategy provide(String description);
 
+    /**
+     * Vrátí bijekci popisků a podporované strategií.
+     * 
+     * @return the supported podporované strategie
+     */
+    Map<String, DisplayStrategy> getSupported();
 }

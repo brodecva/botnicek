@@ -99,6 +99,6 @@ public final class EnterOrderedProcessingNode extends AbstractNode implements Or
      */
     @Override
     public String toString() {
-        return getName().getText() + " (" + getNetwork().getName() + ")[" + getX() + ", " + getY() + "]";
+        return getName().getText() + " (" + getNetwork().getName().getText() + ")[" + getX() + ", " + getY() + "]";
     }
 }

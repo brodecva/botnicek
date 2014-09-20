@@ -483,6 +483,7 @@ public final class AIMLConversation implements Conversation, Serializable {
 
         final StringBuilder resultString = new StringBuilder();
 
+        boolean someSentenceSuccesful = false;
         try {
             final String substituted = substitute(speech);
 
@@ -517,6 +518,8 @@ public final class AIMLConversation implements Conversation, Serializable {
                         loader.getFilledStructure().find(
                                 new AIMLInputPath(pattern, that, topic));
                 if (result.isSuccesful()) {
+                    someSentenceSuccesful = true;
+                    
                     final String template = result.getTemplate().getValue();
 
                     final TemplateParser parser =
@@ -537,6 +540,10 @@ public final class AIMLConversation implements Conversation, Serializable {
             }
         } catch (final ProcessorException e) {
             throw new ConversationException(e);
+        }
+        
+        if (!someSentenceSuccesful) {
+            throw new ConversationException(MESSAGE_LOCALIZER.getMessage("responder.NoMatch"));
         }
 
         if (resultString.length() > 0) {

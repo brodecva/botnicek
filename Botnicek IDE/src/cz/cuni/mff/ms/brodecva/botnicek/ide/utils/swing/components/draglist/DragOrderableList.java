@@ -67,7 +67,7 @@ public final class DragOrderableList<E> extends JList<E> {
                     contentPane.add(new JScrollPane(list));
                     
                     final JFrame frame = new JFrame();
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     frame.setContentPane(contentPane);
                     frame.pack();
                     frame.setVisible(true);

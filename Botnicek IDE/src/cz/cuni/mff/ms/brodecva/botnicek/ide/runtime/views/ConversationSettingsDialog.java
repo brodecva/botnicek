@@ -30,6 +30,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
@@ -50,7 +51,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.api.AIMLConversationConfiguratio
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.ConversationConfiguration;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -97,7 +97,7 @@ public final class ConversationSettingsDialog implements ConversationSettingsVie
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                     
                     final JFrame frame = new JFrame();
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     final ConversationSettingsDialog dialog = ConversationSettingsDialog.create(frame);
                     frame.setVisible(true);
                     dialog.dialog.setVisible(true);
@@ -132,8 +132,8 @@ public final class ConversationSettingsDialog implements ConversationSettingsVie
             @Override
             public void actionPerformed(final ActionEvent e) {
                 newInstance.defaultPredicatesTableModel.addRow();
-                newInstance.contentPane.revalidate();
-                newInstance.dialog.pack();
+                
+                newInstance.updateSize();
             }
         });
 
@@ -142,8 +142,8 @@ public final class ConversationSettingsDialog implements ConversationSettingsVie
             @Override
             public void actionPerformed(final ActionEvent e) {
                 newInstance.displayStrategiesTableModel.addRow();
-                newInstance.contentPane.revalidate();
-                newInstance.dialog.pack();
+                
+                newInstance.updateSize();
             }
         });
         
@@ -161,11 +161,12 @@ public final class ConversationSettingsDialog implements ConversationSettingsVie
         });
         
         newInstance.dialog.addWindowListener(new WindowAdapter() {
+            /* (non-Javadoc)
+             * @see java.awt.event.WindowAdapter#windowClosing(java.awt.event.WindowEvent)
+             */
             @Override
-            public void windowClosed(final WindowEvent e) {
+            public void windowClosing(final WindowEvent e) {
                 conversationSettingsController.removeView(newInstance);
-                
-                super.windowClosed(e);
             }
         });
         
@@ -202,11 +203,16 @@ public final class ConversationSettingsDialog implements ConversationSettingsVie
         this.displayStrategiesTableModel = displayStrategyTableModel;
         this.displayStrategiesTable = new JTable(this.displayStrategiesTableModel);
                 
+        this.addDisplayStrategyButton.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("StrategyAddMnemonics")).getKeyCode());
+        this.addDefaultPredicateButton.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("DefaultPredicateAddMnemonics")).getKeyCode());
+        
         this.defaultPredicatesLabel.setLabelFor(this.defaultPredicatesTable);
-        this.defaultPredicatesLabel.setDisplayedMnemonic(KeyEvent.VK_G);
+        this.defaultPredicatesLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("DefaultPredicatesMnemonics")).getKeyCode());
         
         this.displayStrategiesLabel.setLabelFor(this.displayStrategiesTable);
-        this.displayStrategiesLabel.setDisplayedMnemonic(KeyEvent.VK_P);
+        this.displayStrategiesLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("StrategiesMnemonics")).getKeyCode());
+        
+        this.setButton.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("SetMnemonics")).getKeyCode());
         
         this.contentPaneLayout.setHorizontalGroup(
                 contentPaneLayout.createParallelGroup(Alignment.LEADING)
@@ -270,12 +276,20 @@ public final class ConversationSettingsDialog implements ConversationSettingsVie
         
         this.defaultPredicatesTableModel.update(NormalWords.toTyped(configuration.getDefaultPredicates()));
         this.displayStrategiesTableModel.update(NormalWords.toTyped(configuration.getDisplayStrategies()));
+        
+        updateSize();
     }
 
+    private void updateSize() {
+        this.contentPane.revalidate();
+        this.dialog.pack();
+    }
+    
     /**
      * 
      */
     public void show() {
+        this.dialog.setLocationRelativeTo(this.dialog.getParent());
         this.dialog.setVisible(true);
     }
 }

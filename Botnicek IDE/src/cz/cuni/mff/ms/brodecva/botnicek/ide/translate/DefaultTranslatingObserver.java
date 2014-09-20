@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Text;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Topic;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessor;
@@ -44,6 +45,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultProceedP
 import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultStackProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultTestProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons;
+import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 
 /**
  * <p>Výchozí implementace překladače.</p>
@@ -175,7 +177,14 @@ public final class DefaultTranslatingObserver extends AbstractDfsObserver implem
     private TemplateElement pushToStack(
             final List<TemplateElement> stackProcessorResult,
             final List<TemplateElement> dispatchProcessorResult) {
-        return Stack.popAndPush(ImmutableList.copyOf(Iterables.concat(dispatchProcessorResult, stackProcessorResult)));
+        final Iterable<TemplateElement> pushed;
+        if (!dispatchProcessorResult.isEmpty() && !stackProcessorResult.isEmpty()) {
+            pushed = Iterables.<TemplateElement>concat(dispatchProcessorResult, ImmutableList.of(Text.create(AIML.WORD_DELIMITER.getValue())), stackProcessorResult);
+        } else {
+            pushed = Iterables.<TemplateElement>concat(dispatchProcessorResult, stackProcessorResult);
+        }
+        
+        return Stack.popAndPush(ImmutableList.copyOf(pushed));
     }
 
     /**

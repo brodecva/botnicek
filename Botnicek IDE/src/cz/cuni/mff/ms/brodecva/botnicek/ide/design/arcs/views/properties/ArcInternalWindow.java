@@ -24,17 +24,21 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -46,6 +50,8 @@ import javax.swing.UIManager;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
@@ -74,6 +80,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types.R
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types.TransitionArcPanel;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types.TypeView;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.logging.LocalizedLogger;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.layouts.WrapLayout;
@@ -86,9 +93,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.layouts.WrapLayout;
  */
 public class ArcInternalWindow extends ArcViewAdapter {
 
-    /**
-     * 
-     */
+    private final static Logger LOGGER = LocalizedLogger.getLogger(ArcInternalWindow.class);
+    
     private static final int STRUT_SIZE = 10;
 
     private static final String VIEW_COPY_IDENTIFIER_SEPARATOR = " @ ";
@@ -129,6 +135,11 @@ public class ArcInternalWindow extends ArcViewAdapter {
     
     private final JButton saveButton = new JButton(UiLocalizer.print("Save"));
 
+    private BiMap<String, ImageIcon> icons;
+    
+    private static final String BOTNICEK_ICON_NAME = "botnicekIcon";
+    private static final BiMap<String, String> iconNamesToPaths = ImmutableBiMap.<String, String>of(BOTNICEK_ICON_NAME, "images/botnicek.png");
+
     /**
      * Spustí testovací verzi.
      * 
@@ -147,7 +158,7 @@ public class ArcInternalWindow extends ArcViewAdapter {
                     arcInternalWindow.show();
                     
                     final JFrame frame = new JFrame();
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     frame.setContentPane(contentPane);
                     frame.pack();
                     frame.setVisible(true);
@@ -340,6 +351,28 @@ public class ArcInternalWindow extends ArcViewAdapter {
         this.frame.setResizable(true);
         this.frame.setContentPane(this.contentPane);
         this.frame.setSize(250, 630);
+        
+        this.icons = loadIcons();
+        final ImageIcon botnicekIcon = this.icons.get(BOTNICEK_ICON_NAME);
+        if (Presence.isPresent(botnicekIcon)) {
+            this.frame.setFrameIcon(botnicekIcon);
+        }
+    }
+    
+    private BiMap<String, ImageIcon> loadIcons() {
+        final ImmutableBiMap.Builder<String, ImageIcon> iconsBuilder = ImmutableBiMap.builder();
+        for (final Entry<String, String> iconEntry : iconNamesToPaths.entrySet()) {
+            final String name = iconEntry.getKey();
+            final String path = iconEntry.getValue();
+            
+            final URL iconUrl = getClass().getResource(path);
+            if (Presence.isPresent(iconUrl)) {
+                iconsBuilder.put(name, new ImageIcon(iconUrl));
+            } else {
+                LOGGER.log(Level.WARNING, "MissingIcon", path);
+            }
+        }
+        return iconsBuilder.build();
     }
     
     /* (non-Javadoc)
@@ -355,7 +388,7 @@ public class ArcInternalWindow extends ArcViewAdapter {
         Preconditions.checkArgument(Presence.isPresent(typeButton));
         
         typeButton.setSelected(true);
-        switchTypePanel(arcClass);
+        updateTypePanel(arcClass);
     }
     
     /* (non-Javadoc)
@@ -371,14 +404,22 @@ public class ArcInternalWindow extends ArcViewAdapter {
     }
     
     private void switchTypePanel(final Class<? extends Arc> arcClass) {
-        clearAllButSwitchedToAndCommon(arcClass);
+        clearAllAndResetSwitchedTo(arcClass);
+        
+        this.typesPanelLayout.show(this.typesPanel, arcClass.getName());
+        
+        this.currentType = arcClass;
+    }
+    
+    private void updateTypePanel(final Class<? extends Arc> arcClass) {
+        clearAllButSwitchedTo(arcClass);
         
         this.typesPanelLayout.show(this.typesPanel, arcClass.getName());
         
         this.currentType = arcClass;
     }
 
-    private void clearAllButSwitchedToAndCommon(final Class<? extends Arc> switchedTo) {
+    private void clearAllAndResetSwitchedTo(final Class<? extends Arc> switchedTo) {
         final Set<Entry<Class<? extends Arc>, AbstractTypePanel>> entries = this.arcTypesToElements.entrySet();
         for (final Entry<Class<? extends Arc>, AbstractTypePanel> entry : entries) {            
             final AbstractTypePanel typePanel = entry.getValue();
@@ -388,6 +429,19 @@ public class ArcInternalWindow extends ArcViewAdapter {
             } else {
                 typePanel.clear();
             }
+        }
+    }
+    
+    private void clearAllButSwitchedTo(final Class<? extends Arc> switchedTo) {
+        final Set<Entry<Class<? extends Arc>, AbstractTypePanel>> entries = this.arcTypesToElements.entrySet();
+        for (final Entry<Class<? extends Arc>, AbstractTypePanel> entry : entries) {            
+            final AbstractTypePanel typePanel = entry.getValue();
+            
+            if (entry.getKey().equals(switchedTo)) {
+                continue;
+            }
+            
+            typePanel.clear();
         }
     }
     

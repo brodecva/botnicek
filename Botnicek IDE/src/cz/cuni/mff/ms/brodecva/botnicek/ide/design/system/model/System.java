@@ -28,6 +28,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.FunctionalNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.SystemName;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
 
@@ -44,7 +45,7 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * 
      * @param name název sítě
      */
-    void addNetwork(String name);
+    void addNetwork(SystemName name);
 
     /**
      * Přidá síť.
@@ -52,7 +53,7 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * @param added přidávaná síť
      * @param name název přidávané sítě
      */
-    void addNetwork(Network added, String name);
+    void addNetwork(Network added, SystemName name);
     
     /**
      * Odstraní síť.
@@ -274,7 +275,7 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * 
      * @param newName nový název systému
      */
-    void setName(String newName);
+    void setName(SystemName newName);
 
     /**
      * Přejmenuje síť.
@@ -282,15 +283,15 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * @param network síť
      * @param newName nový název sítě
      */
-    void renameNetwork(Network network, String newName);
+    void renameNetwork(Network network, SystemName newName);
 
     /**
      * Vrátí název sítě.
      * 
      * @param network síť
-     * @return síť
+     * @return název
      */
-    String getNetworkName(Network network);
+    SystemName getNetworkName(Network network);
 
     /**
      * Indikuje, zda-li systém obsahuje zadanou síť.
@@ -306,7 +307,7 @@ public interface System extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.
      * @param name název sítě
      * @return síť
      */
-    Network getNetwork(String name);
+    Network getNetwork(SystemName name);
 
     /**
      * Indikuje, zda-li je první uzel spojen s druhým hranou dané orientace. 

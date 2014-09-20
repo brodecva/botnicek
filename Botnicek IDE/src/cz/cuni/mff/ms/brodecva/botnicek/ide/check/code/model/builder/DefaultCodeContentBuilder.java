@@ -44,7 +44,9 @@ public final class DefaultCodeContentBuilder implements CodeContentBuilder, Sour
     private final StringBuilder contentBuilder;
     private final CodeChecker checker;
     
-    private final static class CodeImplementation implements Code {
+    private final static class CodeImplementation implements Code, Serializable {
+        private static final long serialVersionUID = 1L;
+        
         private final String text;
         
         public static CodeImplementation create(final String rawContent) {

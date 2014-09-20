@@ -25,6 +25,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableBiMap;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.library.processor.set.DisplayStrategy;
 import cz.cuni.mff.ms.brodecva.botnicek.library.processor.set.NameDisplayStretegy;
 import cz.cuni.mff.ms.brodecva.botnicek.library.processor.set.ValueDisplayStrategy;
@@ -69,9 +70,19 @@ public final class DefaultDisplayStrategyFactory implements DisplayStrategyFacto
      */
     @Override
     public DisplayStrategy provide(final String description) {
-        final DisplayStrategy result = this.supported.get(description);
         Preconditions.checkNotNull(description);
         
+        final DisplayStrategy result = this.supported.get(description);
+        Preconditions.checkArgument(Presence.isPresent(result));
+        
         return result;
+    }
+    
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.utils.DisplayStrategyFactory#getSupported()
+     */
+    @Override
+    public Map<String, DisplayStrategy> getSupported() {
+        return this.supported;
     }
 }

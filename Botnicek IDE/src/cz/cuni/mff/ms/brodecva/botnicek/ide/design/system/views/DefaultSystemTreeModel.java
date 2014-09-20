@@ -203,13 +203,21 @@ final class DefaultSystemTreeModel implements SystemTreeModel {
         if (pathCount == 1) {
             Preconditions.checkState(replaced.equals(root));
             
-            systemController.renameSystem(newName);
+            try {
+                systemController.renameSystem(newName);
+            } catch (final IllegalArgumentException e) {
+                return;
+            }
         } else if (pathCount == 2){
             Preconditions.checkState(this.children.contains(replaced));
             
             final Network child = (Network) replaced;
             
-            systemController.renameNetwork(child, newName);                        
+            try {
+                systemController.renameNetwork(child, newName);                        
+            } catch (final IllegalArgumentException e) {
+                return;
+            }
         } else {
             throw new IllegalStateException();
         }

@@ -75,7 +75,7 @@ public final class ReferenceHintingComboBox extends HintingComboBox<EnterNode> i
                     contentPane.add(box, BorderLayout.CENTER);
                     
                     final JFrame frame = new JFrame();
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     frame.setContentPane(contentPane);
                     frame.pack();
                     frame.setVisible(true);

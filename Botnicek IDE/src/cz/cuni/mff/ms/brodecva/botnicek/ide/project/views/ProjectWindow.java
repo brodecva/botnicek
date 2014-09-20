@@ -19,6 +19,7 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.project.views;
 
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 
@@ -35,12 +36,16 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableBiMap;
+import com.google.common.io.Files;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.ResultsTable;
@@ -68,18 +73,29 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.logging.LocalizedLogger;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Localization;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.OverwriteCheckingFileChooser;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Locale;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
+import javax.swing.filechooser.FileFilter;
 
 /**
  * <p>
@@ -105,6 +121,10 @@ public final class ProjectWindow implements ProjectView {
 
         private static final long serialVersionUID = 1L;
 
+        public RuntimeRunAction(final String name, final Icon icon) {
+            super(name, icon);
+        }
+
         @Override
         public void actionPerformed(final ActionEvent e) {
             try {
@@ -120,19 +140,21 @@ public final class ProjectWindow implements ProjectView {
 
         private static final long serialVersionUID = 1L;
 
+        public SettingsOpenAction(final String name, final Icon icon) {
+            super(name, icon);
+        }
+
         public void actionPerformed(final ActionEvent e) {
             projectController.openSettings();
         }
     }
+    
+    private final class NewAction extends AbstractAction {
 
-    private final class NewAction implements ActionListener {
-
-        private final SaveAction saveAction;
-
-        public NewAction(final SaveAction saveAction) {
-            Preconditions.checkNotNull(saveAction);
-
-            this.saveAction = saveAction;
+        private static final long serialVersionUID = 1L;
+        
+        public NewAction(final String name, final Icon icon) {
+            super(name, icon);
         }
 
         public void actionPerformed(final ActionEvent e) {
@@ -147,39 +169,32 @@ public final class ProjectWindow implements ProjectView {
                 return;
             }
 
-            if (projectController.isOpen()) {
-                final int saveConfirmationResult =
-                        JOptionPane
-                                .showOptionDialog(frame,
-                                        UiLocalizer.print("SAVE_CONFIRMATION_MESSAGE"),
-                                                UiLocalizer.print("SAVE_CONFIRMATION_TITLE"),
-                                        JOptionPane.YES_NO_CANCEL_OPTION,
-                                        JOptionPane.QUESTION_MESSAGE, Intended.<Icon>nullReference(),
-                                        new Object[] { UiLocalizer.print("SAVE_OPTION"),
-                                                UiLocalizer.print("FORFEIT_SAVE_OPTION"),
-                                                        UiLocalizer.print("CANCEL_SAVE_OPTION") },
-                                                        UiLocalizer.print("SAVE_OPTION"));
-                switch (saveConfirmationResult) {
-                case JOptionPane.YES_OPTION:
-                    saveAction.actionPerformed(e);
-                    break;
-                case JOptionPane.NO_OPTION:
-                    break;
-                case JOptionPane.CLOSED_OPTION:
-                    return;
-                default:
-                    assert false;
-                    break;
-                }
+            if (!continueAfterClosing(e)) {
+                return;
             }
-
-            projectController.createNew(name);
+            
+            try {
+                projectController.createNew(name);
+            } catch (final IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(Intended.<Component>nullReference(),
+                        UiLocalizer.print("ProjectNameImpossibleMessage"),
+                                UiLocalizer.print("ProjectNameImpossibleTitle"),
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
-    private final class ExportAction implements ActionListener {
+    private final class ExportAction extends AbstractAction {
+        
+        private static final long serialVersionUID = 1L;
+
+        public ExportAction(final String name, final Icon icon) {
+            super(name, icon);
+        }
+
         public void actionPerformed(final ActionEvent e) {
             final JFileChooser exportDirectoryChooser = new JFileChooser();
+            exportDirectoryChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             exportDirectoryChooser.setFileFilter(new DirectoryFileFilter());
             exportDirectoryChooser.setAcceptAllFileFilterUsed(false);
             final int choice = exportDirectoryChooser.showSaveDialog(frame);
@@ -204,11 +219,15 @@ public final class ProjectWindow implements ProjectView {
         }
     }
 
-    private final class OpenAction implements ActionListener {
+    private final class OpenAction extends AbstractAction {
 
+        private static final long serialVersionUID = 1L;
+        
         private final SaveAction saveAction;
 
-        public OpenAction(final SaveAction saveAction) {
+        public OpenAction(final SaveAction saveAction, final String name, final Icon icon) {
+            super(name, icon);
+            
             Preconditions.checkNotNull(saveAction);
 
             this.saveAction = saveAction;
@@ -216,6 +235,9 @@ public final class ProjectWindow implements ProjectView {
 
         public void actionPerformed(final ActionEvent e) {
             final JFileChooser openProjectFileChooser = new JFileChooser();
+            openProjectFileChooser.setLocale(Locale.getDefault());
+            openProjectFileChooser.updateUI();
+            
             openProjectFileChooser
                     .setFileFilter(new ProjectFileFilter());
             
@@ -223,35 +245,16 @@ public final class ProjectWindow implements ProjectView {
 
             switch (choice) {
             case JFileChooser.APPROVE_OPTION:
-                if (projectController.isOpen()) {
-                    final int saveConfirmationResult =
-                            JOptionPane.showOptionDialog(frame,
-                                    UiLocalizer.print("SAVE_CONFIRMATION_MESSAGE"),
-                                            UiLocalizer.print("SAVE_CONFIRMATION_TITLE"),
-                                    JOptionPane.YES_NO_CANCEL_OPTION,
-                                    JOptionPane.QUESTION_MESSAGE, Intended.<Icon>nullReference(),
-                                    new Object[] { UiLocalizer.print("SAVE_OPTION"),
-                                            UiLocalizer.print("FORFEIT_SAVE_OPTION"),
-                                                    UiLocalizer.print("CANCEL_SAVE_OPTION") }, UiLocalizer.print("SAVE_OPTION"));
-                    switch (saveConfirmationResult) {
-                    case JOptionPane.YES_OPTION:
-                        this.saveAction.actionPerformed(e);
-                        break;
-                    case JOptionPane.NO_OPTION:
-                        break;
-                    case JOptionPane.CANCEL_OPTION:
-                        return;
-                    case JOptionPane.CLOSED_OPTION:
-                        return;
-                    default:
-                        assert false;
-                        break;
-                    }
+                if (!continueAfterClosing(e)) {
+                    return;
                 }
 
                 try {
-                    projectController.open(openProjectFileChooser
-                            .getSelectedFile().toPath());
+                    final Path openedPath = openProjectFileChooser
+                    .getSelectedFile().toPath();
+                    
+                    projectController.open(openedPath);
+                    this.saveAction.setUsed(openedPath);
                 } catch (final FileNotFoundException ex) {
                     JOptionPane.showMessageDialog(frame,
                             UiLocalizer.print("OPEN_ERROR_NOT_FOUND_MESSAGE"),
@@ -280,39 +283,30 @@ public final class ProjectWindow implements ProjectView {
     private final class CloseAction extends AbstractAction {
 
         private static final long serialVersionUID = 1L;
-        private final SaveAction saveAction;
 
-        public CloseAction(final SaveAction saveAction) {
-            Preconditions.checkNotNull(saveAction);
-
-            this.saveAction = saveAction;
+        public CloseAction(final String name, final Icon icon) {
+            super(name, icon);
         }
 
         public void actionPerformed(final ActionEvent e) {
-            final int saveConfirmationResult =
-                    JOptionPane.showOptionDialog(frame,
-                            UiLocalizer.print("SAVE_CONFIRMATION_MESSAGE"), UiLocalizer.print("SAVE_CONFIRMATION_TITLE"),
-                            JOptionPane.YES_NO_CANCEL_OPTION,
-                            JOptionPane.QUESTION_MESSAGE, Intended.<Icon>nullReference(), new Object[] {
-                                    UiLocalizer.print("SAVE_OPTION"), UiLocalizer.print("FORFEIT_SAVE_OPTION"),
-                                            UiLocalizer.print("CANCEL_SAVE_OPTION") }, UiLocalizer.print("SAVE_OPTION"));
+            continueAfterClosing(e);
+        }
+    }
+    
+    private final class ExitAction extends AbstractAction {
 
-            switch (saveConfirmationResult) {
-            case JOptionPane.YES_OPTION:
-                this.saveAction.actionPerformed(e);
-                break;
-            case JOptionPane.NO_OPTION:
-                break;
-            case JOptionPane.CANCEL_OPTION:
+        private static final long serialVersionUID = 1L;
+
+        public ExitAction(final String name, final Icon icon) {
+            super(name, icon);
+        }
+
+        public void actionPerformed(final ActionEvent e) {
+            if (!continueAfterClosing(e)) {
                 return;
-            case JOptionPane.CLOSED_OPTION:
-                return;
-            default:
-                assert false;
-                break;
             }
-
-            projectController.close();
+            
+            frame.dispose();
         }
     }
 
@@ -322,24 +316,25 @@ public final class ProjectWindow implements ProjectView {
         
         private Optional<Path> used = Optional.absent();
 
+        public SaveAsAction(final String name, final Icon icon) {
+            super(name, icon);
+        }
+        
         @Override
         public void actionPerformed(final ActionEvent e) {
-            final JFileChooser saveProjectFileChooser = new JFileChooser();
+            final FileFilter botnicekFileFilter = new ProjectFileFilter();
+            
+            final JFileChooser saveProjectFileChooser = OverwriteCheckingFileChooser.create();
             saveProjectFileChooser
-                    .setFileFilter(new ProjectFileFilter());
+                    .setFileFilter(botnicekFileFilter);
             final int choice = saveProjectFileChooser.showSaveDialog(frame);
 
             switch (choice) {
             case JFileChooser.APPROVE_OPTION:
-                final Path selected =
-                        saveProjectFileChooser.getSelectedFile().toPath();
-                try {
-                    projectController.save(selected);
-                } catch (final IOException ex) {
-                    JOptionPane.showMessageDialog(frame, UiLocalizer.print("SAVE_ERROR_MESSAGE"),
-                            UiLocalizer.print("SAVE_ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
-                }
-                this.used = Optional.of(selected);
+                final Path saved =
+                        save(saveProjectFileChooser, botnicekFileFilter);
+                
+                setUsed(saved);
                 break;
             case JFileChooser.CANCEL_OPTION:
                 break;
@@ -350,8 +345,50 @@ public final class ProjectWindow implements ProjectView {
             }
         }
 
+        private Path save(final JFileChooser saveProjectFileChooser,
+                final FileFilter projectFileFilter) {
+            final Path selected =
+                    saveProjectFileChooser.getSelectedFile().toPath();
+            final FileFilter usedFileFilter = saveProjectFileChooser.getFileFilter();
+            
+            try {
+                final Path created =
+                        createSavePath(selected, usedFileFilter,
+                                projectFileFilter);
+                
+                projectController.save(created);
+            } catch (final IOException ex) {
+                JOptionPane.showMessageDialog(frame, UiLocalizer.print("SAVE_ERROR_MESSAGE"),
+                        UiLocalizer.print("SAVE_ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
+            }
+            return selected;
+        }
+
+        private Path createSavePath(final Path selected,
+                final FileFilter usedFileFilter,
+                final FileFilter projectFilesFilter) {
+            final String selectedFileName = selected.getFileName().toString();
+            
+            if (usedFileFilter != projectFilesFilter || Files.getFileExtension(selectedFileName).equals(ProjectFileFilter.PROJECT_FILE_EXTENSION)) {
+                return selected;
+            }
+            
+            final String extensionAppendedFileName = selectedFileName.concat(ProjectFileFilter.EXTENSION_SEPARATOR + ProjectFileFilter.PROJECT_FILE_EXTENSION);
+            return selected.resolveSibling(extensionAppendedFileName);
+        }
+        
         public Path getUsed() {
             return this.used.orNull();
+        }
+
+        public void setUsed(final Path used) {
+            Preconditions.checkNotNull(used);
+            
+            this.used = Optional.of(used);
+        }
+
+        public void clearUsed() {
+            this.used = Optional.absent();
         }
     }
 
@@ -360,10 +397,22 @@ public final class ProjectWindow implements ProjectView {
         private static final long serialVersionUID = 1L;
         private final SaveAsAction saveAsAction;
 
-        public SaveAction(final SaveAsAction saveAsAction) {
+        public SaveAction(final SaveAsAction saveAsAction, final String name, final Icon icon) {
+            super(name, icon);
+            
             Preconditions.checkNotNull(saveAsAction);
 
             this.saveAsAction = saveAsAction;
+        }
+
+        public void setUsed(final Path used) {
+            Preconditions.checkNotNull(used);
+            
+            this.saveAsAction.setUsed(used);
+        }
+        
+        public void clearUsed() {
+            this.saveAsAction.clearUsed();
         }
 
         @Override
@@ -385,26 +434,30 @@ public final class ProjectWindow implements ProjectView {
     }
 
     private final static Logger LOGGER = LocalizedLogger.getLogger(ProjectWindow.class);
-    private static final String PATH_TO_ICON = "images/botnicek.png";
     
-    private static final int RUNTIME_TAB_INDEX = 1;    
+    private static final String BOTNICEK_ICON_NAME = "botnicekIcon";
+    private static final BiMap<String, String> iconNamesToPaths = ImmutableBiMap.<String, String>builder().put(BOTNICEK_ICON_NAME, "images/botnicek.png").put("newIcon", "images/page.png").put("saveIcon", "images/disk.png").put("saveAsIcon", "images/disk_edit.png").put("openIcon", "images/folder_page.png").put("closeIcon", "images/cross.png").put("exitIcon", "images/control_power.png").put("exportIcon", "images/folder_go.png").put("settingsIcon", "images/cog.png").put("testIcon", "images/application_go.png").put("aboutIcon", "images/information.png").build();
+    
+    private static final int RUNTIME_TAB_INDEX = 1;
+    private static final int TEST_BUTTON_WIDTH = 260;
+    private static final int TEST_BUTTON_HEIGHT = 40;    
 
     private final JFrame frame = new JFrame();
     private final JMenuBar menuBar = new JMenuBar();
     private final JPanel contentPane = new JPanel();
 
     private final JMenu projectMenu = new JMenu(UiLocalizer.print("Project"));
-    private final JMenuItem newMenuItem = new JMenuItem(UiLocalizer.print("New"));
-    private final JMenuItem openMenuItem = new JMenuItem(UiLocalizer.print("Open"));
-    private final JMenuItem closeMenuItem = new JMenuItem(UiLocalizer.print("Close"));
-    private final JMenuItem saveMenuItem = new JMenuItem(UiLocalizer.print("Save"));
-    private final JMenuItem saveAsMenuItem = new JMenuItem(UiLocalizer.print("SaveAs"));
-    private final JMenuItem exportMenuItem = new JMenuItem(UiLocalizer.print("Export"));
-    private final JMenuItem settingsMenuItem = new JMenuItem(UiLocalizer.print("Settings"));
-    private final JMenuItem quitMenuItem = new JMenuItem(UiLocalizer.print("Quit"));
+    private final JMenuItem newMenuItem = new JMenuItem();
+    private final JMenuItem openMenuItem = new JMenuItem();
+    private final JMenuItem closeMenuItem = new JMenuItem();
+    private final JMenuItem saveMenuItem = new JMenuItem();
+    private final JMenuItem saveAsMenuItem = new JMenuItem();
+    private final JMenuItem exportMenuItem = new JMenuItem();
+    private final JMenuItem settingsMenuItem = new JMenuItem();
+    private final JMenuItem quitMenuItem = new JMenuItem();
 
     private final JMenu runtimeMenu = new JMenu(UiLocalizer.print("Runtime"));
-    private final JMenuItem testMenuItem = new JMenuItem(UiLocalizer.print("Test"));
+    private final JMenuItem testMenuItem = new JMenuItem();
     private final JMenuItem botMenuItem = new JMenuItem(UiLocalizer.print("Bot"));
     private final JMenuItem languageMenuItem = new JMenuItem(UiLocalizer.print("Language"));
     private final JMenuItem conversationMenuItem = new JMenuItem(
@@ -427,18 +480,19 @@ public final class ProjectWindow implements ProjectView {
     private final JSplitPane mainSplitPane = new JSplitPane(
             JSplitPane.VERTICAL_SPLIT, this.systemSplitPane, this.tabbedPane);
 
-    private final SaveAsAction saveAsAction = new SaveAsAction();
-    private final SaveAction saveAction = new SaveAction(this.saveAsAction);
-    private final CloseAction closeAction = new CloseAction(this.saveAction);
-    private final NewAction newAction = new NewAction(this.saveAction);
-    private final OpenAction openAction = new OpenAction(this.saveAction);
-    private final ExportAction exportAction = new ExportAction();
-    private final SettingsOpenAction settingsOpenAction =
-            new SettingsOpenAction();
-    private final RuntimeRunAction runtimeRunAction = new RuntimeRunAction();
+    private final SaveAsAction saveAsAction;
+    private final SaveAction saveAction;
+    private final CloseAction closeAction;
+    private final ExitAction exitAction;
+    private final NewAction newAction;
+    private final OpenAction openAction;
+    private final ExportAction exportAction;
+    private final SettingsOpenAction settingsOpenAction;
+    private final RuntimeRunAction runtimeRunAction;
 
     private final ProjectController projectController;
-    private ImageIcon icon;
+    
+    private final BiMap<String, ImageIcon> icons;
 
     /**
      * Spustí aplikaci.
@@ -458,8 +512,8 @@ public final class ProjectWindow implements ProjectView {
                     System.exit(1);
                 }
                 
-                JFileChooser.setDefaultLocale(Locale.getDefault());
-
+                Localization.localize();
+                
                 final EventManager eventManager =
                         DefaultEventManager.create();
                 final ProjectController projectController =
@@ -504,7 +558,18 @@ public final class ProjectWindow implements ProjectView {
 
         this.projectController = projectController;
 
-        initializeIcon();
+        this.icons = loadIcons();
+        
+        saveAsAction = new SaveAsAction(UiLocalizer.print("SaveAs"), icons.get("saveAsIcon"));
+        saveAction = new SaveAction(this.saveAsAction, UiLocalizer.print("Save"), icons.get("saveIcon"));
+        closeAction = new CloseAction(UiLocalizer.print("Close"), icons.get("closeIcon"));
+        exitAction = new ExitAction(UiLocalizer.print("Quit"), icons.get("exitIcon"));
+        newAction = new NewAction(UiLocalizer.print("New"), icons.get("newIcon"));
+        openAction = new OpenAction(this.saveAction, UiLocalizer.print("Open"), icons.get("openIcon"));
+        exportAction = new ExportAction(UiLocalizer.print("Export"), icons.get("exportIcon"));
+        settingsOpenAction = new SettingsOpenAction(UiLocalizer.print("Settings"), icons.get("settingsIcon"));
+        runtimeRunAction = new RuntimeRunAction(UiLocalizer.print("Test"), icons.get("testIcon"));
+        
         initializeProjectMenu();
         initializeRuntimeMenu();
         initializeHelpMenu();
@@ -515,15 +580,22 @@ public final class ProjectWindow implements ProjectView {
         initializeFrame();
     }
 
-    private void initializeIcon() {
-        final URL iconUrl = getClass().getResource(PATH_TO_ICON);
-        if (Presence.isPresent(iconUrl)) {
-            this.icon = new ImageIcon(iconUrl);
-        } else {
-            LOGGER.warning("MissingIcon");
+    private BiMap<String, ImageIcon> loadIcons() {
+        final ImmutableBiMap.Builder<String, ImageIcon> iconsBuilder = ImmutableBiMap.builder();
+        for (final Entry<String, String> iconEntry : iconNamesToPaths.entrySet()) {
+            final String name = iconEntry.getKey();
+            final String path = iconEntry.getValue();
+            
+            final URL iconUrl = getClass().getResource(path);
+            if (Presence.isPresent(iconUrl)) {
+                iconsBuilder.put(name, new ImageIcon(iconUrl));
+            } else {
+                LOGGER.log(Level.WARNING, "MissingIcon", path);
+            }
         }
+        return iconsBuilder.build();
     }
-
+    
     private void initializeFrame() {
         this.networksScrollPane.setMinimumSize(new Dimension(100, 400));
         this.networksAndArcPropertiesPane.setMinimumSize(new Dimension(450, 400));
@@ -536,11 +608,21 @@ public final class ProjectWindow implements ProjectView {
         this.mainSplitPane.setResizeWeight(1);
         this.systemSplitPane.setResizeWeight(0);
         
-        if (Presence.isPresent(this.icon)) {
-            this.frame.setIconImage(icon.getImage());
+        final ImageIcon botnicekIcon = this.icons.get(BOTNICEK_ICON_NAME);
+        if (Presence.isPresent(botnicekIcon)) {
+            this.frame.setIconImage(botnicekIcon.getImage());
         }
         
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.frame.addWindowListener(new WindowAdapter() {
+            /* (non-Javadoc)
+             * @see java.awt.event.WindowAdapter#windowClosing(java.awt.event.WindowEvent)
+             */
+            @Override
+            public void windowClosing(WindowEvent e) {
+                exitAction.actionPerformed(new ActionEvent(e.getSource(), e.getID(), Intended.<String>nullReference()));
+            }
+        });
         this.frame.setTitle(UiLocalizer.print("EnvironmentTitle"));
         this.frame.setJMenuBar(this.menuBar);
         this.frame.setContentPane(this.contentPane);
@@ -554,7 +636,8 @@ public final class ProjectWindow implements ProjectView {
     }
 
     private void initializeTestPane() {
-        this.testButton.addActionListener(this.runtimeRunAction);
+        this.testButton.setAction(this.runtimeRunAction);
+        this.testButton.setPreferredSize(new Dimension(TEST_BUTTON_WIDTH, TEST_BUTTON_HEIGHT));
         this.runtimePanel.add(this.testButton);
     }
 
@@ -564,22 +647,34 @@ public final class ProjectWindow implements ProjectView {
     }
 
     private void initializeHelpMenu() {
+        this.helpMenu.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("HelpMenuMnemonic")).getKeyCode());
+        
+        final ImageIcon aboutIcon = this.icons.get("aboutIcon");
+        if (Presence.isPresent(aboutIcon)) {
+            this.aboutMenuItem.setIcon(aboutIcon);
+        }
+        
         this.aboutMenuItem.addActionListener(new ActionListener() {
             
             @Override
             public void actionPerformed(final ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, UiLocalizer.print("AboutMessage"), UiLocalizer.print("AboutTitle"), JOptionPane.INFORMATION_MESSAGE, icon);
+                JOptionPane.showMessageDialog(frame, UiLocalizer.print("AboutMessage"), UiLocalizer.print("AboutTitle"), JOptionPane.INFORMATION_MESSAGE, icons.get(BOTNICEK_ICON_NAME));
             }
         });
-        
+        this.aboutMenuItem.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("AboutMnemonic")).getKeyCode());
+        this.aboutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
         this.helpMenu.add(aboutMenuItem);
+        
         this.menuBar.add(this.helpMenu);
     }
 
     private void initializeRuntimeMenu() {
+        this.runtimeMenu.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("RuntimeMenuMnemonic")).getKeyCode());
         menuBar.add(runtimeMenu);
 
-        this.testMenuItem.addActionListener(this.runtimeRunAction);
+        this.testMenuItem.setAction(this.runtimeRunAction);
+        this.testMenuItem.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("TestMnemonic")).getKeyCode());
+        this.testMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK));
         this.runtimeMenu.add(testMenuItem);
 
         this.runtimeMenu.addSeparator();
@@ -589,6 +684,8 @@ public final class ProjectWindow implements ProjectView {
                 projectController.openBotSettings();
             }
         });
+        this.botMenuItem.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("BotMnemonic")).getKeyCode());
+        this.botMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.CTRL_DOWN_MASK));
         this.runtimeMenu.add(botMenuItem);
 
         this.languageMenuItem.addActionListener(new ActionListener() {
@@ -596,6 +693,8 @@ public final class ProjectWindow implements ProjectView {
                 projectController.openLanguageSettings();
             }
         });
+        this.languageMenuItem.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("LanguageMnemonic")).getKeyCode());
+        this.languageMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_DOWN_MASK));
         this.runtimeMenu.add(languageMenuItem);
 
         this.conversationMenuItem.addActionListener(new ActionListener() {
@@ -603,44 +702,60 @@ public final class ProjectWindow implements ProjectView {
                 projectController.openConversationSettings();
             }
         });
+        this.conversationMenuItem.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("ConversationMnemonic")).getKeyCode());
+        this.conversationMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_DOWN_MASK));
         this.runtimeMenu.add(conversationMenuItem);
     }
 
     private void initializeProjectMenu() {
-        this.newMenuItem.addActionListener(this.newAction);
+        this.projectMenu.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("ProjectMenuMnemonic")).getKeyCode());
+        
+        this.newMenuItem.setAction(this.newAction);
+        this.newMenuItem.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("NewMnemonic")).getKeyCode());
+        this.newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
         this.projectMenu.add(newMenuItem);
 
-        this.openMenuItem.addActionListener(this.openAction);
+        this.openMenuItem.setAction(this.openAction);
+        this.openMenuItem.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("OpenMnemonic")).getKeyCode());
+        this.openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
         this.projectMenu.add(openMenuItem);
 
         this.projectMenu.addSeparator();
 
-        this.closeMenuItem.addActionListener(this.closeAction);
+        this.closeMenuItem.setAction(this.closeAction);
+        this.closeMenuItem.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("CloseMnemonic")).getKeyCode());
+        this.closeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK));
         this.projectMenu.add(closeMenuItem);
 
         this.projectMenu.addSeparator();
 
-        this.saveMenuItem.addActionListener(this.saveAction);
+        this.saveMenuItem.setAction(this.saveAction);
+        this.saveMenuItem.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("SaveMnemonic")).getKeyCode());
+        this.saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
         this.projectMenu.add(saveMenuItem);
 
-        this.saveAsMenuItem.addActionListener(this.saveAsAction);
+        this.saveAsMenuItem.setAction(this.saveAsAction);
+        this.saveAsMenuItem.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("SaveAsMnemonic")).getKeyCode());
+        this.saveAsMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
         this.projectMenu.add(saveAsMenuItem);
 
-        this.exportMenuItem.addActionListener(this.exportAction);
+        this.exportMenuItem.setAction(this.exportAction);
+        this.exportMenuItem.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("ExportMnemonic")).getKeyCode());
+        this.exportMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
         this.projectMenu.add(this.exportMenuItem);
 
         this.projectMenu.addSeparator();
 
-        this.settingsMenuItem.addActionListener(this.settingsOpenAction);
+        this.settingsMenuItem.setAction(this.settingsOpenAction);
+        this.settingsMenuItem.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("SettingsMnemonic")).getKeyCode());
+        this.settingsMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK));
         this.projectMenu.add(settingsMenuItem);
 
         this.projectMenu.addSeparator();
 
-        this.quitMenuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent e) {
-                closeAction.actionPerformed(e);
-            }
-        });
+        this.quitMenuItem.setAction(this.exitAction);
+        this.quitMenuItem.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("QuitMnemonic")).getKeyCode());
+        this.quitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK));
         this.projectMenu.add(quitMenuItem);
 
         this.menuBar.add(projectMenu);
@@ -679,9 +794,23 @@ public final class ProjectWindow implements ProjectView {
 
         Preconditions.checkNotNull(runController);
 
-        this.tabbedPane.setTabComponentAt(RUNTIME_TAB_INDEX,
-                TestPanel.create(runController));
+        final TestPanel testPanel = TestPanel.create(runController);
+        testPanel.addComponentListener(new ComponentAdapter() {
+            /* (non-Javadoc)
+             * @see java.awt.event.ComponentAdapter#componentShown(java.awt.event.ComponentEvent)
+             */
+            @Override
+            public void componentShown(ComponentEvent e) {
+                e.getComponent().requestFocusInWindow();
+                
+                super.componentShown(e);
+            }
+        });
+        
+        this.tabbedPane.setComponentAt(RUNTIME_TAB_INDEX, testPanel);
         this.tabbedPane.setSelectedIndex(RUNTIME_TAB_INDEX);
+        
+        testPanel.requestFocusInWindow();
     }
 
     /*
@@ -786,5 +915,61 @@ public final class ProjectWindow implements ProjectView {
         setProjectControlsEnabled(false);
 
         this.tabbedPane.setComponentAt(RUNTIME_TAB_INDEX, this.runtimePanel);
+    }
+    
+    /**
+     * Zeptá se uživatele, zda-li chce před akcí uložit případně otevřený projekt (pokud ano, uloží jej). Indikuje, zda-li se má pokračovat v akci, kvůli které bylo uložení nabídnuto.
+     * 
+     * @param e událost akce, která předchází výzvě
+     * 
+     * @return zda-li se má pokračovat v akci, kvůli které bylo uložení nabídnuto
+     */
+    public boolean continueAfterSaving(final ActionEvent e) {
+        final int saveConfirmationResult =
+                JOptionPane
+                        .showOptionDialog(frame,
+                                UiLocalizer.print("SAVE_CONFIRMATION_MESSAGE"),
+                                        UiLocalizer.print("SAVE_CONFIRMATION_TITLE"),
+                                JOptionPane.YES_NO_CANCEL_OPTION,
+                                JOptionPane.QUESTION_MESSAGE, Intended.<Icon>nullReference(),
+                                new Object[] { UiLocalizer.print("SAVE_OPTION"),
+                                        UiLocalizer.print("FORFEIT_SAVE_OPTION"),
+                                                UiLocalizer.print("CANCEL_SAVE_OPTION") },
+                                                UiLocalizer.print("SAVE_OPTION"));
+        
+        switch (saveConfirmationResult) {
+            case JOptionPane.YES_OPTION:
+                saveAction.actionPerformed(e);
+                return true;
+            case JOptionPane.NO_OPTION:
+                return true;
+            case JOptionPane.CLOSED_OPTION:
+                return false;
+            case JOptionPane.CANCEL_OPTION:
+                return false;
+            default:
+                throw new AssertionError();
+        }
+    }
+    
+    /**
+     * Pokusí se uzavřít projekt a indikuje, zda-li se má po pokusu pokračovat v akci, které vedla k ukončení. 
+     * 
+     * @param e událost akce, která předchází pokusu
+     * 
+     * @return zda-li se má pokračovat v akci, kvůli které byl pokus proveden
+     */
+    private boolean continueAfterClosing(final ActionEvent e) {
+        if (!projectController.isOpen()) {
+            return true;
+        }
+        
+        if (continueAfterSaving(e)) {
+            projectController.close();
+            saveAction.clearUsed();
+            return true;
+        } else {
+            return false;
+        }
     }
 }

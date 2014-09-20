@@ -60,7 +60,7 @@ public class TransitionArcPanel extends AbstractTypePanel {
                     contentPane.add(panel, BorderLayout.CENTER);
                     
                     final JFrame frame = new JFrame();
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     frame.add(contentPane);
                     frame.pack();
                     frame.setVisible(true);

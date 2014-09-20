@@ -99,6 +99,6 @@ public final class EnterRandomInputNode extends AbstractNode implements RandomNo
      */
     @Override
     public String toString() {
-        return getName().getText() + " (" + getNetwork().getName() + ")[" + getX() + ", " + getY() + "]";
+        return getName().getText() + " (" + getNetwork().getName().getText() + ")[" + getX() + ", " + getY() + "]";
     }
 }

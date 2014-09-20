@@ -36,6 +36,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.SystemRenamedEv
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.SystemRenamedListener;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.views.SystemView;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.SystemName;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.AbstractController;
@@ -183,7 +184,7 @@ public class DefaultSystemController extends AbstractController<SystemView> impl
     public void addNetwork(final String name) {
         Preconditions.checkNotNull(name);
         
-        this.system.addNetwork(name);
+        this.system.addNetwork(SystemName.of(name));
     }
 
     /* (non-Javadoc)
@@ -203,7 +204,7 @@ public class DefaultSystemController extends AbstractController<SystemView> impl
     public void renameSystem(final String newName) {
         Preconditions.checkNotNull(newName);
         
-        this.system.setName(newName);
+        this.system.setName(SystemName.of(newName));
     }
 
     /* (non-Javadoc)
@@ -215,7 +216,7 @@ public class DefaultSystemController extends AbstractController<SystemView> impl
         Preconditions.checkNotNull(newName);
         Preconditions.checkArgument(!newName.isEmpty());
         
-        this.system.renameNetwork(network, newName);
+        this.system.renameNetwork(network, SystemName.of(newName));
     }
 
     /* (non-Javadoc)

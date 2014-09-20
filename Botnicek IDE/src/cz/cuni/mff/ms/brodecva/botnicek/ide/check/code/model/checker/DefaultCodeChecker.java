@@ -118,7 +118,7 @@ public final class DefaultCodeChecker implements CodeChecker, Source {
             prefixDefinitions.append("xmlns" + (prefix.isEmpty() ? "" : ":") + prefix + "=\"" + namespace + "\" ");
         }
                 
-        final String testedDocumentPartOne = String.format(CHECK_DOCUMENT_TEMPLATE_PART_ONE, aimlPrefixSeparated, prefixDefinitions.toString(), aimlSchemaPrefixSeparated, AIML.BACKUP_SCHEMA_LOCATION.getValue(), content);
+        final String testedDocumentPartOne = String.format(CHECK_DOCUMENT_TEMPLATE_PART_ONE, aimlPrefixSeparated, prefixDefinitions.toString(), aimlSchemaPrefixSeparated, AIML.NAMESPACE_URI.getValue() + " " + AIML.BACKUP_SCHEMA_LOCATION.getValue(), content);
         final String template = String.format(TEMPLATE, aimlPrefixSeparated, prefixDefinitions.toString(), aimlSchemaPrefixSeparated, AIML.BACKUP_SCHEMA_LOCATION.getValue(), content);
         final String testedDocumentPartTwo = String.format(CHECK_DOCUMENT_TEMPLATE_PART_TWO, aimlPrefixSeparated, prefixDefinitions.toString(), aimlSchemaPrefixSeparated, AIML.BACKUP_SCHEMA_LOCATION.getValue(), content);
         final String combined = testedDocumentPartOne + template + testedDocumentPartTwo;

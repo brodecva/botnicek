@@ -24,6 +24,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.LayoutManager;
 
+import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -31,6 +32,7 @@ import javax.swing.SwingUtilities;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableBiMap;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcPropertiesDisplayController;
@@ -48,12 +50,14 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.logging.LocalizedLogger;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.FramedComponent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.UnobscuredInternalFrame;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyVetoException;
+import java.net.URL;
+import java.util.Map.Entry;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JScrollPane;
@@ -69,26 +73,30 @@ import javax.swing.event.InternalFrameEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class NetworkInternalWindow implements NetworkView, NodesView, ArcsView {
-    
+public final class NetworkInternalWindow implements NetworkView, NodesView, ArcsView {  
 
     private static final Logger LOGGER = LocalizedLogger.getLogger(NetworkInternalWindow.class);
+
+    private static final LayoutManager NO_LAYOUT = Intended.<LayoutManager>nullReference();
     
     private static final int PLANE_WIDTH = 8000;
     private static final int PLANE_HEIGHT = 4500;
     
-    private static final int HEIGHT = 300;
-    private static final int WIDTH = 400;
+    private static final int HEIGHT = 320;
+    private static final int WIDTH = 480;
 
     private final UnobscuredInternalFrame frame = UnobscuredInternalFrame.create();    
     
-    private final JPanel designPanel = new JPanel(Intended.<LayoutManager>nullReference()) {
+    private final JPanel designPanel = new JPanel(NO_LAYOUT) {
         
         private static final long serialVersionUID = 1L;
 
+        /* (non-Javadoc)
+         * @see javax.swing.JComponent#getPreferredSize()
+         */
         public Dimension getPreferredSize() {
             return new Dimension(PLANE_WIDTH, PLANE_HEIGHT);
-        };
+        }
     };    
     private final JScrollPane designScrollPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
     
@@ -100,8 +108,13 @@ public final class NetworkInternalWindow implements NetworkView, NodesView, Arcs
     private final NetworkController networkController;
     private final NodesController nodesController;
     private final ArcsController arcsController;
-    private final ArcPropertiesDisplayController arcPropertiesController;   
+    private final ArcPropertiesDisplayController arcPropertiesController;
 
+    private BiMap<String, ImageIcon> icons;   
+
+    private static final String BOTNICEK_ICON_NAME = "botnicekIcon";
+    private static final BiMap<String, String> iconNamesToPaths = ImmutableBiMap.<String, String>of(BOTNICEK_ICON_NAME, "images/botnicek.png");
+    
     /**
      * Spustí testovací verzi.
      * 
@@ -112,7 +125,7 @@ public final class NetworkInternalWindow implements NetworkView, NodesView, Arcs
             public void run() {
                 try {
                     final JFrame frame = new JFrame();
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     frame.setSize(new Dimension(600, 600));
                     
                     final JDesktopPane desktopPane = new JDesktopPane();
@@ -225,6 +238,28 @@ public final class NetworkInternalWindow implements NetworkView, NodesView, Arcs
         this.frame.setResizable(true);
         this.frame.setSize(WIDTH, HEIGHT);
         this.frame.setContentPane(this.designScrollPane);
+        
+        this.icons = loadIcons();
+        final ImageIcon botnicekIcon = this.icons.get(BOTNICEK_ICON_NAME);
+        if (Presence.isPresent(botnicekIcon)) {
+            this.frame.setFrameIcon(botnicekIcon);
+        }
+    }
+    
+    private BiMap<String, ImageIcon> loadIcons() {
+        final ImmutableBiMap.Builder<String, ImageIcon> iconsBuilder = ImmutableBiMap.builder();
+        for (final Entry<String, String> iconEntry : iconNamesToPaths.entrySet()) {
+            final String name = iconEntry.getKey();
+            final String path = iconEntry.getValue();
+            
+            final URL iconUrl = getClass().getResource(path);
+            if (Presence.isPresent(iconUrl)) {
+                iconsBuilder.put(name, new ImageIcon(iconUrl));
+            } else {
+                LOGGER.log(Level.WARNING, "MissingIcon", path);
+            }
+        }
+        return iconsBuilder.build();
     }
     
     /* (non-Javadoc)
@@ -353,8 +388,11 @@ public final class NetworkInternalWindow implements NetworkView, NodesView, Arcs
         assert SwingUtilities.isEventDispatchThread();
         Preconditions.checkNotNull(arc);
         
-        final FramedComponent present = this.arcs.remove(arc.getName());
+        final ArcUI present = this.arcs.remove(arc.getName());
         Preconditions.checkArgument(Presence.isPresent(present));
+        
+        present.getFrom().removeOut(present);
+        present.getTo().removeIn(present);
         
         this.designPanel.remove(present);
     }
@@ -366,7 +404,7 @@ public final class NetworkInternalWindow implements NetworkView, NodesView, Arcs
     public void renamed(final Network network) {
         Preconditions.checkNotNull(network);
         
-        this.frame.setTitle(network.getName());
+        this.frame.setTitle(network.getName().getText());
     }
 
     /* (non-Javadoc)

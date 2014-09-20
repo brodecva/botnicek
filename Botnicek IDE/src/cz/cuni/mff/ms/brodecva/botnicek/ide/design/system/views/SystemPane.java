@@ -71,7 +71,7 @@ public class SystemPane implements ArcPropertiesDisplayView, NetworkDisplayView,
             public void run() {
                 try {
                     final JFrame frame = new JFrame();
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     
                     final SystemPane systemPane = SystemPane.create(frame);
                     systemPane.desktopPane.setBackground(Color.BLUE);

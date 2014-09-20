@@ -65,6 +65,7 @@ public final class DefaultPrettyPrinter implements Printer, Serializable {
     public static final int DEFAULT_INDENTATION = 4;
     
     private static final String ENABLE_OPTION_VALUE = "yes";
+    private static final String DISABLE_OPTION_VALUE = "no";
     private static final String INDENT_NUMBER_OPTION_NAME = "indent-number";
     
     private final Transformer transformer;
@@ -108,7 +109,7 @@ public final class DefaultPrettyPrinter implements Printer, Serializable {
         }
         
         transformer.setOutputProperty(OutputKeys.INDENT, ENABLE_OPTION_VALUE);
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, ENABLE_OPTION_VALUE);
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, DISABLE_OPTION_VALUE);
         return transformer;
     }
     

@@ -70,6 +70,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.AvailableRefere
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.NetworkAddedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.updates.Update;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.SystemName;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
 import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
@@ -82,7 +83,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
  * @see DefaultSystem
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({NetworkAddedEvent.class, Priority.class, NormalWords.class, TransitionArc.class, RecurentArc.class})
+@PrepareForTest({NetworkAddedEvent.class, Priority.class, NormalWords.class, TransitionArc.class, RecurentArc.class, SystemName.class})
 @Category(UnitTest.class)
 public class DefaultSystemTest {
 
@@ -100,10 +101,12 @@ public class DefaultSystemTest {
     private static final String OTHER_TO_NODE_NAME = "4";
     private static final String REFERRING_ARC_NAME = "Referring";
     private static final String AFFECTED_ARC_NAME = "Affected";
-    private static final String OTHER_NETWORK_NAME = "Other network";
-    private static final String NETWORK_NAME = "Network";
-    private static final String SYSTEM_NAME = "System";
-    private static final String RESERVED_NETWORK_NAME = "Reserved";
+    
+    private SystemName otherNetworkNameDummy = Intended.nullReference();
+    private SystemName networkNameDummy = Intended.nullReference();
+    private SystemName someNetworkNameDummy = Intended.nullReference();
+    private SystemName systemNameDummy = Intended.nullReference();
+    private SystemName reservedNetworkNameDummy = Intended.nullReference();
 
     private System tested = Intended.nullReference();
     private SystemGraph graph = Intended.nullReference();
@@ -151,6 +154,12 @@ public class DefaultSystemTest {
      */
     @Before
     public void setUp() throws Exception {
+        otherNetworkNameDummy = PowerMock.createStrictMock(SystemName.class);       
+        networkNameDummy = PowerMock.createStrictMock(SystemName.class);
+        someNetworkNameDummy = PowerMock.createStrictMock(SystemName.class);
+        systemNameDummy = PowerMock.createStrictMock(SystemName.class);
+        reservedNetworkNameDummy = PowerMock.createStrictMock(SystemName.class);
+        
         graph = EasyMock.createStrictMock(SystemGraph.class);
         
         statesNamingAuthority = EasyMock.createStrictMock(NamingAuthority.class);
@@ -171,14 +180,14 @@ public class DefaultSystemTest {
         
         dispatcher = EasyMock.createStrictMock(Dispatcher.class);
         
-        this.tested = DefaultSystem.create(SYSTEM_NAME, graph, statesNamingAuthority, variablesNamingAuthority, nodeModifier, arcModifier, realignmentProcessor, ImmutableSet.of(RESERVED_NETWORK_NAME), systemVisitorFactory, initialNodeFactory, initialArcFactory, dispatcher);
+        this.tested = DefaultSystem.create(systemNameDummy, graph, statesNamingAuthority, variablesNamingAuthority, nodeModifier, arcModifier, realignmentProcessor, ImmutableSet.of(reservedNetworkNameDummy), systemVisitorFactory, initialNodeFactory, initialArcFactory, dispatcher);
         
         networkStub = EasyMock.createMock("networkStub", Network.class);
-        EasyMock.expect(networkStub.getName()).andStubReturn(NETWORK_NAME);
+        EasyMock.expect(networkStub.getName()).andStubReturn(networkNameDummy);
         EasyMock.expect(networkStub.getSystem()).andStubReturn(tested);
         
         otherNetworkStub = EasyMock.createMock("otherNetworkStub", Network.class);
-        EasyMock.expect(otherNetworkStub.getName()).andStubReturn(OTHER_NETWORK_NAME);
+        EasyMock.expect(otherNetworkStub.getName()).andStubReturn(otherNetworkNameDummy);
         EasyMock.expect(otherNetworkStub.getSystem()).andStubReturn(tested);
         
         affectedArcNameDummy = EasyMock.createStrictMock(NormalWord.class);
@@ -324,7 +333,8 @@ public class DefaultSystemTest {
                 toExitNodeStub, otherFromEnterNodeStub, otherToExitNodeStub,
                 otherNetworkOtherFromEnterNodeStub, otherNetworkOtherToExitNodeStub);
         PowerMock.replay(affectedArcStub, priorityDummy, thisTemporaryArcStub,
-                otherNetworkTemporaryArcStub, otherNetworkReferringArcStub, thisNetworkReferringArcStub);
+                otherNetworkTemporaryArcStub, otherNetworkReferringArcStub, thisNetworkReferringArcStub,
+                otherNetworkNameDummy, networkNameDummy, someNetworkNameDummy, systemNameDummy, reservedNetworkNameDummy);
     }
     
     private void verifyTested() {
@@ -341,7 +351,7 @@ public class DefaultSystemTest {
                 toExitNodeStub, otherFromEnterNodeStub, otherToExitNodeStub,
                 otherNetworkOtherFromEnterNodeStub, otherNetworkOtherToExitNodeStub);
         PowerMock.verify(affectedArcStub, priorityDummy, thisTemporaryArcStub,
-                otherNetworkTemporaryArcStub, otherNetworkReferringArcStub, thisNetworkReferringArcStub);
+                otherNetworkTemporaryArcStub, otherNetworkReferringArcStub, thisNetworkReferringArcStub, otherNetworkNameDummy, networkNameDummy, someNetworkNameDummy, systemNameDummy, reservedNetworkNameDummy);
     }
     
     /**
@@ -351,6 +361,11 @@ public class DefaultSystemTest {
      */
     @After
     public void tearDown() throws Exception {
+        otherNetworkNameDummy = Intended.nullReference();
+        networkNameDummy = Intended.nullReference();
+        someNetworkNameDummy = Intended.nullReference();
+        systemNameDummy = Intended.nullReference();
+        reservedNetworkNameDummy = Intended.nullReference();
         tested = Intended.nullReference();
         graph = Intended.nullReference();
         statesNamingAuthority = Intended.nullReference();
@@ -392,7 +407,7 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor)} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, String)}.
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor)} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, SystemName)}.
      */
     @Test
     public void testAccept() {
@@ -407,7 +422,7 @@ public class DefaultSystemTest {
         
         replayTested();
         
-        this.tested.addNetwork(networkMock, NETWORK_NAME);
+        this.tested.addNetwork(networkMock, networkNameDummy);
         this.tested.accept(visitorMock);
         
         EasyMock.verify(visitorMock);
@@ -415,7 +430,7 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#getNetworks()} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, String)}.
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#getNetworks()} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, SystemName)}.
      */
     @Test
     public void testGetNetworks() {
@@ -423,14 +438,14 @@ public class DefaultSystemTest {
         
         replayTested();
         
-        this.tested.addNetwork(networkStub, NETWORK_NAME);
+        this.tested.addNetwork(networkStub, networkNameDummy);
         assertEquals(ImmutableSet.of(networkStub), this.tested.getNetworks());
         
         verifyTested();
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, String)}.
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, SystemName)}.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAddNetworkWhenNameAlreadyPresent() {
@@ -438,30 +453,30 @@ public class DefaultSystemTest {
         
         replayTested();
         
-        this.tested.addNetwork(networkStub, NETWORK_NAME);
+        this.tested.addNetwork(networkStub, networkNameDummy);
         try {
-            this.tested.addNetwork(otherNetworkStub, NETWORK_NAME);
+            this.tested.addNetwork(otherNetworkStub, networkNameDummy);
         } finally {
             verifyTested();
         }
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, String)}.
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, SystemName)}.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAddNetworkWhenNameAlreadyReserved() {
         replayTested();
         
         try {
-            this.tested.addNetwork(networkStub, RESERVED_NETWORK_NAME);
+            this.tested.addNetwork(networkStub, reservedNetworkNameDummy);
         } finally {
             verifyTested();
         }
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, String)}.
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, SystemName)}.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAddNetworkWhenAlreadyPresent() {
@@ -469,16 +484,16 @@ public class DefaultSystemTest {
         
         replayTested();
         
-        this.tested.addNetwork(networkStub, NETWORK_NAME);
+        this.tested.addNetwork(networkStub, networkNameDummy);
         try {
-            this.tested.addNetwork(networkStub, "Same network");
+            this.tested.addNetwork(networkStub, someNetworkNameDummy);
         } finally {
             verifyTested();
         }
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, String)}.
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, SystemName)}.
      */
     @Test
     public void testAddNetworkExpectEventFiredWithCorrectParameters() {
@@ -493,7 +508,7 @@ public class DefaultSystemTest {
         
         replayTested();
         
-        this.tested.addNetwork(networkStub, NETWORK_NAME);
+        this.tested.addNetwork(networkStub, networkNameDummy);
         
         PowerMock.verify(NetworkAddedEvent.class);
         PowerMock.verify(eventDummy);
@@ -501,7 +516,7 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#removeNetwork(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)}, {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#getNetworks()} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, String)}.
+     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#removeNetwork(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)}, {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#getNetworks()} and {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, SystemName)}.
      */
     @Test
     public void testRemoveNetworkExpectAddedRemoved() {
@@ -524,7 +539,7 @@ public class DefaultSystemTest {
         
         replayTested();
         
-        this.tested.addNetwork(networkMock, NETWORK_NAME);
+        this.tested.addNetwork(networkMock, networkNameDummy);
         this.tested.removeNetwork(networkMock);
         assertTrue(this.tested.getNetworks().isEmpty());
         
@@ -627,12 +642,12 @@ public class DefaultSystemTest {
         
         replayTested();
         
-        this.tested.addNetwork(networkStub, NETWORK_NAME);
+        this.tested.addNetwork(networkStub, networkNameDummy);
         this.tested.addNode(networkStub, FROM_NODE_X, FROM_NODE_Y);
         this.tested.addNode(networkStub, TO_NODE_X, TO_NODE_Y);
         this.tested.addArc(networkStub, affectedArcNameDummy, fromIsolatedNodeStub, toIsolatedNodeStub);
         
-        this.tested.addNetwork(otherNetworkStub, OTHER_NETWORK_NAME);
+        this.tested.addNetwork(otherNetworkStub, otherNetworkNameDummy);
         this.tested.addNode(otherNetworkStub, OTHER_FROM_NODE_X, OTHER_FROM_NODE_Y);
         this.tested.addNode(otherNetworkStub, OTHER_TO_NODE_X, OTHER_TO_NODE_Y);
         this.tested.addArc(otherNetworkStub, referringArcNameDummy, otherNetworkOtherFromIsolatedNodeStub, otherNetworkOtherToIsolatedNodeStub);
@@ -784,12 +799,12 @@ public class DefaultSystemTest {
         
         replayTested();
         
-        this.tested.addNetwork(networkMock, NETWORK_NAME);
+        this.tested.addNetwork(networkMock, networkNameDummy);
         this.tested.addNode(networkMock, FROM_NODE_X, FROM_NODE_Y);
         this.tested.addNode(networkMock, TO_NODE_X, TO_NODE_Y);
         this.tested.addArc(networkMock, affectedArcNameDummy, fromIsolatedNodeStub, toIsolatedNodeStub);
         
-        this.tested.addNetwork(otherNetworkMock, OTHER_NETWORK_NAME);
+        this.tested.addNetwork(otherNetworkMock, otherNetworkNameDummy);
         this.tested.addNode(otherNetworkMock, OTHER_FROM_NODE_X, OTHER_FROM_NODE_Y);
         this.tested.addNode(otherNetworkMock, OTHER_TO_NODE_X, OTHER_TO_NODE_Y);
         this.tested.addArc(otherNetworkMock, referringArcNameDummy, otherNetworkOtherFromIsolatedNodeStub, otherNetworkOtherToIsolatedNodeStub);
@@ -824,7 +839,7 @@ public class DefaultSystemTest {
         
         replayTested();
         
-        this.tested.addNetwork(networkStub, NETWORK_NAME);
+        this.tested.addNetwork(networkStub, networkNameDummy);
         this.tested.addNode(networkStub, FROM_NODE_X, FROM_NODE_Y);
         assertEquals(ImmutableSet.of(fromIsolatedNodeStub), this.tested.getNodes(networkStub));
         
@@ -864,7 +879,7 @@ public class DefaultSystemTest {
         
         replayTested();
         
-        this.tested.addNetwork(networkStub, NETWORK_NAME);
+        this.tested.addNetwork(networkStub, networkNameDummy);
         this.tested.addNode(networkStub, FROM_NODE_X, FROM_NODE_Y);
         this.tested.removeNode(fromIsolatedNodeStub);
         assertTrue(this.tested.getNodes(networkStub).isEmpty());
@@ -928,7 +943,7 @@ public class DefaultSystemTest {
         
         replayTested();
         
-        this.tested.addNetwork(networkStub, OTHER_NETWORK_NAME);
+        this.tested.addNetwork(networkStub, otherNetworkNameDummy);
         this.tested.addNode(networkStub, OTHER_FROM_NODE_X, OTHER_FROM_NODE_Y);
         this.tested.addNode(networkStub, OTHER_TO_NODE_X, OTHER_TO_NODE_Y);
         this.tested.addArc(networkStub, referringArcNameDummy, fromIsolatedNodeStub, toIsolatedNodeStub);
@@ -1069,7 +1084,7 @@ public class DefaultSystemTest {
         
         replayTested();
         
-        this.tested.addNetwork(networkStub, NETWORK_NAME);
+        this.tested.addNetwork(networkStub, networkNameDummy);
         this.tested.addNode(networkStub, FROM_NODE_X, FROM_NODE_Y);
         this.tested.addNode(networkStub, TO_NODE_X, TO_NODE_Y);
         this.tested.addArc(networkStub, affectedArcNameDummy, fromIsolatedNodeStub, toIsolatedNodeStub);

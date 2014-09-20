@@ -47,17 +47,22 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.root.Toplevel;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Topic;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder.DefaultCodeContentBuilder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.compile.Compiler;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.compile.CompilerFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.compile.DefaultCompilerFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.compile.library.Randomize;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.compile.library.Recursion;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.TransitionArc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.SystemName;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.print.DefaultPrettyPrinter;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.print.PrintException;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.print.Printer;
@@ -78,6 +83,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.Runtime;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.RuntimeFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.RuntimeSettings;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
+import cz.cuni.mff.ms.brodecva.botnicek.library.api.AIMLConversationConfiguration;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.ConversationConfiguration;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration;
@@ -85,6 +91,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.api.SessionException;
 import cz.cuni.mff.ms.brodecva.botnicek.library.loader.LoaderException;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.SimpleNormalizer;
+import cz.cuni.mff.ms.brodecva.botnicek.library.processor.set.DisplayStrategy;
 
 /**
  * <p>Instance projektové třídy slouží k provádění základních operací, jako je otevření, uložení, export, konfigurace a provedení testu.</p>
@@ -175,7 +182,7 @@ public final class Project {
     /**
      * Rezervovaný název exportního souboru knihovny.
      */
-    public static final String RESERVED_LIBRARY_NAME = "botnicek";
+    public static final SystemName RESERVED_LIBRARY_NAME = SystemName.of("botnicek");
     
     private final NamingAuthority statesNamingAuthority;
     private final NamingAuthority predicatesNamingAuthority;
@@ -219,10 +226,9 @@ public final class Project {
      * @param dispatcher vysílač událostí
      * @return výchozí projekt
      */
-    public static Project createAndOpen(final String name, final Dispatcher dispatcher) {        
+    public static Project createAndOpen(final SystemName name, final Dispatcher dispatcher) {        
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(dispatcher);
-        Preconditions.checkArgument(!name.isEmpty());
         
         final NamingAuthority statesNamingAuthority = NormalizedNamingAuthority.create(new SimpleNormalizer());
         final NamingAuthority predicatesNamingAuthority = NormalizedNamingAuthority.create(new SimpleNormalizer());
@@ -247,15 +253,43 @@ public final class Project {
         predicatesNamingAuthority.use(NormalWords.join(settings.getPrefix(), settings.getTestingPredicate()).getText());
         
         final Project newInstance = create(system, statesNamingAuthority, predicatesNamingAuthority, dispatcher, settings, runtimeSettings, rendererFactory, printer, compilerFactory, runtimeFactory, BufferedFileWriterFactory.create());
+        
+        newInstance.fillNew();
+        
         dispatcher.fire(ProjectOpenedEvent.create(newInstance));
         return newInstance;
+    }
+
+    private void fillNew() {
+        final System addedSystem = getSystem();
+        
+        final SystemName addNetworkName = SystemName.of("HelloWorld");
+        addedSystem.addNetwork(addNetworkName);
+        
+        final Network addedNetwork = addedSystem.getNetwork(addNetworkName);
+        
+        addedSystem.addNode(addedNetwork, 160, 200);
+        final Node startNode = addedSystem.getNode(NormalWords.of("1"));
+        final NormalWord startNodeName = NormalWords.of("START");
+        addedSystem.changeNode(startNode, startNodeName);
+        
+        addedSystem.addNode(addedNetwork, 260, 120);
+        final Node finishNode = addedSystem.getNode(NormalWords.of("2"));
+        final NormalWord finishNodeName = NormalWords.of("END");
+        addedSystem.changeNode(finishNode, finishNodeName);
+        
+        final NormalWord arcName = NormalWords.of("HELLO");
+        addedSystem.addArc(addedNetwork, arcName, startNodeName, finishNodeName);
+        addedSystem.changeArc(addedSystem.getArc(arcName), arcName, Priority.of(1), TransitionArc.class, DefaultCodeContentBuilder.create(DefaultCodeChecker.create(runtimeSettings.getBotConfiguration(), runtimeSettings.getLanguageConfiguration(), settings.getNamespacesToPrefixes()), "Hello World!").build());
+        
+        setConversationConfiguration(AIMLConversationConfiguration.of(ImmutableMap.of("TOPIC", startNodeName.getText() + " " + joinSuccessState().getText()), ImmutableMap.<String, DisplayStrategy>of()));
     }
     
     /**
      * Načte projekt z umístění.
      * 
      * @param projectPath cesta k souboru s projektem
-     * @param dispatcher TODO
+     * @param dispatcher rozesílač událostí
      * @return načtený projekt
      * @throws IOException pokud dojde k chybě při otevírání či načítání
      * @throws ClassNotFoundException pokud je otevřená definice projektu nekompatibilní
@@ -423,13 +457,13 @@ public final class Project {
         return result;
     }
 
-    private void exportUnit(final String description, final List<Topic> content,
+    private void exportUnit(final SystemName name, final List<Topic> content,
             final Renderer render, final Path directory) throws IOException {
         final String text = render(render, content);
         final String formatted = format(text);
         
         final String unitName =
-                String.format("%1s$.%2s$", description, AIML.FILE_SUFFIX);
+                String.format("%s.%s", name.getText(), AIML.FILE_SUFFIX);
         
         writeUnit(directory, unitName, formatted);
     }
@@ -524,18 +558,18 @@ public final class Project {
     /**
      * Vygeneruje a načte kód obsah do běhového prostředí.
      * 
-     * @param description formální popis jednotky
+     * @param name název jednotky
      * @param content zdroj dat ke generování kódu
      * @param renderer generátor kódu
      * @param runtime plněné běhové prostředí
      * @throws LoaderException pokud dojde k chybě při načítání kódu
      */
-    private void loadUnit(final String description,
+    private void loadUnit(final SystemName name,
             final List<? extends Toplevel> content, final Renderer renderer,
             final Runtime runtime) throws LoaderException {
         final String text = render(renderer, content);
         
-        runtime.load(description, text);
+        runtime.load(name.getText(), text);
     }
 
     /**
@@ -549,7 +583,6 @@ public final class Project {
             final List<? extends Toplevel> content) {
         final Aiml root = Aiml.create(content, this.settings.getNamespacesToPrefixes());
         final String text = renderer.render(root);
-        
         return text;
     }
 

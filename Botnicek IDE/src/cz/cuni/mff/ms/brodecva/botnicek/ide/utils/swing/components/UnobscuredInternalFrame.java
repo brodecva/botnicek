@@ -59,7 +59,7 @@ public class UnobscuredInternalFrame extends JInternalFrame {
             contentPane.add(desktopPane);
             
             final JFrame frame = new JFrame();
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setContentPane(contentPane);
             frame.setSize(300, 300);
             frame.setVisible(true);

@@ -142,7 +142,7 @@ public enum XML {
     /**
      * Prostor jmen atributu definice prostoru jmen.
      */
-    XMLNS_NAMESPACE("http://www.w3.org/2000/xmlns/"),
+    XMLNS_NAMESPACE_URI("http://www.w3.org/2000/xmlns/"),
     
     /**
      * Středník oddělující prefix od lokálního názvu.

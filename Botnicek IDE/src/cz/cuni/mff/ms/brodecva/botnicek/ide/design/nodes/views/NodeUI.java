@@ -159,7 +159,7 @@ public final class NodeUI extends FramedComponent implements DragFinishedListene
     }
     
     /**
-     * Vytvoří komponentu hrany a zaregistruje na ní posluchače tak, aby po poklepání na ni fungovala funkcionalita specifikovaná v popis grafu sítě (přejmenovávání, změna typů uzlů, odebírání).
+     * Vytvoří komponentu hrany a zaregistruje na ní posluchače tak, aby po poklepání na ni byla realizována funkcionalita specifikovaná v popis grafu sítě (přejmenovávání, změna typů uzlů, odebírání).
      * 
      * @param node model uzlu
      * @param dimension rozměry
@@ -170,22 +170,26 @@ public final class NodeUI extends FramedComponent implements DragFinishedListene
         return create(node.getName(), toPositional(node), toProceed(node), toDispatch(node), new Point(node.getX(), node.getY()), DEFAULT_DIMENSION, controller);
     }
     
-    private static NodeUI create(final NormalWord name, final PositionalType positional, final ProceedType proceed, final DispatchType dispatch, final Point location, final Dimension dimension, final NodesController controller) {
+    private static NodeUI create(final NormalWord name, final PositionalType positional, final ProceedType proceed, final DispatchType dispatch, final Point centerLocation, final Dimension dimension, final NodesController controller) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(positional);
         Preconditions.checkNotNull(proceed);
         Preconditions.checkNotNull(dispatch);
-        Preconditions.checkNotNull(location);
+        Preconditions.checkNotNull(centerLocation);
         Preconditions.checkNotNull(dimension);
         Preconditions.checkNotNull(controller);
-        Preconditions.checkArgument(location.getX() > 0);
-        Preconditions.checkArgument(location.getY() > 0);
-        Preconditions.checkArgument(dimension.getHeight() > 0);
-        Preconditions.checkArgument(dimension.getWidth() > 0);    
+        
+        final Point centerLocationCopy = new Point(centerLocation);
+        final Dimension dimensionCopy = new Dimension(dimension);
+        Preconditions.checkArgument(centerLocationCopy.x >= 0);
+        Preconditions.checkArgument(centerLocationCopy.y >= 0);
+        Preconditions.checkArgument(dimensionCopy.height > 0);
+        Preconditions.checkArgument(dimensionCopy.width > 0);    
                 
         final NodeUI newInstance = new NodeUI(name, positional, proceed, dispatch, controller);
         
-        final Rectangle bounds = new Rectangle(new Point((int) (location.getX() - dimension.getWidth() / 2), (int) (location.getY() -  dimension.getHeight() / 2)), dimension);
+        final Point cornerLocation = getCornerLocation(centerLocationCopy, dimensionCopy);
+        final Rectangle bounds = new Rectangle(cornerLocation, dimensionCopy);
         newInstance.setFramedBounds(bounds);
         
         newInstance.addComponentListener(new ComponentAdapter() {
@@ -229,6 +233,15 @@ public final class NodeUI extends FramedComponent implements DragFinishedListene
         });
         
         return newInstance;
+    }
+
+    private static Point getCornerLocation(final Point centerLocation,
+            final Dimension dimension) {
+        return new Point(centerLocation.x - dimension.width / 2, centerLocation.y -  dimension.height / 2);
+    }
+    
+    private static Point getCenterLocation(final Point cornerLocation, final Dimension dimension) {
+        return new Point(cornerLocation.x + dimension.width / 2, cornerLocation.y + dimension.height / 2);
     }
     
     private void removeNode() {
@@ -346,7 +359,9 @@ public final class NodeUI extends FramedComponent implements DragFinishedListene
     public final void nodeMoved(final Node newVersion) {
         Preconditions.checkNotNull(newVersion);
         
-        setContentLocation(newVersion.getX(), newVersion.getY());
+        final Point cornerLocation = getCornerLocation(new Point(newVersion.getX(), newVersion.getY()), new Dimension(getContentWidth(), getContentHeight()));
+        
+        setContentLocation(cornerLocation.x, cornerLocation.y);
         this.invalidate();
     }
     
@@ -529,6 +544,18 @@ public final class NodeUI extends FramedComponent implements DragFinishedListene
      */
     @Override
     public void finished() {
-        this.nodesController.changeNode(getNodeName(), Math.max(0, getContentX()), Math.max(0, getContentY()));
+        final Dimension parentDimension = getParent().getSize();
+        
+        final Point contentLocation = new Point(getContentX(), getContentY());
+        final Dimension contentDimension = new Dimension(getContentWidth(), getContentHeight());
+        
+        final Point centerLocation = getCenterLocation(contentLocation, contentDimension);
+        
+        final int minimumContentX = 0;
+        final int minimumContentY = 0;
+        final int maximumContentX = parentDimension.width;
+        final int maximumContentY = parentDimension.height;
+        
+        this.nodesController.changeNode(getNodeName(), Math.min(maximumContentX, Math.max(minimumContentX, centerLocation.x)), Math.min(maximumContentY, Math.max(minimumContentY, centerLocation.y)));
     }
 }

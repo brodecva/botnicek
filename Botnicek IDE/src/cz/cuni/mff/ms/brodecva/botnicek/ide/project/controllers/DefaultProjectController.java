@@ -50,6 +50,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.controllers.DefaultSys
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.controllers.SystemController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events.SystemClosedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.SystemName;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.BotSettingsOpenedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.BotSettingsOpenedListener;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.ConversationSettingsOpenedEvent;
@@ -430,6 +431,10 @@ public class DefaultProjectController extends AbstractController<ProjectView>
     public void open(final Path projectPath) throws FileNotFoundException,
             ClassNotFoundException, IOException {
         Preconditions.checkNotNull(projectPath);
+        
+        if (isOpen()) {
+            close();
+        }
 
         this.currentProject = Optional.of(Project.open(projectPath, getEventManager()));
     }
@@ -478,8 +483,12 @@ public class DefaultProjectController extends AbstractController<ProjectView>
     public void createNew(final String name) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(name.isEmpty());
+        
+        if (isOpen()) {
+            close();
+        }
 
-        final Project newProject = Project.createAndOpen(name, getEventManager());
+        final Project newProject = Project.createAndOpen(SystemName.of(name), getEventManager());
         this.currentProject = Optional.of(newProject);
     }
 

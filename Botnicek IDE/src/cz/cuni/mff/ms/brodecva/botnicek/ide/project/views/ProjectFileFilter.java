@@ -34,7 +34,15 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
  */
 final class ProjectFileFilter extends FileFilter {
     
-    private final static String PROJECT_FILE_EXTENSION = "btk";
+    /**
+     * Koncovka projektových souborů botníčku.
+     */
+    public final static String PROJECT_FILE_EXTENSION = "btk";
+    
+    /**
+     * Oddělovač koncovky souboru.
+     */
+    public static final String EXTENSION_SEPARATOR = ".";
     
     /* (non-Javadoc)
      * @see javax.swing.filechooser.FileFilter#accept(java.io.File)

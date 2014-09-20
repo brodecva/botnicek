@@ -31,6 +31,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
@@ -111,7 +112,7 @@ public final class BotSettingsDialog implements BotSettingsView {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                     
                     final JFrame frame = new JFrame();
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     
                     final BotSettingsDialog dialog = BotSettingsDialog.create(frame);
                     
@@ -170,8 +171,7 @@ public final class BotSettingsDialog implements BotSettingsView {
             public void actionPerformed(final ActionEvent e) {
                 newInstance.predicatesTableModel.addRow();
                 
-                newInstance.contentPane.revalidate();
-                newInstance.dialog.pack();
+                newInstance.updateSize();
             }
         });
         
@@ -186,8 +186,7 @@ public final class BotSettingsDialog implements BotSettingsView {
                 
                 newInstance.beforeLoadingOrderList.addElement(input);
                 
-                newInstance.contentPane.revalidate();
-                newInstance.dialog.pack();
+                newInstance.updateSize();
             }
         });
         
@@ -202,8 +201,7 @@ public final class BotSettingsDialog implements BotSettingsView {
                 
                 newInstance.afterLoadingOrderList.addElement(input);
                 
-                newInstance.contentPane.revalidate();
-                newInstance.dialog.pack();
+                newInstance.updateSize();
             }
         });
         
@@ -226,13 +224,11 @@ public final class BotSettingsDialog implements BotSettingsView {
         
         newInstance.dialog.addWindowListener(new WindowAdapter() {
             /* (non-Javadoc)
-             * @see java.awt.event.WindowAdapter#windowClosed(java.awt.event.WindowEvent)
+             * @see java.awt.event.WindowAdapter#windowClosing(java.awt.event.WindowEvent)
              */
             @Override
-            public void windowClosed(WindowEvent e) {
+            public void windowClosing(WindowEvent e) {
                 botSettingsController.removeView(newInstance);
-                
-                super.windowClosed(e);
             }
         });
         
@@ -262,22 +258,27 @@ public final class BotSettingsDialog implements BotSettingsView {
         this.botPredicatesTable = new JTable(predicatesTableModel);
                 
         this.nameLabel.setLabelFor(this.nameTextField);
-        this.nameLabel.setDisplayedMnemonic(KeyEvent.VK_N);
+        this.nameLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("BotNameMnemonics")).getKeyCode());
         
         this.filesLocationLabel.setLabelFor(this.filesLocationTextField);
-        this.filesLocationLabel.setDisplayedMnemonic(KeyEvent.VK_F);
+        this.filesLocationLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("FilesMnemonics")).getKeyCode());
         
         this.gossipPathLabel.setLabelFor(this.gossipPathTextField);
-        this.gossipPathLabel.setDisplayedMnemonic(KeyEvent.VK_G);
+        this.gossipPathLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("GossipMnemonics")).getKeyCode());
         
         this.beforeLoadingOrderLabel.setLabelFor(this.beforeLoadingOrderList);
-        this.beforeLoadingOrderLabel.setDisplayedMnemonic(KeyEvent.VK_B);
+        this.beforeLoadingOrderLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("BeforeMnemonics")).getKeyCode());
         
         this.afterLoadingOrderLabel.setLabelFor(this.afterLoadingOrderList);
-        this.afterLoadingOrderLabel.setDisplayedMnemonic(KeyEvent.VK_A);
+        this.afterLoadingOrderLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("AfterMnemonics")).getKeyCode());
         
         this.botPredicatesLabel.setLabelFor(this.botPredicatesTable);
-        this.botPredicatesLabel.setDisplayedMnemonic(KeyEvent.VK_P);
+        this.botPredicatesLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("BotPredicatesMnemonics")).getKeyCode());
+        
+        this.addBeforeLoadingOrderItemButton.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("AddBeforeMnemonics")).getKeyCode());
+        this.addAfterLoadingOrderItemButton.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("AddAfterMnemonics")).getKeyCode());
+        this.addBotPredicateButton.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("AddBotPredicateMnemonics")).getKeyCode());
+        this.setButton.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("SetMnemonics")).getKeyCode());
         
         this.contentPaneLayout.setHorizontalGroup(
                 contentPaneLayout.createParallelGroup(Alignment.LEADING)
@@ -332,20 +333,20 @@ public final class BotSettingsDialog implements BotSettingsView {
                     .addGroup(contentPaneLayout.createParallelGroup(Alignment.BASELINE)
                         .addComponent(this.beforeLoadingOrderLabel)
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addComponent(beforeLoadingOrderList)
+                            .addComponent(beforeLoadingOrderList, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addComponent(addBeforeLoadingOrderItemButton)))
                     .addPreferredGap(ComponentPlacement.RELATED)
                     .addGroup(contentPaneLayout.createParallelGroup(Alignment.BASELINE)
                         .addComponent(this.afterLoadingOrderLabel)
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addComponent(afterLoadingOrderList)
+                            .addComponent(afterLoadingOrderList, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addComponent(addAfterLoadingOrderItemButton)))
                     .addPreferredGap(ComponentPlacement.UNRELATED)
                     .addGroup(contentPaneLayout.createParallelGroup(Alignment.BASELINE)
                         .addComponent(this.botPredicatesLabel)
                         .addGroup(contentPaneLayout.createSequentialGroup()
                             .addComponent(this.botPredicatesTable.getTableHeader())
-                            .addComponent(this.botPredicatesTable)
+                            .addComponent(this.botPredicatesTable, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addComponent(this.addBotPredicateButton)))
                     .addPreferredGap(ComponentPlacement.UNRELATED)
                     .addComponent(this.setButton, GroupLayout.PREFERRED_SIZE, SET_BUTTON_PREFERRED_HEIGHT, GroupLayout.PREFERRED_SIZE))
@@ -359,7 +360,6 @@ public final class BotSettingsDialog implements BotSettingsView {
         this.dialog.pack();
     }
 
-
     /* (non-Javadoc)
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.BotSettingsView#updatedBotConfiguration(cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration)
      */
@@ -372,13 +372,21 @@ public final class BotSettingsDialog implements BotSettingsView {
         this.filesLocationTextField.setText(botConfiguration.getFilesLocation().toString());
         this.gossipPathTextField.setText(botConfiguration.getGossipPath().toString());        
         this.beforeLoadingOrderList.setDefaultModel(botConfiguration.getBeforeLoadingOrder());
-        this.afterLoadingOrderList.setDefaultModel(botConfiguration.getAfterLoadingOrder());        
+        this.afterLoadingOrderList.setDefaultModel(botConfiguration.getAfterLoadingOrder());
+        
+        updateSize();
+    }
+    
+    private void updateSize() {
+        this.contentPane.revalidate();
+        this.dialog.pack();
     }
 
     /**
      * Zobrazí dialog.
      */
     public void show() {
+        this.dialog.setLocationRelativeTo(this.dialog.getParent());
         this.dialog.setVisible(true);
     }
 }

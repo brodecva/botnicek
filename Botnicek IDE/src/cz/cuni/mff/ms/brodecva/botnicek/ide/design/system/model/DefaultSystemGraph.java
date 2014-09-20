@@ -290,10 +290,11 @@ public final class DefaultSystemGraph implements SystemGraph, Serializable {
                 getReferencesCopy(references);
         final Set<EnterNode> initialsCopy = getInitialsCopy(initials);
 
-        this.baseGraph.removeEdge(removed);
-
         final Node from = removed.getFrom();
         final Node to = removed.getTo();
+        
+        this.baseGraph.removeEdge(removed);
+        
         final Node newFrom = processor.realign(from);
         final Node newTo = processor.realign(to);
 

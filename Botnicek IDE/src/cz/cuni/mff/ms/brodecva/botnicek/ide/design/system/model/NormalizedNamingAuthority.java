@@ -49,7 +49,7 @@ public final class NormalizedNamingAuthority implements NamingAuthority, Seriali
     private static final long serialVersionUID = 1L;
     
     private static final String EMPTY_SUBMITTED_PART = "";
-    private static final int DEFAULT_START = 2;
+    private static final int DEFAULT_START = 1;
     
     private final Set<String> used = new HashSet<>();
     private final Normalizer normalizer;

@@ -36,6 +36,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Text;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Topic;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor;
@@ -46,6 +47,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
+import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
 
 /**
@@ -56,7 +58,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
  * @see DefaultTranslatingObserver
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ Stack.class, Topic.class })
+@PrepareForTest({ Stack.class, Topic.class, Text.class })
 @Category(UnitTest.class)
 public class DefaultTranslatingObserverTest {
 
@@ -84,6 +86,8 @@ public class DefaultTranslatingObserverTest {
     
     private Arc arcMock = Intended.nullReference();
     private Node nodeMock = Intended.nullReference();
+
+    private Text spaceDummy = Intended.nullReference();
 
     /**
      * Vytvoří testovací objekty.
@@ -138,6 +142,9 @@ public class DefaultTranslatingObserverTest {
         nodeMock = EasyMock.createMock(Node.class);
         arcMock = EasyMock.createMock(Arc.class);
         
+        spaceDummy = PowerMock.createStrictMock(Text.class);
+        PowerMock.replay(spaceDummy);
+        
         this.tested = DefaultTranslatingObserver.create(this.nodeTopicFactoryStub, this.stackProcessorDummy, this.dispatchProcessorDummy, this.proceedProcessorDummy, this.testProcessorStub);
         
         PowerMock.mockStatic(Stack.class);
@@ -172,8 +179,9 @@ public class DefaultTranslatingObserverTest {
         arcMock = Intended.nullReference();
         nodeMock = Intended.nullReference();
         
-        this.tested = Intended.nullReference();
+        spaceDummy = Intended.nullReference();
         
+        this.tested = Intended.nullReference();
     }
     
     private void verifyNodeProcessorDummiesNotTouched() {
@@ -230,7 +238,11 @@ public class DefaultTranslatingObserverTest {
         EasyMock.expect(nodeMock.accept(this.proceedProcessorDummy)).andStubReturn(ImmutableList.of(proceedProcessingResultElementDummy));
         EasyMock.replay(nodeMock);
         
-        EasyMock.expect(Stack.popAndPush(ImmutableList.of(dispatchProcessingResultElementDummy, stackProcessingResultElementDummy))).andStubReturn(combinedProcessingResultElementDummy);
+        PowerMock.mockStatic(Text.class);
+        EasyMock.expect(Text.create(AIML.WORD_DELIMITER.getValue())).andStubReturn(spaceDummy);
+        PowerMock.replay(Text.class);
+        
+        EasyMock.expect(Stack.popAndPush(ImmutableList.of(dispatchProcessingResultElementDummy, spaceDummy, stackProcessingResultElementDummy))).andStubReturn(combinedProcessingResultElementDummy);
         PowerMock.replay(Stack.class);
         
         EasyMock.expect(this.nodeTopicFactoryStub.produce(nodeMock, ImmutableList.of(combinedProcessingResultElementDummy, proceedProcessingResultElementDummy))).andStubReturn(topicDummy);
@@ -249,6 +261,8 @@ public class DefaultTranslatingObserverTest {
         EasyMock.verify(proceedProcessingResultElementDummy);
         PowerMock.verify(topicDummy);
         EasyMock.verify(networkDummy);
+        PowerMock.verify(spaceDummy);
+        PowerMock.verify(Text.class);
         verifyNodeProcessorDummiesNotTouched();
     }
 

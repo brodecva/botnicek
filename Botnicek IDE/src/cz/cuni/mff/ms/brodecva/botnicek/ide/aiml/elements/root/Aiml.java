@@ -68,9 +68,6 @@ public class Aiml extends AbstractProperElement {
     private static final URI DEFAULT_SCHEMA_URI = URI
             .create(AIML.BACKUP_SCHEMA_LOCATION.getValue());
 
-    private static final URI XMLNS_NAMESPACE_URI = URI
-            .create(XML.XMLNS_NAMESPACE.getValue());
-
     private final List<Toplevel> content;
 
     private final BiMap<URI, String> namespacesToPrefixes;
@@ -172,7 +169,7 @@ public class Aiml extends AbstractProperElement {
                 AIML.ATT_VERSION.getValue(),
                 AIML.IMPLEMENTED_VERSION.getValue()));
         attributesBuilder.add(AttributeImplementation.create(
-                XML.SCHEMA_ATT.getValue(), this.schemaLocation.toString(),
+                XML.SCHEMA_ATT.getValue(), AIML.NAMESPACE_URI.getValue() + " " + this.schemaLocation.toString(),
                 SCHEMA_NAMESPACE_URI));
     }
 
@@ -185,7 +182,7 @@ public class Aiml extends AbstractProperElement {
 
             attributesBuilder.add(AttributeImplementation.create(XML.XMLNS_ATT
                     + (prefix.isEmpty() ? "" : XML.PREFIX_SEPARATOR.getValue())
-                    + prefix, namespace.toString(), XMLNS_NAMESPACE_URI));
+                    + prefix, namespace.toString()));
         }
     }
 

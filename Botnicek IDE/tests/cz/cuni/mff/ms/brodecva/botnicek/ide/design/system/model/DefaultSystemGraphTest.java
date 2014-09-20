@@ -46,6 +46,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RealignmentProces
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.updates.Update;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.updates.UpdateBuilder;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.updates.UpdateBuilderFactory;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.SystemName;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.LabeledDirectedGraph;
@@ -59,13 +60,16 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
  * @see DefaultSystemGraphTest
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(RecurentArc.class)
+@PrepareForTest({RecurentArc.class, SystemName.class})
 @Category(UnitTest.class)
 public class DefaultSystemGraphTest {
 
     private LabeledDirectedGraph<Node, NormalWord, Arc, NormalWord> baseGraphStub = Intended.nullReference();
     private UpdateBuilderFactory updateBuilderFactoryStub = Intended.nullReference();
     private DefaultSystemGraph tested = Intended.nullReference();
+    private SystemName networkNameDummy = Intended.nullReference();
+    private NormalWord fromNodeNameDummy = Intended.nullReference();
+    private NormalWord toNodeNameDummy = Intended.nullReference();
 
     /**
      * Sestaví testovací objekty.
@@ -81,6 +85,15 @@ public class DefaultSystemGraphTest {
         updateBuilderFactoryStub = EasyMock.createMock(UpdateBuilderFactory.class);
         
         this.tested = DefaultSystemGraph.of(baseGraphStub, updateBuilderFactoryStub);
+        
+        this.fromNodeNameDummy = EasyMock.createStrictMock(NormalWord.class);
+        EasyMock.replay(fromNodeNameDummy);
+        
+        this.toNodeNameDummy = EasyMock.createStrictMock(NormalWord.class);
+        EasyMock.replay(toNodeNameDummy);
+        
+        this.networkNameDummy = PowerMock.createStrictMock(SystemName.class);
+        PowerMock.replay(this.networkNameDummy);
     }
 
     /**
@@ -93,16 +106,19 @@ public class DefaultSystemGraphTest {
         baseGraphStub = Intended.nullReference();
         updateBuilderFactoryStub = Intended.nullReference();
         tested = Intended.nullReference();
+        fromNodeNameDummy = Intended.nullReference();
+        toNodeNameDummy = Intended.nullReference();
+        networkNameDummy = Intended.nullReference();
     }
 
     private void replayTestedStubs() {
         EasyMock.replay(baseGraphStub);
         EasyMock.replay(updateBuilderFactoryStub);
+        PowerMock.replay(networkNameDummy);
     }
     
     private void verifyTestedStubs() {
-        EasyMock.verify(baseGraphStub);
-        EasyMock.verify(updateBuilderFactoryStub);
+        EasyMock.verify(baseGraphStub, updateBuilderFactoryStub, fromNodeNameDummy, toNodeNameDummy, networkNameDummy);
     }
     
     /**
@@ -126,11 +142,13 @@ public class DefaultSystemGraphTest {
         final Node toNodeDummy = EasyMock.createStrictMock(Node.class);
         EasyMock.replay(toNodeDummy);
         
-        final Node newFromNodeDummy = EasyMock.createStrictMock(Node.class);
-        EasyMock.replay(newFromNodeDummy);
+        final Node newFromNodeStub = EasyMock.createStrictMock(Node.class);
+        EasyMock.expect(newFromNodeStub.getName()).andStubReturn(fromNodeNameDummy);
+        EasyMock.replay(newFromNodeStub);
         
-        final Node newToNodeDummy = EasyMock.createStrictMock(Node.class);
-        EasyMock.replay(newToNodeDummy);
+        final Node newToNodeStub = EasyMock.createStrictMock(Node.class);
+        EasyMock.expect(newToNodeStub.getName()).andStubReturn(toNodeNameDummy);
+        EasyMock.replay(newToNodeStub);
         
         final Arc removedArcStub = EasyMock.createMock(Arc.class);
         EasyMock.expect(removedArcStub.getFrom()).andStubReturn(fromNodeDummy);
@@ -138,23 +156,23 @@ public class DefaultSystemGraphTest {
         EasyMock.replay(removedArcStub);
         
         final RealignmentProcessor processorStub = EasyMock.createMock(RealignmentProcessor.class);
-        EasyMock.expect(processorStub.realign(fromNodeDummy)).andStubReturn(newFromNodeDummy);
-        EasyMock.expect(processorStub.realign(toNodeDummy)).andStubReturn(newToNodeDummy);
+        EasyMock.expect(processorStub.realign(fromNodeDummy)).andStubReturn(newFromNodeStub);
+        EasyMock.expect(processorStub.realign(toNodeDummy)).andStubReturn(newToNodeStub);
         EasyMock.replay(processorStub);
         
         final Update updateDummy = EasyMock.createStrictMock(Update.class);
         EasyMock.replay(updateDummy);
         
         final UpdateBuilder updateBuilderMock = EasyMock.createMock(UpdateBuilder.class);
-        updateBuilderMock.addSwitched(fromNodeDummy, newFromNodeDummy);
-        updateBuilderMock.addSwitched(toNodeDummy, newToNodeDummy);
+        updateBuilderMock.addSwitched(fromNodeDummy, newFromNodeStub);
+        updateBuilderMock.addSwitched(toNodeDummy, newToNodeStub);
         EasyMock.expect(updateBuilderMock.build()).andStubReturn(updateDummy);
         EasyMock.replay(updateBuilderMock);
         
         this.baseGraphStub.removeEdge(removedArcStub);
         EasyMock.checkOrder(this.baseGraphStub, false);
-        this.baseGraphStub.replaceVertex(fromNodeDummy, newFromNodeDummy);
-        this.baseGraphStub.replaceVertex(toNodeDummy, newToNodeDummy);
+        this.baseGraphStub.replaceVertex(fromNodeDummy, newFromNodeStub, fromNodeNameDummy);
+        this.baseGraphStub.replaceVertex(toNodeDummy, newToNodeStub, toNodeNameDummy);
         EasyMock.checkOrder(this.baseGraphStub, true);
         
         EasyMock.expect(this.updateBuilderFactoryStub.produce()).andStubReturn(updateBuilderMock);
@@ -166,8 +184,8 @@ public class DefaultSystemGraphTest {
         EasyMock.verify(removedArcStub);
         EasyMock.verify(fromNodeDummy);
         EasyMock.verify(toNodeDummy);
-        EasyMock.verify(newFromNodeDummy);
-        EasyMock.verify(newToNodeDummy);
+        EasyMock.verify(newFromNodeStub);
+        EasyMock.verify(newToNodeStub);
         EasyMock.verify(processorStub);
         EasyMock.verify(updateDummy);
         EasyMock.verify(updateBuilderMock);
@@ -181,38 +199,40 @@ public class DefaultSystemGraphTest {
     public
             void
             testRemoveAndRealignArcWhenFromReferredButRemainsItself() {
-        final EnterNode fromNodeDummy = EasyMock.createStrictMock(EnterNode.class);
-        EasyMock.replay(fromNodeDummy);
+        final EnterNode fromNodeStub = EasyMock.createStrictMock(EnterNode.class);
+        EasyMock.expect(fromNodeStub.getName()).andStubReturn(fromNodeNameDummy);
+        EasyMock.replay(fromNodeStub);
         
         final Node toNodeDummy = EasyMock.createStrictMock(Node.class);
         EasyMock.replay(toNodeDummy);
         
-        final Node newToNodeDummy = EasyMock.createStrictMock(Node.class);
-        EasyMock.replay(newToNodeDummy);
+        final Node newToNodeStub = EasyMock.createStrictMock(Node.class);
+        EasyMock.expect(newToNodeStub.getName()).andStubReturn(toNodeNameDummy);
+        EasyMock.replay(newToNodeStub);
         
         final Arc removedArcStub = EasyMock.createMock(Arc.class);
-        EasyMock.expect(removedArcStub.getFrom()).andStubReturn(fromNodeDummy);
+        EasyMock.expect(removedArcStub.getFrom()).andStubReturn(fromNodeStub);
         EasyMock.expect(removedArcStub.getTo()).andStubReturn(toNodeDummy);
         EasyMock.replay(removedArcStub);
         
         final RealignmentProcessor processorStub = EasyMock.createMock(RealignmentProcessor.class);
-        EasyMock.expect(processorStub.realign(fromNodeDummy)).andStubReturn(fromNodeDummy);
-        EasyMock.expect(processorStub.realign(toNodeDummy)).andStubReturn(newToNodeDummy);
+        EasyMock.expect(processorStub.realign(fromNodeStub)).andStubReturn(fromNodeStub);
+        EasyMock.expect(processorStub.realign(toNodeDummy)).andStubReturn(newToNodeStub);
         EasyMock.replay(processorStub);
         
         final Update updateDummy = EasyMock.createStrictMock(Update.class);
         EasyMock.replay(updateDummy);
         
         final UpdateBuilder updateBuilderMock = EasyMock.createMock(UpdateBuilder.class);
-        updateBuilderMock.addSwitched(fromNodeDummy, fromNodeDummy);
-        updateBuilderMock.addSwitched(toNodeDummy, newToNodeDummy);
+        updateBuilderMock.addSwitched(fromNodeStub, fromNodeStub);
+        updateBuilderMock.addSwitched(toNodeDummy, newToNodeStub);
         EasyMock.expect(updateBuilderMock.build()).andStubReturn(updateDummy);
         EasyMock.replay(updateBuilderMock);
         
         this.baseGraphStub.removeEdge(removedArcStub);
         EasyMock.checkOrder(this.baseGraphStub, false);
-        this.baseGraphStub.replaceVertex(fromNodeDummy, fromNodeDummy);
-        this.baseGraphStub.replaceVertex(toNodeDummy, newToNodeDummy);
+        this.baseGraphStub.replaceVertex(fromNodeStub, fromNodeStub, fromNodeNameDummy);
+        this.baseGraphStub.replaceVertex(toNodeDummy, newToNodeStub, toNodeNameDummy);
         EasyMock.checkOrder(this.baseGraphStub, true);
         
         EasyMock.expect(this.updateBuilderFactoryStub.produce()).andStubReturn(updateBuilderMock);
@@ -222,12 +242,12 @@ public class DefaultSystemGraphTest {
         
         replayTestedStubs();
         
-        this.tested.removeAndRealign(removedArcStub, processorStub, ImmutableMap.<EnterNode, Set<RecurentArc>>of(fromNodeDummy, ImmutableSet.of(dependentArcDummy)), ImmutableSet.<EnterNode>of(fromNodeDummy));
+        this.tested.removeAndRealign(removedArcStub, processorStub, ImmutableMap.<EnterNode, Set<RecurentArc>>of(fromNodeStub, ImmutableSet.of(dependentArcDummy)), ImmutableSet.<EnterNode>of(fromNodeStub));
         
         EasyMock.verify(removedArcStub);
-        EasyMock.verify(fromNodeDummy);
+        EasyMock.verify(fromNodeStub);
         EasyMock.verify(toNodeDummy);
-        EasyMock.verify(newToNodeDummy);
+        EasyMock.verify(newToNodeStub);
         EasyMock.verify(processorStub);
         EasyMock.verify(updateDummy);
         EasyMock.verify(updateBuilderMock);
@@ -245,14 +265,16 @@ public class DefaultSystemGraphTest {
         final EnterNode fromNodeDummy = EasyMock.createStrictMock(EnterNode.class);
         EasyMock.replay(fromNodeDummy);
         
-        final IsolatedNode newFromNodeDummy = EasyMock.createStrictMock(IsolatedNode.class);
-        EasyMock.replay(newFromNodeDummy);
-        
         final Node toNodeDummy = EasyMock.createStrictMock(Node.class);
         EasyMock.replay(toNodeDummy);
         
-        final Node newToNodeDummy = EasyMock.createStrictMock(Node.class);
-        EasyMock.replay(newToNodeDummy);
+        final IsolatedNode newFromNodeStub = EasyMock.createStrictMock(IsolatedNode.class);
+        EasyMock.expect(newFromNodeStub.getName()).andStubReturn(fromNodeNameDummy);
+        EasyMock.replay(newFromNodeStub);
+        
+        final Node newToNodeStub = EasyMock.createStrictMock(Node.class);
+        EasyMock.expect(newToNodeStub.getName()).andStubReturn(toNodeNameDummy);
+        EasyMock.replay(newToNodeStub);
         
         final RecurentArc removedArcStub = PowerMock.createMock(RecurentArc.class);
         EasyMock.expect(removedArcStub.getFrom()).andStubReturn(fromNodeDummy);
@@ -261,16 +283,16 @@ public class DefaultSystemGraphTest {
         PowerMock.replay(removedArcStub);
         
         final RealignmentProcessor processorStub = EasyMock.createMock(RealignmentProcessor.class);
-        EasyMock.expect(processorStub.realign(fromNodeDummy)).andStubReturn(newFromNodeDummy);
-        EasyMock.expect(processorStub.realign(toNodeDummy)).andStubReturn(newToNodeDummy);
+        EasyMock.expect(processorStub.realign(fromNodeDummy)).andStubReturn(newFromNodeStub);
+        EasyMock.expect(processorStub.realign(toNodeDummy)).andStubReturn(newToNodeStub);
         EasyMock.replay(processorStub);
         
         final Update updateDummy = EasyMock.createStrictMock(Update.class);
         EasyMock.replay(updateDummy);
         
         final UpdateBuilder updateBuilderMock = EasyMock.createMock(UpdateBuilder.class);
-        updateBuilderMock.addSwitched(fromNodeDummy, newFromNodeDummy);
-        updateBuilderMock.addSwitched(toNodeDummy, newToNodeDummy);
+        updateBuilderMock.addSwitched(fromNodeDummy, newFromNodeStub);
+        updateBuilderMock.addSwitched(toNodeDummy, newToNodeStub);
         updateBuilderMock.addRemovedReference(removedArcStub);
         updateBuilderMock.addRemovedInitial(fromNodeDummy);
         EasyMock.expect(updateBuilderMock.build()).andStubReturn(updateDummy);
@@ -278,8 +300,8 @@ public class DefaultSystemGraphTest {
         
         this.baseGraphStub.removeEdge(removedArcStub);
         EasyMock.checkOrder(this.baseGraphStub, false);
-        this.baseGraphStub.replaceVertex(fromNodeDummy, newFromNodeDummy);
-        this.baseGraphStub.replaceVertex(toNodeDummy, newToNodeDummy);
+        this.baseGraphStub.replaceVertex(fromNodeDummy, newFromNodeStub, fromNodeNameDummy);
+        this.baseGraphStub.replaceVertex(toNodeDummy, newToNodeStub, toNodeNameDummy);
         EasyMock.checkOrder(this.baseGraphStub, true);
         
         EasyMock.expect(this.updateBuilderFactoryStub.produce()).andStubReturn(updateBuilderMock);
@@ -289,9 +311,9 @@ public class DefaultSystemGraphTest {
         this.tested.removeAndRealign(removedArcStub, processorStub, ImmutableMap.<EnterNode, Set<RecurentArc>>of(fromNodeDummy, ImmutableSet.of(removedArcStub)), ImmutableSet.<EnterNode>of(fromNodeDummy));
         
         EasyMock.verify(fromNodeDummy);
-        EasyMock.verify(newFromNodeDummy);
+        EasyMock.verify(newFromNodeStub);
         EasyMock.verify(toNodeDummy);
-        EasyMock.verify(newToNodeDummy);
+        EasyMock.verify(newToNodeStub);
         EasyMock.verify(processorStub);
         EasyMock.verify(updateDummy);
         EasyMock.verify(updateBuilderMock);
@@ -310,7 +332,7 @@ public class DefaultSystemGraphTest {
         EasyMock.replay(nameDummy);
         
         final Network networkStub = EasyMock.createStrictMock(Network.class);
-        EasyMock.expect(networkStub.getName()).andStubReturn("Network name");
+        EasyMock.expect(networkStub.getName()).andStubReturn(networkNameDummy);
         EasyMock.replay(networkStub);
         
         final EnterNode fromNodeStub = EasyMock.createMock(EnterNode.class);
@@ -378,14 +400,16 @@ public class DefaultSystemGraphTest {
         final Node fromNodeDummy = EasyMock.createStrictMock(Node.class);
         EasyMock.replay(fromNodeDummy);
         
-        final Node newFromNodeDummy = EasyMock.createStrictMock(Node.class);
-        EasyMock.replay(newFromNodeDummy);
-        
         final Node toNodeDummy = EasyMock.createStrictMock(Node.class);
         EasyMock.replay(toNodeDummy);
         
-        final EnterNode newToNodeDummy = EasyMock.createStrictMock(EnterNode.class);
-        EasyMock.replay(newToNodeDummy);
+        final Node newFromNodeStub = EasyMock.createStrictMock(Node.class);
+        EasyMock.expect(newFromNodeStub.getName()).andStubReturn(fromNodeNameDummy);
+        EasyMock.replay(newFromNodeStub);
+        
+        final EnterNode newToNodeStub = EasyMock.createStrictMock(EnterNode.class);
+        EasyMock.expect(newToNodeStub.getName()).andStubReturn(toNodeNameDummy);
+        EasyMock.replay(newToNodeStub);
         
         final Arc removedArcStub = PowerMock.createMock(Arc.class);
         EasyMock.expect(removedArcStub.getFrom()).andStubReturn(fromNodeDummy);
@@ -393,24 +417,24 @@ public class DefaultSystemGraphTest {
         PowerMock.replay(removedArcStub);
         
         final RealignmentProcessor processorStub = EasyMock.createMock(RealignmentProcessor.class);
-        EasyMock.expect(processorStub.realign(fromNodeDummy)).andStubReturn(newFromNodeDummy);
-        EasyMock.expect(processorStub.realign(toNodeDummy)).andStubReturn(newToNodeDummy);
+        EasyMock.expect(processorStub.realign(fromNodeDummy)).andStubReturn(newFromNodeStub);
+        EasyMock.expect(processorStub.realign(toNodeDummy)).andStubReturn(newToNodeStub);
         EasyMock.replay(processorStub);
         
         final Update updateDummy = EasyMock.createStrictMock(Update.class);
         EasyMock.replay(updateDummy);
         
         final UpdateBuilder updateBuilderMock = EasyMock.createMock(UpdateBuilder.class);
-        updateBuilderMock.addSwitched(fromNodeDummy, newFromNodeDummy);
-        updateBuilderMock.addSwitched(toNodeDummy, newToNodeDummy);
-        updateBuilderMock.addNewInitial(newToNodeDummy);
+        updateBuilderMock.addSwitched(fromNodeDummy, newFromNodeStub);
+        updateBuilderMock.addSwitched(toNodeDummy, newToNodeStub);
+        updateBuilderMock.addNewInitial(newToNodeStub);
         EasyMock.expect(updateBuilderMock.build()).andStubReturn(updateDummy);
         EasyMock.replay(updateBuilderMock);
         
         this.baseGraphStub.removeEdge(removedArcStub);
         EasyMock.checkOrder(this.baseGraphStub, false);
-        this.baseGraphStub.replaceVertex(fromNodeDummy, newFromNodeDummy);
-        this.baseGraphStub.replaceVertex(toNodeDummy, newToNodeDummy);
+        this.baseGraphStub.replaceVertex(fromNodeDummy, newFromNodeStub, fromNodeNameDummy);
+        this.baseGraphStub.replaceVertex(toNodeDummy, newToNodeStub, toNodeNameDummy);
         EasyMock.checkOrder(this.baseGraphStub, true);
         
         EasyMock.expect(this.updateBuilderFactoryStub.produce()).andStubReturn(updateBuilderMock);
@@ -420,9 +444,9 @@ public class DefaultSystemGraphTest {
         this.tested.removeAndRealign(removedArcStub, processorStub, ImmutableMap.<EnterNode, Set<RecurentArc>>of(), ImmutableSet.<EnterNode>of());
         
         EasyMock.verify(fromNodeDummy);
-        EasyMock.verify(newFromNodeDummy);
+        EasyMock.verify(newFromNodeStub);
         EasyMock.verify(toNodeDummy);
-        EasyMock.verify(newToNodeDummy);
+        EasyMock.verify(newToNodeStub);
         EasyMock.verify(processorStub);
         EasyMock.verify(updateDummy);
         EasyMock.verify(updateBuilderMock);
@@ -448,32 +472,34 @@ public class DefaultSystemGraphTest {
         final EnterNode toNodeDummy = EasyMock.createStrictMock(EnterNode.class);
         EasyMock.replay(toNodeDummy);
         
-        final EnterNode newFromNodeDummy = EasyMock.createStrictMock(EnterNode.class);
-        EasyMock.replay(newFromNodeDummy);
+        final EnterNode newFromNodeStub = EasyMock.createStrictMock(EnterNode.class);
+        EasyMock.expect(newFromNodeStub.getName()).andStubReturn(fromNodeNameDummy);
+        EasyMock.replay(newFromNodeStub);
         
-        final Node newToNodeDummy = EasyMock.createStrictMock(Node.class);
-        EasyMock.replay(newToNodeDummy);
+        final EnterNode newToNodeStub = EasyMock.createStrictMock(EnterNode.class);
+        EasyMock.expect(newToNodeStub.getName()).andStubReturn(toNodeNameDummy);
+        EasyMock.replay(newToNodeStub);
         
         final RealignmentProcessor processorStub = EasyMock.createMock(RealignmentProcessor.class);
-        EasyMock.expect(processorStub.realign(fromNodeDummy)).andStubReturn(newFromNodeDummy);
-        EasyMock.expect(processorStub.realign(toNodeDummy)).andStubReturn(newToNodeDummy);
+        EasyMock.expect(processorStub.realign(fromNodeDummy)).andStubReturn(newFromNodeStub);
+        EasyMock.expect(processorStub.realign(toNodeDummy)).andStubReturn(newToNodeStub);
         EasyMock.replay(processorStub);
         
         final Update updateDummy = EasyMock.createStrictMock(Update.class);
         EasyMock.replay(updateDummy);
         
         final UpdateBuilder updateBuilderMock = EasyMock.createMock(UpdateBuilder.class);
-        updateBuilderMock.addNewInitial(newFromNodeDummy);
+        updateBuilderMock.addNewInitial(newFromNodeStub);
         updateBuilderMock.addRemovedInitial(toNodeDummy);
-        updateBuilderMock.addSwitched(fromNodeDummy, newFromNodeDummy);
-        updateBuilderMock.addSwitched(toNodeDummy, newToNodeDummy);
+        updateBuilderMock.addSwitched(fromNodeDummy, newFromNodeStub);
+        updateBuilderMock.addSwitched(toNodeDummy, newToNodeStub);
         EasyMock.expect(updateBuilderMock.build()).andStubReturn(updateDummy);
         EasyMock.replay(updateBuilderMock);
         
         this.baseGraphStub.add(addedArcStub, addedArcNameDummy, fromNodeDummy, toNodeDummy);
         EasyMock.checkOrder(this.baseGraphStub, false);
-        this.baseGraphStub.replaceVertex(fromNodeDummy, newFromNodeDummy);
-        this.baseGraphStub.replaceVertex(toNodeDummy, newToNodeDummy);
+        this.baseGraphStub.replaceVertex(fromNodeDummy, newFromNodeStub, fromNodeNameDummy);
+        this.baseGraphStub.replaceVertex(toNodeDummy, newToNodeStub, toNodeNameDummy);
         EasyMock.checkOrder(this.baseGraphStub, true);
         
         EasyMock.expect(this.updateBuilderFactoryStub.produce()).andStubReturn(updateBuilderMock);
@@ -486,8 +512,8 @@ public class DefaultSystemGraphTest {
         EasyMock.verify(addedArcStub);
         EasyMock.verify(fromNodeDummy);
         EasyMock.verify(toNodeDummy);
-        EasyMock.verify(newFromNodeDummy);
-        EasyMock.verify(newToNodeDummy);
+        EasyMock.verify(newFromNodeStub);
+        EasyMock.verify(newToNodeStub);
         EasyMock.verify(processorStub);
         EasyMock.verify(updateDummy);
         EasyMock.verify(updateBuilderMock);
@@ -512,32 +538,34 @@ public class DefaultSystemGraphTest {
         final EnterNode toNodeDummy = EasyMock.createStrictMock(EnterNode.class);
         EasyMock.replay(toNodeDummy);
         
-        final EnterNode newFromNodeDummy = EasyMock.createStrictMock(EnterNode.class);
-        EasyMock.replay(newFromNodeDummy);
+        final EnterNode newFromNodeStub = EasyMock.createStrictMock(EnterNode.class);
+        EasyMock.expect(newFromNodeStub.getName()).andStubReturn(fromNodeNameDummy);
+        EasyMock.replay(newFromNodeStub);
         
-        final Node newToNodeDummy = EasyMock.createStrictMock(Node.class);
-        EasyMock.replay(newToNodeDummy);
+        final Node newToNodeStub = EasyMock.createStrictMock(Node.class);
+        EasyMock.expect(newToNodeStub.getName()).andStubReturn(toNodeNameDummy);
+        EasyMock.replay(newToNodeStub);
         
         final RealignmentProcessor processorStub = EasyMock.createMock(RealignmentProcessor.class);
-        EasyMock.expect(processorStub.realign(fromNodeDummy)).andStubReturn(newFromNodeDummy);
-        EasyMock.expect(processorStub.realign(toNodeDummy)).andStubReturn(newToNodeDummy);
+        EasyMock.expect(processorStub.realign(fromNodeDummy)).andStubReturn(newFromNodeStub);
+        EasyMock.expect(processorStub.realign(toNodeDummy)).andStubReturn(newToNodeStub);
         EasyMock.replay(processorStub);
         
         final Update updateDummy = EasyMock.createStrictMock(Update.class);
         EasyMock.replay(updateDummy);
         
         final UpdateBuilder updateBuilderMock = EasyMock.createMock(UpdateBuilder.class);
-        updateBuilderMock.addNewInitial(newFromNodeDummy);
+        updateBuilderMock.addNewInitial(newFromNodeStub);
         updateBuilderMock.addRemovedInitial(toNodeDummy);
-        updateBuilderMock.addSwitched(fromNodeDummy, newFromNodeDummy);
-        updateBuilderMock.addSwitched(toNodeDummy, newToNodeDummy);
+        updateBuilderMock.addSwitched(fromNodeDummy, newFromNodeStub);
+        updateBuilderMock.addSwitched(toNodeDummy, newToNodeStub);
         EasyMock.expect(updateBuilderMock.build()).andStubReturn(updateDummy);
         EasyMock.replay(updateBuilderMock);
         
         this.baseGraphStub.add(addedArcStub, addedArcNameDummy, fromNodeDummy, toNodeDummy);
         EasyMock.checkOrder(this.baseGraphStub, false);
-        this.baseGraphStub.replaceVertex(fromNodeDummy, newFromNodeDummy);
-        this.baseGraphStub.replaceVertex(toNodeDummy, newToNodeDummy);
+        this.baseGraphStub.replaceVertex(fromNodeDummy, newFromNodeStub, fromNodeNameDummy);
+        this.baseGraphStub.replaceVertex(toNodeDummy, newToNodeStub, toNodeNameDummy);
         EasyMock.checkOrder(this.baseGraphStub, true);
         
         EasyMock.expect(this.updateBuilderFactoryStub.produce()).andStubReturn(updateBuilderMock);
@@ -550,8 +578,8 @@ public class DefaultSystemGraphTest {
         EasyMock.verify(addedArcStub);
         EasyMock.verify(fromNodeDummy);
         EasyMock.verify(toNodeDummy);
-        EasyMock.verify(newFromNodeDummy);
-        EasyMock.verify(newToNodeDummy);
+        EasyMock.verify(newFromNodeStub);
+        EasyMock.verify(newToNodeStub);
         EasyMock.verify(processorStub);
         EasyMock.verify(updateDummy);
         EasyMock.verify(updateBuilderMock);

@@ -33,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
@@ -51,7 +52,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.regex.Pattern;
@@ -147,7 +147,7 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                     
                     final JFrame frame = new JFrame();
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     final LanguageSettingsDialog dialog = LanguageSettingsDialog.create(frame);
                     frame.setVisible(true);
                     dialog.dialog.setVisible(true);
@@ -178,8 +178,7 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
             public void actionPerformed(final ActionEvent e) {
                 newInstance.abbreviationsSubsTableModel.addRow();
                 
-                newInstance.contentPane.revalidate();
-                newInstance.dialog.pack();
+                newInstance.updateSize();
             }
         });
         
@@ -189,8 +188,7 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
             public void actionPerformed(final ActionEvent e) {
                 newInstance.emoticonsSubsTableModel.addRow();
                 
-                newInstance.contentPane.revalidate();
-                newInstance.dialog.pack();
+                newInstance.updateSize();
             }
         });
         
@@ -200,8 +198,7 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
             public void actionPerformed(final ActionEvent e) {
                 newInstance.genderSubsTableModel.addRow();
                 
-                newInstance.contentPane.revalidate();
-                newInstance.dialog.pack();
+                newInstance.updateSize();
             }
         });
         
@@ -211,8 +208,7 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
             public void actionPerformed(final ActionEvent e) {
                 newInstance.person2SubsTableModel.addRow();
                 
-                newInstance.contentPane.revalidate();
-                newInstance.dialog.pack();
+                newInstance.updateSize();
             }
         });
         
@@ -222,8 +218,7 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
             public void actionPerformed(final ActionEvent e) {
                 newInstance.personSubsTableModel.addRow();
                 
-                newInstance.contentPane.revalidate();
-                newInstance.dialog.pack();
+                newInstance.updateSize();
             }
         });
         
@@ -233,8 +228,7 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
             public void actionPerformed(final ActionEvent e) {
                 newInstance.innerPunctuationSubsTableModel.addRow();
                 
-                newInstance.contentPane.revalidate();
-                newInstance.dialog.pack();
+                newInstance.updateSize();
             }
         });
         
@@ -244,8 +238,7 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
             public void actionPerformed(final ActionEvent e) {
                 newInstance.spellingSubsTableModel.addRow();
                 
-                newInstance.contentPane.revalidate();
-                newInstance.dialog.pack();
+                newInstance.updateSize();
             }
         });
         
@@ -273,13 +266,11 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         
         newInstance.dialog.addWindowListener(new WindowAdapter() {
             /* (non-Javadoc)
-             * @see java.awt.event.WindowAdapter#windowClosed(java.awt.event.WindowEvent)
+             * @see java.awt.event.WindowAdapter#windowClosing(java.awt.event.WindowEvent)
              */
             @Override
-            public void windowClosed(final WindowEvent e) {
+            public void windowClosing(final WindowEvent e) {
                 languageSettingsController.removeView(newInstance);
-                
-                super.windowClosed(e);
             }
         });
         
@@ -301,10 +292,6 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         return create(owner, languageSettingsController, DefaultSubstitutionsTableModelFactory.create());
     }
     
-    /**
-     * Create the frame.
-     * @param substitutionsTableModelFactory 
-     */
     private LanguageSettingsDialog(final Window owner, final SubstitutionsTableModelFactory substitutionsTableModelFactory) {      
         Preconditions.checkNotNull(owner);
         Preconditions.checkNotNull(substitutionsTableModelFactory);
@@ -333,10 +320,21 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         int tabIndex = 0;
         
         this.nameLabel.setLabelFor(this.nameTextField);
-        this.nameLabel.setDisplayedMnemonic(KeyEvent.VK_N);
+        this.nameLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("LanguageNameMnemonics")).getKeyCode());
         this.sentencesDelimLabel.setLabelFor(this.sentencesDelimTextField);
-        this.sentencesDelimLabel.setDisplayedMnemonic(KeyEvent.VK_D);
+        this.sentencesDelimLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("DelimiterMnemonics")).getKeyCode());
         
+        final int subMnemonicKeyCode = KeyStroke.getKeyStroke(UiLocalizer.print("AddSubMnemonics")).getKeyCode();
+        addGenderSubButton.setMnemonic(subMnemonicKeyCode);
+        addPersonSubButton.setMnemonic(subMnemonicKeyCode);
+        addPerson2SubButton.setMnemonic(subMnemonicKeyCode);
+        addAbbsSubButton.setMnemonic(subMnemonicKeyCode);
+        addSpellingSubButton.setMnemonic(subMnemonicKeyCode);
+        addEmoSubButton.setMnemonic(subMnemonicKeyCode);
+        addPunctuationSubButton.setMnemonic(subMnemonicKeyCode);
+        
+        setButton.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("SetMnemonics")).getKeyCode());
+                
         this.settingsLayout.setHorizontalGroup(
                 settingsLayout.createParallelGroup(Alignment.LEADING)
                 .addGroup(settingsLayout.createSequentialGroup()
@@ -363,8 +361,10 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         );
         this.settingsPane.setLayout(this.settingsLayout);
         this.settingsPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("SETTINGS_TAB_TITLE"), Intended.<Icon>nullReference(), this.settingsPane, UiLocalizer.print("LanguageSettingsTabTip"), tabIndex++);
-        
+        this.tabbedPane.insertTab(UiLocalizer.print("SETTINGS_TAB_TITLE"), Intended.<Icon>nullReference(), this.settingsPane, UiLocalizer.print("LanguageSettingsTabTip"), tabIndex);
+        this.tabbedPane.setMnemonicAt(tabIndex, KeyStroke.getKeyStroke(UiLocalizer.print("LanguagePropertiesMnemonics")).getKeyCode());
+        tabIndex++;
+                
         this.genderLayout.setHorizontalGroup(this.genderLayout
                 .createParallelGroup(Alignment.LEADING)
                     .addComponent(this.genderSubsTable.getTableHeader(), GroupLayout.DEFAULT_SIZE,
@@ -383,7 +383,9 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         );
         this.genderPane.setLayout(this.genderLayout);
         this.genderPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("GENDER_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.genderPane, UiLocalizer.print("GenderSubsTabTip"), tabIndex++);
+        this.tabbedPane.insertTab(UiLocalizer.print("GENDER_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.genderPane, UiLocalizer.print("GenderSubsTabTip"), tabIndex);
+        this.tabbedPane.setMnemonicAt(tabIndex, KeyStroke.getKeyStroke(UiLocalizer.print("GenderMnemonics")).getKeyCode());
+        tabIndex++;
         
         this.personLayout.setHorizontalGroup(this.personLayout
                 .createParallelGroup(Alignment.LEADING)
@@ -403,7 +405,9 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         );
         this.personPane.setLayout(this.personLayout);
         this.personPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("PERSON_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.personPane, UiLocalizer.print("PersonSubsTabTip"), tabIndex++);
+        this.tabbedPane.insertTab(UiLocalizer.print("PERSON_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.personPane, UiLocalizer.print("PersonSubsTabTip"), tabIndex);
+        this.tabbedPane.setMnemonicAt(tabIndex, KeyStroke.getKeyStroke(UiLocalizer.print("PersonMnemonics")).getKeyCode());
+        tabIndex++;
         
         this.person2Layout.setHorizontalGroup(this.person2Layout
                 .createParallelGroup(Alignment.LEADING)
@@ -423,7 +427,9 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         );
         this.person2Pane.setLayout(this.person2Layout);
         this.person2Pane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("PERSON2_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.person2Pane, UiLocalizer.print("Person2SubsTabTip"), tabIndex++);
+        this.tabbedPane.insertTab(UiLocalizer.print("PERSON2_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.person2Pane, UiLocalizer.print("Person2SubsTabTip"), tabIndex);
+        this.tabbedPane.setMnemonicAt(tabIndex, KeyStroke.getKeyStroke(UiLocalizer.print("Person2Mnemonics")).getKeyCode());
+        tabIndex++;
         
         this.abbsLayout.setHorizontalGroup(this.abbsLayout
                 .createParallelGroup(Alignment.LEADING)
@@ -443,7 +449,9 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         );
         this.abbsPane.setLayout(this.abbsLayout);
         this.abbsPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("ABBS_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.abbsPane, UiLocalizer.print("AbbsSubsTabTip"), tabIndex++);
+        this.tabbedPane.insertTab(UiLocalizer.print("ABBS_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.abbsPane, UiLocalizer.print("AbbsSubsTabTip"), tabIndex);
+        this.tabbedPane.setMnemonicAt(tabIndex, KeyStroke.getKeyStroke(UiLocalizer.print("AbbsMnemonics")).getKeyCode());
+        tabIndex++;
         
         this.spellingLayout.setHorizontalGroup(this.spellingLayout
                 .createParallelGroup(Alignment.LEADING)
@@ -463,7 +471,9 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         );
         this.spellingPane.setLayout(this.spellingLayout);
         this.spellingPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("SPELLING_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.spellingPane, UiLocalizer.print("SpellingSubsTabTip"), tabIndex++);
+        this.tabbedPane.insertTab(UiLocalizer.print("SPELLING_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.spellingPane, UiLocalizer.print("SpellingSubsTabTip"), tabIndex);
+        this.tabbedPane.setMnemonicAt(tabIndex, KeyStroke.getKeyStroke(UiLocalizer.print("SpellingMnemonics")).getKeyCode());
+        tabIndex++;
         
         this.emoLayout.setHorizontalGroup(this.emoLayout
                 .createParallelGroup(Alignment.LEADING)
@@ -483,7 +493,9 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         );
         this.emoPane.setLayout(this.emoLayout);
         this.emoPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("EMOTICONS_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.emoPane, UiLocalizer.print("EmoSubsTabTip"), tabIndex++);
+        this.tabbedPane.insertTab(UiLocalizer.print("EMOTICONS_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.emoPane, UiLocalizer.print("EmoSubsTabTip"), tabIndex);
+        this.tabbedPane.setMnemonicAt(tabIndex, KeyStroke.getKeyStroke(UiLocalizer.print("EmoticonsMnemonics")).getKeyCode());
+        tabIndex++;
         
         this.punctuationLayout.setHorizontalGroup(this.punctuationLayout
                 .createParallelGroup(Alignment.LEADING)
@@ -503,7 +515,8 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         );
         this.punctuationPane.setLayout(this.punctuationLayout);
         this.punctuationPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("PUNCTUATION_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.punctuationPane, UiLocalizer.print("PunctuationSubsTabTip"), tabIndex++);
+        this.tabbedPane.insertTab(UiLocalizer.print("PUNCTUATION_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.punctuationPane, UiLocalizer.print("PunctuationSubsTabTip"), tabIndex);
+        this.tabbedPane.setMnemonicAt(tabIndex, KeyStroke.getKeyStroke(UiLocalizer.print("PunctuationMnemonics")).getKeyCode());
         
         this.contentPaneLayout.setHorizontalGroup(
                 contentPaneLayout.createParallelGroup(Alignment.LEADING)
@@ -547,12 +560,20 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         this.spellingSubsTableModel.update(languageConfiguration.getSpellingSubs());
         this.emoticonsSubsTableModel.update(languageConfiguration.getEmoticonsSubs());
         this.innerPunctuationSubsTableModel.update(languageConfiguration.getInnerPunctuationSubs());
+        
+        updateSize();
     }
 
+    private void updateSize() {
+        this.contentPane.revalidate();
+        this.dialog.pack();
+    }
+    
     /**
      * 
      */
     public void show() {
+        this.dialog.setLocationRelativeTo(this.dialog.getParent());
         this.dialog.setVisible(true);
     }    
 }

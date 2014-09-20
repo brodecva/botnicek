@@ -242,7 +242,7 @@ public abstract class AbstractGui implements Gui {
     public final void createAndShowGUI(final ActionListener inputListener) {
         frame = new JFrame(LABELS.getString("MainFrameLabel"));
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 
         final Container pane = frame.getContentPane();

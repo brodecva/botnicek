@@ -18,6 +18,8 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.api;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.SystemName;
+
 /**
  * Autonomní prvek systému sítí, tj. takový který může existovat sám o sobě (systém samotný a sítě).
  * 
@@ -30,5 +32,5 @@ public interface AutonomousComponent {
      * 
      * @return název
      */
-    String getName();
+    SystemName getName();
 }

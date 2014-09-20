@@ -50,7 +50,7 @@ final class DefaultPrefixesSettingsTableModel extends AbstractNameValueTableMode
         final TreeMap<URI, String> namespacesToPrefixes = new TreeMap<>();
         
         namespacesToPrefixes.put(URI.create(AIML.NAMESPACE_URI.getValue()), AIML.DEFAULT_PREFIX.getValue());
-        namespacesToPrefixes.put(URI.create(XML.SCHEMA_NAMESPACE_URI.getValue()), XML.DEFAULT_SCHEMA_PREFIX.getValue());
+        namespacesToPrefixes.put(URI.create(XML.SCHEMA_NAMESPACE_URI.getValue()), XML.DEFAULT_SCHEMA_PREFIX.getValue());        
         
         return create(namespacesToPrefixes);
     }
@@ -66,7 +66,7 @@ final class DefaultPrefixesSettingsTableModel extends AbstractNameValueTableMode
         final ImmutableMap<URI, String> copy = ImmutableMap.copyOf(namespacesToPrefixes);
         
         Preconditions.checkArgument(copy.containsKey(URI.create(AIML.NAMESPACE_URI.getValue())));
-        Preconditions.checkArgument(copy.containsKey(URI.create(XML.SCHEMA_NAMESPACE_URI.getValue())));
+        Preconditions.checkArgument(copy.containsKey(URI.create(XML.SCHEMA_NAMESPACE_URI.getValue())));        
         
         return new DefaultPrefixesSettingsTableModel(namespacesToPrefixes);
     }
@@ -98,7 +98,7 @@ final class DefaultPrefixesSettingsTableModel extends AbstractNameValueTableMode
         final ImmutableMap<URI, String> copy = ImmutableMap.copyOf(namespacesToPrefixes);
         
         Preconditions.checkArgument(copy.containsKey(URI.create(AIML.NAMESPACE_URI.getValue())));
-        Preconditions.checkArgument(copy.containsKey(URI.create(XML.SCHEMA_NAMESPACE_URI.getValue())));
+        Preconditions.checkArgument(copy.containsKey(URI.create(XML.SCHEMA_NAMESPACE_URI.getValue())));        
         
         super.update(copy);
     }

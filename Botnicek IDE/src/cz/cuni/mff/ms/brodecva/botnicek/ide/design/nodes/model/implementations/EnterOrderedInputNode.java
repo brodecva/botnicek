@@ -99,6 +99,6 @@ public final class EnterOrderedInputNode extends AbstractNode implements Ordered
      */
     @Override
     public String toString() {
-        return getName().getText() + " (" + getNetwork().getName() + ")[" + getX() + ", " + getY() + "]";
+        return getName().getText() + " (" + getNetwork().getName().getText() + ")[" + getX() + ", " + getY() + "]";
     }
 }

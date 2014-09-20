@@ -23,6 +23,8 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -879,9 +881,9 @@ public final class AIMLConversationTest {
      * @throws ConversationException
      *             chyba v konverzaci
      */
-    @Test
+    @Test(expected = ConversationException.class)
     public void
-            testTalkStringAndListenWhenSpeechUnrecognizableReturnsEmptyString()
+            testTalkStringAndListenWhenSpeechUnrecognizable()
                     throws ConversationException {
         conversation.talk(UNRECOGNIZABLE_SPEECH);
         assertEquals(EMPTY_STRING, conversation.listen());
@@ -1012,18 +1014,19 @@ public final class AIMLConversationTest {
      */
     @Test(timeout = TEST_TIME_LIMIT)
     public void
-            testTalkStringListenerWhenUnrecognizableSpeechReturnsEmptyString()
+            testTalkStringListenerWhenUnrecognizableSpeechCallsExceptionalStateHandler()
                     throws ConversationException, InterruptedException {
         conversation.talk(UNRECOGNIZABLE_SPEECH, new Listener() {
 
             @Override
             public void answerReceived(final Answer answer) {
-                assertEquals(EMPTY_STRING, answer.getAnswer());
-                updateLatch.countDown();
+                fail();
             }
 
             @Override
             public void exceptionalStateCaught(final ExceptionalState status) {
+                assertTrue(status.getThrowable() instanceof ConversationException);
+                updateLatch.countDown();
             }
 
         });
@@ -1114,8 +1117,8 @@ public final class AIMLConversationTest {
      * @throws ConversationException
      *             chyba v konverzaci
      */
-    @Test
-    public void testAttemptTalkWhenUnrecognizableReturnsEmptyString()
+    @Test(expected = ConversationException.class)
+    public void testAttemptTalkWhenUnrecognizable()
             throws ConversationException {
         assertEquals(EMPTY_STRING, conversation.attemptTalk(UNRECOGNIZABLE_SPEECH));
     }

@@ -53,6 +53,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.I
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.IsolatedProcessingNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.updates.DefaultUpdateBuilderFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.SystemName;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph;
 import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.IntegrationTest;
@@ -243,7 +244,7 @@ public class DefaultSystemGraphIntegrationTest {
     @Test
     public void testRemoveAndRealignNodeWhenPathOfThreeFirstRemovedExpectSecondAddedToInitials() {
         final Network networkDummy = EasyMock.createMock(Network.class);
-        EasyMock.expect(networkDummy.getName()).andStubReturn("Network");
+        EasyMock.expect(networkDummy.getName()).andStubReturn(SystemName.of("Network"));
         EasyMock.replay(networkDummy);
         
         final EnterNode firstNode = EnterOrderedInputNode.create(NormalWords.of("FIRST"), networkDummy, 25, 25);

@@ -77,8 +77,9 @@ public class DefaultPrettyPrinterTest {
      *             pokud dojde k chybě při tisku
      */
     @Test
-    public void testPrintWhenEmptyReturnsEmpty() throws PrintException {
+    public void testPrint() throws PrintException {
         assertEquals(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEW_LINE +
                 "<root>" + NEW_LINE +
                     "    <element>Text</element>" + NEW_LINE +
                 "</root>" + NEW_LINE,

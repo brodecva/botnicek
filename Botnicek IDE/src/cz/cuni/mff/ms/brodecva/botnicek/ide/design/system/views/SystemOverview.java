@@ -56,9 +56,6 @@ public class SystemOverview implements SystemView {
     private static final class SystemTree extends JTree {
         private static final long serialVersionUID = 1L;
 
-        /**
-         * @param name
-         */
         private SystemTree(final TreeModel name) {
             super(name);
         }
@@ -78,7 +75,7 @@ public class SystemOverview implements SystemView {
             Preconditions.checkState(value instanceof AutonomousComponent);
             final AutonomousComponent castValue = (AutonomousComponent) value;
             
-            return castValue.getName();
+            return castValue.getName().getText();
         }
     }
 

@@ -27,6 +27,9 @@ import java.io.Serializable;
 import java.io.Writer;
 import java.nio.file.Path;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
+
 /**
  * Továrna produkující {@link FileWriter} s vyrovnávací pamětí.
  * 
@@ -57,11 +60,18 @@ final class BufferedFileWriterFactory implements WriterFactory, Serializable {
             throws IOException {
         final Path filePath = directory.resolve(fileName);
         
-        try (final FileWriter fileOutput = new FileWriter(filePath.toFile());
-                final BufferedWriter outputBuffer =
-                        new BufferedWriter(fileOutput)) {
-            return outputBuffer;
+        FileWriter fileOutput = Intended.nullReference();
+        try {
+            fileOutput = new FileWriter(filePath.toFile());
+        } catch (final IOException e) {
+            if (Presence.isPresent(fileOutput)) {
+                fileOutput.close();     
+            }
+            
+            throw e;
         }
+        
+        return new BufferedWriter(fileOutput);
     }
     
     private void readObject(final ObjectInputStream objectInputStream)
