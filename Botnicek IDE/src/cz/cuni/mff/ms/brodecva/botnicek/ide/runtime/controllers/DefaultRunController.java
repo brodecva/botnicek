@@ -39,56 +39,44 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.responder.ExceptionalState;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultRunController extends AbstractController<RunView> implements
-        RunController {
+public final class DefaultRunController extends AbstractController<RunView>
+        implements RunController {
 
-    private final class DefaultSpokenListener implements SpokenListener {
+    private final class DefaultExceptionStateCaughtListener implements
+            ExceptionalStateCaughtListener {
 
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.events.SpokenListener#spoken(java.lang.String)
-         */
-        @Override
-        public void spoken(final String author, final String content) {
-            Preconditions.checkNotNull(author);
-            Preconditions.checkNotNull(content);
-            
-            callViews(new Callback<RunView>() {
-
-                @Override
-                public void call(final RunView view) {
-                    view.receive(author, content);
-                }
-
-            });
-        }
-        
-    }
-    
-    private final class DefaultExceptionStateCaughtListener implements ExceptionalStateCaughtListener {
-
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.events.ExceptionalStateCaughtListener#caught(cz.cuni.mff.ms.brodecva.botnicek.library.responder.ExceptionalState)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.events.
+         * ExceptionalStateCaughtListener
+         * #caught(cz.cuni.mff.ms.brodecva.botnicek
+         * .library.responder.ExceptionalState)
          */
         @Override
         public void caught(final ExceptionalState exceptionalState) {
             Preconditions.checkNotNull(exceptionalState);
-            
+
             callViews(new Callback<RunView>() {
 
                 @Override
                 public void call(final RunView view) {
                     view.exceptionalStateCaught(exceptionalState);
                 }
-                
+
             });
         }
-        
-    }
-    
-    private final class DefaultRunsTerminatedListener implements RunsTerminatedListener {
 
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.events.RunsTerminatedListener#terminated()
+    }
+
+    private final class DefaultRunsTerminatedListener implements
+            RunsTerminatedListener {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.events.
+         * RunsTerminatedListener#terminated()
          */
         @Override
         public void terminated() {
@@ -100,46 +88,85 @@ public final class DefaultRunController extends AbstractController<RunView> impl
                 }
             });
         }
-        
+
     }
-    
-    private final Run run;
-    
+
+    private final class DefaultSpokenListener implements SpokenListener {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.events.SpokenListener
+         * #spoken(java.lang.String)
+         */
+        @Override
+        public void spoken(final String author, final String content) {
+            Preconditions.checkNotNull(author);
+            Preconditions.checkNotNull(content);
+
+            callViews(new Callback<RunView>() {
+
+                @Override
+                public void call(final RunView view) {
+                    view.receive(author, content);
+                }
+
+            });
+        }
+
+    }
+
     /**
-     * Vytvoří řadič, který bude též naslouchat vyřčeným promluvám a aktualizovat pohledy na konverzaci, případě reagovat na ukočnení konverzací.
+     * Vytvoří řadič, který bude též naslouchat vyřčeným promluvám a
+     * aktualizovat pohledy na konverzaci, případě reagovat na ukočnení
+     * konverzací.
      * 
-     * @param run běžící konverzace
-     * @param eventManager správce událostí
+     * @param run
+     *            běžící konverzace
+     * @param eventManager
+     *            správce událostí
      * @return řadič
      */
-    public static DefaultRunController create(final Run run, final EventManager eventManager) {
+    public static DefaultRunController create(final Run run,
+            final EventManager eventManager) {
         Preconditions.checkNotNull(run);
         Preconditions.checkNotNull(eventManager);
-        
-        final DefaultRunController newInstance = new DefaultRunController(run, eventManager);
-        
-        newInstance.addListener(SpokenEvent.class, newInstance.new DefaultSpokenListener());
-        newInstance.addListener(RunsTerminatedEvent.class, newInstance.new DefaultRunsTerminatedListener());
-        newInstance.addListener(ExceptionalStateCaughtEvent.class, run, newInstance.new DefaultExceptionStateCaughtListener());
-        
+
+        final DefaultRunController newInstance =
+                new DefaultRunController(run, eventManager);
+
+        newInstance.addListener(SpokenEvent.class,
+                newInstance.new DefaultSpokenListener());
+        newInstance.addListener(RunsTerminatedEvent.class,
+                newInstance.new DefaultRunsTerminatedListener());
+        newInstance.addListener(ExceptionalStateCaughtEvent.class, run,
+                newInstance.new DefaultExceptionStateCaughtListener());
+
         return newInstance;
     }
-    
+
+    private final Run run;
+
     private DefaultRunController(final Run run, final EventManager eventManager) {
         super(eventManager);
-        
+
         Preconditions.checkNotNull(run);
-        
+
         this.run = run;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.RunController#tell(java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.RunController
+     * #tell(java.lang.String)
      */
     @Override
     public void tell(final String content) {
         Preconditions.checkNotNull(content);
-        
+
         this.run.tell(content);
     }
 

@@ -31,53 +31,60 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority;
  * @author Václav Brodec
  * @version 1.0
  */
-final class PermissiveNamingAuthority implements
-        NamingAuthority {
-    @Override
-    public String use(String name) {
-        return name;
-    }
-
-    @Override
-    public void tryUse(String... name) {
-    }
-
-    @Override
-    public String replace(String oldName, String newName) {
-        return newName;
-    }
-
-    @Override
-    public void release(String oldName) {
-    }
-
-    @Override
-    public boolean isUsed(String name) {
-        return false;
-    }
-
-    @Override
-    public boolean isUsable(String name) {
-        return true;
-    }
-
+final class PermissiveNamingAuthority implements NamingAuthority {
     @Override
     public String generate() {
         return "";
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority#tryReplace(java.util.Map)
-     */
-    @Override
-    public void tryReplace(Map<String, String> oldToNew) {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority#getSnapshot()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority
+     * #getSnapshot()
      */
     @Override
     public Set<String> getSnapshot() {
         return ImmutableSet.of();
+    }
+
+    @Override
+    public boolean isUsable(final String name) {
+        return true;
+    }
+
+    @Override
+    public boolean isUsed(final String name) {
+        return false;
+    }
+
+    @Override
+    public void release(final String oldName) {
+    }
+
+    @Override
+    public String replace(final String oldName, final String newName) {
+        return newName;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority
+     * #tryReplace(java.util.Map)
+     */
+    @Override
+    public void tryReplace(final Map<String, String> oldToNew) {
+    }
+
+    @Override
+    public void tryUse(final String... name) {
+    }
+
+    @Override
+    public String use(final String name) {
+        return name;
     }
 }

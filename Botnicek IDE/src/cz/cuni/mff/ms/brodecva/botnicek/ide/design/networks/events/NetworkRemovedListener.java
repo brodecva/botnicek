@@ -30,7 +30,8 @@ public interface NetworkRemovedListener {
     /**
      * Reaguje na odstranění sítě.
      * 
-     * @param network odstraněná síť
+     * @param network
+     *            odstraněná síť
      */
     void removed(Network network);
 }

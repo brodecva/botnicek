@@ -41,103 +41,159 @@ final class DummyProjectController implements ProjectController {
         return new DummyProjectController();
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java
+     * .lang.Object)
      */
     @Override
-    public void addView(ProjectView view) {
+    public void addView(final ProjectView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
+     * #close()
      */
     @Override
-    public void removeView(ProjectView view) {
+    public void close() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController#create(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
+     * #create(java.lang.String)
      */
     @Override
-    public void createNew(String name) {
+    public void createNew(final String name) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController#save(java.io.File)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
+     * #export(java.io.File)
      */
     @Override
-    public void save(Path projectPath) throws IOException {
+    public void export(final Path location) throws IOException {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController#open(java.io.File)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang
+     * .Object)
      */
     @Override
-    public void open(Path projectPath) throws FileNotFoundException,
-            ClassNotFoundException, IOException {
+    public void fill(final ProjectView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController#export(java.io.File)
-     */
-    @Override
-    public void export(Path location) throws IOException {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController#isOpen()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
+     * #isOpen()
      */
     @Override
     public boolean isOpen() {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
+     * #open(java.io.File)
      */
     @Override
-    public void fill(ProjectView view) {
+    public void open(final Path projectPath) throws FileNotFoundException,
+            ClassNotFoundException, IOException {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController#openSettings()
-     */
-    @Override
-    public void openSettings() {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController#openBotSettings()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
+     * #openBotSettings()
      */
     @Override
     public void openBotSettings() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController#openLanguageSettings()
-     */
-    @Override
-    public void openLanguageSettings() {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController#openConversationSettings()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
+     * #openConversationSettings()
      */
     @Override
     public void openConversationSettings() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController#run()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
+     * #openLanguageSettings()
+     */
+    @Override
+    public void openLanguageSettings() {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
+     * #openSettings()
+     */
+    @Override
+    public void openSettings() {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(
+     * java.lang.Object)
+     */
+    @Override
+    public void removeView(final ProjectView view) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
+     * #save(java.io.File)
+     */
+    @Override
+    public void save(final Path projectPath) throws IOException {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
+     * #run()
      */
     @Override
     public void test() {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController#close()
-     */
-    @Override
-    public void close() {
     }
 }

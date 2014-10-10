@@ -35,72 +35,94 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultBotSettingsController extends AbstractController<BotSettingsView> implements BotSettingsController {
+public final class DefaultBotSettingsController extends
+        AbstractController<BotSettingsView> implements BotSettingsController {
 
-    private final class DefaultBotSettingsChangedListener implements BotSettingsChangedListener {
+    private final class DefaultBotSettingsChangedListener implements
+            BotSettingsChangedListener {
 
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.events.SettingsChangedListener#changed(cz.cuni.mff.ms.brodecva.botnicek.ide.projects.model.Settings)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.events.
+         * SettingsChangedListener
+         * #changed(cz.cuni.mff.ms.brodecva.botnicek.ide.projects
+         * .model.Settings)
          */
         @Override
         public void changed(final BotConfiguration settings) {
             Preconditions.checkNotNull(settings);
-            
+
             callViews(new Callback<BotSettingsView>() {
 
                 @Override
                 public void call(final BotSettingsView view) {
                     view.updateBotConfiguration(settings);
                 }
-                
+
             });
         }
-        
+
     }
-    
-    private final Project project;
-    
+
     /**
      * Vytvoří řadič pro daný projekt a bude naslouchat změnám na něm.
      * 
-     * @param project projekt
-     * @param eventManager správce událostí
+     * @param project
+     *            projekt
+     * @param eventManager
+     *            správce událostí
      * @return řadič
      */
-    public static DefaultBotSettingsController create(final Project project, final EventManager eventManager) {
+    public static DefaultBotSettingsController create(final Project project,
+            final EventManager eventManager) {
         Preconditions.checkNotNull(project);
         Preconditions.checkNotNull(eventManager);
-        
-        final DefaultBotSettingsController newInstance = new DefaultBotSettingsController(project, eventManager);
-        
-        newInstance.addListener(BotSettingsChangedEvent.class, newInstance.new DefaultBotSettingsChangedListener());
-        
+
+        final DefaultBotSettingsController newInstance =
+                new DefaultBotSettingsController(project, eventManager);
+
+        newInstance.addListener(BotSettingsChangedEvent.class,
+                newInstance.new DefaultBotSettingsChangedListener());
+
         return newInstance;
     }
-    
-    private DefaultBotSettingsController(final Project project, final EventManager eventManager) {
+
+    private final Project project;
+
+    private DefaultBotSettingsController(final Project project,
+            final EventManager eventManager) {
         super(eventManager);
-        
+
         this.project = project;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.BotSettingsController#setBotConfiguration(cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration)
-     */
-    @Override
-    public void set(final BotConfiguration configuration) {
-        Preconditions.checkNotNull(configuration);
-        
-        this.project.setBotConfiguration(configuration);
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.BotSettingsController#fill(cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.BotSettingsView)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.
+     * BotSettingsController
+     * #fill(cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.BotSettingsView)
      */
     @Override
     public void fill(final BotSettingsView view) {
         Preconditions.checkNotNull(view);
-        
-        view.updateBotConfiguration(project.getBotConfiguration());
+
+        view.updateBotConfiguration(this.project.getBotConfiguration());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.
+     * BotSettingsController
+     * #setBotConfiguration(cz.cuni.mff.ms.brodecva.botnicek
+     * .library.api.BotConfiguration)
+     */
+    @Override
+    public void set(final BotConfiguration configuration) {
+        Preconditions.checkNotNull(configuration);
+
+        this.project.setBotConfiguration(configuration);
     }
 }

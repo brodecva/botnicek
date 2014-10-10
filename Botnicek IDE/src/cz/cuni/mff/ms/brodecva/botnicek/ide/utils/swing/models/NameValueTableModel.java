@@ -23,21 +23,17 @@ import java.util.Map;
 import javax.swing.table.TableModel;
 
 /**
- * Model se dvěma sloupci, které mohou mít libovolný typ (ne nutně stejný) - název (ty musí být unikátní) a hodnota.
+ * Model se dvěma sloupci, které mohou mít libovolný typ (ne nutně stejný) -
+ * název (ty musí být unikátní) a hodnota.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @param <N> typ názvu
- * @param <V> typ hodnoty
+ * @param <N>
+ *            typ názvu
+ * @param <V>
+ *            typ hodnoty
  */
 public interface NameValueTableModel<N, V> extends TableModel {
-
-    /**
-     * Aktualizuje model.
-     * 
-     * @param namesToValues hodnoty na názvy
-     */
-    void update(final Map<N, V> namesToValues);
 
     /**
      * Přidá nový řádek do tabulky.
@@ -50,4 +46,12 @@ public interface NameValueTableModel<N, V> extends TableModel {
      * @return zobrazení názvů na hodnoty
      */
     Map<N, V> getNamesToValues();
+
+    /**
+     * Aktualizuje model.
+     * 
+     * @param namesToValues
+     *            hodnoty na názvy
+     */
+    void update(final Map<N, V> namesToValues);
 }

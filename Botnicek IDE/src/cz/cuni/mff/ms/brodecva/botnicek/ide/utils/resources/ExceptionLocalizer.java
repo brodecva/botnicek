@@ -28,16 +28,15 @@ import java.util.ResourceBundle;
  * @see AbstractBundleLocalizer pro specifikaci parametrů v textu balíku
  */
 public final class ExceptionLocalizer extends AbstractBundleLocalizer {
-    
+
     /**
      * Lokální umístění překladu výjimek.
      */
     public static final String BUNDLE_PACKAGE_NAME = ".exceptions";
-    
-    private static final ResourceBundle DEFAULT_LOCALE =
-            ResourceBundle.getBundle(ROOT_PACKAGE
-                    + BUNDLE_PACKAGE_NAME);
-    
+
+    private static final ResourceBundle DEFAULT_LOCALE = ResourceBundle
+            .getBundle(ROOT_PACKAGE + BUNDLE_PACKAGE_NAME);
+
     /**
      * Vrátí překladač výjimek pro třídu využívající výchozí umístění.
      * 
@@ -46,20 +45,19 @@ public final class ExceptionLocalizer extends AbstractBundleLocalizer {
     public static ExceptionLocalizer get() {
         return new ExceptionLocalizer(DEFAULT_LOCALE);
     }
-    
+
     /**
      * Vrátí přeloženou zprávu.
      * 
      * @param key
-     *            klíč pro hledaný řetězec, musí pro něj
-     *            existovat překlad
+     *            klíč pro hledaný řetězec, musí pro něj existovat překlad
      * @param params
      *            objekty k substituci do lokalizované zprávy
      * @return řetězec pro daný klíč
      * @see java.util.logging.Logger#log(java.util.logging.Level, String,
      *      Object[]) Obdobně užitá metoda
      */
-    public static String print(final String key, final Object...params) {
+    public static String print(final String key, final Object... params) {
         return get().getMessage(key, params);
     }
 

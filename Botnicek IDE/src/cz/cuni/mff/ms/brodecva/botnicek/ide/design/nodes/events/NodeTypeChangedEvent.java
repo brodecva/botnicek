@@ -20,8 +20,8 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.events;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
 
 /**
@@ -30,39 +30,49 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public class NodeTypeChangedEvent extends AbstractMappedEvent<Network, NodeTypeChangedListener> {
-    
-    private final Node oldVersion;
-    private final Node newVersion;
-    
+public class NodeTypeChangedEvent extends
+        AbstractMappedEvent<Network, NodeTypeChangedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param network rodičovská síť uzlu
-     * @param oldVersion původní verze uzlu
-     * @param newVersion nová verze uzlu
+     * @param network
+     *            rodičovská síť uzlu
+     * @param oldVersion
+     *            původní verze uzlu
+     * @param newVersion
+     *            nová verze uzlu
      * @return událost
      */
-    public static NodeTypeChangedEvent create(final Network network, final Node oldVersion, final Node newVersion) {
+    public static NodeTypeChangedEvent create(final Network network,
+            final Node oldVersion, final Node newVersion) {
         return new NodeTypeChangedEvent(network, oldVersion, newVersion);
     }
-    
-    private NodeTypeChangedEvent(final Network network, final Node oldVersion, final Node newVersion) {
+
+    private final Node oldVersion;
+
+    private final Node newVersion;
+
+    private NodeTypeChangedEvent(final Network network, final Node oldVersion,
+            final Node newVersion) {
         super(network);
-        
+
         Preconditions.checkNotNull(oldVersion);
         Preconditions.checkNotNull(newVersion);
-        
+
         this.oldVersion = oldVersion;
         this.newVersion = newVersion;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final NodeTypeChangedListener listener) {
         listener.nodeTypeChanged(this.oldVersion, this.newVersion);
     }
 }
- 

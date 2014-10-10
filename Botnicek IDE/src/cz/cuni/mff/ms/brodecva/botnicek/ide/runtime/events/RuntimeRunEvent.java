@@ -30,35 +30,41 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public class RuntimeRunEvent extends AbstractMappedEvent<Project, RuntimeRunListener> {
-    
-    private final Run run;
-    
+public class RuntimeRunEvent extends
+        AbstractMappedEvent<Project, RuntimeRunListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param project projekt, v rámci něhož testovací konverzace probíhá
-     * @param run testovací konverzace
+     * @param project
+     *            projekt, v rámci něhož testovací konverzace probíhá
+     * @param run
+     *            testovací konverzace
      * @return událost
      */
     public static RuntimeRunEvent create(final Project project, final Run run) {
         return new RuntimeRunEvent(project, run);
     }
-    
+
+    private final Run run;
+
     private RuntimeRunEvent(final Project project, final Run run) {
         super(project);
-        
+
         Preconditions.checkNotNull(run);
-        
+
         this.run = run;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final RuntimeRunListener listener) {
         listener.run(this.run);
     }
 }
- 

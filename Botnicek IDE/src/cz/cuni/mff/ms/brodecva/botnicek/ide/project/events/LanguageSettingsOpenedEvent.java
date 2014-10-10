@@ -22,33 +22,38 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.Project;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
 
 /**
- * Událost otevření nastavení jazyka. 
+ * Událost otevření nastavení jazyka.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class LanguageSettingsOpenedEvent extends AbstractMappedEvent<Project, LanguageSettingsOpenedListener> {
-    
+public final class LanguageSettingsOpenedEvent extends
+        AbstractMappedEvent<Project, LanguageSettingsOpenedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param project cílený projekt
+     * @param project
+     *            cílený projekt
      * @return událost
      */
     public static LanguageSettingsOpenedEvent create(final Project project) {
         return new LanguageSettingsOpenedEvent(project);
     }
-    
+
     private LanguageSettingsOpenedEvent(final Project project) {
         super(project);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event#dispatchTo(java
+     * .lang.Object)
      */
     @Override
     public void dispatchTo(final LanguageSettingsOpenedListener listener) {
         listener.settingsOpenedTo(getKey());
     }
 }
- 

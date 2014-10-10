@@ -42,30 +42,41 @@ public class UnobscuredInternalFrame extends JInternalFrame {
     private static final int X_OFFSET = 30;
 
     private static final int Y_OFFSET = 30;
-    
+
+    /**
+     * Vytvoří vnitřní rám.
+     * 
+     * @return vnitřní rám
+     */
+    public static UnobscuredInternalFrame create() {
+        return new UnobscuredInternalFrame();
+    }
+
     /**
      * Spustí testovací verzi.
      * 
-     * @param args argumenty
+     * @param args
+     *            argumenty
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            
+
             final JDesktopPane desktopPane = new JDesktopPane();
             final JPanel contentPane = new JPanel(new CardLayout());
             contentPane.setPreferredSize(new Dimension(300, 300));
             contentPane.setMinimumSize(new Dimension(300, 300));
             contentPane.add(desktopPane);
-            
+
             final JFrame frame = new JFrame();
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setContentPane(contentPane);
             frame.setSize(300, 300);
             frame.setVisible(true);
-            
+
             for (int i = 0; i < 5; i++) {
-                final UnobscuredInternalFrame child = UnobscuredInternalFrame.create();
+                final UnobscuredInternalFrame child =
+                        UnobscuredInternalFrame.create();
                 child.setSize(new Dimension(133, 133));
                 desktopPane.add(child);
                 child.offset();
@@ -75,23 +86,25 @@ public class UnobscuredInternalFrame extends JInternalFrame {
             e.printStackTrace();
         }
     }
-    
-    /**
-     * Vytvoří vnitřní rám.
-     * 
-     * @return vnitřní rám
-     */
-    public static UnobscuredInternalFrame create() {
-        return new UnobscuredInternalFrame();
-    }
-    
+
     /**
      * Vytvoří vnitřní rám.
      */
     protected UnobscuredInternalFrame() {
         super();
     }
-    
+
+    private boolean foundFreeSpot(final int x, final int y,
+            final JInternalFrame[] siblings) {
+        for (final JInternalFrame sibling : siblings) {
+            if (sibling != this && sibling.getX() == x && sibling.getY() == y) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * Poskočí na volný násobek posuvu v rámci rodiče.
      */
@@ -100,30 +113,19 @@ public class UnobscuredInternalFrame extends JInternalFrame {
         if (!Components.hasParent(desktop)) {
             return;
         }
-                
+
         final JInternalFrame[] siblings = desktop.getAllFrames();
-        
+
         int x = getX();
-        int y = getY();        
+        int y = getY();
         boolean found = foundFreeSpot(x, y, siblings);
         while (!found) {
             x += X_OFFSET;
             y += Y_OFFSET;
-            
+
             found = foundFreeSpot(x, y, siblings);
         }
-        
-        setLocation(x, y);
-    }
 
-    private boolean
-            foundFreeSpot(int x, int y, final JInternalFrame[] siblings) {
-        for (final JInternalFrame sibling : siblings) {
-            if (sibling != this && sibling.getX() == x && sibling.getY() == y) {
-                return false;
-            }
-        }
-        
-        return true;
+        setLocation(x, y);
     }
 }

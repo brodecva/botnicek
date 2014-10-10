@@ -22,8 +22,8 @@ import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.NetworkRemovedListener;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
 
 /**
  * Událost odstranění sítě ze systému.
@@ -31,35 +31,42 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
  * @author Václav Brodec
  * @version 1.0
  */
-public class NetworkRemovedEvent extends AbstractMappedEvent<System, NetworkRemovedListener> {
-    
-    private final Network network;
-    
+public class NetworkRemovedEvent extends
+        AbstractMappedEvent<System, NetworkRemovedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param system rodičovský systém
-     * @param network odstraněná síť
+     * @param system
+     *            rodičovský systém
+     * @param network
+     *            odstraněná síť
      * @return událost
      */
-    public static NetworkRemovedEvent create(final System system, final Network network) {
+    public static NetworkRemovedEvent create(final System system,
+            final Network network) {
         return new NetworkRemovedEvent(system, network);
     }
-    
+
+    private final Network network;
+
     private NetworkRemovedEvent(final System system, final Network network) {
         super(system);
-        
+
         Preconditions.checkNotNull(network);
-        
+
         this.network = network;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final NetworkRemovedListener listener) {
         listener.removed(this.network);
     }
 }
- 

@@ -33,36 +33,45 @@ import com.google.common.base.Preconditions;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultRendererFactory implements RendererFactory, Serializable {
+public final class DefaultRendererFactory implements RendererFactory,
+        Serializable {
 
     private static final long serialVersionUID = 1L;
-    
-    private final RenderingVisitorFactory renderingVisitorFactory;
-    
+
     /**
      * Vytvoří továrnu.
      * 
-     * @param renderingVisitorFactory továrna na návštěvníky stromu dokumentu
+     * @param renderingVisitorFactory
+     *            továrna na návštěvníky stromu dokumentu
      * @return továrna
      */
-    public static DefaultRendererFactory create(final RenderingVisitorFactory renderingVisitorFactory) {
+    public static DefaultRendererFactory create(
+            final RenderingVisitorFactory renderingVisitorFactory) {
         return new DefaultRendererFactory(renderingVisitorFactory);
     }
-    
-    private DefaultRendererFactory(final RenderingVisitorFactory renderingVisitorFactory) {
+
+    private final RenderingVisitorFactory renderingVisitorFactory;
+
+    private DefaultRendererFactory(
+            final RenderingVisitorFactory renderingVisitorFactory) {
         Preconditions.checkNotNull(renderingVisitorFactory);
-        
+
         this.renderingVisitorFactory = renderingVisitorFactory;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.render.RendererFactory#produce(java.util.Map)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.render.RendererFactory#produce(java
+     * .util.Map)
      */
     @Override
     public Renderer produce(final Map<URI, String> namespacesToPrefixes) {
         Preconditions.checkNotNull(namespacesToPrefixes);
-        
-        return DefaultRenderer.create(this.renderingVisitorFactory, namespacesToPrefixes);
+
+        return DefaultRenderer.create(this.renderingVisitorFactory,
+                namespacesToPrefixes);
     }
 
     private void readObject(final ObjectInputStream objectInputStream)

@@ -19,6 +19,7 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model;
 
 import java.util.Map;
+
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
 import cz.cuni.mff.ms.brodecva.botnicek.library.language.Language;
 import cz.cuni.mff.ms.brodecva.botnicek.library.loader.Loader;
@@ -34,7 +35,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.processor.set.DisplayStrategy;
  * @version 1.0
  */
 public interface RunFactory {
-    
+
     /**
      * Vytvoří novou testovací konverzaci.
      * 
@@ -53,12 +54,12 @@ public interface RunFactory {
      * @param predicatesSetBehavior
      *            názvy predikátů zobrazené na strategie pro zobrazení výstupu
      *            při jejich nastavování
-     * @param dispatcher rozesílač událostí
+     * @param dispatcher
+     *            rozesílač událostí
      * @return konverzace
      */
-    Run produce(Loader loader, Splitter splitter,
-            Normalizer normalizer, Language language,
-            TemplateParserFactory parserFactory,
+    Run produce(Loader loader, Splitter splitter, Normalizer normalizer,
+            Language language, TemplateParserFactory parserFactory,
             Map<String, String> defaultPredicates,
             Map<String, DisplayStrategy> predicatesSetBehavior,
             Dispatcher dispatcher);

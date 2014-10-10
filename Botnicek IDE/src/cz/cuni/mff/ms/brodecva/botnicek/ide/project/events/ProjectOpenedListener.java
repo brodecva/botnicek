@@ -31,7 +31,8 @@ public interface ProjectOpenedListener {
     /**
      * Reaguje na otevření projektu.
      * 
-     * @param opened otevřený projekt
+     * @param opened
+     *            otevřený projekt
      */
     void opened(Project opened);
 

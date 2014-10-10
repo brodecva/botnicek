@@ -32,7 +32,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.responder.AIMLConversation;
 import cz.cuni.mff.ms.brodecva.botnicek.library.responder.Conversation;
 
 /**
- * Implementace {@link ConversationFactory} vytvářející konverzace s robotem postaveným nad AIML.
+ * Implementace {@link ConversationFactory} vytvářející konverzace s robotem
+ * postaveným nad AIML.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -47,12 +48,21 @@ public final class AimlConversationFactory implements ConversationFactory {
     public static AimlConversationFactory create() {
         return new AimlConversationFactory();
     }
-    
+
     private AimlConversationFactory() {
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.ConversationFactory#produce(cz.cuni.mff.ms.brodecva.botnicek.library.loader.Loader, cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Splitter, cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Normalizer, cz.cuni.mff.ms.brodecva.botnicek.library.language.Language, cz.cuni.mff.ms.brodecva.botnicek.library.parser.TemplateParserFactory, java.util.Map, java.util.Map)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.ConversationFactory
+     * #produce(cz.cuni.mff.ms.brodecva.botnicek.library.loader.Loader,
+     * cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Splitter,
+     * cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Normalizer,
+     * cz.cuni.mff.ms.brodecva.botnicek.library.language.Language,
+     * cz.cuni.mff.ms.brodecva.botnicek.library.parser.TemplateParserFactory,
+     * java.util.Map, java.util.Map)
      */
     @Override
     public Conversation produce(final Loader loader, final Splitter splitter,
@@ -66,11 +76,10 @@ public final class AimlConversationFactory implements ConversationFactory {
         Preconditions.checkNotNull(language);
         Preconditions.checkNotNull(parserFactory);
         Preconditions.checkNotNull(defaultPredicates);
-        Preconditions.checkNotNull(predicatesSetBehavior);        
-        
-        return new AIMLConversation(loader, splitter, normalizer,
-                language, parserFactory, defaultPredicates,
-                predicatesSetBehavior);
+        Preconditions.checkNotNull(predicatesSetBehavior);
+
+        return new AIMLConversation(loader, splitter, normalizer, language,
+                parserFactory, defaultPredicates, predicatesSetBehavior);
     }
 
 }

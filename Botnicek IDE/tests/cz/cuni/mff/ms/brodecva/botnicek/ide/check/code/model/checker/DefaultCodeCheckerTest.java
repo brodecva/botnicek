@@ -18,7 +18,9 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
 import java.util.Map;
@@ -30,7 +32,6 @@ import org.junit.experimental.categories.Category;
 
 import com.google.common.collect.ImmutableMap;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.Settings;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.RuntimeSettings;
@@ -40,7 +41,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.platform.XML;
 import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.IntegrationTest;
 
 /**
- * Testuje výchozí implementaci validátoru kódu šablony jazyka AIML, jež užívá části interpretu, které mají na starosti načtení kódu. S výchozím nastavením.
+ * Testuje výchozí implementaci validátoru kódu šablony jazyka AIML, jež užívá
+ * části interpretu, které mají na starosti načtení kódu. S výchozím nastavením.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -51,128 +53,176 @@ public class DefaultCodeCheckerTest {
 
     private static final String AIML_PREFIX = "aiml";
     private static final String SCHEMA_PREFIX = "customschemans";
-    
+
     private DefaultCodeChecker defaultPrefixedTested = Intended.nullReference();
     private DefaultCodeChecker customPrefixedTested = Intended.nullReference();
-    
+
     /**
      * Sestaví testovaný objekt.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @Before
     public void setUp() throws Exception {
         final RuntimeSettings runtimeSettings = RuntimeSettings.getDefault();
-        this.defaultPrefixedTested = DefaultCodeChecker.create(runtimeSettings.getBotConfiguration(), runtimeSettings.getLanguageConfiguration(), Settings.getDefault().getNamespacesToPrefixes());
-        
-        final Map<URI, String> customNamespacePrefixes = ImmutableMap.of(URI.create(AIML.NAMESPACE_URI.getValue()), AIML_PREFIX, URI.create(XML.SCHEMA_NAMESPACE_URI.getValue()), SCHEMA_PREFIX);
-        this.customPrefixedTested = DefaultCodeChecker.create(runtimeSettings.getBotConfiguration(), runtimeSettings.getLanguageConfiguration(), customNamespacePrefixes);
+        this.defaultPrefixedTested =
+                DefaultCodeChecker.create(
+                        runtimeSettings.getBotConfiguration(), runtimeSettings
+                                .getLanguageConfiguration(), Settings
+                                .getDefault().getNamespacesToPrefixes());
+
+        final Map<URI, String> customNamespacePrefixes =
+                ImmutableMap.of(URI.create(AIML.NAMESPACE_URI.getValue()),
+                        AIML_PREFIX,
+                        URI.create(XML.SCHEMA_NAMESPACE_URI.getValue()),
+                        SCHEMA_PREFIX);
+        this.customPrefixedTested =
+                DefaultCodeChecker.create(
+                        runtimeSettings.getBotConfiguration(),
+                        runtimeSettings.getLanguageConfiguration(),
+                        customNamespacePrefixes);
     }
 
     /**
      * Uklidí testovaný objekt.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @After
     public void tearDown() throws Exception {
-        defaultPrefixedTested = Intended.nullReference();
-        customPrefixedTested = Intended.nullReference();
+        this.defaultPrefixedTested = Intended.nullReference();
+        this.customPrefixedTested = Intended.nullReference();
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}
+     * .
      */
     @Test
-    public void testCheckWhenEmptyInputExpectValid() {
-        assertTrue(defaultPrefixedTested.check("").isValid());
+    public
+            void
+            testCheckWhenCustomPrefixCorrectLocalNameButDifferentPrefixExpectInvalid() {
+        assertFalse(this.customPrefixedTested.check(
+                "<otherns:get name=\"BLA\"/>").isValid());
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenOpenTagExpectInvalid() {
-        assertFalse(defaultPrefixedTested.check("<").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenOpenTagExpectColumnPositionTwo() {
-        final CheckResult result = defaultPrefixedTested.check("<");
-        
-        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER, result.getErrorLineNumber());
-        assertEquals(2, result.getErrorColumnNumber());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenUnknownElementExpectInvalid() {
-        assertFalse(defaultPrefixedTested.check("<unknown/>").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenUnknownElementExpectColumnPositionTagCodeLengthPlusOne() {
-        final String tagCode = "<unknown/>";
-        
-        final CheckResult result = defaultPrefixedTested.check(tagCode);
-        
-        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER, result.getErrorLineNumber());
-        assertEquals(tagCode.length() + 1, result.getErrorColumnNumber());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenValidAimlCodeExpectValid() {
-        assertTrue(defaultPrefixedTested.check("<random><li><get name=\"TOPIC\"/> is the topic</li><li><javascript><get name=\"USER\"></get></javascript></li></random>").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}
+     * .
      */
     @Test
     public void testCheckWhenCustomPrefixedEmptyInputExpectValid() {
-        assertTrue(customPrefixedTested.check("").isValid());
+        assertTrue(this.customPrefixedTested.check("").isValid());
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}
+     * .
      */
     @Test
     public void testCheckWhenCustomPrefixedOpenTagExpectInvalid() {
-        assertFalse(customPrefixedTested.check("<").isValid());
+        assertFalse(this.customPrefixedTested.check("<").isValid());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}
+     * .
      */
     @Test
     public void testCheckWhenCustomPrefixedUnknownElementExpectInvalid() {
-        assertFalse(customPrefixedTested.check("<aiml:unknown/>").isValid());
+        assertFalse(this.customPrefixedTested.check("<aiml:unknown/>")
+                .isValid());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenCustomPrefixCorrectLocalNameButDifferentPrefixExpectInvalid() {
-        assertFalse(customPrefixedTested.check("<otherns:get name=\"BLA\"/>").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}
+     * .
      */
     @Test
     public void testCheckWhenCustomPrefixedValidAimlCodeExpectValid() {
-        assertTrue(customPrefixedTested.check("<aiml:random><aiml:li><aiml:get name=\"TOPIC\"/> is the topic</aiml:li><aiml:li><aiml:javascript><aiml:get name=\"USER\"></aiml:get></aiml:javascript></aiml:li></aiml:random>").isValid());
+        assertTrue(this.customPrefixedTested
+                .check("<aiml:random><aiml:li><aiml:get name=\"TOPIC\"/> is the topic</aiml:li><aiml:li><aiml:javascript><aiml:get name=\"USER\"></aiml:get></aiml:javascript></aiml:li></aiml:random>")
+                .isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenEmptyInputExpectValid() {
+        assertTrue(this.defaultPrefixedTested.check("").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenOpenTagExpectColumnPositionTwo() {
+        final CheckResult result = this.defaultPrefixedTested.check("<");
+
+        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER,
+                result.getErrorLineNumber());
+        assertEquals(2, result.getErrorColumnNumber());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenOpenTagExpectInvalid() {
+        assertFalse(this.defaultPrefixedTested.check("<").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public
+            void
+            testCheckWhenUnknownElementExpectColumnPositionTagCodeLengthPlusOne() {
+        final String tagCode = "<unknown/>";
+
+        final CheckResult result = this.defaultPrefixedTested.check(tagCode);
+
+        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER,
+                result.getErrorLineNumber());
+        assertEquals(tagCode.length() + 1, result.getErrorColumnNumber());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenUnknownElementExpectInvalid() {
+        assertFalse(this.defaultPrefixedTested.check("<unknown/>").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenValidAimlCodeExpectValid() {
+        assertTrue(this.defaultPrefixedTested
+                .check("<random><li><get name=\"TOPIC\"/> is the topic</li><li><javascript><get name=\"USER\"></get></javascript></li></random>")
+                .isValid());
     }
 }

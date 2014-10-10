@@ -54,7 +54,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.layouts.WrapLayout;
 public final class MainPanel extends AbstractPartPanel {
 
     private static final long serialVersionUID = 1L;
-    
+
     private static final int PRIORITY_SPINNER_MINIMUM = Priority.MIN_VALUE;
     private static final int PRIORITY_SPINNER_MAXIMUM = Priority.MAX_VALUE;
     private static final int PRIORITY_SPIINER_STEP = 1;
@@ -68,49 +68,72 @@ public final class MainPanel extends AbstractPartPanel {
     private static final int BORDER_TOP = 0;
     private static final int BORDER_BOTTOM = 24;
     private static final int BORDER_SIDES = 0;
-    private static final Dimension LABEL_DIMENSION = new Dimension(LABEL_WIDTH, LABEL_HEIGHT);
-    private static final Dimension TEXT_FIELD_DIMENSION = new Dimension(TEXT_FIELD_WIDTH, TEXT_FIELD_HEIGHT);
-    private static final Dimension SPINNER_DIMENSION = new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT);
-    
+    private static final Dimension LABEL_DIMENSION = new Dimension(LABEL_WIDTH,
+            LABEL_HEIGHT);
+    private static final Dimension TEXT_FIELD_DIMENSION = new Dimension(
+            TEXT_FIELD_WIDTH, TEXT_FIELD_HEIGHT);
+    private static final Dimension SPINNER_DIMENSION = new Dimension(
+            SPINNER_WIDTH, SPINNER_HEIGHT);
+
     static {
         assert DEFAULT_PRIORITY >= PRIORITY_SPINNER_MINIMUM;
         assert DEFAULT_PRIORITY <= PRIORITY_SPINNER_MAXIMUM;
     }
-    
-    private final ArcController arcController;
-    
-    private final JPanel namePane = new JPanel();
-    private final JLabel nameLabel = new JLabel(UiLocalizer.print("ArcName"));
-    private final NormalWordTextField nameTextField;
-    
-    private final JPanel fromPane = new JPanel();
-    private final JLabel fromLabel = new JLabel(UiLocalizer.print("FromNode"));
-    private final JTextField fromTextField = new JTextField();
-    
-    private final JPanel toPane = new JPanel();
-    private final JLabel toLabel = new JLabel(UiLocalizer.print("ToNode"));
-    private final JTextField toTextField = new JTextField();
-    
-    private final JPanel priorityPane = new JPanel();
-    private final JLabel priorityLabel = new JLabel(UiLocalizer.print("Priority"));
-    private final JSpinner prioritySpinner = new JSpinner(new SpinnerNumberModel(DEFAULT_PRIORITY, PRIORITY_SPINNER_MINIMUM, PRIORITY_SPINNER_MAXIMUM, PRIORITY_SPIINER_STEP));
-    
+
+    private static MainPanel create() {
+        return create(new Source() {
+        }, DummyArcController.create(),
+                DummyNormalWordValidationController.create());
+    }
+
+    /**
+     * Vytvoří panel.
+     * 
+     * @param parent
+     *            rodič
+     * @param arcController
+     *            řadič vlastností hrany
+     * @param nameValidationController
+     *            řadič validace názvu hrany
+     * @return panel
+     */
+    public static MainPanel create(final Source parent,
+            final ArcController arcController,
+            final NormalWordValidationController nameValidationController) {
+        Preconditions.checkNotNull(parent);
+        Preconditions.checkNotNull(arcController);
+        Preconditions.checkNotNull(nameValidationController);
+
+        final NormalWordTextField nameTextField =
+                NormalWordTextField.create(parent, nameValidationController);
+
+        final MainPanel newInstance =
+                new MainPanel(arcController, nameTextField);
+        arcController.addView(newInstance);
+        arcController.fill(newInstance);
+
+        return newInstance;
+    }
+
     /**
      * Spustí testovací verzi.
      * 
-     * @param args argumenty
+     * @param args
+     *            argumenty
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                    
+                    UIManager.setLookAndFeel(UIManager
+                            .getSystemLookAndFeelClassName());
+
                     final MainPanel panel = MainPanel.create();
-                    
+
                     final JPanel contentPane = new JPanel(new BorderLayout());
                     contentPane.add(panel, BorderLayout.CENTER);
-                    
+
                     final JFrame frame = new JFrame();
                     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     frame.setContentPane(contentPane);
@@ -122,40 +145,38 @@ public final class MainPanel extends AbstractPartPanel {
             }
         });
     }
-    
-    private static MainPanel create() {
-        return create(new Source() { }, DummyArcController.create(), DummyNormalWordValidationController.create());
-    }
-    
-    /**
-     * Vytvoří panel.
-     * 
-     * @param parent rodič
-     * @param arcController řadič vlastností hrany
-     * @param nameValidationController řadič validace názvu hrany
-     * @return panel
-     */
-    public static MainPanel create(final Source parent, final ArcController arcController, final NormalWordValidationController nameValidationController) {
-        Preconditions.checkNotNull(parent);
-        Preconditions.checkNotNull(arcController);
-        Preconditions.checkNotNull(nameValidationController);
-        
-        final NormalWordTextField nameTextField = NormalWordTextField.create(parent, nameValidationController);
-        
-        final MainPanel newInstance = new MainPanel(arcController, nameTextField);
-        arcController.addView(newInstance);
-        arcController.fill(newInstance);
-        
-        return newInstance;
-    }
-    
-    private MainPanel(final ArcController arcController, final NormalWordTextField nameTextField) {
+
+    private final ArcController arcController;
+
+    private final JPanel namePane = new JPanel();
+    private final JLabel nameLabel = new JLabel(UiLocalizer.print("ArcName"));
+    private final NormalWordTextField nameTextField;
+
+    private final JPanel fromPane = new JPanel();
+    private final JLabel fromLabel = new JLabel(UiLocalizer.print("FromNode"));
+    private final JTextField fromTextField = new JTextField();
+
+    private final JPanel toPane = new JPanel();
+    private final JLabel toLabel = new JLabel(UiLocalizer.print("ToNode"));
+    private final JTextField toTextField = new JTextField();
+
+    private final JPanel priorityPane = new JPanel();
+
+    private final JLabel priorityLabel = new JLabel(
+            UiLocalizer.print("Priority"));
+
+    private final JSpinner prioritySpinner = new JSpinner(
+            new SpinnerNumberModel(DEFAULT_PRIORITY, PRIORITY_SPINNER_MINIMUM,
+                    PRIORITY_SPINNER_MAXIMUM, PRIORITY_SPIINER_STEP));
+
+    private MainPanel(final ArcController arcController,
+            final NormalWordTextField nameTextField) {
         Preconditions.checkNotNull(arcController);
         Preconditions.checkNotNull(nameTextField);
-        
+
         this.arcController = arcController;
         this.nameTextField = nameTextField;
-        
+
         this.nameLabel.setLabelFor(this.nameTextField);
         this.nameLabel.setDisplayedMnemonic(KeyEvent.VK_N);
         this.fromLabel.setLabelFor(this.toTextField);
@@ -164,53 +185,66 @@ public final class MainPanel extends AbstractPartPanel {
         this.toLabel.setDisplayedMnemonic(KeyEvent.VK_T);
         this.priorityLabel.setLabelFor(this.prioritySpinner);
         this.priorityLabel.setDisplayedMnemonic(KeyEvent.VK_P);
-        
+
         this.fromTextField.setEnabled(false);
         this.toTextField.setEnabled(false);
-        
+
         this.nameLabel.setPreferredSize(LABEL_DIMENSION);
         this.nameTextField.setMinimumSize(TEXT_FIELD_DIMENSION);
         this.nameTextField.setPreferredSize(TEXT_FIELD_DIMENSION);
-        
+
         this.fromLabel.setPreferredSize(LABEL_DIMENSION);
         this.fromTextField.setMinimumSize(TEXT_FIELD_DIMENSION);
         this.fromTextField.setPreferredSize(TEXT_FIELD_DIMENSION);
-        
+
         this.toLabel.setPreferredSize(LABEL_DIMENSION);
         this.toTextField.setMinimumSize(TEXT_FIELD_DIMENSION);
         this.toTextField.setPreferredSize(TEXT_FIELD_DIMENSION);
-        
+
         this.priorityLabel.setPreferredSize(LABEL_DIMENSION);
         this.priorityLabel.setMinimumSize(LABEL_DIMENSION);
         this.prioritySpinner.setMinimumSize(SPINNER_DIMENSION);
         this.prioritySpinner.setMaximumSize(SPINNER_DIMENSION);
         this.prioritySpinner.setPreferredSize(SPINNER_DIMENSION);
-        
+
         this.namePane.setLayout(new BoxLayout(this.namePane, BoxLayout.X_AXIS));
         this.namePane.add(this.nameLabel);
         this.namePane.add(this.nameTextField);
-        
+
         this.fromPane.setLayout(new BoxLayout(this.fromPane, BoxLayout.X_AXIS));
         this.fromPane.add(this.fromLabel);
         this.fromPane.add(this.fromTextField);
-        
+
         this.toPane.setLayout(new BoxLayout(this.toPane, BoxLayout.X_AXIS));
         this.toPane.add(this.toLabel);
         this.toPane.add(this.toTextField);
-        
+
         this.priorityPane.setLayout(new BorderLayout());
         this.priorityPane.add(this.priorityLabel, BorderLayout.WEST);
         this.priorityPane.add(this.prioritySpinner, BorderLayout.EAST);
 
         setLayout(new WrapLayout(WrapLayout.LEADING));
-        setBorder(BorderFactory.createEmptyBorder(BORDER_TOP, BORDER_SIDES, BORDER_BOTTOM, BORDER_SIDES));
-        
+        setBorder(BorderFactory.createEmptyBorder(BORDER_TOP, BORDER_SIDES,
+                BORDER_BOTTOM, BORDER_SIDES));
+
         add(this.namePane);
         add(this.fromPane);
         add(this.toPane);
         add(this.priorityPane);
     }
-    
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearable
+     * #clear()
+     */
+    @Override
+    public void clear() {
+        this.nameTextField.clear();
+    }
+
     /**
      * Vrátí zadaný název.
      * 
@@ -229,86 +263,94 @@ public final class MainPanel extends AbstractPartPanel {
         return (Integer) this.prioritySpinner.getValue();
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.PartView#close()
-     */
-    @Override
-    public void close() {
-        unsubscribe();
-    }
-    
-    private void unsubscribe() {
-        this.arcController.removeView(this);
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.ArcViewAdapter#updatedName(java.lang.String)
-     */
-    @Override
-    public void updateName(final NormalWord name) {
-        assert SwingUtilities.isEventDispatchThread();
-        
-        Preconditions.checkNotNull(name);
-        
-        this.nameTextField.setText(name.getText());
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.AbstractPartPanel#updatedFrom(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
-     */
-    public void updateFrom(final NormalWord from) {
-        assert SwingUtilities.isEventDispatchThread();
-        
-        Preconditions.checkNotNull(from);
-        
-        this.fromTextField.setText(from.getText());
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.AbstractPartPanel#updatedTo(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
-     */
-    public void updateTo(final NormalWord to) {
-        assert SwingUtilities.isEventDispatchThread();
-        
-        Preconditions.checkNotNull(to);
-        
-        this.toTextField.setText(to.getText());
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.AbstractPartPanel#updatedPriority(cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority)
-     */
-    public void updatePriority(final Priority priority) {
-        assert SwingUtilities.isEventDispatchThread();
-        
-        this.prioritySpinner.setValue(priority.getValue());
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.ArcViewAdapter#removed()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.ArcViewAdapter
+     * #removed()
      */
     @Override
     public void removed() {
         this.arcController.removeView(this);
-        
+
         super.removed();
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearable#clear()
-     */
-    @Override
-    public void clear() {
-        this.nameTextField.clear();
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearable#reset()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearable
+     * #reset()
      */
     @Override
     public void reset(final Source client) {
         Preconditions.checkNotNull(client);
-        
+
         this.nameTextField.reset(client);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.
+     * AbstractPartPanel
+     * #updatedFrom(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+     */
+    @Override
+    public void updateFrom(final NormalWord from) {
+        assert SwingUtilities.isEventDispatchThread();
+
+        Preconditions.checkNotNull(from);
+
+        this.fromTextField.setText(from.getText());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.ArcViewAdapter
+     * #updatedName(java.lang.String)
+     */
+    @Override
+    public void updateName(final NormalWord name) {
+        assert SwingUtilities.isEventDispatchThread();
+
+        Preconditions.checkNotNull(name);
+
+        this.nameTextField.setText(name.getText());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.
+     * AbstractPartPanel
+     * #updatedPriority(cz.cuni.mff.ms.brodecva.botnicek.ide.design
+     * .types.Priority)
+     */
+    @Override
+    public void updatePriority(final Priority priority) {
+        assert SwingUtilities.isEventDispatchThread();
+
+        this.prioritySpinner.setValue(priority.getValue());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.
+     * AbstractPartPanel
+     * #updatedTo(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+     */
+    @Override
+    public void updateTo(final NormalWord to) {
+        assert SwingUtilities.isEventDispatchThread();
+
+        Preconditions.checkNotNull(to);
+
+        this.toTextField.setText(to.getText());
     }
 }

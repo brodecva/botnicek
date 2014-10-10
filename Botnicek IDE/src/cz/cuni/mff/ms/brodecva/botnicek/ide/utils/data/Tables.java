@@ -24,8 +24,8 @@ import java.util.Set;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableTable;
-import com.google.common.collect.Table;
 import com.google.common.collect.ImmutableTable.Builder;
+import com.google.common.collect.Table;
 
 /**
  * Pomocné metody pro práci s tabulkami.
@@ -37,28 +37,30 @@ public class Tables {
     /**
      * Převede reprezentace tabulky.
      * 
-     * @param tableMap tabulka ve formě dvojitého zobrazení
+     * @param tableMap
+     *            tabulka ve formě dvojitého zobrazení
      * @return tabulka
      */
-    public static <R, C, V> Table<R, C, V> toImmutableTable(final Map<R, Map<C, V>> tableMap) {
+    public static <R, C, V> Table<R, C, V> toImmutableTable(
+            final Map<R, Map<C, V>> tableMap) {
         Preconditions.checkNotNull(tableMap);
-        
+
         final Builder<R, C, V> builder = ImmutableTable.builder();
-        
+
         final Set<Entry<R, Map<C, V>>> rowEntries = tableMap.entrySet();
         for (final Entry<R, Map<C, V>> rowEntry : rowEntries) {
             final R rowKey = rowEntry.getKey();
-            
+
             final Map<C, V> row = rowEntry.getValue();
-            final Set<Entry<C, V>> cellEntries = row.entrySet(); 
+            final Set<Entry<C, V>> cellEntries = row.entrySet();
             for (final Entry<C, V> cellEntry : cellEntries) {
                 final C columnKey = cellEntry.getKey();
                 final V value = cellEntry.getValue();
-                
+
                 builder.put(rowKey, columnKey, value);
             }
         }
-        
+
         return builder.build();
     }
 }

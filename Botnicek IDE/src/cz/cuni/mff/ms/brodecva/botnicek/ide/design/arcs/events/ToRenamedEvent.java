@@ -30,39 +30,49 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class ToRenamedEvent extends AbstractMappedEvent<Arc, ToRenamedListener> {
-    
-    private final Node oldVersion;
-    private final Node newVersion;
-    
+public final class ToRenamedEvent extends
+        AbstractMappedEvent<Arc, ToRenamedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param arc hrana
-     * @param oldVersion původní verze cílového uzlu
-     * @param newVersion nová verze cílového uzlu
+     * @param arc
+     *            hrana
+     * @param oldVersion
+     *            původní verze cílového uzlu
+     * @param newVersion
+     *            nová verze cílového uzlu
      * @return událost
      */
-    public static ToRenamedEvent create(final Arc arc, final Node oldVersion, final Node newVersion) {
+    public static ToRenamedEvent create(final Arc arc, final Node oldVersion,
+            final Node newVersion) {
         return new ToRenamedEvent(arc, oldVersion, newVersion);
     }
-    
-    private ToRenamedEvent(final Arc arc, final Node oldVersion, final Node newVersion) {
+
+    private final Node oldVersion;
+
+    private final Node newVersion;
+
+    private ToRenamedEvent(final Arc arc, final Node oldVersion,
+            final Node newVersion) {
         super(arc);
-        
+
         Preconditions.checkNotNull(oldVersion);
         Preconditions.checkNotNull(newVersion);
-                
+
         this.oldVersion = oldVersion;
         this.newVersion = newVersion;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final ToRenamedListener listener) {
         listener.toRenamed(this.oldVersion, this.newVersion);
     }
 }
- 

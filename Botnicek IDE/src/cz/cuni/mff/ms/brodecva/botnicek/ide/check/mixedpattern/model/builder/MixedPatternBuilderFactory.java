@@ -28,7 +28,8 @@ public interface MixedPatternBuilderFactory {
     /**
      * Vytvoří konstruktor.
      * 
-     * @param startContent počáteční obsah
+     * @param startContent
+     *            počáteční obsah
      * @return konstruktor
      */
     MixedPatternBuilder produce(final String startContent);

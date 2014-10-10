@@ -37,10 +37,34 @@ final class DummyNetworkController implements NetworkController {
     public static DummyNetworkController create() {
         return new DummyNetworkController();
     }
-    
+
     private DummyNetworkController() {
     }
-    
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.controllers.
+     * NetworkController#addArc(java.lang.String,
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord,
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+     */
+    @Override
+    public void addArc(final String proposedArcName,
+            final NormalWord firstNodeName, final NormalWord secondNodeName) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController
+     * #addNode(int, int)
+     */
+    @Override
+    public void addNode(final int x, final int y) {
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -49,7 +73,19 @@ final class DummyNetworkController implements NetworkController {
      * #addView(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.views.NetworkView)
      */
     @Override
-    public void addView(NetworkView view) {
+    public void addView(final NetworkView view) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.controllers.
+     * NetworkController
+     * #fill(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks
+     * .views.NetworkView)
+     */
+    @Override
+    public void fill(final NetworkView view) {
     }
 
     /*
@@ -62,33 +98,7 @@ final class DummyNetworkController implements NetworkController {
      * )
      */
     @Override
-    public void removeView(NetworkView view) {
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController
-     * #addNode(int, int)
-     */
-    @Override
-    public void addNode(int x, int y) {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.controllers.NetworkController#addArc(java.lang.String, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
-     */
-    @Override
-    public void addArc(String proposedArcName, NormalWord firstNodeName,
-            NormalWord secondNodeName) {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.controllers.NetworkController#fill(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.views.NetworkView)
-     */
-    @Override
-    public void fill(NetworkView view) {
+    public void removeView(final NetworkView view) {
     }
 
 }

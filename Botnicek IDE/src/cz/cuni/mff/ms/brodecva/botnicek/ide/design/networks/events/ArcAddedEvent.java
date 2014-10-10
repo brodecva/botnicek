@@ -30,35 +30,41 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public class ArcAddedEvent extends AbstractMappedEvent<Network, ArcAddedListener> {
-    
-    private final Arc newArc;
-    
+public class ArcAddedEvent extends
+        AbstractMappedEvent<Network, ArcAddedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param network síť
-     * @param newArc nová hrana v síti
+     * @param network
+     *            síť
+     * @param newArc
+     *            nová hrana v síti
      * @return událost
      */
     public static ArcAddedEvent create(final Network network, final Arc newArc) {
         return new ArcAddedEvent(network, newArc);
     }
-    
+
+    private final Arc newArc;
+
     private ArcAddedEvent(final Network network, final Arc newArc) {
         super(network);
-        
+
         Preconditions.checkNotNull(newArc);
-        
+
         this.newArc = newArc;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final ArcAddedListener listener) {
         listener.arcAdded(this.newArc);
     }
 }
- 

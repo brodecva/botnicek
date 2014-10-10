@@ -26,17 +26,16 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.hinters;
  */
 interface SelectionBoundsProvider {
     /**
-     * Vrátí počátek výběru.
-     * 
-     * @return počátek
-     */
-    int getStart();
-    
-    
-    /**
      * Vrátí konec výběr.
      * 
      * @return konec
      */
     int getEnd();
+
+    /**
+     * Vrátí počátek výběru.
+     * 
+     * @return počátek
+     */
+    int getStart();
 }

@@ -29,41 +29,48 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TextFormattin
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-lowercase">hhttp://www.alicebot.org/TR/2011/#section-lowercase</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-lowercase">hhttp://www.alicebot.org/TR/2011/#section-lowercase</a>
  */
-public final class LowerCase extends AbstractCompoundElement implements TextFormattingElement {
+public final class LowerCase extends AbstractCompoundElement implements
+        TextFormattingElement {
     private static final String NAME = "lowercase";
 
     /**
      * Vytvoří prvek.
      * 
-     * @param content potomci
-     * @return prvek
-     */
-    public static LowerCase create(final TemplateElement... content) {
-        return new LowerCase(content);
-    }
-    
-    /**
-     * Vytvoří prvek.
-     * 
-     * @param content potomci
+     * @param content
+     *            potomci
      * @return prvek
      */
     public static LowerCase create(final List<TemplateElement> content) {
         return new LowerCase(content);
     }
-    
-    private LowerCase(final TemplateElement... content) {
-        super(content);
+
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content
+     *            potomci
+     * @return prvek
+     */
+    public static LowerCase create(final TemplateElement... content) {
+        return new LowerCase(content);
     }
-    
+
     private LowerCase(final List<TemplateElement> content) {
         super(content);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    private LowerCase(final TemplateElement... content) {
+        super(content);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {

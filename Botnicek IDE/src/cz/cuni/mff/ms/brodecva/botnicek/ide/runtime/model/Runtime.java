@@ -31,13 +31,16 @@ public interface Runtime {
     /**
      * Načte (dodatečnou) definici bota.
      * 
-     * @param documentName formální jméno dokumentu se zdrojovým kódem
-     * @param text zdrojový kód
-     * @throws LoaderException chyba při načítání
+     * @param documentName
+     *            formální jméno dokumentu se zdrojovým kódem
+     * @param text
+     *            zdrojový kód
+     * @throws LoaderException
+     *             chyba při načítání
      */
     void load(final String documentName, final String text)
             throws LoaderException;
-    
+
     /**
      * Naváže konverzaci s botem.
      * 

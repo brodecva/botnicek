@@ -31,7 +31,8 @@ public interface LanguageSettingsOpenedListener {
     /**
      * Vyzve k otevření nastavení jazyka.
      * 
-     * @param project projekt
+     * @param project
+     *            projekt
      */
     void settingsOpenedTo(Project project);
 

@@ -29,7 +29,8 @@ import java.io.Serializable;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultUpdateBuilderFactory implements UpdateBuilderFactory, Serializable {
+public final class DefaultUpdateBuilderFactory implements UpdateBuilderFactory,
+        Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -41,18 +42,21 @@ public final class DefaultUpdateBuilderFactory implements UpdateBuilderFactory, 
     public static DefaultUpdateBuilderFactory create() {
         return new DefaultUpdateBuilderFactory();
     }
-    
+
     private DefaultUpdateBuilderFactory() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.updates.UpdateBuilderFactory#produce()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.updates.
+     * UpdateBuilderFactory#produce()
      */
     @Override
     public UpdateBuilder produce() {
         return DefaultUpdateBuilder.create();
     }
-    
+
     private void readObject(final ObjectInputStream objectInputStream)
             throws ClassNotFoundException, IOException {
         objectInputStream.defaultReadObject();

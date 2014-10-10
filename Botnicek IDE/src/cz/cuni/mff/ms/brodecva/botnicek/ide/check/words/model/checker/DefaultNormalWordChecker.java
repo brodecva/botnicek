@@ -32,9 +32,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultNormalWordChecker implements NormalWordChecker, Source {
-    private final NamingAuthority namingAuthority;
-    
+public final class DefaultNormalWordChecker implements NormalWordChecker,
+        Source {
     /**
      * Vytvoří validátor, který neomezuje výskyt normálního slova.
      * 
@@ -43,56 +42,79 @@ public final class DefaultNormalWordChecker implements NormalWordChecker, Source
     public static DefaultNormalWordChecker create() {
         return new DefaultNormalWordChecker(new PermissiveNamingAuthority());
     }
-    
+
     /**
      * Vytvoří validátor.
      * 
-     * @param namingAuthority autorita přidělující unikátní jména 
+     * @param namingAuthority
+     *            autorita přidělující unikátní jména
      * 
      * @return validátor
      */
-    public static DefaultNormalWordChecker create(final NamingAuthority namingAuthority) {
+    public static DefaultNormalWordChecker create(
+            final NamingAuthority namingAuthority) {
         return new DefaultNormalWordChecker(namingAuthority);
     }
-    
+
+    private final NamingAuthority namingAuthority;
+
     private DefaultNormalWordChecker(final NamingAuthority namingAuthority) {
         Preconditions.checkNotNull(namingAuthority);
-        
+
         this.namingAuthority = namingAuthority;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.editor.checker.PredicateNameChecker#check(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.editor.checker.PredicateNameChecker
+     * #check(java.lang.String)
      */
     @Override
-    public CheckResult check(final Source source, Object subject, final String name) {
+    public CheckResult check(final Source source, final Object subject,
+            final String name) {
         Preconditions.checkNotNull(source);
         Preconditions.checkNotNull(subject);
         Preconditions.checkNotNull(name);
-        
+
         if (name.isEmpty()) {
-            return DefaultCheckResult.fail(0, ExceptionLocalizer.print("EmptyName"), source, subject);
+            return DefaultCheckResult.fail(0,
+                    ExceptionLocalizer.print("EmptyName"), source, subject);
         }
-        
+
         final char[] characters = name.toCharArray();
         for (int index = 0; index < characters.length; index++) {
             final int position = index + 1;
-            final char character = characters[index]; 
-            
-            if (!Character.isDigit(character) && !Character.isUpperCase(character) && !(Character.isLetter(character) && !Character.isLowerCase(character) && !Character.isUpperCase(character) && !Character.isTitleCase(character))) {
-                return DefaultCheckResult.fail(position, ExceptionLocalizer.print("InvalidCharacter"), source, subject);
+            final char character = characters[index];
+
+            if (!Character.isDigit(character)
+                    && !Character.isUpperCase(character)
+                    && !(Character.isLetter(character)
+                            && !Character.isLowerCase(character)
+                            && !Character.isUpperCase(character) && !Character
+                                .isTitleCase(character))) {
+                return DefaultCheckResult.fail(position,
+                        ExceptionLocalizer.print("InvalidCharacter"), source,
+                        subject);
             }
         }
-        
+
         if (!this.namingAuthority.isUsable(name)) {
-            return DefaultCheckResult.fail(0, ExceptionLocalizer.print("AlreadyAssigned"), source, subject);
+            return DefaultCheckResult.fail(0,
+                    ExceptionLocalizer.print("AlreadyAssigned"), source,
+                    subject);
         }
-        
+
         return DefaultCheckResult.succeed(source, subject);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker#check(java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker#check
+     * (java.lang.String)
      */
     @Override
     public CheckResult check(final String content) {

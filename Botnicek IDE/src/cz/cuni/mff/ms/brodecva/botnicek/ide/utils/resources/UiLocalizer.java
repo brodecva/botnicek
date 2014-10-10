@@ -28,19 +28,18 @@ import java.util.ResourceBundle;
  * @see AbstractBundleLocalizer pro specifikaci parametrů v textu balíku
  */
 public final class UiLocalizer extends AbstractBundleLocalizer {
-    
+
     /**
      * Lokální umístění překladu řetězců.
      */
     public static final String BUNDLE_PACKAGE_NAME = ".ui";
-    
+
     /**
      * Výchozí zdroj překladu řetězců.
      */
-    private static final ResourceBundle DEFAULT_LOCALE =
-            ResourceBundle.getBundle(ROOT_PACKAGE
-                    + BUNDLE_PACKAGE_NAME);
-    
+    private static final ResourceBundle DEFAULT_LOCALE = ResourceBundle
+            .getBundle(ROOT_PACKAGE + BUNDLE_PACKAGE_NAME);
+
     /**
      * Vrátí překladač řetězců pro třídu využívající výchozí umístění.
      * 
@@ -49,20 +48,19 @@ public final class UiLocalizer extends AbstractBundleLocalizer {
     public static UiLocalizer get() {
         return new UiLocalizer(DEFAULT_LOCALE);
     }
-    
+
     /**
      * Vrátí přeloženou zprávu.
      * 
      * @param key
-     *            klíč pro hledaný řetězec, musí pro něj
-     *            existovat překlad
+     *            klíč pro hledaný řetězec, musí pro něj existovat překlad
      * @param params
      *            objekty k substituci do lokalizované zprávy
      * @return řetězec pro daný klíč
      * @see java.util.logging.Logger#log(java.util.logging.Level, String,
      *      Object[]) Obdobně užitá metoda
      */
-    public static String print(final String key, final Object...params) {
+    public static String print(final String key, final Object... params) {
         return get().getMessage(key, params);
     }
 

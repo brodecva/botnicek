@@ -19,8 +19,12 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.hinters;
 
 import java.util.List;
+
 import javax.swing.JTextField;
-import javax.swing.text.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
+import javax.swing.text.Document;
 
 import com.google.common.base.Preconditions;
 
@@ -31,18 +35,23 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
  * 
  * @author Václav Brodec
  * @version 1.0
- * @param <E> typ napovídaných prvků
+ * @param <E>
+ *            typ napovídaných prvků
  */
-public class HintingTextField<E> extends JTextField implements SelectionChangedListener {
+public class HintingTextField<E> extends JTextField implements
+        SelectionChangedListener {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * Vytvoří napovídající textové pole.
      * 
-     * @param list seznam napovídaných prvků
-     * @param caseSensitive nastaví citlivost na velikost písmen při napovídání
-     * @param strict vynutí užití jen povolených slov
+     * @param list
+     *            seznam napovídaných prvků
+     * @param caseSensitive
+     *            nastaví citlivost na velikost písmen při napovídání
+     * @param strict
+     *            vynutí užití jen povolených slov
      * @return textové pole
      */
     public static <E> HintingTextField<E> create(final List<E> list,
@@ -54,27 +63,31 @@ public class HintingTextField<E> extends JTextField implements SelectionChangedL
                         new SelectionBoundsProvider() {
 
                             @Override
-                            public int getStart() {
-                                return newInstance.getSelectionStart();
+                            public int getEnd() {
+                                return newInstance.getSelectionEnd();
                             }
 
                             @Override
-                            public int getEnd() {
-                                return newInstance.getSelectionEnd();
+                            public int getStart() {
+                                return newInstance.getSelectionStart();
                             }
                         });
 
         document.addSelectionChangedListener(newInstance);
-        
+
         newInstance.initialize(document);
 
         return newInstance;
     }
 
+    private HintingTextField() {
+    }
+
     /**
      * Inicializuje pole napovídajícím modelem dokumentu.
      * 
-     * @param document model napovídajícího textového pole
+     * @param document
+     *            model napovídajícího textového pole
      */
     private HintingTextField(final HintingDocument<E> document) {
         Preconditions.checkNotNull(document);
@@ -82,12 +95,14 @@ public class HintingTextField<E> extends JTextField implements SelectionChangedL
         initialize(document);
     }
 
-    private void initialize(final HintingDocument<E> document) {
-        setDocument(document);
-        rewriteDisplayed(document.getDataList());
-    }
-
-    private HintingTextField() {
+    /**
+     * Přidá posluchač napovídání.
+     * 
+     * @param listener
+     *            posluchač
+     */
+    final void addHintListener(final HintListener listener) {
+        getCastDocument().addHintListener(listener);
     }
 
     private HintingDocument<E> getCastDocument() {
@@ -100,26 +115,33 @@ public class HintingTextField<E> extends JTextField implements SelectionChangedL
         return castCurrentDocument;
     }
 
+    /**
+     * Vrátí kopii položek.
+     * 
+     * @return kopie položek
+     */
+    public final List<E> getDataList() {
+        return getCastDocument().getDataList();
+    }
+
     /*
      * (non-Javadoc)
      * 
-     * @see javax.swing.text.JTextComponent#replaceSelection(java.lang.String)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.hinters.
+     * SelectionChangedListener#selectionChanged(int, int)
      */
     @Override
-    public void replaceSelection(final String content) {
-        try {
-            final Caret caret = getCaret();
-            final int dot = caret.getDot();
-            final int mark = caret.getMark();
+    public void changeSelection(final int start, final int end) {
+        Preconditions.checkArgument(start >= 0);
+        Preconditions.checkArgument(end >= start);
 
-            final int dotMarkMin = Math.min(dot, mark);
-            final int dotMarkMax = Math.max(dot, mark);
+        setSelectionStart(start);
+        setSelectionEnd(end);
+    }
 
-            getCastDocument().replace(dotMarkMin, dotMarkMax - dotMarkMin,
-                    content, Intended.<AttributeSet>nullReference());
-        } catch (final BadLocationException e) {
-            return;
-        }
+    private void initialize(final HintingDocument<E> document) {
+        setDocument(document);
+        rewriteDisplayed(document.getDataList());
     }
 
     /**
@@ -141,24 +163,35 @@ public class HintingTextField<E> extends JTextField implements SelectionChangedL
     }
 
     /**
-     * Vrátí kopii položek.
+     * Odebere posluchač napovídání.
      * 
-     * @return kopie položek
+     * @param listener
+     *            posluchač
      */
-    public final List<E> getDataList() {
-        return getCastDocument().getDataList();
+    final void removeHintListener(final HintListener listener) {
+        getCastDocument().removeHintListener(listener);
     }
 
-    /**
-     * Nastaví napovídané položky.
+    /*
+     * (non-Javadoc)
      * 
-     * @param list seznam položek
+     * @see javax.swing.text.JTextComponent#replaceSelection(java.lang.String)
      */
-    final public void setDataList(final List<E> list) {
-        Preconditions.checkNotNull(list);
-        
-        getCastDocument().setDataList(list);
-        rewriteDisplayed(list);
+    @Override
+    public void replaceSelection(final String content) {
+        try {
+            final Caret caret = getCaret();
+            final int dot = caret.getDot();
+            final int mark = caret.getMark();
+
+            final int dotMarkMin = Math.min(dot, mark);
+            final int dotMarkMax = Math.max(dot, mark);
+
+            getCastDocument().replace(dotMarkMin, dotMarkMax - dotMarkMin,
+                    content, Intended.<AttributeSet> nullReference());
+        } catch (final BadLocationException e) {
+            return;
+        }
     }
 
     private void rewriteDisplayed(final List<E> list) {
@@ -168,32 +201,15 @@ public class HintingTextField<E> extends JTextField implements SelectionChangedL
     }
 
     /**
-     * Přidá posluchač napovídání.
+     * Nastaví napovídané položky.
      * 
-     * @param listener posluchač
+     * @param list
+     *            seznam položek
      */
-    final void addHintListener(final HintListener listener) {
-        getCastDocument().addHintListener(listener);
-    }
+    final public void setDataList(final List<E> list) {
+        Preconditions.checkNotNull(list);
 
-    /**
-     * Odebere posluchač napovídání.
-     * 
-     * @param listener posluchač
-     */
-    final void removeHintListener(final HintListener listener) {
-        getCastDocument().removeHintListener(listener);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.hinters.SelectionChangedListener#selectionChanged(int, int)
-     */
-    @Override
-    public void changeSelection(int start, int end) {
-        Preconditions.checkArgument(start >= 0);
-        Preconditions.checkArgument(end >= start);
-        
-        setSelectionStart(start);
-        setSelectionEnd(end);
+        getCastDocument().setDataList(list);
+        rewriteDisplayed(list);
     }
 }

@@ -26,26 +26,27 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
  * @author Václav Brodec
  * @version 1.0
  */
-public interface ContentAggregator  {
-    
+public interface ContentAggregator {
+
     /**
      * Přidá obsah na konec budovaného řetězce.
      * 
-     * @param content obsah
+     * @param content
+     *            obsah
      */
     void add(String content);
-    
-    /**
-     * Zjistí, zda-li je řetězec validní.
-     * 
-     * @return zda-li je řetězec validní
-     */
-    boolean isValid();
-    
+
     /**
      * Provede kontrolu aktuálního stavu sestavovaného řetězce.
      * 
      * @return výsledek kontroly
      */
     CheckResult check();
+
+    /**
+     * Zjistí, zda-li je řetězec validní.
+     * 
+     * @return zda-li je řetězec validní
+     */
+    boolean isValid();
 }

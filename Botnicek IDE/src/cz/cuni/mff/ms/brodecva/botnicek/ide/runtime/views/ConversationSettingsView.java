@@ -30,7 +30,10 @@ public interface ConversationSettingsView {
     /**
      * Aktualizuje zobrazené nastavení.
      * 
-     * @param configuration nastavení konverzace
+     * @param configuration
+     *            nastavení konverzace
      */
-    void updateConversationConfiguration(ConversationConfiguration configuration);
+    void
+            updateConversationConfiguration(
+                    ConversationConfiguration configuration);
 }

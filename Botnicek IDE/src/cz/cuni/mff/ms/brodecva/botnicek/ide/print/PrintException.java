@@ -33,8 +33,8 @@ public final class PrintException extends Exception {
     private static final long serialVersionUID = 622261012819229399L;
 
     /**
-     * Vytvoří novou výjimku s {@code null} místo podrobné zprávy. Příčina
-     * není inicializována, může být dodatečně nastavena voláním
+     * Vytvoří novou výjimku s {@code null} místo podrobné zprávy. Příčina není
+     * inicializována, může být dodatečně nastavena voláním
      * {@link Throwable#initCause(java.lang.Throwable)}.
      */
     public PrintException() {
@@ -55,22 +55,6 @@ public final class PrintException extends Exception {
     }
 
     /**
-     * Vytvoří novou výjimku s danou příčinou a podrobnou zprávou
-     * {@code (cause==null \? null : cause.toString()} (což typicky
-     * obsahuje třídu a podrobnou zprávu o příčině). Tento konstruktor je
-     * užitečný pro výjimky, které nejsou nic víc než obaly pro jiné vyhoditelné
-     * objekty.
-     * 
-     * @param cause
-     *            příčina (která je uložena pro pozdější získání pomocí metody
-     *            {@link Throwable#getCause()}). (Hodnota {@code null} je
-     *            povolena: říká, že příčina neexistuje či není známa.)
-     */
-    public PrintException(final Throwable cause) {
-        super(cause);
-    }
-
-    /**
      * Vytvoří novou výjimku s danou podrobnou zprávou a příčinou. <br>
      * Je třeba brát v potaz, že podrobná zpráva o příčině není automaticky
      * začleněna do podrobné zprávy této výjimky.
@@ -85,6 +69,21 @@ public final class PrintException extends Exception {
      */
     public PrintException(final String message, final Throwable cause) {
         super(message, cause);
+    }
+
+    /**
+     * Vytvoří novou výjimku s danou příčinou a podrobnou zprávou
+     * {@code (cause==null \? null : cause.toString()} (což typicky obsahuje
+     * třídu a podrobnou zprávu o příčině). Tento konstruktor je užitečný pro
+     * výjimky, které nejsou nic víc než obaly pro jiné vyhoditelné objekty.
+     * 
+     * @param cause
+     *            příčina (která je uložena pro pozdější získání pomocí metody
+     *            {@link Throwable#getCause()}). (Hodnota {@code null} je
+     *            povolena: říká, že příčina neexistuje či není známa.)
+     */
+    public PrintException(final Throwable cause) {
+        super(cause);
     }
 
 }

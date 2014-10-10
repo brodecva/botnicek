@@ -28,9 +28,11 @@ public interface Printer {
     /**
      * Naformátuje kód.
      * 
-     * @param input vstupní kód
+     * @param input
+     *            vstupní kód
      * @return naformátovaný kód
-     * @throws PrintException pokud nelze konverzi provést
+     * @throws PrintException
+     *             pokud nelze konverzi provést
      */
     String print(String input) throws PrintException;
 }

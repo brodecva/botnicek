@@ -19,7 +19,8 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.graph;
 
 /**
- * Výčet možných kolmých odchylek zobrazené hrany od nejkratšího spoje středu krajních uzlů.
+ * Výčet možných kolmých odchylek zobrazené hrany od nejkratšího spoje středu
+ * krajních uzlů.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -29,18 +30,18 @@ enum Offset {
      * Odchylka.
      */
     OFFSET(12),
-    
+
     /**
      * Bez odchylky.
      */
     NO_OFFSET(0);
-    
+
     private final int value;
-    
+
     private Offset(final int value) {
         this.value = value;
     }
-    
+
     /**
      * Vrátí hodnotu odchylky (body).
      * 

@@ -32,7 +32,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.NodeModifier;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 
 /**
- * Testuje výchozí implementace procesoru pro opravu typu uzlů dle umístění v grafu po změně.
+ * Testuje výchozí implementace procesoru pro opravu typu uzlů dle umístění v
+ * grafu po změně.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -47,116 +48,143 @@ public class DefaultRealignmentProcessorTest {
     /**
      * Inicializuje testovací objekty.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @Before
     public void setUp() throws Exception {
-        inputNodeStub = EasyMock.createMock(Node.class);
-        
-        outputNodeDummy = EasyMock.createStrictMock(Node.class);
-        EasyMock.replay(outputNodeDummy);
-        
-        nodeModifierMock = EasyMock.createStrictMock(NodeModifier.class);
+        this.inputNodeStub = EasyMock.createMock(Node.class);
+
+        this.outputNodeDummy = EasyMock.createStrictMock(Node.class);
+        EasyMock.replay(this.outputNodeDummy);
+
+        this.nodeModifierMock = EasyMock.createStrictMock(NodeModifier.class);
     }
 
     /**
      * Uklidí testovací objekty.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @After
     public void tearDown() throws Exception {
-        outputNodeDummy = Intended.nullReference();
-        inputNodeStub = Intended.nullReference();
+        this.outputNodeDummy = Intended.nullReference();
+        this.inputNodeStub = Intended.nullReference();
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.DefaultRealignmentProcessor#create(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.NodeModifier)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.DefaultRealignmentProcessor#create(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.NodeModifier)}
+     * .
      */
     @Test
     public void testCreate() {
-        final NodeModifier nodeModifierDummy = EasyMock.createStrictMock(NodeModifier.class);
+        final NodeModifier nodeModifierDummy =
+                EasyMock.createStrictMock(NodeModifier.class);
         EasyMock.replay(nodeModifierDummy);
-        
+
         DefaultRealignmentProcessor.create(nodeModifierDummy);
-        
+
         EasyMock.verify(nodeModifierDummy);
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.DefaultRealignmentProcessor#realign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.DefaultRealignmentProcessor#realign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
+     * .
      */
     @Test
     public void testRealignWhenNoConnectionsChangesToIsolatedNode() {
-        EasyMock.expect(inputNodeStub.getInDegree()).andStubReturn(0);
-        EasyMock.expect(inputNodeStub.getOutDegree()).andStubReturn(0);
-        EasyMock.replay(inputNodeStub);
-        
-        EasyMock.expect(nodeModifierMock.change(inputNodeStub, IsolatedNode.class)).andReturn(outputNodeDummy);
-        EasyMock.replay(nodeModifierMock);
-        
-        DefaultRealignmentProcessor.create(nodeModifierMock).realign(inputNodeStub);
-        
-        EasyMock.verify(inputNodeStub);
-        EasyMock.verify(outputNodeDummy);
-        EasyMock.verify(nodeModifierMock);
+        EasyMock.expect(this.inputNodeStub.getInDegree()).andStubReturn(0);
+        EasyMock.expect(this.inputNodeStub.getOutDegree()).andStubReturn(0);
+        EasyMock.replay(this.inputNodeStub);
+
+        EasyMock.expect(
+                this.nodeModifierMock.change(this.inputNodeStub,
+                        IsolatedNode.class)).andReturn(this.outputNodeDummy);
+        EasyMock.replay(this.nodeModifierMock);
+
+        DefaultRealignmentProcessor.create(this.nodeModifierMock).realign(
+                this.inputNodeStub);
+
+        EasyMock.verify(this.inputNodeStub);
+        EasyMock.verify(this.outputNodeDummy);
+        EasyMock.verify(this.nodeModifierMock);
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.DefaultRealignmentProcessor#realign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.DefaultRealignmentProcessor#realign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
+     * .
      */
     @Test
     public void testRealignWhenNoInboundConnectionsChangesToEnterNode() {
-        EasyMock.expect(inputNodeStub.getInDegree()).andStubReturn(0);
-        EasyMock.expect(inputNodeStub.getOutDegree()).andStubReturn(1);
-        EasyMock.replay(inputNodeStub);
-        
-        EasyMock.expect(nodeModifierMock.change(inputNodeStub, EnterNode.class)).andReturn(outputNodeDummy);
-        EasyMock.replay(nodeModifierMock);
-        
-        DefaultRealignmentProcessor.create(nodeModifierMock).realign(inputNodeStub);
-        
-        EasyMock.verify(inputNodeStub);
-        EasyMock.verify(outputNodeDummy);
-        EasyMock.verify(nodeModifierMock);
+        EasyMock.expect(this.inputNodeStub.getInDegree()).andStubReturn(0);
+        EasyMock.expect(this.inputNodeStub.getOutDegree()).andStubReturn(1);
+        EasyMock.replay(this.inputNodeStub);
+
+        EasyMock.expect(
+                this.nodeModifierMock.change(this.inputNodeStub,
+                        EnterNode.class)).andReturn(this.outputNodeDummy);
+        EasyMock.replay(this.nodeModifierMock);
+
+        DefaultRealignmentProcessor.create(this.nodeModifierMock).realign(
+                this.inputNodeStub);
+
+        EasyMock.verify(this.inputNodeStub);
+        EasyMock.verify(this.outputNodeDummy);
+        EasyMock.verify(this.nodeModifierMock);
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.DefaultRealignmentProcessor#realign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.DefaultRealignmentProcessor#realign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
+     * .
      */
     @Test
     public void testRealignWhenNoOutboundConnectionsChangesToExitNode() {
-        EasyMock.expect(inputNodeStub.getInDegree()).andStubReturn(1);
-        EasyMock.expect(inputNodeStub.getOutDegree()).andStubReturn(0);
-        EasyMock.replay(inputNodeStub);
-        
-        EasyMock.expect(nodeModifierMock.change(inputNodeStub, ExitNode.class)).andReturn(outputNodeDummy);
-        EasyMock.replay(nodeModifierMock);
-        
-        DefaultRealignmentProcessor.create(nodeModifierMock).realign(inputNodeStub);
-        
-        EasyMock.verify(inputNodeStub);
-        EasyMock.verify(outputNodeDummy);
-        EasyMock.verify(nodeModifierMock);
+        EasyMock.expect(this.inputNodeStub.getInDegree()).andStubReturn(1);
+        EasyMock.expect(this.inputNodeStub.getOutDegree()).andStubReturn(0);
+        EasyMock.replay(this.inputNodeStub);
+
+        EasyMock.expect(
+                this.nodeModifierMock
+                        .change(this.inputNodeStub, ExitNode.class)).andReturn(
+                this.outputNodeDummy);
+        EasyMock.replay(this.nodeModifierMock);
+
+        DefaultRealignmentProcessor.create(this.nodeModifierMock).realign(
+                this.inputNodeStub);
+
+        EasyMock.verify(this.inputNodeStub);
+        EasyMock.verify(this.outputNodeDummy);
+        EasyMock.verify(this.nodeModifierMock);
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.DefaultRealignmentProcessor#realign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.DefaultRealignmentProcessor#realign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
+     * .
      */
     @Test
-    public void testRealignWhenSomeConnectionsInBothDirectionsChangesToInnerNode() {
-        EasyMock.expect(inputNodeStub.getInDegree()).andStubReturn(1);
-        EasyMock.expect(inputNodeStub.getOutDegree()).andStubReturn(1);
-        EasyMock.replay(inputNodeStub);
-        
-        EasyMock.expect(nodeModifierMock.change(inputNodeStub, InnerNode.class)).andReturn(outputNodeDummy);
-        EasyMock.replay(nodeModifierMock);
-        
-        DefaultRealignmentProcessor.create(nodeModifierMock).realign(inputNodeStub);
-        
-        EasyMock.verify(inputNodeStub);
-        EasyMock.verify(outputNodeDummy);
-        EasyMock.verify(nodeModifierMock);
+    public void
+            testRealignWhenSomeConnectionsInBothDirectionsChangesToInnerNode() {
+        EasyMock.expect(this.inputNodeStub.getInDegree()).andStubReturn(1);
+        EasyMock.expect(this.inputNodeStub.getOutDegree()).andStubReturn(1);
+        EasyMock.replay(this.inputNodeStub);
+
+        EasyMock.expect(
+                this.nodeModifierMock.change(this.inputNodeStub,
+                        InnerNode.class)).andReturn(this.outputNodeDummy);
+        EasyMock.replay(this.nodeModifierMock);
+
+        DefaultRealignmentProcessor.create(this.nodeModifierMock).realign(
+                this.inputNodeStub);
+
+        EasyMock.verify(this.inputNodeStub);
+        EasyMock.verify(this.outputNodeDummy);
+        EasyMock.verify(this.nodeModifierMock);
     }
 
 }

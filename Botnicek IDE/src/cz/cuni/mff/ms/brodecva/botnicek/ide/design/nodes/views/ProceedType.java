@@ -31,14 +31,14 @@ enum ProceedType {
      * Zadávací typ.
      */
     INPUT(Color.RED),
-    
+
     /**
      * Procesní typ.
      */
     PROCESSING(Color.WHITE);
-    
+
     private final Color background;
-    
+
     private ProceedType(final Color background) {
         this.background = background;
     }
@@ -49,6 +49,6 @@ enum ProceedType {
      * @return barva pozadí
      */
     public final Color getBackground() {
-        return background;
+        return this.background;
     }
 }

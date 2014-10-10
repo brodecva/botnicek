@@ -28,7 +28,8 @@ public interface NormalWordBuilderFactory {
     /**
      * Vytvoří konstruktor.
      * 
-     * @param startContent počáteční obsah
+     * @param startContent
+     *            počáteční obsah
      * @return konstruktor
      */
     NormalWordBuilder produce(final String startContent);

@@ -28,12 +28,14 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller;
  * @author Václav Brodec
  * @version 1.0
  */
-public interface ArcPropertiesDisplayController extends Controller<ArcPropertiesDisplayView> {
-    
+public interface ArcPropertiesDisplayController extends
+        Controller<ArcPropertiesDisplayView> {
+
     /**
      * Zobrazí vlastnosti hrany.
      * 
-     * @param arcName název hrany
+     * @param arcName
+     *            název hrany
      */
     void displayArcProperties(NormalWord arcName);
 }

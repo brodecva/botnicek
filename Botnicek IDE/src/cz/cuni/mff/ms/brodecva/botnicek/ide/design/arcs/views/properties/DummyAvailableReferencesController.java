@@ -19,7 +19,6 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.AvailableReferencesController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.AvailableReferencesView;
 
 /**
  * Atrapa řadiče dostupných vstupů pro zanoření.
@@ -38,32 +37,44 @@ class DummyAvailableReferencesController implements
     public static DummyAvailableReferencesController create() {
         return new DummyAvailableReferencesController();
     }
-    
+
     /**
      * 
      */
     private DummyAvailableReferencesController() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java
+     * .lang.Object)
      */
     @Override
-    public void addView(AvailableReferencesView view) {
+    public void addView(final AvailableReferencesView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang
+     * .Object)
      */
     @Override
-    public void removeView(AvailableReferencesView view) {
+    public void fill(final AvailableReferencesView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(
+     * java.lang.Object)
      */
     @Override
-    public void fill(AvailableReferencesView view) {
+    public void removeView(final AvailableReferencesView view) {
     }
 
 }

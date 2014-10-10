@@ -30,39 +30,49 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public class NodeRenamedEvent extends AbstractMappedEvent<Network, NodeRenamedListener> {
-    
-    private final Node oldVersion;
-    private final Node newVersion;
-    
+public class NodeRenamedEvent extends
+        AbstractMappedEvent<Network, NodeRenamedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param network rodičovská síť uzlu
-     * @param oldVersion původní verze
-     * @param newVersion nová verze
+     * @param network
+     *            rodičovská síť uzlu
+     * @param oldVersion
+     *            původní verze
+     * @param newVersion
+     *            nová verze
      * @return událost
      */
-    public static NodeRenamedEvent create(final Network network, final Node oldVersion, final Node newVersion) {
+    public static NodeRenamedEvent create(final Network network,
+            final Node oldVersion, final Node newVersion) {
         return new NodeRenamedEvent(network, oldVersion, newVersion);
     }
-    
-    private NodeRenamedEvent(final Network network, final Node oldVersion, final Node newVersion) {
+
+    private final Node oldVersion;
+
+    private final Node newVersion;
+
+    private NodeRenamedEvent(final Network network, final Node oldVersion,
+            final Node newVersion) {
         super(network);
-        
+
         Preconditions.checkNotNull(oldVersion);
         Preconditions.checkNotNull(newVersion);
-                
+
         this.oldVersion = oldVersion;
         this.newVersion = newVersion;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final NodeRenamedListener listener) {
         listener.nodeRenamed(this.oldVersion, this.newVersion);
     }
 }
- 

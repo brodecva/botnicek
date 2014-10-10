@@ -18,7 +18,7 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,41 +44,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
 public class TablesTest {
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Tables#toImmutableTable(java.util.Map)}.
-     */
-    @Test
-    public void testToImmutableTableWhenEmpty() {
-        assertEquals(ImmutableTable.<String, Integer, Boolean>of(), Tables.toImmutableTable(ImmutableMap.<String, Map<Integer, Boolean>>of()));
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Tables#toImmutableTable(java.util.Map)}.
-     */
-    @Test
-    public void testToImmutableTableWhenSingleCell() {
-        assertEquals(ImmutableTable.<String, Integer, Boolean>of("key", 5, false), Tables.toImmutableTable(ImmutableMap.<String, Map<Integer, Boolean>>of("key", ImmutableMap.of(5, false))));
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Tables#toImmutableTable(java.util.Map)}.
-     */
-    @Test
-    public void testToImmutableTableWhenMultiple() {
-        final Table<String, Integer, Boolean> left = HashBasedTable.create();
-        left.put("one", 1, true);
-        left.put("two", 2, false);
-        left.put("three", 3, true);
-        
-        final Map<String, Map<Integer, Boolean>> right = new HashMap<>();
-        right.put("one", ImmutableMap.of(1, true));
-        right.put("two", ImmutableMap.of(2, false));
-        right.put("three", ImmutableMap.of(3, true));
-        
-        assertEquals(left, Tables.toImmutableTable(right));
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Tables#toImmutableTable(java.util.Map)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Tables#toImmutableTable(java.util.Map)}
+     * .
      */
     @Test
     public void testToImmutableTableSymetry() {
@@ -86,8 +54,53 @@ public class TablesTest {
         left.put("one", 1, true);
         left.put("two", 2, false);
         left.put("three", 3, true);
-        
+
         assertEquals(left, Tables.toImmutableTable(left.rowMap()));
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Tables#toImmutableTable(java.util.Map)}
+     * .
+     */
+    @Test
+    public void testToImmutableTableWhenEmpty() {
+        assertEquals(ImmutableTable.<String, Integer, Boolean> of(),
+                Tables.toImmutableTable(ImmutableMap
+                        .<String, Map<Integer, Boolean>> of()));
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Tables#toImmutableTable(java.util.Map)}
+     * .
+     */
+    @Test
+    public void testToImmutableTableWhenMultiple() {
+        final Table<String, Integer, Boolean> left = HashBasedTable.create();
+        left.put("one", 1, true);
+        left.put("two", 2, false);
+        left.put("three", 3, true);
+
+        final Map<String, Map<Integer, Boolean>> right = new HashMap<>();
+        right.put("one", ImmutableMap.of(1, true));
+        right.put("two", ImmutableMap.of(2, false));
+        right.put("three", ImmutableMap.of(3, true));
+
+        assertEquals(left, Tables.toImmutableTable(right));
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Tables#toImmutableTable(java.util.Map)}
+     * .
+     */
+    @Test
+    public void testToImmutableTableWhenSingleCell() {
+        assertEquals(ImmutableTable.<String, Integer, Boolean> of("key", 5,
+                false), Tables.toImmutableTable(ImmutableMap
+                .<String, Map<Integer, Boolean>> of("key",
+                        ImmutableMap.of(5, false))));
     }
 
 }

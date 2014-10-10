@@ -18,7 +18,6 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types;
 
-
 /**
  * Pohled na typově specifické vlastnosti hrany.
  * 
@@ -29,9 +28,12 @@ public interface TypeView extends PartView {
     /**
      * Uloží daný typ s užitím společných informací pro všechny hrany.
      * 
-     * @param newName nový název
-     * @param priority priorita
-     * @param code kód
+     * @param newName
+     *            nový název
+     * @param priority
+     *            priorita
+     * @param code
+     *            kód
      */
     void save(final String newName, final int priority, final String code);
 }

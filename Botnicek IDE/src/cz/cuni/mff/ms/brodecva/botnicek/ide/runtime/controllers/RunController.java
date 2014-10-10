@@ -31,7 +31,8 @@ public interface RunController extends Controller<RunView> {
     /**
      * Předá uživatelský vstup do běžící konverzace.
      * 
-     * @param content text promluvy
+     * @param content
+     *            text promluvy
      */
     void tell(String content);
 }

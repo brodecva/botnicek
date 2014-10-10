@@ -38,54 +38,47 @@ public final class SystemName implements Serializable, Comparable<SystemName> {
 
     private static final String VALID_TEXT_PATTERN = "[a-zA-Z0-9_]+";
 
-    private final String text;
-    
     /**
      * Vytvoří název.
      * 
-     * @param text text názvu
+     * @param text
+     *            text názvu
      * @return priorita
      */
     public static SystemName of(final String text) {
         validate(text);
-        
+
         return new SystemName(text);
     }
-    
+
     private static void validate(final String text) {
         Preconditions.checkNotNull(text);
         Preconditions.checkArgument(text.matches(VALID_TEXT_PATTERN));
     }
 
+    private final String text;
+
     private SystemName(final String text) {
         this.text = text;
     }
-    
-    /**
-     * Vrátí text názvu.
-     * 
-     * @return text
-     */
-    public String getText() {
-        return this.text;
-    }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + text.hashCode();
-        return result;
+    public int compareTo(final SystemName name) {
+        Preconditions.checkNotNull(name);
+
+        return this.text.compareTo(name.text);
     }
 
     /**
      * Porovná prioritu s objektem. Shoduje se pouze s prioritou stejné hodnoty.
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -95,39 +88,54 @@ public final class SystemName implements Serializable, Comparable<SystemName> {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        SystemName other = (SystemName) obj;
-        if (text != other.text) {
+        final SystemName other = (SystemName) obj;
+        if (this.text != other.text) {
             return false;
         }
         return true;
     }
 
-    /* (non-Javadoc)
+    /**
+     * Vrátí text názvu.
+     * 
+     * @return text
+     */
+    public String getText() {
+        return this.text;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + this.text.hashCode();
+        return result;
+    }
+
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+
+        validate(this.text);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "SystemName [text=" + text + "]";
-    }
-    
-    private void readObject(final ObjectInputStream objectInputStream)
-            throws ClassNotFoundException, IOException {
-        objectInputStream.defaultReadObject();
-        
-        validate(this.text);
+        return "SystemName [text=" + this.text + "]";
     }
 
     private void writeObject(final ObjectOutputStream objectOutputStream)
             throws IOException {
         objectOutputStream.defaultWriteObject();
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
-    public int compareTo(SystemName name) {
-        Preconditions.checkNotNull(name);
-        
-        return this.text.compareTo(name.text);
     }
 }

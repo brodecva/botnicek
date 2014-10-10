@@ -68,41 +68,90 @@ public final class PredicateTestArcPanel extends AbstractTypePanel {
 
     private static final int CODE_EDITOR_MIN_HEIGHT = 100;
 
-    private static final Dimension TEXT_FIELD_REQUESTED_DIMENSION = new Dimension(TEXT_FIELD_WIDTH, TEXT_FIELD_HEIGHT);
+    private static final Dimension TEXT_FIELD_REQUESTED_DIMENSION =
+            new Dimension(TEXT_FIELD_WIDTH, TEXT_FIELD_HEIGHT);
 
-    private static final Dimension TEXT_FIELD_CONSTRAINT_DIMENSION = new Dimension(Short.MAX_VALUE, TEXT_FIELD_HEIGHT);
-    
-    private static final Dimension HORIZONTAL_SMALL_GAP_DIMENSION = new Dimension(SMALL_GAP, 0);
+    private static final Dimension TEXT_FIELD_CONSTRAINT_DIMENSION =
+            new Dimension(Short.MAX_VALUE, TEXT_FIELD_HEIGHT);
 
-    private static final Dimension VERTICAL_SMALL_GAP_DIMENSION = new Dimension(0, SMALL_GAP);
+    private static final Dimension HORIZONTAL_SMALL_GAP_DIMENSION =
+            new Dimension(SMALL_GAP, 0);
 
-    private static final Dimension CODE_EDITOR_DIMENSION = new Dimension(CODE_EDITOR_MIN_WIDTH, CODE_EDITOR_MIN_HEIGHT);
+    private static final Dimension VERTICAL_SMALL_GAP_DIMENSION =
+            new Dimension(0, SMALL_GAP);
 
-    private final ArcController arcController;
-    
-    private final CodeEditorPane prepareCodeEditorPane;
-    
-    private final JPanel predicatePane = new JPanel();
-    private final JLabel predicateLabel = new JLabel(UiLocalizer.print("PredicateName"));
-    private final NormalWordTextField predicateTextField;
-    
-    private final JPanel valuePane = new JPanel();
-    private final JLabel valueLabel = new JLabel(UiLocalizer.print("ExpectedValue"));
-    private final SimplePatternTextField valueTextField;
+    private static final Dimension CODE_EDITOR_DIMENSION = new Dimension(
+            CODE_EDITOR_MIN_WIDTH, CODE_EDITOR_MIN_HEIGHT);
+
+    private static PredicateTestArcPanel create() {
+        return create(new Source() {
+        }, DummyArcController.create(), DummyCodeValidationController.create(),
+                DummySimplePatternValidationController.create(),
+                DummyNormalWordValidationController.create());
+    }
+
+    /**
+     * Vytvoří panel.
+     * 
+     * @param parent
+     *            rodič panelu
+     * @param arcController
+     *            řadič vlastnosti hrany
+     * @param codeValidationController
+     *            řadič validace přípravného kódu
+     * @param simplePatternValidationController
+     *            řadič validace očekávané hodnoty
+     * @param predicateNameValidationController
+     *            řadič validace názvu testovaného predikátu
+     * @return panel
+     */
+    public static
+            PredicateTestArcPanel
+            create(final Source parent,
+                    final ArcController arcController,
+                    final CodeValidationController codeValidationController,
+                    final SimplePatternValidationController simplePatternValidationController,
+                    final NormalWordValidationController predicateNameValidationController) {
+        Preconditions.checkNotNull(parent);
+        Preconditions.checkNotNull(arcController);
+        Preconditions.checkNotNull(codeValidationController);
+        Preconditions.checkNotNull(simplePatternValidationController);
+
+        final CodeEditorPane prepareCodeEditorPane =
+                CodeEditorPane.create(parent, codeValidationController);
+        final NormalWordTextField predicateTextField =
+                NormalWordTextField.create(parent,
+                        predicateNameValidationController);
+        final SimplePatternTextField valueTextField =
+                SimplePatternTextField.create(parent,
+                        simplePatternValidationController);
+
+        final PredicateTestArcPanel newInstance =
+                new PredicateTestArcPanel(arcController, valueTextField,
+                        prepareCodeEditorPane, predicateTextField);
+
+        arcController.addView(newInstance);
+        arcController.fill(newInstance);
+
+        return newInstance;
+    }
 
     /**
      * Spustí testovací verzi.
      * 
-     * @param args argumenty
+     * @param args
+     *            argumenty
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
-                    final PredicateTestArcPanel panel = PredicateTestArcPanel.create();
+                    final PredicateTestArcPanel panel =
+                            PredicateTestArcPanel.create();
                     final JPanel contentPane = new JPanel(new BorderLayout());
                     contentPane.add(panel, BorderLayout.CENTER);
-                    
+
                     final JFrame frame = new JFrame();
                     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     frame.setContentPane(contentPane);
@@ -114,76 +163,69 @@ public final class PredicateTestArcPanel extends AbstractTypePanel {
             }
         });
     }
-    
-    private static PredicateTestArcPanel create() {
-        return create(new Source() {}, DummyArcController.create(), DummyCodeValidationController.create(), DummySimplePatternValidationController.create(), DummyNormalWordValidationController.create());
-    }
-    
-    /**
-     * Vytvoří panel.
-     * 
-     * @param parent rodič panelu
-     * @param arcController řadič vlastnosti hrany
-     * @param codeValidationController řadič validace přípravného kódu 
-     * @param simplePatternValidationController  řadič validace očekávané hodnoty
-     * @param predicateNameValidationController řadič validace názvu testovaného predikátu
-     * @return panel
-     */
-    public static PredicateTestArcPanel create(final Source parent, final ArcController arcController, final CodeValidationController codeValidationController, final SimplePatternValidationController simplePatternValidationController, final NormalWordValidationController predicateNameValidationController) {
-        Preconditions.checkNotNull(parent);
-        Preconditions.checkNotNull(arcController);        
-        Preconditions.checkNotNull(codeValidationController);
-        Preconditions.checkNotNull(simplePatternValidationController);
-        
-        final CodeEditorPane prepareCodeEditorPane = CodeEditorPane.create(parent, codeValidationController);
-        final NormalWordTextField predicateTextField = NormalWordTextField.create(parent, predicateNameValidationController);
-        final SimplePatternTextField valueTextField = SimplePatternTextField.create(parent, simplePatternValidationController);
-        
-        final PredicateTestArcPanel newInstance = new PredicateTestArcPanel(arcController, valueTextField, prepareCodeEditorPane, predicateTextField);
-        
-        arcController.addView(newInstance);
-        arcController.fill(newInstance);
-        
-        return newInstance;
-    }
-    
-    private PredicateTestArcPanel(final ArcController arcController, final SimplePatternTextField valueTextField, final CodeEditorPane prepareCodeEditorPane, final NormalWordTextField predicateTextField) {
+
+    private final ArcController arcController;
+    private final CodeEditorPane prepareCodeEditorPane;
+
+    private final JPanel predicatePane = new JPanel();
+    private final JLabel predicateLabel = new JLabel(
+            UiLocalizer.print("PredicateName"));
+    private final NormalWordTextField predicateTextField;
+
+    private final JPanel valuePane = new JPanel();
+
+    private final JLabel valueLabel = new JLabel(
+            UiLocalizer.print("ExpectedValue"));
+
+    private final SimplePatternTextField valueTextField;
+
+    private PredicateTestArcPanel(final ArcController arcController,
+            final SimplePatternTextField valueTextField,
+            final CodeEditorPane prepareCodeEditorPane,
+            final NormalWordTextField predicateTextField) {
         Preconditions.checkNotNull(arcController);
         Preconditions.checkNotNull(valueTextField);
         Preconditions.checkNotNull(predicateTextField);
         Preconditions.checkNotNull(prepareCodeEditorPane);
-        
+
         this.arcController = arcController;
         this.valueTextField = valueTextField;
         this.predicateTextField = predicateTextField;
         this.prepareCodeEditorPane = prepareCodeEditorPane;
-        
+
         this.predicateTextField.setMinimumSize(TEXT_FIELD_REQUESTED_DIMENSION);
         this.predicateTextField.setMaximumSize(TEXT_FIELD_CONSTRAINT_DIMENSION);
-        this.predicateTextField.setPreferredSize(TEXT_FIELD_REQUESTED_DIMENSION);
-        
+        this.predicateTextField
+                .setPreferredSize(TEXT_FIELD_REQUESTED_DIMENSION);
+
         this.valueTextField.setMinimumSize(TEXT_FIELD_REQUESTED_DIMENSION);
         this.valueTextField.setMaximumSize(TEXT_FIELD_CONSTRAINT_DIMENSION);
         this.valueTextField.setPreferredSize(TEXT_FIELD_REQUESTED_DIMENSION);
-        
-        this.predicatePane.setLayout(new BoxLayout(this.predicatePane, BoxLayout.X_AXIS));
+
+        this.predicatePane.setLayout(new BoxLayout(this.predicatePane,
+                BoxLayout.X_AXIS));
         this.predicatePane.add(this.predicateLabel);
-        this.predicatePane.add(Box.createRigidArea(HORIZONTAL_SMALL_GAP_DIMENSION));
+        this.predicatePane.add(Box
+                .createRigidArea(HORIZONTAL_SMALL_GAP_DIMENSION));
         this.predicatePane.add(this.predicateTextField);
-        
-        this.valuePane.setLayout(new BoxLayout(this.valuePane, BoxLayout.X_AXIS));
+
+        this.valuePane
+                .setLayout(new BoxLayout(this.valuePane, BoxLayout.X_AXIS));
         this.valuePane.add(this.valueLabel);
         this.valuePane.add(Box.createRigidArea(HORIZONTAL_SMALL_GAP_DIMENSION));
         this.valuePane.add(this.valueTextField);
-        
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        
-        final ScrollableEditorPanel prepareCodeScrollableEditorPanel = new ScrollableEditorPanel(this.prepareCodeEditorPane);
-        final JScrollPane prepareCodeScrollPane = new JScrollPane(prepareCodeScrollableEditorPanel); 
+
+        final ScrollableEditorPanel prepareCodeScrollableEditorPanel =
+                new ScrollableEditorPanel(this.prepareCodeEditorPane);
+        final JScrollPane prepareCodeScrollPane =
+                new JScrollPane(prepareCodeScrollableEditorPanel);
         prepareCodeScrollPane.setMinimumSize(CODE_EDITOR_DIMENSION);
         prepareCodeScrollPane.setPreferredSize(CODE_EDITOR_DIMENSION);
-        prepareCodeScrollPane.setBorder(BorderFactory.createTitledBorder(UiLocalizer.print("InitCode")));
-        
+        prepareCodeScrollPane.setBorder(BorderFactory
+                .createTitledBorder(UiLocalizer.print("InitCode")));
+
         add(prepareCodeScrollPane);
         add(Box.createRigidArea(VERTICAL_SMALL_GAP_DIMENSION));
         add(this.predicatePane);
@@ -191,80 +233,89 @@ public final class PredicateTestArcPanel extends AbstractTypePanel {
         add(this.valuePane);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.TypeElement#save(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, int, java.lang.String)
-     */
-    @Override
-    public void save(final String newName, int priority, String code) {
-        Preconditions.checkNotNull(newName);
-        Preconditions.checkNotNull(code);
-        
-        this.arcController.updatePredicateTest(newName, priority, code, this.prepareCodeEditorPane.getText(), this.predicateTextField.getText(), this.valueTextField.getText());
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.TypeElement#close()
-     */
-    @Override
-    public void close() {
-        unsubscribe();
-    }
-    
-    @Override
-    public void updatedTested(final Code code) {
-        assert SwingUtilities.isEventDispatchThread();
-        
-        Preconditions.checkNotNull(code);
-        
-        this.prepareCodeEditorPane.setText(code.getText());
-    }
-    
-    @Override
-    public void updatedValue(final SimplePattern value) {
-        assert SwingUtilities.isEventDispatchThread();
-        
-        Preconditions.checkNotNull(value);
-        
-        this.valueTextField.setText(value.getText());
-    }
-    
-    @Override
-    public void updatedPredicate(final NormalWord name) {
-        assert SwingUtilities.isEventDispatchThread();
-        
-        Preconditions.checkNotNull(name);
-        
-        this.predicateTextField.setText(name.getText());
-    }
-    
-    @Override
-    public void removed() {
-        unsubscribe();
-    }
-
-    private void unsubscribe() {
-        this.arcController.removeView(this);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types.TypeView#reset()
-     */
-    @Override
-    public void reset(final Source client) {
-        Preconditions.checkNotNull(client);
-        
-        this.predicateTextField.reset(client);
-        this.prepareCodeEditorPane.reset(client);
-        this.valueTextField.reset(client);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearable#clear()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearable
+     * #clear()
      */
     @Override
     public void clear() {
         this.predicateTextField.clear();
         this.prepareCodeEditorPane.clear();
         this.valueTextField.clear();
+    }
+
+    @Override
+    public void removed() {
+        unsubscribe();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types
+     * .TypeView#reset()
+     */
+    @Override
+    public void reset(final Source client) {
+        Preconditions.checkNotNull(client);
+
+        this.predicateTextField.reset(client);
+        this.prepareCodeEditorPane.reset(client);
+        this.valueTextField.reset(client);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.TypeElement
+     * #save(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, int,
+     * java.lang.String)
+     */
+    @Override
+    public void
+            save(final String newName, final int priority, final String code) {
+        Preconditions.checkNotNull(newName);
+        Preconditions.checkNotNull(code);
+
+        this.arcController.updatePredicateTest(newName, priority, code,
+                this.prepareCodeEditorPane.getText(),
+                this.predicateTextField.getText(),
+                this.valueTextField.getText());
+    }
+
+    private void unsubscribe() {
+        this.arcController.removeView(this);
+    }
+
+    @Override
+    public void updatedPredicate(final NormalWord name) {
+        assert SwingUtilities.isEventDispatchThread();
+
+        Preconditions.checkNotNull(name);
+
+        this.predicateTextField.setText(name.getText());
+    }
+
+    @Override
+    public void updatedTested(final Code code) {
+        assert SwingUtilities.isEventDispatchThread();
+
+        Preconditions.checkNotNull(code);
+
+        this.prepareCodeEditorPane.setText(code.getText());
+    }
+
+    @Override
+    public void updatedValue(final SimplePattern value) {
+        assert SwingUtilities.isEventDispatchThread();
+
+        Preconditions.checkNotNull(value);
+
+        this.valueTextField.setText(value.getText());
     }
 }

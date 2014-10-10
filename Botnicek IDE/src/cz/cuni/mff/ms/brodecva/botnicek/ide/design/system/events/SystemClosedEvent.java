@@ -27,28 +27,33 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public class SystemClosedEvent extends AbstractMappedEvent<System, SystemClosedListener> {
-    
+public class SystemClosedEvent extends
+        AbstractMappedEvent<System, SystemClosedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param system zavřený systém
+     * @param system
+     *            zavřený systém
      * @return událost
      */
     public static SystemClosedEvent create(final System system) {
         return new SystemClosedEvent(system);
     }
-    
+
     private SystemClosedEvent(final System system) {
         super(system);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final SystemClosedListener listener) {
         listener.closed();
     }
 }
- 

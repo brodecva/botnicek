@@ -29,14 +29,17 @@ import java.nio.file.Path;
  * @version 1.0
  */
 interface WriterFactory {
-    
+
     /**
      * Vytvoří instanci.
      * 
-     * @param directory adresář
-     * @param fileName jméno souboru
+     * @param directory
+     *            adresář
+     * @param fileName
+     *            jméno souboru
      * @return nová instance
-     * @throws IOException pokud dojde k chybě při vytváření
+     * @throws IOException
+     *             pokud dojde k chybě při vytváření
      */
     Writer produce(Path directory, String fileName) throws IOException;
 }

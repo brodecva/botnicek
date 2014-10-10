@@ -18,61 +18,83 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events;
 
-
 /**
- * <p>Registr událostí. Poskytuje metody pro přidávání a odebírání posluchače běžných i mapovaných událostí.</p>
- * <p>Mapované události jsou doručovány i těm posluchačům, které je mají registrované bez klíče.</p>
+ * <p>
+ * Registr událostí. Poskytuje metody pro přidávání a odebírání posluchače
+ * běžných i mapovaných událostí.
+ * </p>
+ * <p>
+ * Mapované události jsou doručovány i těm posluchačům, které je mají
+ * registrované bez klíče.
+ * </p>
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface EventRegister {
     /**
-     * Přidá posluchače mapované události.
-     * 
-     * @param type typ registrované události
-     * @param key klíč
-     * @param listener posluchač
-     */
-    public <K, L> void addListener(Class<? extends MappedEvent<K, L>> type, K key, L listener);
-    
-    /**
      * Přidá posluchače běžné události.
      * 
-     * @param type typ registrované události
-     * @param listener posluchač
+     * @param type
+     *            typ registrované události
+     * @param listener
+     *            posluchač
      */
     public <L> void addListener(Class<? extends Event<L>> type, L listener);
-    
+
     /**
-     * Odebere posluchače běžné události.
+     * Přidá posluchače mapované události.
      * 
-     * @param type typ registrované události
-     * @param listener posluchač
+     * @param type
+     *            typ registrované události
+     * @param key
+     *            klíč
+     * @param listener
+     *            posluchač
      */
-    public <L> void removeListener(Class<? extends Event<L>> type, L listener);
-    
-    /**
-     * Odebere posluchače mapované události.
-     * 
-     * @param type typ registrované události
-     * @param key klíč
-     * @param listener posluchač
-     */
-    public <K, L> void removeListener(Class<? extends MappedEvent<K, L>> type, K key, L listener);
-    
+    public <K, L> void addListener(Class<? extends MappedEvent<K, L>> type,
+            K key, L listener);
+
     /**
      * Odebere všechny posluchače daného typu běžné události.
      * 
-     * @param type typ události
+     * @param type
+     *            typ události
      */
     public <K, L> void removeAllListeners(Class<? extends Event<L>> type);
-    
+
     /**
-     * Odebere všechny posluchače daného typu mapované události pod daným klíčem.
+     * Odebere všechny posluchače daného typu mapované události pod daným
+     * klíčem.
      * 
-     * @param type typ události
-     * @param key klíč registrovaných posluchačů
+     * @param type
+     *            typ události
+     * @param key
+     *            klíč registrovaných posluchačů
      */
-    public <K, L> void removeAllListeners(Class<? extends MappedEvent<K, L>> type, K key);    
+    public <K, L> void removeAllListeners(
+            Class<? extends MappedEvent<K, L>> type, K key);
+
+    /**
+     * Odebere posluchače běžné události.
+     * 
+     * @param type
+     *            typ registrované události
+     * @param listener
+     *            posluchač
+     */
+    public <L> void removeListener(Class<? extends Event<L>> type, L listener);
+
+    /**
+     * Odebere posluchače mapované události.
+     * 
+     * @param type
+     *            typ registrované události
+     * @param key
+     *            klíč
+     * @param listener
+     *            posluchač
+     */
+    public <K, L> void removeListener(Class<? extends MappedEvent<K, L>> type,
+            K key, L listener);
 }

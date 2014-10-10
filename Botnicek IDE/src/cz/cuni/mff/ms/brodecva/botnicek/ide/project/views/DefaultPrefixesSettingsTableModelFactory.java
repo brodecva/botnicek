@@ -25,7 +25,7 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.project.views;
  * @version 1.0
  */
 final class DefaultPrefixesSettingsTableModelFactory implements
-    PrefixesSettingsTableModelFactory {
+        PrefixesSettingsTableModelFactory {
 
     /**
      * Vytvoří továrnu.
@@ -35,12 +35,15 @@ final class DefaultPrefixesSettingsTableModelFactory implements
     public static DefaultPrefixesSettingsTableModelFactory create() {
         return new DefaultPrefixesSettingsTableModelFactory();
     }
-    
+
     private DefaultPrefixesSettingsTableModelFactory() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.views.PrefixesSettingsTableModelFactory#produce()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.views.
+     * PrefixesSettingsTableModelFactory#produce()
      */
     @Override
     public DefaultPrefixesSettingsTableModel produce() {

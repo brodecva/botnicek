@@ -30,7 +30,8 @@ public interface NetworkAddedListener {
     /**
      * Reaguje na přidání sítě do systému.
      * 
-     * @param network nová síť
+     * @param network
+     *            nová síť
      */
     void networkAdded(Network network);
 }

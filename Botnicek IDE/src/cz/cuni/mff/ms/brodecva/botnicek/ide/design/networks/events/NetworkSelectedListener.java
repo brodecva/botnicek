@@ -21,7 +21,8 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 
 /**
- * Posluchač událost vybrání sítě. Obvyklá implementace např. přesune zobrazení sítě do popředí.
+ * Posluchač událost vybrání sítě. Obvyklá implementace např. přesune zobrazení
+ * sítě do popředí.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -30,7 +31,8 @@ public interface NetworkSelectedListener {
     /**
      * Reaguje na vybrání sítě.
      * 
-     * @param network vybraná síť
+     * @param network
+     *            vybraná síť
      */
     void selected(Network network);
 }

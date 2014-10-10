@@ -19,45 +19,55 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.events;
 
 import com.google.common.base.Preconditions;
+
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.Run;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.library.responder.ExceptionalState;
 
 /**
- * Událost zachycení výjimečného stavu je generována během vyhodnocování interpretem v případě, že se dostane do neplatného stavu.
+ * Událost zachycení výjimečného stavu je generována během vyhodnocování
+ * interpretem v případě, že se dostane do neplatného stavu.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class ExceptionalStateCaughtEvent extends AbstractMappedEvent<Run, ExceptionalStateCaughtListener> {
-    
-    private final ExceptionalState exceptionalState;
-    
+public class ExceptionalStateCaughtEvent extends
+        AbstractMappedEvent<Run, ExceptionalStateCaughtListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param run konverzace, v níž došlo k výjimečnému stavu
-     * @param exceptionalState popis výjimečného stavu
+     * @param run
+     *            konverzace, v níž došlo k výjimečnému stavu
+     * @param exceptionalState
+     *            popis výjimečného stavu
      * @return událost
      */
-    public static ExceptionalStateCaughtEvent create(final Run run, final ExceptionalState exceptionalState) {
+    public static ExceptionalStateCaughtEvent create(final Run run,
+            final ExceptionalState exceptionalState) {
         return new ExceptionalStateCaughtEvent(run, exceptionalState);
     }
-    
-    private ExceptionalStateCaughtEvent(final Run run, final ExceptionalState exceptionalState) {
+
+    private final ExceptionalState exceptionalState;
+
+    private ExceptionalStateCaughtEvent(final Run run,
+            final ExceptionalState exceptionalState) {
         super(run);
-        
+
         Preconditions.checkNotNull(exceptionalState);
-        
+
         this.exceptionalState = exceptionalState;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final ExceptionalStateCaughtListener listener) {
         listener.caught(this.exceptionalState);
     }
 }
- 

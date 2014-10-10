@@ -25,45 +25,53 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateEleme
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TransformationalElement;
 
 /**
- * Prohazuje podle implementace interpreta ve výstupu potomků mužské a ženské mluvnické rody. 
+ * Prohazuje podle implementace interpreta ve výstupu potomků mužské a ženské
+ * mluvnické rody.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-gender">http://www.alicebot.org/TR/2011/#section-gender</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-gender">http://www.alicebot.org/TR/2011/#section-gender</a>
  */
-public final class Gender extends AbstractCompoundElement implements TransformationalElement {
+public final class Gender extends AbstractCompoundElement implements
+        TransformationalElement {
     private static final String NAME = "gender";
 
     /**
      * Vytvoří prvek.
      * 
-     * @param content potomci
-     * @return prvek
-     */
-    public static Gender create(final TemplateElement... content) {
-        return new Gender(content);
-    }
-    
-    /**
-     * Vytvoří prvek.
-     * 
-     * @param content potomci
+     * @param content
+     *            potomci
      * @return prvek
      */
     public static Gender create(final List<TemplateElement> content) {
         return new Gender(content);
     }
-    
-    private Gender(final TemplateElement... content) {
-        super(content);
+
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content
+     *            potomci
+     * @return prvek
+     */
+    public static Gender create(final TemplateElement... content) {
+        return new Gender(content);
     }
-    
+
     private Gender(final List<TemplateElement> content) {
         super(content);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    private Gender(final TemplateElement... content) {
+        super(content);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {

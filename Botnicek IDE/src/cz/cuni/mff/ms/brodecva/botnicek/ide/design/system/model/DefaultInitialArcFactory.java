@@ -36,7 +36,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultInitialArcFactory implements InitialArcFactory, Serializable {
+public class DefaultInitialArcFactory implements InitialArcFactory,
+        Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -48,21 +49,27 @@ public class DefaultInitialArcFactory implements InitialArcFactory, Serializable
     public static DefaultInitialArcFactory create() {
         return new DefaultInitialArcFactory();
     }
-    
+
     private DefaultInitialArcFactory() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.InitialArcFactory#produce(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.InitialArcFactory
+     * #
+     * produce(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network
+     * , cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
      */
     @Override
-    public Arc produce(Network network, NormalWord name) {
+    public Arc produce(final Network network, final NormalWord name) {
         Preconditions.checkNotNull(network);
         Preconditions.checkNotNull(name);
-        
+
         return TransitionArc.getInitial(network, name);
     }
-    
+
     private void readObject(final ObjectInputStream objectInputStream)
             throws ClassNotFoundException, IOException {
         objectInputStream.defaultReadObject();

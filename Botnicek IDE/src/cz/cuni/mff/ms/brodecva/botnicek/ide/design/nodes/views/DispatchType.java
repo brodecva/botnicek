@@ -31,25 +31,21 @@ enum DispatchType {
     /**
      * Řadící typ.
      */
-    ORDERED(new BasicStroke(5.0f,
-            BasicStroke.CAP_BUTT,
-            BasicStroke.JOIN_MITER,
-            10.0f,
-            new float[] { 10.0f }, 0.0f)
-    ),
-    
+    ORDERED(new BasicStroke(5.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
+            10.0f, new float[] { 10.0f }, 0.0f)),
+
     /**
      * Náhodný typ.
      */
     RANDOM(new BasicStroke(3.0f)),
-    
+
     /**
      * Výchozí typ.
      */
     DEFAULT(new BasicStroke(3.0f));
-    
+
     private final Stroke stroke;
-    
+
     private DispatchType(final Stroke stroke) {
         this.stroke = stroke;
     }
@@ -60,6 +56,6 @@ enum DispatchType {
      * @return štětec
      */
     public final Stroke getStroke() {
-        return stroke;
+        return this.stroke;
     }
 }

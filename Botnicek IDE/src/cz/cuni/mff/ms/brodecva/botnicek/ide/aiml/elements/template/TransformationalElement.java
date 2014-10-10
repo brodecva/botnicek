@@ -23,7 +23,8 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template;
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-transformational-elements">http://www.alicebot.org/TR/2011/#section-transformational-elements</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-transformational-elements">http://www.alicebot.org/TR/2011/#section-transformational-elements</a>
  */
 public interface TransformationalElement extends TemplateElement {
 }

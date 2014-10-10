@@ -26,18 +26,23 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 
 /**
- * Pozorovatel DFS průchodu grafem, který provádí za běhu překlad jeho struktury do seznamu témat jazyka AIML.
+ * Pozorovatel DFS průchodu grafem, který provádí za běhu překlad jeho struktury
+ * do seznamu témat jazyka AIML.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-topic">http://www.alicebot.org/TR/2011/#section-topic</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-topic">http://www.alicebot.org/TR/2011/#section-topic</a>
  */
 public interface TranslatingObserver extends DfsObserver {
 
     /**
-     * Vrátí výsledek překladu. V případě zavolání před doběhnutím průchodu nemusí být výsledek nutně korektní, přestože se doporučuje implementacím, aby byl.
+     * Vrátí výsledek překladu. V případě zavolání před doběhnutím průchodu
+     * nemusí být výsledek nutně korektní, přestože se doporučuje implementacím,
+     * aby byl.
      * 
-     * @return zobrazení sítí na seznamy témat jazyka AIML, do kterých byly přeloženy
+     * @return zobrazení sítí na seznamy témat jazyka AIML, do kterých byly
+     *         přeloženy
      */
     Map<Network, List<Topic>> getResult();
 

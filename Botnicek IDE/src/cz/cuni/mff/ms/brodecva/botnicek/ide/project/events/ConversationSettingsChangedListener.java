@@ -31,7 +31,8 @@ public interface ConversationSettingsChangedListener {
     /**
      * Reaguje na změnu nastavení.
      * 
-     * @param settings nová nastavení konverzace
+     * @param settings
+     *            nová nastavení konverzace
      */
     void changed(ConversationConfiguration settings);
 

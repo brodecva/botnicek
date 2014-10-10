@@ -30,8 +30,10 @@ public interface LanguageSettingsView {
     /**
      * Aktualizuje zobrazené nastavení.
      * 
-     * @param languageConfiguration nastavení jazyka
+     * @param languageConfiguration
+     *            nastavení jazyka
      */
-    void updateLanguageConfiguration(
-            LanguageConfiguration languageConfiguration);
+    void
+            updateLanguageConfiguration(
+                    LanguageConfiguration languageConfiguration);
 }

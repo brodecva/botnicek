@@ -21,52 +21,61 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementati
 import java.util.List;
 
 import com.google.common.base.Preconditions;
+
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractCompoundElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.CaptureElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 
 /**
- * Interpret uloží výstup z potomků dle implementace pro pozdější vyhodnocení administrátorem.
+ * Interpret uloží výstup z potomků dle implementace pro pozdější vyhodnocení
+ * administrátorem.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-gossip">http://www.alicebot.org/TR/2011/#section-gossip</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-gossip">http://www.alicebot.org/TR/2011/#section-gossip</a>
  */
-public final class Gossip extends AbstractCompoundElement implements CaptureElement {
+public final class Gossip extends AbstractCompoundElement implements
+        CaptureElement {
     private static final String NAME = "gossip";
 
     /**
      * Vytvoří prvek.
      * 
-     * @param content potomci
-     * @return prvek
-     */
-    public static Gossip create(final TemplateElement... content) {
-        Preconditions.checkNotNull(content);
-        
-        return new Gossip(content);
-    }
-    
-    /**
-     * Vytvoří prvek.
-     * 
-     * @param content potomci
+     * @param content
+     *            potomci
      * @return prvek
      */
     public static Gossip create(final List<TemplateElement> content) {
         return new Gossip(content);
     }
-    
-    private Gossip(final TemplateElement... content) {
-        super(content);
+
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content
+     *            potomci
+     * @return prvek
+     */
+    public static Gossip create(final TemplateElement... content) {
+        Preconditions.checkNotNull(content);
+
+        return new Gossip(content);
     }
-    
+
     private Gossip(final List<TemplateElement> content) {
         super(content);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    private Gossip(final TemplateElement... content) {
+        super(content);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {

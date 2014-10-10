@@ -18,7 +18,6 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.tables;
 
-
 /**
  * Továrna na {@link SubstitutionsTableModel}.
  * 

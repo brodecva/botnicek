@@ -18,7 +18,7 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -32,7 +32,9 @@ import org.junit.Test;
 public class CodesTest {
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Codes#createEmpty()}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Codes#createEmpty()}
+     * .
      */
     @Test
     public void testCreateEmpty() {

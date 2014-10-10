@@ -31,7 +31,8 @@ public interface ProjectClosedListener {
     /**
      * Reaguje na uzavření.
      * 
-     * @param closed zavřený projekt
+     * @param closed
+     *            zavřený projekt
      */
     void closed(Project closed);
 

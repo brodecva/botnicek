@@ -35,19 +35,23 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
 public class ObjectsTest {
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects#isNull(java.lang.Object)}.
-     */
-    @Test
-    public void testIsNullWhenNullReturnTrue() {
-        Objects.isNull(Intended.nullReference());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects#isNull(java.lang.Object)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects#isNull(java.lang.Object)}
+     * .
      */
     @Test
     public void testIsNullWhenNotNullReturnFalse() {
         Objects.isNull(new Object());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects#isNull(java.lang.Object)}
+     * .
+     */
+    @Test
+    public void testIsNullWhenNullReturnTrue() {
+        Objects.isNull(Intended.nullReference());
     }
 
 }

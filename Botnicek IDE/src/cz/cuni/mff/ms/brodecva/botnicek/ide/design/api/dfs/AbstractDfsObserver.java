@@ -24,7 +24,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 
 /**
- * Pomocná abstraktní třída vhodná k dědění v případech kdy implementující objekt nemusí reagovat na všechny typy událostí při průchodu.
+ * Pomocná abstraktní třída vhodná k dědění v případech kdy implementující
+ * objekt nemusí reagovat na všechny typy událostí při průchodu.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -32,66 +33,102 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
  */
 public abstract class AbstractDfsObserver implements DfsObserver {
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyVisit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyBack
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
      */
     @Override
-    public void notifyVisit(System visited) {
+    public void notifyBack(final Arc back) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyVisit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyCross
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
      */
     @Override
-    public void notifyVisit(Network visited) {
+    public void notifyCross(final Arc cross) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyDiscovery(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#
+     * notifyDiscovery
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
      */
     @Override
-    public void notifyDiscovery(Node discovered) {
+    public void notifyDiscovery(final Node discovered) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyFinish(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#
+     * notifyExamination
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
      */
     @Override
-    public void notifyFinish(Node finished) {
+    public void notifyExamination(final Arc examined) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyExamination(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyFinish
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
      */
     @Override
-    public void notifyExamination(Arc examined) {
+    public void notifyFinish(final Node finished) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyTree(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyForward
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
      */
     @Override
-    public void notifyTree(Arc tree) {
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyForward(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
-     */
-    @Override
-    public void notifyForward(Arc forward) {
+    public void notifyForward(final Arc forward) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyBack(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyTree
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
      */
     @Override
-    public void notifyBack(Arc back) {
+    public void notifyTree(final Arc tree) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyCross(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyVisit
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)
      */
     @Override
-    public void notifyCross(Arc cross) {
+    public void notifyVisit(final Network visited) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver#notifyVisit
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System)
+     */
+    @Override
+    public void notifyVisit(final System visited) {
     }
 }

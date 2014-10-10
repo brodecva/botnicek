@@ -36,10 +36,14 @@ public interface ArcDesignListenerFactory {
     /**
      * Vytvoří posluchače.
      * 
-     * @param designPanel panel grafu
-     * @param nodes přítomné uzly
-     * @param arcs přítomné hrany
-     * @param controller řadič sítě (zabezpečuje přidání hrany)
+     * @param designPanel
+     *            panel grafu
+     * @param nodes
+     *            přítomné uzly
+     * @param arcs
+     *            přítomné hrany
+     * @param controller
+     *            řadič sítě (zabezpečuje přidání hrany)
      * @return posluchač návrhu
      */
     ArcDesignListener produce(JPanel designPanel, Set<NodeUI> nodes,

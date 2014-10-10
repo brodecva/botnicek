@@ -22,25 +22,29 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InputNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode;
 
 /**
- * Procesor, který analyzuje uzly pro míru interakce uživatele při přechodu do dalšího stavu.
+ * Procesor, který analyzuje uzly pro míru interakce uživatele při přechodu do
+ * dalšího stavu.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @param <T> typ výsledku zpracování
+ * @param <T>
+ *            typ výsledku zpracování
  */
 public interface ProceedProcessor<T> {
     /**
      * Zpracuje uzel čekající na uživatelský vstup.
      * 
-     * @param node blokující uzel
+     * @param node
+     *            blokující uzel
      * @return výsledek zpracování
      */
     T process(InputNode node);
-    
+
     /**
      * Zpracuje výpočetní uzel.
      * 
-     * @param node uzel, který pokračuje ve výpočtu
+     * @param node
+     *            uzel, který pokračuje ve výpočtu
      * @return výsledek zpracování
      */
     T process(ProcessingNode node);

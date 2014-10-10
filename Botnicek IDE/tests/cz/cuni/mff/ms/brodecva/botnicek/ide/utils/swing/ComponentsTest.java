@@ -42,34 +42,38 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
 public class ComponentsTest {
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components#hasParent(java.awt.Container)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components#hasParent(java.awt.Container)}
+     * .
      */
     @Test
     public void testHasParentWhenWithoutReturnsFalse() {
-        assertFalse(Components.hasParent((new JComponent(){
+        assertFalse(Components.hasParent((new JComponent() {
 
             private static final long serialVersionUID = 1L;
-            
+
         }).getParent()));
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components#hasParent(java.awt.Container)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components#hasParent(java.awt.Container)}
+     * .
      */
     @Test
     public void testHasParentWhenWithReturnsTrue() {
-        final Component component = new JComponent(){
+        final Component component = new JComponent() {
 
             private static final long serialVersionUID = 1L;
-            
+
         };
-        final Container container = new JComponent(){
+        final Container container = new JComponent() {
 
             private static final long serialVersionUID = 1L;
-            
+
         };
         container.add(component);
-        
+
         assertTrue(Components.hasParent(component.getParent()));
     }
 }

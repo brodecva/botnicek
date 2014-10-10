@@ -29,23 +29,27 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller;
  * @version 1.0
  */
 public interface NetworkController extends Controller<NetworkView> {
-    
-    /**
-     * Přidá izolovaný uzel do sítě.
-     * 
-     * @param x souřadnice nového uzlu na ose x
-     * @param y souřadnice nového uzlu na ose y
-     */
-    void addNode(int x, int y);
-    
-    
+
     /**
      * Přidá výchozí typ hrany mezi uzly sítě.
      * 
-     * @param name název nové hrany
-     * @param fromName výchozí uzel hrany
-     * @param toName cílový uzel hrany
+     * @param name
+     *            název nové hrany
+     * @param fromName
+     *            výchozí uzel hrany
+     * @param toName
+     *            cílový uzel hrany
      */
     void addArc(String name, NormalWord fromName, NormalWord toName);
+
+    /**
+     * Přidá izolovaný uzel do sítě.
+     * 
+     * @param x
+     *            souřadnice nového uzlu na ose x
+     * @param y
+     *            souřadnice nového uzlu na ose y
+     */
+    void addNode(int x, int y);
 
 }

@@ -31,7 +31,8 @@ public interface BotSettingsOpenedListener {
     /**
      * Vyzve k otevření nastavení projektu.
      * 
-     * @param project projekt
+     * @param project
+     *            projekt
      */
     void settingsOpenedTo(Project project);
 

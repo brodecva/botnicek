@@ -27,28 +27,33 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class ConversationSettingsOpenedEvent extends AbstractMappedEvent<Project, ConversationSettingsOpenedListener> {
-    
+public final class ConversationSettingsOpenedEvent extends
+        AbstractMappedEvent<Project, ConversationSettingsOpenedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param project cílený projekt
+     * @param project
+     *            cílený projekt
      * @return událost
      */
     public static ConversationSettingsOpenedEvent create(final Project project) {
         return new ConversationSettingsOpenedEvent(project);
     }
-    
+
     private ConversationSettingsOpenedEvent(final Project project) {
         super(project);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event#dispatchTo(java
+     * .lang.Object)
      */
     @Override
     public void dispatchTo(final ConversationSettingsOpenedListener listener) {
         listener.settingsOpenedTo(getKey());
     }
 }
- 

@@ -18,7 +18,7 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -36,39 +36,39 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
 public class IntendedTest {
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#nullReference()}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#arrayNull()}
+     * .
      */
     @Test
-    public void testNullReferenceWhenUnconstrained() {
-        assertNull(Intended.nullReference());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#nullReference()}.
-     */
-    @Test
-    public void testNullReferenceWhenConstrained() {
-        assertNull(Intended.<String>nullReference());
+    public void testArrayNullWhenConstrained() {
+        assertNull(Intended.<String> arrayNull());
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#arrayNull()}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#arrayNull()}
+     * .
      */
     @Test
     public void testArrayNullWhenUnconstrained() {
         assertNull(Intended.arrayNull());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#arrayNull()}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#booleanArrayNull()}
+     * .
      */
     @Test
-    public void testArrayNullWhenConstrained() {
-        assertNull(Intended.<String>arrayNull());
+    public void testBooleanArrayNull() {
+        assertNull(Intended.booleanArrayNull());
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#byteArrayNull()}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#byteArrayNull()}
+     * .
      */
     @Test
     public void testByteArrayNull() {
@@ -76,39 +76,9 @@ public class IntendedTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#shortArrayNull()}.
-     */
-    @Test
-    public void testShortArrayNull() {
-        assertNull(Intended.shortArrayNull());
-    }
-
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#intArrayNull()}.
-     */
-    @Test
-    public void testIntArrayNull() {
-        assertNull(Intended.intArrayNull());
-    }
-
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#longArrayNull()}.
-     */
-    @Test
-    public void testLongArrayNull() {
-        assertNull(Intended.longArrayNull());
-    }
-
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#floatArrayNull()}.
-     */
-    @Test
-    public void testFloatArrayNull() {
-        assertNull(Intended.floatArrayNull());
-    }
-
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#doubleArrayNull()}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#doubleArrayNull()}
+     * .
      */
     @Test
     public void testDoubleArrayNull() {
@@ -116,7 +86,19 @@ public class IntendedTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#charArrayNull()}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#floatArrayNull()}
+     * .
+     */
+    @Test
+    public void testFloatArrayNull() {
+        assertNull(Intended.floatArrayNull());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#charArrayNull()}
+     * .
      */
     @Test
     public void testCharArrayNull() {
@@ -124,11 +106,53 @@ public class IntendedTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#booleanArrayNull()}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#intArrayNull()}
+     * .
      */
     @Test
-    public void testBooleanArrayNull() {
-        assertNull(Intended.booleanArrayNull());
+    public void testIntArrayNull() {
+        assertNull(Intended.intArrayNull());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#longArrayNull()}
+     * .
+     */
+    @Test
+    public void testLongArrayNull() {
+        assertNull(Intended.longArrayNull());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#nullReference()}
+     * .
+     */
+    @Test
+    public void testNullReferenceWhenConstrained() {
+        assertNull(Intended.<String> nullReference());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#nullReference()}
+     * .
+     */
+    @Test
+    public void testNullReferenceWhenUnconstrained() {
+        assertNull(Intended.nullReference());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#shortArrayNull()}
+     * .
+     */
+    @Test
+    public void testShortArrayNull() {
+        assertNull(Intended.shortArrayNull());
     }
 
 }

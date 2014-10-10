@@ -25,93 +25,82 @@ import java.io.ObjectOutputStream;
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 
 /**
- * Implementace hrany, jejíž test projde tehdy, pokud uživatelský vstup odpovídá vzorům kategorie jazyka AIML.
+ * Implementace hrany, jejíž test projde tehdy, pokud uživatelský vstup odpovídá
+ * vzorům kategorie jazyka AIML.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class PatternArc extends AbstractCodeArc {
-    
+
     private static final long serialVersionUID = 1L;
-    
-    private final MixedPattern pattern;
-    private final MixedPattern that;
-    
+
     /**
      * Vytvoří hranu.
      * 
-     * @param parent rodičovská síť
-     * @param name název hrany
-     * @param priority priorita
-     * @param code kód k provedení v případě splnění testu
-     * @param pattern očekávaná hodnota testu
-     * @param that kód generující testovanou hodnotu
+     * @param parent
+     *            rodičovská síť
+     * @param name
+     *            název hrany
+     * @param priority
+     *            priorita
+     * @param code
+     *            kód k provedení v případě splnění testu
+     * @param pattern
+     *            očekávaná hodnota testu
+     * @param that
+     *            kód generující testovanou hodnotu
      * @return hrana
      */
-    public static PatternArc create(final Network parent, final NormalWord name, final Priority priority, final Code code, final MixedPattern pattern, final MixedPattern that) {
+    public static PatternArc create(final Network parent,
+            final NormalWord name, final Priority priority, final Code code,
+            final MixedPattern pattern, final MixedPattern that) {
         return new PatternArc(parent, name, priority, code, pattern, that);
     }
-    
-    private PatternArc(final Network parent, final NormalWord name, final Priority priority, final Code code, final MixedPattern pattern, final MixedPattern that) {
+
+    private final MixedPattern pattern;
+
+    private final MixedPattern that;
+
+    private PatternArc(final Network parent, final NormalWord name,
+            final Priority priority, final Code code,
+            final MixedPattern pattern, final MixedPattern that) {
         super(parent, name, priority, code);
-        
+
         Preconditions.checkNotNull(pattern);
         Preconditions.checkNotNull(that);
-        
+
         this.pattern = pattern;
         this.that = that;
     }
-    
-    /**
-     * Vrátí vzor.
-     * 
-     * @return vzor
-     */
-    public MixedPattern getPattern() {
-        return pattern;
-    }
 
-    /**
-     * Vrátí vzor zmínky.
+    /*
+     * (non-Javadoc)
      * 
-     * @return vzor zmínky
-     */
-    public MixedPattern getThat() {
-        return that;
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor)
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processible
+     * #accept
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor)
      */
     @Override
     public <T> T accept(final Processor<T> processor) {
         return processor.process(this);
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + pattern.hashCode();
-        result = prime * result + that.hashCode();
-        return result;
-    }
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -121,17 +110,59 @@ public final class PatternArc extends AbstractCodeArc {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        PatternArc other = (PatternArc) obj;
-        if (!pattern.equals(other.pattern)) {
+        final PatternArc other = (PatternArc) obj;
+        if (!this.pattern.equals(other.pattern)) {
             return false;
         }
-        if (!that.equals(other.that)) {
+        if (!this.that.equals(other.that)) {
             return false;
         }
         return true;
     }
 
-    /* (non-Javadoc)
+    /**
+     * Vrátí vzor.
+     * 
+     * @return vzor
+     */
+    public MixedPattern getPattern() {
+        return this.pattern;
+    }
+
+    /**
+     * Vrátí vzor zmínky.
+     * 
+     * @return vzor zmínky
+     */
+    public MixedPattern getThat() {
+        return this.that;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + this.pattern.hashCode();
+        result = prime * result + this.that.hashCode();
+        return result;
+    }
+
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+
+        Preconditions.checkNotNull(this.pattern);
+        Preconditions.checkNotNull(this.that);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -139,15 +170,7 @@ public final class PatternArc extends AbstractCodeArc {
         return "PatternArc [getName()=" + getName() + ", getNetwork()="
                 + getNetwork() + ", getFrom()=" + getFrom() + ", getTo()="
                 + getTo() + ", getPriority()=" + getPriority() + ", pattern="
-                + pattern + ", that=" + that + "]";
-    }
-    
-    private void readObject(final ObjectInputStream objectInputStream)
-            throws ClassNotFoundException, IOException {
-        objectInputStream.defaultReadObject();
-        
-        Preconditions.checkNotNull(this.pattern);
-        Preconditions.checkNotNull(this.that);
+                + this.pattern + ", that=" + this.that + "]";
     }
 
     private void writeObject(final ObjectOutputStream objectOutputStream)

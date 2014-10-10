@@ -27,11 +27,12 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
  * @version 1.0
  */
 public interface NetworkRenamedListener {
-    
+
     /**
      * Reaguje na přejmenování sítě.
      * 
-     * @param network přejmenovaná síť
+     * @param network
+     *            přejmenovaná síť
      */
     void renamed(Network network);
 }

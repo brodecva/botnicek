@@ -37,21 +37,20 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
  * @version 1.0
  */
 public final class DefaultUpdate implements Update {
-    
-    private final Set<RecurentArc> referencesRemoved;
-    private final Set<EnterNode> initialsAdded;
-    private final Set<EnterNode> initialsRemoved;
-    private final Map<Node, Node> switched;
-    private final Set<Arc> edgesRemoved;
-    
+
     /**
      * Vytvoří výzvu k provedení aktualizace.
      * 
-     * @param referencesRemoved odstraněné odkazující hrany
-     * @param initialsAdded nově přidané vstupní uzly
-     * @param initialsRemoved nově odebrané vstupní uzly
-     * @param swithed náhrady uzlu za uzel
-     * @param edgesRemoved odstraněné hrany
+     * @param referencesRemoved
+     *            odstraněné odkazující hrany
+     * @param initialsAdded
+     *            nově přidané vstupní uzly
+     * @param initialsRemoved
+     *            nově odebrané vstupní uzly
+     * @param swithed
+     *            náhrady uzlu za uzel
+     * @param edgesRemoved
+     *            odstraněné hrany
      * @return výzva k provedení aktualizace
      */
     public static Update of(final Set<? extends RecurentArc> referencesRemoved,
@@ -59,9 +58,17 @@ public final class DefaultUpdate implements Update {
             final Set<? extends EnterNode> initialsRemoved,
             final Map<? extends Node, ? extends Node> swithed,
             final Set<? extends Arc> edgesRemoved) {
-        return new DefaultUpdate(referencesRemoved, initialsAdded, initialsRemoved, swithed, edgesRemoved);
+        return new DefaultUpdate(referencesRemoved, initialsAdded,
+                initialsRemoved, swithed, edgesRemoved);
     }
-    
+
+    private final Set<RecurentArc> referencesRemoved;
+    private final Set<EnterNode> initialsAdded;
+    private final Set<EnterNode> initialsRemoved;
+    private final Map<Node, Node> switched;
+
+    private final Set<Arc> edgesRemoved;
+
     private DefaultUpdate(final Set<? extends RecurentArc> referencesRemoved,
             final Set<? extends EnterNode> initialsAdded,
             final Set<? extends EnterNode> initialsRemoved,
@@ -72,7 +79,7 @@ public final class DefaultUpdate implements Update {
         Preconditions.checkNotNull(initialsRemoved);
         Preconditions.checkNotNull(swithed);
         Preconditions.checkNotNull(edgesRemoved);
-        
+
         this.referencesRemoved = ImmutableSet.copyOf(referencesRemoved);
         this.initialsAdded = ImmutableSet.copyOf(initialsAdded);
         this.initialsRemoved = ImmutableSet.copyOf(initialsRemoved);
@@ -80,43 +87,60 @@ public final class DefaultUpdate implements Update {
         this.edgesRemoved = ImmutableSet.copyOf(edgesRemoved);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.updates.Update#getReferencesRemoved()
-     */
-    @Override
-    public Set<RecurentArc> getReferencesRemoved() {
-        return referencesRemoved;
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.Update#getInitialsAdded()
-     */
-    @Override
-    public Set<EnterNode> getInitialsAdded() {
-        return initialsAdded;
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.Update#getInitialsRemoved()
-     */
-    @Override
-    public Set<EnterNode> getInitialsRemoved() {
-        return initialsRemoved;
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.Update#getAffected()
-     */
-    @Override
-    public Map<Node, Node> getSwitched() {
-        return switched;
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.Update#getEdgesRemoved()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.Update#
+     * getEdgesRemoved()
      */
     @Override
     public Set<Arc> getEdgesRemoved() {
         return this.edgesRemoved;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.Update#
+     * getInitialsAdded()
+     */
+    @Override
+    public Set<EnterNode> getInitialsAdded() {
+        return this.initialsAdded;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.Update#
+     * getInitialsRemoved()
+     */
+    @Override
+    public Set<EnterNode> getInitialsRemoved() {
+        return this.initialsRemoved;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.updates.Update
+     * #getReferencesRemoved()
+     */
+    @Override
+    public Set<RecurentArc> getReferencesRemoved() {
+        return this.referencesRemoved;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.Update#getAffected
+     * ()
+     */
+    @Override
+    public Map<Node, Node> getSwitched() {
+        return this.switched;
     }
 }

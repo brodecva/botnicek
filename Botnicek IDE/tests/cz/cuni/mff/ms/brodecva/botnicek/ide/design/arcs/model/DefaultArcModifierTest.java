@@ -18,7 +18,7 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -38,7 +38,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 
 /**
- * Testuje výchozí implementaci modifikátoru hran využívá reflexi ke konstrukci hrany nové.
+ * Testuje výchozí implementaci modifikátoru hran využívá reflexi ke konstrukci
+ * hrany nové.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -56,38 +57,47 @@ public class DefaultArcModifierTest {
      */
     static final class ArcStub implements Arc {
 
-        private final Network network;
-        private final NormalWord name;
-        private final Priority priority;
-        private final String first;
-        private final Object second;
-        private final int third;
-        
         /**
-         * Vytvoří pahýl hrany. 
+         * Vytvoří pahýl hrany.
          * 
-         * @param network rodičovská síť
-         * @param name název
-         * @param priority priorita
-         * @param first první přídatný parametr
-         * @param second druhý přídatný parametr
-         * @param third třetí přídatný parametr
+         * @param network
+         *            rodičovská síť
+         * @param name
+         *            název
+         * @param priority
+         *            priorita
+         * @param first
+         *            první přídatný parametr
+         * @param second
+         *            druhý přídatný parametr
+         * @param third
+         *            třetí přídatný parametr
          * @return pahýl hrany
          */
-        public static ArcStub create(final Network network, final NormalWord name, final Priority priority, final String first, final Object second, final int third) {
+        public static ArcStub create(final Network network,
+                final NormalWord name, final Priority priority,
+                final String first, final Object second, final int third) {
             Preconditions.checkNotNull(network);
             Preconditions.checkNotNull(name);
             Preconditions.checkNotNull(priority);
             Preconditions.checkNotNull(first);
             Preconditions.checkNotNull(second);
             Preconditions.checkNotNull(third);
-            
+
             return new ArcStub(network, name, priority, first, second, third);
         }
-        
-        private ArcStub(final Network network, final NormalWord name, final Priority priority,
-                final String first, final Object second,
-                final int third) {
+
+        private final Network network;
+        private final NormalWord name;
+        private final Priority priority;
+        private final String first;
+        private final Object second;
+
+        private final int third;
+
+        private ArcStub(final Network network, final NormalWord name,
+                final Priority priority, final String first,
+                final Object second, final int third) {
             this.network = network;
             this.name = name;
             this.priority = priority;
@@ -95,121 +105,39 @@ public class DefaultArcModifierTest {
             this.second = second;
             this.third = third;
         }
-        
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor)
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processible
+         * #accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.
+         * Processor)
          */
         @Override
-        public <T> T accept(Processor<T> processor) {
+        public <T> T accept(final Processor<T> processor) {
             throw new IllegalStateException();
         }
 
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitable#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitable#accept(
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor)
          */
         @Override
-        public void accept(Visitor visitor) {
+        public void accept(final Visitor visitor) {
             throw new IllegalStateException();
         }
 
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getName()
-         */
-        @Override
-        public NormalWord getName() {
-            return this.name;
-        }
-
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#isTo(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
-         */
-        @Override
-        public boolean isTo(Node node) {
-            throw new IllegalStateException();
-        }
-
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#isFrom(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
-         */
-        @Override
-        public boolean isFrom(Node node) {
-            throw new IllegalStateException();
-        }
-
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#isAttached(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
-         */
-        @Override
-        public boolean isAttached(Node node, Direction direction) {
-            throw new IllegalStateException();
-        }
-
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getFrom()
-         */
-        @Override
-        public Node getFrom() {
-            throw new IllegalStateException();
-        }
-
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getTo()
-         */
-        @Override
-        public Node getTo() {
-            throw new IllegalStateException();
-        }
-
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getAttached(cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
-         */
-        @Override
-        public Node getAttached(Direction direction) {
-            throw new IllegalStateException();
-        }
-
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getPriority()
-         */
-        @Override
-        public Priority getPriority() {
-            return this.priority;
-        }
-
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getNetwork()
-         */
-        @Override
-        public Network getNetwork() {
-            return this.network;
-        }
-
-        /* (non-Javadoc)
-         * @see java.lang.Object#hashCode()
-         */
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + first.hashCode();
-            result = prime * result + name.hashCode();
-            result =
-                    prime * result
-                            + network.hashCode();
-            result =
-                    prime * result
-                            + priority.hashCode();
-            result =
-                    prime * result + second.hashCode();
-            result = prime * result + third;
-            return result;
-        }
-
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.lang.Object#equals(java.lang.Object)
          */
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             if (this == obj) {
                 return true;
             }
@@ -220,31 +148,157 @@ public class DefaultArcModifierTest {
                 return false;
             }
             final ArcStub other = (ArcStub) obj;
-            if (!first.equals(other.first)) {
+            if (!this.first.equals(other.first)) {
                 return false;
             }
-            if (!name.equals(other.name)) {
+            if (!this.name.equals(other.name)) {
                 return false;
             }
-            if (!network.equals(other.network)) {
+            if (!this.network.equals(other.network)) {
                 return false;
             }
-            if (!priority.equals(other.priority)) {
+            if (!this.priority.equals(other.priority)) {
                 return false;
             }
-            if (!second.equals(other.second)) {
+            if (!this.second.equals(other.second)) {
                 return false;
             }
-            if (third != other.third) {
+            if (this.third != other.third) {
                 return false;
             }
             return true;
         }
-        
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getAttached
+         * (cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
+         */
+        @Override
+        public Node getAttached(final Direction direction) {
+            throw new IllegalStateException();
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getFrom()
+         */
+        @Override
+        public Node getFrom() {
+            throw new IllegalStateException();
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getName()
+         */
+        @Override
+        public NormalWord getName() {
+            return this.name;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getNetwork
+         * ()
+         */
+        @Override
+        public Network getNetwork() {
+            return this.network;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getPriority
+         * ()
+         */
+        @Override
+        public Priority getPriority() {
+            return this.priority;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getTo()
+         */
+        @Override
+        public Node getTo() {
+            throw new IllegalStateException();
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.lang.Object#hashCode()
+         */
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + this.first.hashCode();
+            result = prime * result + this.name.hashCode();
+            result = prime * result + this.network.hashCode();
+            result = prime * result + this.priority.hashCode();
+            result = prime * result + this.second.hashCode();
+            result = prime * result + this.third;
+            return result;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#isAttached
+         * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node,
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
+         */
+        @Override
+        public boolean isAttached(final Node node, final Direction direction) {
+            throw new IllegalStateException();
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#isFrom
+         * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
+         */
+        @Override
+        public boolean isFrom(final Node node) {
+            throw new IllegalStateException();
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#isTo(cz
+         * .cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
+         */
+        @Override
+        public boolean isTo(final Node node) {
+            throw new IllegalStateException();
+        }
+
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.DefaultArcModifier#create()}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.DefaultArcModifier#create()}
+     * .
      */
     @Test
     public void testCreate() {
@@ -252,32 +306,39 @@ public class DefaultArcModifierTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.DefaultArcModifier#change(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority, java.lang.Class, java.lang.Object[])}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.DefaultArcModifier#change(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority, java.lang.Class, java.lang.Object[])}
+     * .
      */
     @Test
     public void testChange() {
         final DefaultArcModifier tested = DefaultArcModifier.create();
-        
+
         final Network networkDummy = EasyMock.createStrictMock(Network.class);
         EasyMock.replay(networkDummy);
-        
+
         final Arc arcStub = EasyMock.createStrictMock(Arc.class);
         EasyMock.expect(arcStub.getNetwork()).andStubReturn(networkDummy);
         EasyMock.replay(arcStub);
-        
-        final NormalWord newNameDummy = EasyMock.createStrictMock(NormalWord.class);
+
+        final NormalWord newNameDummy =
+                EasyMock.createStrictMock(NormalWord.class);
         EasyMock.replay(newNameDummy);
-        
-        final Priority priorityDummy = PowerMock.createStrictMock(Priority.class);
+
+        final Priority priorityDummy =
+                PowerMock.createStrictMock(Priority.class);
         PowerMock.replay(priorityDummy);
-        
+
         final String first = "first";
         final Object second = new Object();
         final int third = 3;
-        
-        final Arc prototype = ArcStub.create(networkDummy, newNameDummy, priorityDummy, first, second, third);
-        assertEquals(prototype, tested.change(arcStub, newNameDummy, priorityDummy, ArcStub.class, first, second, third));
-        
+
+        final Arc prototype =
+                ArcStub.create(networkDummy, newNameDummy, priorityDummy,
+                        first, second, third);
+        assertEquals(prototype, tested.change(arcStub, newNameDummy,
+                priorityDummy, ArcStub.class, first, second, third));
+
         EasyMock.verify(networkDummy);
         EasyMock.verify(newNameDummy);
         PowerMock.verify(priorityDummy);

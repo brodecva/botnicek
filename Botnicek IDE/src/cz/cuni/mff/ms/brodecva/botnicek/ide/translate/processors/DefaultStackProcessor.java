@@ -22,6 +22,7 @@ import java.util.List;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Text;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
@@ -33,31 +34,43 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons;
 
 /**
- * Výchozí implementace procesoru zpracovávajícího uzly tak, že podle nich vytváří instrukce pro modifikaci zásobníku pomocí prvků šablony.  
+ * Výchozí implementace procesoru zpracovávajícího uzly tak, že podle nich
+ * vytváří instrukce pro modifikaci zásobníku pomocí prvků šablony.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultStackProcessor implements StackProcessor<List<TemplateElement>> {
-    private final NormalWord pullState;
-    private final NormalWord pullStopState;
-
+public final class DefaultStackProcessor implements
+        StackProcessor<List<TemplateElement>> {
     /**
      * Vytvoří nový procesor.
      * 
-     * @param pullState slovo popisující stav, který je vložen na zásobník po průchodu sítí až do koncového uzlu, a spustí tak proceduru uvolňování nezpracovaných stavů z něj 
-     * @param pullStopState slovo popisující stav, který slouží jako zarážka při uvolňování nezpracovaných stavů úspěšně prošlé sítě ze zásobníku
+     * @param pullState
+     *            slovo popisující stav, který je vložen na zásobník po průchodu
+     *            sítí až do koncového uzlu, a spustí tak proceduru uvolňování
+     *            nezpracovaných stavů z něj
+     * @param pullStopState
+     *            slovo popisující stav, který slouží jako zarážka při
+     *            uvolňování nezpracovaných stavů úspěšně prošlé sítě ze
+     *            zásobníku
      * @return zásobníkový procesor
      */
-    public static DefaultStackProcessor create(final NormalWord pullState, final NormalWord pullStopState) {
+    public static DefaultStackProcessor create(final NormalWord pullState,
+            final NormalWord pullStopState) {
         Preconditions.checkNotNull(pullState);
         Preconditions.checkNotNull(pullStopState);
-        Preconditions.checkArgument(Comparisons.allDifferent(pullState, pullStopState));
-        
+        Preconditions.checkArgument(Comparisons.allDifferent(pullState,
+                pullStopState));
+
         return new DefaultStackProcessor(pullState, pullStopState);
     }
-    
-    private DefaultStackProcessor(final NormalWord pullState, final NormalWord pullStopState) {
+
+    private final NormalWord pullState;
+
+    private final NormalWord pullStopState;
+
+    private DefaultStackProcessor(final NormalWord pullState,
+            final NormalWord pullStopState) {
         this.pullState = pullState;
         this.pullStopState = pullStopState;
     }
@@ -65,7 +78,35 @@ public final class DefaultStackProcessor implements StackProcessor<List<Template
     /**
      * {@inheritDoc}
      * 
-     * <p>Vnitřní uzel nijak nemodifikuje zásobník.</p>
+     * <p>
+     * Vstupní uzel umístí na zásobník zarážku úklidu nezpracovaných stavů.
+     * </p>
+     */
+    @Override
+    public List<TemplateElement> process(final EnterNode node) {
+        return ImmutableList.<TemplateElement> of(Text
+                .create(this.pullStopState.getText()));
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * Výstupní uzel umístí na zásobník značku pro úklid.
+     * </p>
+     */
+    @Override
+    public List<TemplateElement> process(final ExitNode node) {
+        return ImmutableList.<TemplateElement> of(Text.create(this.pullState
+                .getText()));
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * Vnitřní uzel nijak nemodifikuje zásobník.
+     * </p>
      */
     @Override
     public List<TemplateElement> process(final InnerNode node) {
@@ -75,27 +116,10 @@ public final class DefaultStackProcessor implements StackProcessor<List<Template
     /**
      * {@inheritDoc}
      * 
-     * <p>Výstupní uzel umístí na zásobník značku pro úklid.</p>
-     */
-    @Override
-    public List<TemplateElement> process(final ExitNode node) {
-        return ImmutableList.<TemplateElement>of(Text.create(this.pullState.getText()));
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * <p>Vstupní uzel umístí na zásobník zarážku úklidu nezpracovaných stavů.</p>
-     */
-    @Override
-    public List<TemplateElement> process(final EnterNode node) {
-        return ImmutableList.<TemplateElement>of(Text.create(this.pullStopState.getText()));
-    }
-
-    /** 
-     * {@inheritDoc}
-     * 
-     * <p>Izolovaný uzel je nedosažitelný, tedy jím provedené úpravy zásobníku jsou irelevantní.</p>
+     * <p>
+     * Izolovaný uzel je nedosažitelný, tedy jím provedené úpravy zásobníku jsou
+     * irelevantní.
+     * </p>
      */
     @Override
     public List<TemplateElement> process(final IsolatedNode node) {

@@ -27,24 +27,34 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.api.Visitor;
  * @version 1.0
  */
 public abstract class AbstractProperElement extends AbstractElement {
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#visitEnter(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.api.Visitor)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement
+     * #visitEnter(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models
+     * .aiml.api.Visitor)
      */
     @Override
     protected void visitEnter(final Visitor visitor) {
         super.visitEnter(visitor);
-        
+
         visitor.visitEnter(this);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#visitExit(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.api.Visitor)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement
+     * #visitExit(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models
+     * .aiml.api.Visitor)
      */
     @Override
     protected void visitExit(final Visitor visitor) {
         super.visitExit(visitor);
-        
+
         visitor.visitExit(this);
     }
 }

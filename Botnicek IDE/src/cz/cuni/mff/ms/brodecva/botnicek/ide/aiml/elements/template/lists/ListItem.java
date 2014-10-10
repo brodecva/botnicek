@@ -20,13 +20,13 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.lists;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element;
 
-
 /**
  * Položka seznamu.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-condition">http://www.alicebot.org/TR/2011/#section-condition</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-condition">http://www.alicebot.org/TR/2011/#section-condition</a>
  */
 public interface ListItem extends Element {
 }

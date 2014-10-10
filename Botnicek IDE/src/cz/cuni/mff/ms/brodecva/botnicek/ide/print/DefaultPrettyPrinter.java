@@ -36,111 +36,126 @@ import javax.xml.transform.stream.StreamSource;
 import com.google.common.base.Preconditions;
 
 /**
- * Výchozí implementace formátovače využívá pro zpracování XML standardní knihovny.
+ * Výchozí implementace formátovače využívá pro zpracování XML standardní
+ * knihovny.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class DefaultPrettyPrinter implements Printer, Serializable {
-    
-    private static final class DefaultPrettyPrinterSerializationProxy implements Serializable {
+
+    private static final class DefaultPrettyPrinterSerializationProxy implements
+            Serializable {
         private static final long serialVersionUID = 1L;
-        
+
         private final int indentation;
-        
+
         public DefaultPrettyPrinterSerializationProxy(final int indentation) {
             this.indentation = indentation;
         }
-        
+
         private Object readResolve() throws ObjectStreamException {
-            return DefaultPrettyPrinter.create(indentation);
+            return DefaultPrettyPrinter.create(this.indentation);
         }
     }
-    
+
     private static final long serialVersionUID = 1L;
 
     /**
      * Výchozí velikost odsazení ve znacích.
      */
     public static final int DEFAULT_INDENTATION = 4;
-    
+
     private static final String ENABLE_OPTION_VALUE = "yes";
     private static final String DISABLE_OPTION_VALUE = "no";
     private static final String INDENT_NUMBER_OPTION_NAME = "indent-number";
-    
-    private final Transformer transformer;
-    private final int indentation;
-    
+
     /**
      * Vytvoří formátovač s výchozím nastavením velikost odsazení.
      * 
      * @return formátovač
-     * @throws PrintConfigurationException pokud nelze inicializovat
+     * @throws PrintConfigurationException
+     *             pokud nelze inicializovat
      */
-    public static DefaultPrettyPrinter create() throws PrintConfigurationException {
+    public static DefaultPrettyPrinter create()
+            throws PrintConfigurationException {
         return create(DEFAULT_INDENTATION);
     }
-    
+
     /**
      * Vytvoří formátovač.
      * 
-     * @param indent velikost odsazení v počtu znaků
+     * @param indent
+     *            velikost odsazení v počtu znaků
      * @return formátovač
-     * @throws PrintConfigurationException pokud nelze inicializovat
+     * @throws PrintConfigurationException
+     *             pokud nelze inicializovat
      */
-    public static DefaultPrettyPrinter create(final int indent) throws PrintConfigurationException {
+    public static DefaultPrettyPrinter create(final int indent)
+            throws PrintConfigurationException {
         Preconditions.checkArgument(indent >= 0);
-        
+
         final Transformer transformer = initializeTransformer(indent);
-        
+
         return new DefaultPrettyPrinter(transformer, indent);
     }
 
     private static Transformer initializeTransformer(final int indent)
             throws TransformerFactoryConfigurationError {
-        final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        final TransformerFactory transformerFactory =
+                TransformerFactory.newInstance();
         transformerFactory.setAttribute(INDENT_NUMBER_OPTION_NAME, indent);
-        
+
         final Transformer transformer;
         try {
             transformer = transformerFactory.newTransformer();
         } catch (final TransformerConfigurationException e) {
             throw new PrintConfigurationException(e);
         }
-        
+
         transformer.setOutputProperty(OutputKeys.INDENT, ENABLE_OPTION_VALUE);
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, DISABLE_OPTION_VALUE);
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION,
+                DISABLE_OPTION_VALUE);
         return transformer;
     }
-    
-    private DefaultPrettyPrinter(final Transformer transformer, final int indentation) {
+
+    private final Transformer transformer;
+
+    private final int indentation;
+
+    private DefaultPrettyPrinter(final Transformer transformer,
+            final int indentation) {
         this.transformer = transformer;
         this.indentation = indentation;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.rendering.Printer#print(java.lang.String)
-     */
-    @Override
-    public String print(final String input) throws PrintException {
-        Preconditions.checkNotNull(input);
-        
-        return prettify(input);
-    }
-    
     private String prettify(final String input) throws PrintException {
         final Source xmlInput = new StreamSource(new StringReader(input));
-        
+
         final StringWriter stringWriter = new StringWriter();
         final StreamResult xmlOutput = new StreamResult(stringWriter);
-        
+
         try {
             this.transformer.transform(xmlInput, xmlOutput);
         } catch (final TransformerException e) {
             throw new PrintException(e);
         }
-        
+
         return xmlOutput.getWriter().toString();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.rendering.Printer
+     * #print(java.lang.String)
+     */
+    @Override
+    public String print(final String input) throws PrintException {
+        Preconditions.checkNotNull(input);
+
+        return prettify(input);
     }
 
     private Object writeReplace() throws ObjectStreamException {

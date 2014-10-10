@@ -20,7 +20,6 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 
-
 /**
  * Posluchač události přejmenování hrany.
  * 
@@ -32,8 +31,10 @@ public interface ArcRenamedListener {
     /**
      * Reaguje na přejmenování hrany.
      * 
-     * @param oldVersion původní verze
-     * @param newVersion nová verze
+     * @param oldVersion
+     *            původní verze
+     * @param newVersion
+     *            nová verze
      */
     void arcRenamed(Arc oldVersion, Arc newVersion);
 

@@ -28,7 +28,8 @@ public interface Dispatcher {
     /**
      * Rozešle zprávu o události.
      * 
-     * @param event událost k rozeslání
+     * @param event
+     *            událost k rozeslání
      */
     public <L> void fire(Event<L> event);
 }

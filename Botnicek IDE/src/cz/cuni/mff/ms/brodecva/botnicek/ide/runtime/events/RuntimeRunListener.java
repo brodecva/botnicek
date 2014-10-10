@@ -21,7 +21,8 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.events;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.Run;
 
 /**
- * Posluchač událost zahájení konverzace s robotem. Typicky implementováno objekty, které budou do konverzace zasahovat, např. přímo zasíláním promluv.
+ * Posluchač událost zahájení konverzace s robotem. Typicky implementováno
+ * objekty, které budou do konverzace zasahovat, např. přímo zasíláním promluv.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -31,7 +32,8 @@ public interface RuntimeRunListener {
     /**
      * Reakce na zahájení konverzace.
      * 
-     * @param run běžící konverzace
+     * @param run
+     *            běžící konverzace
      */
     void run(Run run);
 

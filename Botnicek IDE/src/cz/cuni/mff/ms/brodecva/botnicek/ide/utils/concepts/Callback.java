@@ -19,17 +19,20 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts;
 
 /**
- * Zpětné volání. Implementace nejsou povinny poskytovat jakékoli garance ohledně absence postranních efektů.
+ * Zpětné volání. Implementace nejsou povinny poskytovat jakékoli garance
+ * ohledně absence postranních efektů.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @param <T> typ parametru
+ * @param <T>
+ *            typ parametru
  */
 public interface Callback<T> {
     /**
      * Zavolá příslušnou metodu s daným parametrem.
      * 
-     * @param parameter parametr volání
+     * @param parameter
+     *            parametr volání
      */
     void call(T parameter);
 }

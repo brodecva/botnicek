@@ -28,39 +28,47 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.platform.XML;
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-cdata-sections">http://www.alicebot.org/TR/2011/#section-cdata-sections</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-cdata-sections">http://www.alicebot.org/TR/2011/#section-cdata-sections</a>
  */
 public class Cdata extends AbstractRawElement implements TemplateElement {
     private static final String NAME = "cdata";
-    
-    private final String content;
-    
+
     /**
      * Vytvoří CDATA sekci v šabloně.
      * 
-     * @param content obsah
+     * @param content
+     *            obsah
      * @return CDATA
      */
     public static Cdata create(final String content) {
         return new Cdata(content);
     }
-    
+
+    private final String content;
+
     private Cdata(final String content) {
         Preconditions.checkNotNull(content);
-        
+
         this.content = content;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {
         return NAME;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getText()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getText()
      */
     @Override
     public String getText() {

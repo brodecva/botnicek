@@ -26,12 +26,13 @@ import java.net.URI;
 import java.util.Map;
 
 /**
- * Továrna vracející výchozí implementaci návštěvníka. 
+ * Továrna vracející výchozí implementaci návštěvníka.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultRenderingVisitorFactory implements RenderingVisitorFactory, Serializable {
+public final class DefaultRenderingVisitorFactory implements
+        RenderingVisitorFactory, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -43,15 +44,20 @@ public final class DefaultRenderingVisitorFactory implements RenderingVisitorFac
     public static DefaultRenderingVisitorFactory create() {
         return new DefaultRenderingVisitorFactory();
     }
-    
+
     private DefaultRenderingVisitorFactory() {
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.render.RenderingVisitorFactory#spawn()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.render.RenderingVisitorFactory#spawn
+     * ()
      */
     @Override
-    public DefaultRenderingVisitor produce(final Map<URI, String> namespacesToPrefixes) {
+    public DefaultRenderingVisitor produce(
+            final Map<URI, String> namespacesToPrefixes) {
         return DefaultRenderingVisitor.create(namespacesToPrefixes);
     }
 

@@ -31,17 +31,20 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.processor.set.NameDisplayStreteg
 import cz.cuni.mff.ms.brodecva.botnicek.library.processor.set.ValueDisplayStrategy;
 
 /**
- * Výchozí továrna na strategie. Bez další konfigurace podporuje strategie pro zobrazení názvu predikátu či právě nastavené hodnoty.
+ * Výchozí továrna na strategie. Bez další konfigurace podporuje strategie pro
+ * zobrazení názvu predikátu či právě nastavené hodnoty.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultDisplayStrategyFactory implements DisplayStrategyFactory {
-    
-    private static final BiMap<String, DisplayStrategy> DEFAULTS = ImmutableBiMap.<String, DisplayStrategy>of("name", new NameDisplayStretegy(), "value", new ValueDisplayStrategy()); 
-    
-    private final BiMap<String, DisplayStrategy> supported;
-    
+public final class DefaultDisplayStrategyFactory implements
+        DisplayStrategyFactory {
+
+    private static final BiMap<String, DisplayStrategy> DEFAULTS =
+            ImmutableBiMap.<String, DisplayStrategy> of("name",
+                    new NameDisplayStretegy(), "value",
+                    new ValueDisplayStrategy());
+
     /**
      * Vytvoří továrnu.
      * 
@@ -50,39 +53,50 @@ public final class DefaultDisplayStrategyFactory implements DisplayStrategyFacto
     public static DisplayStrategyFactory create() {
         return new DefaultDisplayStrategyFactory(DEFAULTS);
     }
-    
+
     /**
      * Vytvoří továrna dle zadání.
      * 
-     * @param supported vzájemně jednoznačné podporované popisy a strategie
+     * @param supported
+     *            vzájemně jednoznačné podporované popisy a strategie
      * @return továrna
      */
-    public static DisplayStrategyFactory create(final Map<String, DisplayStrategy> supported) {
+    public static DisplayStrategyFactory create(
+            final Map<String, DisplayStrategy> supported) {
         return new DefaultDisplayStrategyFactory(HashBiMap.create(supported));
     }
-    
-    private DefaultDisplayStrategyFactory(final BiMap<String, DisplayStrategy> supported) {
+
+    private final BiMap<String, DisplayStrategy> supported;
+
+    private DefaultDisplayStrategyFactory(
+            final BiMap<String, DisplayStrategy> supported) {
         this.supported = ImmutableBiMap.copyOf(supported);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.utils.DisplayStrategyFactory#provide(java.lang.String)
-     */
-    @Override
-    public DisplayStrategy provide(final String description) {
-        Preconditions.checkNotNull(description);
-        
-        final DisplayStrategy result = this.supported.get(description);
-        Preconditions.checkArgument(Presence.isPresent(result));
-        
-        return result;
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.utils.DisplayStrategyFactory#getSupported()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.utils.
+     * DisplayStrategyFactory#getSupported()
      */
     @Override
     public Map<String, DisplayStrategy> getSupported() {
         return this.supported;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.utils.
+     * DisplayStrategyFactory#provide(java.lang.String)
+     */
+    @Override
+    public DisplayStrategy provide(final String description) {
+        Preconditions.checkNotNull(description);
+
+        final DisplayStrategy result = this.supported.get(description);
+        Preconditions.checkArgument(Presence.isPresent(result));
+
+        return result;
     }
 }

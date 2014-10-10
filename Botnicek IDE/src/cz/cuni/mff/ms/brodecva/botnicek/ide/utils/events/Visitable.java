@@ -28,7 +28,8 @@ interface Visitable {
     /**
      * Přijme návštěvníka události.
      * 
-     * @param visitor návštěvník
+     * @param visitor
+     *            návštěvník
      */
     void accept(final Visitor visitor);
 }

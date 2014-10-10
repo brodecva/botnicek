@@ -45,106 +45,130 @@ public class DefaultAvailableReferencesController extends
         AbstractController<AvailableReferencesView> implements
         AvailableReferencesController {
 
-    private final class DefaultAvailableReferencesChangedListener implements AvailableReferencesChangedListener {
+    private final class DefaultAvailableReferencesExtendedListener implements
+            AvailableReferencesExtendedListener {
 
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.events.system.AvailableReferencesChangedListener#referencesChanged(java.util.Set)
-         */
-        @Override
-        public void referencesChanged(final Set<EnterNode> references) {
-            Preconditions.checkNotNull(references);
-            
-            callViews(new Callback<AvailableReferencesView>() {
-
-                @Override
-                public void call(final AvailableReferencesView view) {
-                    view.updateAvailableReferences(references);
-                }
-                
-            });
-        }
-        
-    }
-    
-    private final class DefaultAvailableReferencesExtendedListener implements AvailableReferencesExtendedListener {
-
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.events.system.AvailableReferencesChangedListener#referencesChanged(java.util.Set)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.events.system.
+         * AvailableReferencesChangedListener#referencesChanged(java.util.Set)
          */
         @Override
         public void referencesExtended(final Set<EnterNode> references) {
             Preconditions.checkNotNull(references);
-            
+
             callViews(new Callback<AvailableReferencesView>() {
 
                 @Override
                 public void call(final AvailableReferencesView view) {
                     view.extendAvailableReferences(references);
                 }
-                
+
             });
         }
-        
-    }
-    
-    private final class DefaultAvailableReferencesReducedListener implements AvailableReferencesReducedListener {
 
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.events.system.AvailableReferencesChangedListener#referencesChanged(java.util.Set)
+    }
+
+    private final class DefaultAvailableReferencesChangedListener implements
+            AvailableReferencesChangedListener {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.events.system.
+         * AvailableReferencesChangedListener#referencesChanged(java.util.Set)
+         */
+        @Override
+        public void referencesChanged(final Set<EnterNode> references) {
+            Preconditions.checkNotNull(references);
+
+            callViews(new Callback<AvailableReferencesView>() {
+
+                @Override
+                public void call(final AvailableReferencesView view) {
+                    view.updateAvailableReferences(references);
+                }
+
+            });
+        }
+
+    }
+
+    private final class DefaultAvailableReferencesReducedListener implements
+            AvailableReferencesReducedListener {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.events.system.
+         * AvailableReferencesChangedListener#referencesChanged(java.util.Set)
          */
         @Override
         public void referencesReduced(final Set<EnterNode> references) {
             Preconditions.checkNotNull(references);
-            
+
             callViews(new Callback<AvailableReferencesView>() {
 
                 @Override
                 public void call(final AvailableReferencesView view) {
                     view.removeAvailableReferences(references);
                 }
-                
+
             });
         }
-        
+
     }
-    
-    private final System system;
-    
+
     /**
      * Vytvoří řadič
      * 
-     * @param system systém sítí
-     * @param eventManager správce událostí
+     * @param system
+     *            systém sítí
+     * @param eventManager
+     *            správce událostí
      * @return řadič
      */
-    public static DefaultAvailableReferencesController create(final System system, final EventManager eventManager) {
+    public static DefaultAvailableReferencesController create(
+            final System system, final EventManager eventManager) {
         Preconditions.checkNotNull(system);
         Preconditions.checkNotNull(eventManager);
-        
-        final DefaultAvailableReferencesController newInstance = new DefaultAvailableReferencesController(system, eventManager);
-        
-        newInstance.addListener(AvailableReferencesChangedEvent.class, system, newInstance.new DefaultAvailableReferencesChangedListener());
-        newInstance.addListener(AvailableReferencesExtendedEvent.class, system, newInstance.new DefaultAvailableReferencesExtendedListener());
-        newInstance.addListener(AvailableReferencesReducedEvent.class, system, newInstance.new DefaultAvailableReferencesReducedListener());
-        
+
+        final DefaultAvailableReferencesController newInstance =
+                new DefaultAvailableReferencesController(system, eventManager);
+
+        newInstance.addListener(AvailableReferencesChangedEvent.class, system,
+                newInstance.new DefaultAvailableReferencesChangedListener());
+        newInstance.addListener(AvailableReferencesExtendedEvent.class, system,
+                newInstance.new DefaultAvailableReferencesExtendedListener());
+        newInstance.addListener(AvailableReferencesReducedEvent.class, system,
+                newInstance.new DefaultAvailableReferencesReducedListener());
+
         return newInstance;
     }
 
-    private DefaultAvailableReferencesController(final System system, final EventManager eventManager) {
+    private final System system;
+
+    private DefaultAvailableReferencesController(final System system,
+            final EventManager eventManager) {
         super(eventManager);
-        
+
         Preconditions.checkNotNull(system);
-        
+
         this.system = system;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.AbstractController#fill(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.AbstractController#fill
+     * (java.lang.Object)
      */
     @Override
     public void fill(final AvailableReferencesView view) {
         Preconditions.checkNotNull(view);
-        
+
         view.updateAvailableReferences(this.system.getAvailableReferences());
     }
 }

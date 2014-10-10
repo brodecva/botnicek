@@ -26,34 +26,58 @@ import javax.swing.plaf.basic.BasicComboBoxEditor;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
-
 /**
  * Editor combo boxu implementovaný pomocí napovídajícího textového pole.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @param <E> typ napovídaných položek
+ * @param <E>
+ *            typ napovídaných položek
  */
-final class HintingTextFieldEditor<E> extends BasicComboBoxEditor implements Serializable {
+final class HintingTextFieldEditor<E> extends BasicComboBoxEditor implements
+        Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * Vytvoří editor.
      * 
-     * @param textField napovídající textové pole
+     * @param textField
+     *            napovídající textové pole
      * @return napovídající editor
      */
-    public static <E> HintingTextFieldEditor<E> create(final HintingTextField<E> textField) {
+    public static <E> HintingTextFieldEditor<E> create(
+            final HintingTextField<E> textField) {
         return new HintingTextFieldEditor<E>(textField);
     }
-    
+
     private HintingTextFieldEditor(final HintingTextField<E> textField) {
         Preconditions.checkNotNull(textField);
-        
+
         super.editor = textField;
     }
-    
+
+    /**
+     * Přidá posluchač napovídání.
+     * 
+     * @param listener
+     *            posluchač
+     */
+    void addHintListener(final HintListener listener) {
+        Preconditions.checkNotNull(listener);
+
+        getTextField().addHintListener(listener);
+    }
+
+    /**
+     * Vrátí kopii položek.
+     * 
+     * @return kopie položek
+     */
+    public List<E> getDataList() {
+        return ImmutableList.copyOf(getTextField().getDataList());
+    }
+
     /**
      * Vrátí implementující textové pole.
      * 
@@ -61,8 +85,9 @@ final class HintingTextFieldEditor<E> extends BasicComboBoxEditor implements Ser
      */
     public HintingTextField<E> getTextField() {
         @SuppressWarnings("unchecked")
-        final HintingTextField<E> castSuperEditor = (HintingTextField<E>) super.editor;
-        
+        final HintingTextField<E> castSuperEditor =
+                (HintingTextField<E>) super.editor;
+
         return castSuperEditor;
     }
 
@@ -85,44 +110,26 @@ final class HintingTextFieldEditor<E> extends BasicComboBoxEditor implements Ser
     }
 
     /**
-     * Vrátí kopii položek.
-     * 
-     * @return kopie položek
-     */
-    public List<E> getDataList() {
-        return ImmutableList.copyOf(getTextField().getDataList());
-    }
-    
-    /**
-     * Nastaví napovídané položky.
-     * 
-     * @param list seznam položek
-     */
-    public void setDataList(final List<E> list) {
-        Preconditions.checkNotNull(list);
-        
-        getTextField().setDataList(list);
-    }
-    
-    /**
-     * Přidá posluchač napovídání.
-     * 
-     * @param listener posluchač
-     */
-    void addHintListener(final HintListener listener) {
-        Preconditions.checkNotNull(listener);
-        
-        getTextField().addHintListener(listener);
-    }
-    
-    /**
      * Odebere posluchač napovídání.
      * 
-     * @param listener posluchač
+     * @param listener
+     *            posluchač
      */
     void removeHintListener(final HintListener listener) {
         Preconditions.checkNotNull(listener);
-        
+
         getTextField().removeHintListener(listener);
+    }
+
+    /**
+     * Nastaví napovídané položky.
+     * 
+     * @param list
+     *            seznam položek
+     */
+    public void setDataList(final List<E> list) {
+        Preconditions.checkNotNull(list);
+
+        getTextField().setDataList(list);
     }
 }

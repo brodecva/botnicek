@@ -68,11 +68,6 @@ public class Aiml extends AbstractProperElement {
     private static final URI DEFAULT_SCHEMA_URI = URI
             .create(AIML.BACKUP_SCHEMA_LOCATION.getValue());
 
-    private final List<Toplevel> content;
-
-    private final BiMap<URI, String> namespacesToPrefixes;
-    private final URI schemaLocation;
-
     /**
      * Vytvoří kořenový prvek.
      * 
@@ -117,6 +112,12 @@ public class Aiml extends AbstractProperElement {
         return new Aiml(contentCopy, namespacesToPrefixesCopy, schemaLocation);
     }
 
+    private final List<Toplevel> content;
+
+    private final BiMap<URI, String> namespacesToPrefixes;
+
+    private final URI schemaLocation;
+
     private Aiml(final List<Toplevel> content,
             final BiMap<URI, String> namespacesToPrefixes,
             final URI schemaLocation) {
@@ -125,26 +126,29 @@ public class Aiml extends AbstractProperElement {
         this.schemaLocation = schemaLocation;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement#getName
-     * ()
-     */
-    @Override
-    public String getLocalName() {
-        return NAME;
+    private void addCustomNamespacesTo(
+            final Builder<Attribute> attributesBuilder) {
+        for (final Entry<URI, String> namespacePrefix : this.namespacesToPrefixes
+                .entrySet()) {
+            final URI namespace = namespacePrefix.getKey();
+            final String prefix = namespacePrefix.getValue();
+
+            attributesBuilder.add(AttributeImplementation.create(XML.XMLNS_ATT
+                    + (prefix.isEmpty() ? "" : XML.PREFIX_SEPARATOR.getValue())
+                    + prefix, namespace.toString()));
+        }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement#
-     * getChildren()
-     */
-    public List<Element> getChildren() {
-        return ImmutableList.<Element> copyOf(this.content);
+    private void addMandatoryNamespacesTo(
+            final Builder<Attribute> attributesBuilder) {
+        attributesBuilder.add(AttributeImplementation.create(
+                AIML.ATT_VERSION.getValue(),
+                AIML.IMPLEMENTED_VERSION.getValue()));
+        attributesBuilder
+                .add(AttributeImplementation.create(XML.SCHEMA_ATT.getValue(),
+                        AIML.NAMESPACE_URI.getValue() + " "
+                                + this.schemaLocation.toString(),
+                        SCHEMA_NAMESPACE_URI));
     }
 
     /*
@@ -163,35 +167,37 @@ public class Aiml extends AbstractProperElement {
         return attributesBuilder.build();
     }
 
-    private void addMandatoryNamespacesTo(
-            final Builder<Attribute> attributesBuilder) {
-        attributesBuilder.add(AttributeImplementation.create(
-                AIML.ATT_VERSION.getValue(),
-                AIML.IMPLEMENTED_VERSION.getValue()));
-        attributesBuilder.add(AttributeImplementation.create(
-                XML.SCHEMA_ATT.getValue(), AIML.NAMESPACE_URI.getValue() + " " + this.schemaLocation.toString(),
-                SCHEMA_NAMESPACE_URI));
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement#
+     * getChildren()
+     */
+    @Override
+    public List<Element> getChildren() {
+        return ImmutableList.<Element> copyOf(this.content);
     }
 
-    private void addCustomNamespacesTo(
-            final Builder<Attribute> attributesBuilder) {
-        for (final Entry<URI, String> namespacePrefix : this.namespacesToPrefixes
-                .entrySet()) {
-            final URI namespace = namespacePrefix.getKey();
-            final String prefix = namespacePrefix.getValue();
-
-            attributesBuilder.add(AttributeImplementation.create(XML.XMLNS_ATT
-                    + (prefix.isEmpty() ? "" : XML.PREFIX_SEPARATOR.getValue())
-                    + prefix, namespace.toString()));
-        }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement#getName
+     * ()
+     */
+    @Override
+    public String getLocalName() {
+        return NAME;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("Aiml [getName()=");
         builder.append(getLocalName());
         builder.append(", getChildren()=");
@@ -199,13 +205,13 @@ public class Aiml extends AbstractProperElement {
         builder.append(", getAttributes()=");
         builder.append(getAttributes());
         builder.append(", namespacesToPrefixes=");
-        builder.append(namespacesToPrefixes);
+        builder.append(this.namespacesToPrefixes);
         builder.append(", schemaLocation=");
-        builder.append(schemaLocation);
+        builder.append(this.schemaLocation);
         builder.append(", content=");
-        builder.append(content);
+        builder.append(this.content);
         builder.append("]");
         return builder.toString();
     }
-    
+
 }

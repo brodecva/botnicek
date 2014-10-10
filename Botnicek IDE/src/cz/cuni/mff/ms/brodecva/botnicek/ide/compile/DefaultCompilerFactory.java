@@ -43,19 +43,29 @@ public class DefaultCompilerFactory implements CompilerFactory, Serializable {
     public static DefaultCompilerFactory create() {
         return new DefaultCompilerFactory();
     }
-    
+
     private DefaultCompilerFactory() {
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.model.CompilerFactory#produce(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.model.CompilerFactory#produce
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord,
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord,
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord,
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
      */
     @Override
-    public Compiler produce(final NormalWord pullState, final NormalWord pullStopState,
-            final NormalWord randomizeState, NormalWord successState, NormalWord returnState, final NormalWord testingPredicate) {
-        return DefaultCompiler.create(pullState, pullStopState, successState, returnState, randomizeState, testingPredicate);
+    public Compiler produce(final NormalWord pullState,
+            final NormalWord pullStopState, final NormalWord randomizeState,
+            final NormalWord successState, final NormalWord returnState,
+            final NormalWord testingPredicate) {
+        return DefaultCompiler.create(pullState, pullStopState, successState,
+                returnState, randomizeState, testingPredicate);
     }
-    
+
     private void readObject(final ObjectInputStream objectInputStream)
             throws ClassNotFoundException, IOException {
         objectInputStream.defaultReadObject();

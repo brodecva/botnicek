@@ -27,5 +27,5 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element;
  * @version 1.0
  */
 public interface TemplateElement extends Element {
-    
+
 }

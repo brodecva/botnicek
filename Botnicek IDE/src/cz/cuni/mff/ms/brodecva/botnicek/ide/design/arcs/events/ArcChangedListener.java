@@ -31,7 +31,8 @@ public interface ArcChangedListener {
     /**
      * Reaguje na změnu hrany na dodanou verzi.
      * 
-     * @param arc nová verze hrany
+     * @param arc
+     *            nová verze hrany
      */
     void arcChanged(Arc arc);
 

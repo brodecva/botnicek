@@ -33,7 +33,8 @@ public interface AvailableReferencesChangedListener {
     /**
      * Reaguje na změnu.
      * 
-     * @param references aktuální množina dostupných uzlů
+     * @param references
+     *            aktuální množina dostupných uzlů
      */
     void referencesChanged(Set<EnterNode> references);
 

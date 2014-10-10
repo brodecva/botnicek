@@ -19,9 +19,11 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
 import java.util.List;
+
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.ConditionElement;
@@ -29,89 +31,98 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.lists.Default
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.lists.NameAndValueListItem;
 
 /**
- * Podmínka, která testuje hodnoty predikátů oproti vzorům v každé z vnořených položek.
+ * Podmínka, která testuje hodnoty predikátů oproti vzorům v každé z vnořených
+ * položek.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-conditional-elements">http://www.alicebot.org/TR/2011/#section-conditional-elements</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-conditional-elements">http://www.alicebot.org/TR/2011/#section-conditional-elements</a>
  */
-public final class MultiPredicateCondition extends AbstractProperElement implements ConditionElement {
+public final class MultiPredicateCondition extends AbstractProperElement
+        implements ConditionElement {
     private static final String NAME = "condition";
-    
-    private final List<NameAndValueListItem> items;
-    private final Optional<DefaultListItem> defaultItem;
-    
+
     /**
      * Vytvoří prvek.
      * 
-     * @param defaultItem výchozí položka, jejíž obsah bude zpracování v případě, že neuspěje žádná s predikátem a hodnotou
-     * @param items položky s názvy testovaných predikátů vzory pro hodnotu predikátu
+     * @param defaultItem
+     *            výchozí položka, jejíž obsah bude zpracování v případě, že
+     *            neuspěje žádná s predikátem a hodnotou
+     * @param items
+     *            položky s názvy testovaných predikátů vzory pro hodnotu
+     *            predikátu
      * @return prvek
      */
-    public static MultiPredicateCondition create(final DefaultListItem defaultItem, final NameAndValueListItem... items) {
-        Preconditions.checkNotNull(items);
-        
-        return new MultiPredicateCondition(Optional.of(defaultItem), ImmutableList.copyOf(items));
-    }
-    
-    /**
-     * Vytvoří prvek.
-     * 
-     * @param items položky s názvy testovaných predikátů vzory pro hodnotu predikátu
-     * @return prvek
-     */
-    public static MultiPredicateCondition create(final NameAndValueListItem... items) {
-        Preconditions.checkNotNull(items);
-        
-        return create(ImmutableList.copyOf(items));
-    }
-    
-    /**
-     * Vytvoří prvek.
-     * 
-     * @param defaultItem výchozí položka, jejíž obsah bude zpracování v případě, že neuspěje žádná s predikátem a hodnotou
-     * @param items položky s názvy testovaných predikátů vzory pro hodnotu predikátu
-     * @return prvek
-     */
-    public static MultiPredicateCondition create(final DefaultListItem defaultItem, final List<NameAndValueListItem> items) {
+    public static MultiPredicateCondition create(
+            final DefaultListItem defaultItem,
+            final List<NameAndValueListItem> items) {
         Preconditions.checkNotNull(defaultItem);
-        
+
         return new MultiPredicateCondition(Optional.of(defaultItem), items);
     }
-    
+
     /**
      * Vytvoří prvek.
      * 
-     * @param items položky s názvy testovaných predikátů vzory pro hodnotu predikátu
+     * @param defaultItem
+     *            výchozí položka, jejíž obsah bude zpracování v případě, že
+     *            neuspěje žádná s predikátem a hodnotou
+     * @param items
+     *            položky s názvy testovaných predikátů vzory pro hodnotu
+     *            predikátu
      * @return prvek
      */
-    public static MultiPredicateCondition create(final List<NameAndValueListItem> items) {
-        return new MultiPredicateCondition(Optional.<DefaultListItem>absent(), items);
+    public static MultiPredicateCondition create(
+            final DefaultListItem defaultItem,
+            final NameAndValueListItem... items) {
+        Preconditions.checkNotNull(items);
+
+        return new MultiPredicateCondition(Optional.of(defaultItem),
+                ImmutableList.copyOf(items));
     }
-    
-    private MultiPredicateCondition(final Optional<DefaultListItem> defaultItem, final List<NameAndValueListItem> items) {
+
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param items
+     *            položky s názvy testovaných predikátů vzory pro hodnotu
+     *            predikátu
+     * @return prvek
+     */
+    public static MultiPredicateCondition create(
+            final List<NameAndValueListItem> items) {
+        return new MultiPredicateCondition(Optional.<DefaultListItem> absent(),
+                items);
+    }
+
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param items
+     *            položky s názvy testovaných predikátů vzory pro hodnotu
+     *            predikátu
+     * @return prvek
+     */
+    public static MultiPredicateCondition create(
+            final NameAndValueListItem... items) {
+        Preconditions.checkNotNull(items);
+
+        return create(ImmutableList.copyOf(items));
+    }
+
+    private final List<NameAndValueListItem> items;
+
+    private final Optional<DefaultListItem> defaultItem;
+
+    private MultiPredicateCondition(
+            final Optional<DefaultListItem> defaultItem,
+            final List<NameAndValueListItem> items) {
         Preconditions.checkNotNull(defaultItem);
         Preconditions.checkNotNull(items);
-        
+
         this.items = ImmutableList.copyOf(items);
         this.defaultItem = defaultItem;
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
-     */
-    @Override
-    public String getLocalName() {
-        return NAME;
-    }
-    
-    /**
-     * Vrátí obsažené položky s názvem a vzorem.
-     * 
-     * @return obsažené položky s názvem a vzorem
-     */
-    public List<NameAndValueListItem> getItems() {
-        return items;
     }
 
     /**
@@ -122,19 +133,43 @@ public final class MultiPredicateCondition extends AbstractProperElement impleme
     public DefaultListItem getDefaultItem() {
         return this.defaultItem.orNull();
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getChildren()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getChildren()
      */
     @Override
     public List<Element> getChildren() {
-        final ImmutableList.Builder<Element> resultBuilder = ImmutableList.builder();
-        
+        final ImmutableList.Builder<Element> resultBuilder =
+                ImmutableList.builder();
+
         resultBuilder.addAll(this.items);
         if (this.defaultItem.isPresent()) {
             resultBuilder.add(this.defaultItem.get());
         }
-        
+
         return resultBuilder.build();
+    }
+
+    /**
+     * Vrátí obsažené položky s názvem a vzorem.
+     * 
+     * @return obsažené položky s názvem a vzorem
+     */
+    public List<NameAndValueListItem> getItems() {
+        return this.items;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
+     */
+    @Override
+    public String getLocalName() {
+        return NAME;
     }
 }

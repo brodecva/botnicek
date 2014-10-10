@@ -37,49 +37,31 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultCodeContentBuilder implements CodeContentBuilder, Source, Serializable {
-    
-    private static final long serialVersionUID = 1L;
-    
-    private final StringBuilder contentBuilder;
-    private final CodeChecker checker;
-    
+public final class DefaultCodeContentBuilder implements CodeContentBuilder,
+        Source, Serializable {
+
     private final static class CodeImplementation implements Code, Serializable {
         private static final long serialVersionUID = 1L;
-        
-        private final String text;
-        
+
         public static CodeImplementation create(final String rawContent) {
             return new CodeImplementation(rawContent);
         }
-        
+
+        private final String text;
+
         private CodeImplementation(final String rawContent) {
             Preconditions.checkNotNull(rawContent);
-            
+
             this.text = rawContent;
         }
 
-        @Override
-        public String getText() {
-            return this.text;
-        }
-        
-        /* (non-Javadoc)
-         * @see java.lang.Object#hashCode()
-         */
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + text.hashCode();
-            return result;
-        }
-
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.lang.Object#equals(java.lang.Object)
          */
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             if (this == obj) {
                 return true;
             }
@@ -90,16 +72,34 @@ public final class DefaultCodeContentBuilder implements CodeContentBuilder, Sour
                 return false;
             }
             final Code other = (Code) obj;
-            if (!text.equals(other.getText())) {
+            if (!this.text.equals(other.getText())) {
                 return false;
             }
             return true;
         }
-        
+
+        @Override
+        public String getText() {
+            return this.text;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.lang.Object#hashCode()
+         */
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + this.text.hashCode();
+            return result;
+        }
+
         private void readObject(final ObjectInputStream objectInputStream)
                 throws ClassNotFoundException, IOException {
             objectInputStream.defaultReadObject();
-            
+
             Preconditions.checkNotNull(this.text);
         }
 
@@ -108,58 +108,84 @@ public final class DefaultCodeContentBuilder implements CodeContentBuilder, Sour
             objectOutputStream.defaultWriteObject();
         }
     }
-    
+
+    private static final long serialVersionUID = 1L;
+
     /**
      * Vytvoří konstruktor.
      * 
-     * @param checker přímý validátor
-     * @param startContent úvodní řetězec k sestavení
+     * @param checker
+     *            přímý validátor
+     * @param startContent
+     *            úvodní řetězec k sestavení
      * @return konstruktor
      */
-    public static DefaultCodeContentBuilder create(final CodeChecker checker, final String startContent) {
+    public static DefaultCodeContentBuilder create(final CodeChecker checker,
+            final String startContent) {
         return new DefaultCodeContentBuilder(checker, startContent);
     }
-    
-    private DefaultCodeContentBuilder(final CodeChecker checker, final String startContent) {
+
+    private final StringBuilder contentBuilder;
+
+    private final CodeChecker checker;
+
+    private DefaultCodeContentBuilder(final CodeChecker checker,
+            final String startContent) {
         Preconditions.checkNotNull(checker);
         Preconditions.checkNotNull(startContent);
-        
+
         this.checker = checker;
         this.contentBuilder = new StringBuilder(startContent);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.ContentAggregator#add(java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.
+     * ContentAggregator#add(java.lang.String)
      */
+    @Override
     public void add(final String content) {
         this.contentBuilder.append(content);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.editor.checker.CodeContentBuilder#isValid()
-     */
-    @Override
-    public boolean isValid() {
-        return check().isValid();
-    }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.editor.checker.CodeContentBuilder#build()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.editor.checker.CodeContentBuilder
+     * #build()
      */
     @Override
     public Code build() {
         if (!isValid()) {
             throw new IllegalStateException();
         }
-        
+
         return CodeImplementation.create(this.contentBuilder.toString());
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.editor.checker.CodeContentBuilder#check()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.editor.checker.CodeContentBuilder
+     * #check()
      */
     @Override
     public CheckResult check() {
         return this.checker.check(this, this, this.contentBuilder.toString());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.editor.checker.CodeContentBuilder
+     * #isValid()
+     */
+    @Override
+    public boolean isValid() {
+        return check().isValid();
     }
 }

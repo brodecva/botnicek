@@ -31,8 +31,10 @@ public interface NodeTypeChangedListener {
     /**
      * Reaguje na změnu typu uzlu.
      * 
-     * @param oldVersion původní verze
-     * @param newVersion nová verze
+     * @param oldVersion
+     *            původní verze
+     * @param newVersion
+     *            nová verze
      */
     void nodeTypeChanged(Node oldVersion, Node newVersion);
 

@@ -30,38 +30,60 @@ import javax.swing.JPanel;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
-
 /**
  * Combo box který při psaní v něm nabízí souhlasné obsažené prvky.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @param <E> typ obsažených prvků
+ * @param <E>
+ *            typ obsažených prvků
  */
 public class HintingComboBox<E> extends JComboBox<E> implements HintListener {
 
     private static final long serialVersionUID = 1L;
-    
-    private final HintingTextFieldEditor<E> hintingTextFieldEditor;
-    
+
     /**
-     * Spustí testovací ukázku. První box nerespektuje a druhý respektuje velikost písmen při napovídání. První box dále dovoluje vepsat i nepovolené řetězce, zatímco druhý nikoli.
+     * Vytvoří napovídající combo box.
      * 
-     * @param args argumenty
+     * @param list
+     *            seznam prvků
+     * @param caseSensitive
+     *            nastavuje citlivost na velikost znaků
+     * @param strict
+     *            vynucuje užití jen napovězených řetězců
+     * @return napovídající combo box
      */
-    public static void main(String[] args) {
+    public static <E> HintingComboBox<E> create(final List<E> list,
+            final boolean caseSensitive, final boolean strict) {
+        return new HintingComboBox<>(list, caseSensitive, strict);
+    }
+
+    /**
+     * Spustí testovací ukázku. První box nerespektuje a druhý respektuje
+     * velikost písmen při napovídání. První box dále dovoluje vepsat i
+     * nepovolené řetězce, zatímco druhý nikoli.
+     * 
+     * @param args
+     *            argumenty
+     */
+    public static void main(final String[] args) {
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
-                    final List<String> content = ImmutableList.of("apple", "butter", "Chevrolet", "9 monkeys");
-                    
-                    final HintingComboBox<String> nonStrictCaseInsensitiveComboBox = HintingComboBox.create(content, false, false);
-                    final HintingComboBox<String> strictCaseSensitiveComboBox = HintingComboBox.create(content, true, true);
-                    
+                    final List<String> content =
+                            ImmutableList.of("apple", "butter", "Chevrolet",
+                                    "9 monkeys");
+
+                    final HintingComboBox<String> nonStrictCaseInsensitiveComboBox =
+                            HintingComboBox.create(content, false, false);
+                    final HintingComboBox<String> strictCaseSensitiveComboBox =
+                            HintingComboBox.create(content, true, true);
+
                     final JPanel contentPane = new JPanel();
                     contentPane.add(nonStrictCaseInsensitiveComboBox);
                     contentPane.add(strictCaseSensitiveComboBox);
-                    
+
                     final JFrame frame = new JFrame();
                     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     frame.setContentPane(contentPane);
@@ -73,49 +95,94 @@ public class HintingComboBox<E> extends JComboBox<E> implements HintListener {
             }
         });
     }
-    
-    /**
-     * Vytvoří napovídající combo box.
-     * 
-     * @param list seznam prvků
-     * @param caseSensitive nastavuje citlivost na velikost znaků
-     * @param strict vynucuje užití jen napovězených řetězců
-     * @return napovídající combo box
-     */
-    public static <E> HintingComboBox<E> create(final List<E> list, final boolean caseSensitive, final boolean strict) {
-        return new HintingComboBox<>(list, caseSensitive, strict);
-    }
-    
-    /**
-     * Vytvoří napovídající combo box.
-     * 
-     * @param list seznam prvků
-     * @param caseSensitive nastavuje citlivost na velikost znaků
-     * @param strict vynucuje užití jen napovězených řetězců
-     */
-    protected HintingComboBox(final List<E> list, final boolean caseSensitive, final boolean strict) {
-        this(HintingTextField.create(list, caseSensitive, strict));
-    }
-    
+
+    private final HintingTextFieldEditor<E> hintingTextFieldEditor;
+
     /**
      * Komponenta je postavena na napovídajícím textovém poli.
      * 
-     * @param hintingTextField základní textové pole
+     * @param hintingTextField
+     *            základní textové pole
      */
     private HintingComboBox(final HintingTextField<E> hintingTextField) {
-        this(HintingTextFieldEditor.create(hintingTextField), IgnoreFireContentsChangedComboBoxModel.create(hintingTextField.getDataList()));
+        this(HintingTextFieldEditor.create(hintingTextField),
+                IgnoreFireContentsChangedComboBoxModel.create(hintingTextField
+                        .getDataList()));
     }
-    
-    private HintingComboBox(final HintingTextFieldEditor<E> hintingTextFieldEditor, final IgnoreFireContentsChangedComboBoxModel<E> model) {
+
+    private HintingComboBox(
+            final HintingTextFieldEditor<E> hintingTextFieldEditor,
+            final IgnoreFireContentsChangedComboBoxModel<E> model) {
         Preconditions.checkNotNull(hintingTextFieldEditor);
         Preconditions.checkNotNull(model);
-        
+
         hintingTextFieldEditor.addHintListener(this);
-        
+
         this.hintingTextFieldEditor = hintingTextFieldEditor;
         setEditable(true);
         setEditor(this.hintingTextFieldEditor);
         setModel(model);
+    }
+
+    /**
+     * Vytvoří napovídající combo box.
+     * 
+     * @param list
+     *            seznam prvků
+     * @param caseSensitive
+     *            nastavuje citlivost na velikost znaků
+     * @param strict
+     *            vynucuje užití jen napovězených řetězců
+     */
+    protected HintingComboBox(final List<E> list, final boolean caseSensitive,
+            final boolean strict) {
+        this(HintingTextField.create(list, caseSensitive, strict));
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.swing.JComboBox#fireActionEvent()
+     */
+    @Override
+    protected void fireActionEvent() {
+        if (getCastModel().isIgnored()) {
+            return;
+        }
+
+        super.fireActionEvent();
+    }
+
+    private IgnoreFireContentsChangedComboBoxModel<E> getCastModel() {
+        final ComboBoxModel<E> model = getModel();
+        Preconditions
+                .checkState(model instanceof IgnoreFireContentsChangedComboBoxModel);
+
+        final IgnoreFireContentsChangedComboBoxModel<E> castModel =
+                (IgnoreFireContentsChangedComboBoxModel<E>) model;
+        return castModel;
+    }
+
+    /**
+     * Vrátí kopii položek.
+     * 
+     * @return kopie položek
+     */
+    public final List<E> getDataList() {
+        return this.hintingTextFieldEditor.getDataList();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.hinters.
+     * HintListener#hinted(java.lang.Object)
+     */
+    @Override
+    public final void hint(final Object item) {
+        Preconditions.checkNotNull(item);
+
+        setSelectedValue(item);
     }
 
     /**
@@ -137,73 +204,36 @@ public class HintingComboBox<E> extends JComboBox<E> implements HintListener {
     }
 
     /**
-     * Vrátí kopii položek.
-     * 
-     * @return kopie položek
-     */
-    public final List<E> getDataList() {
-        return this.hintingTextFieldEditor.getDataList();
-    }
-
-    /**
      * Nastaví napovídané (a obsažené položky).
      * 
-     * @param list seznam položek
+     * @param list
+     *            seznam položek
      */
     public final void setDataList(final List<E> list) {
         Preconditions.checkNotNull(list);
-        
+
         this.hintingTextFieldEditor.setDataList(list);
         setModel(IgnoreFireContentsChangedComboBoxModel.create(list));
     }
-    
+
     /**
      * Nastaví vybranou hodnotu.
      * 
-     * @param selected vybraná hodnota
+     * @param selected
+     *            vybraná hodnota
      */
     private final void setSelectedValue(final Object selected) {
         Preconditions.checkNotNull(selected);
-        
+
         final IgnoreFireContentsChangedComboBoxModel<E> model = getCastModel();
         if (model.isIgnored()) {
             return;
         }
-        
+
         model.setIgnored(true);
         setSelectedItem(selected);
-        fireItemStateChanged(new ItemEvent(this, 701, this.selectedItemReminder,
-                1));
+        fireItemStateChanged(new ItemEvent(this, 701,
+                this.selectedItemReminder, 1));
         model.setIgnored(false);
-    }
-
-    /* (non-Javadoc)
-     * @see javax.swing.JComboBox#fireActionEvent()
-     */
-    @Override
-    protected void fireActionEvent() {
-        if (getCastModel().isIgnored()) {
-            return;
-        }
-        
-        super.fireActionEvent();
-    }
-    
-    private IgnoreFireContentsChangedComboBoxModel<E> getCastModel() {
-        final ComboBoxModel<E> model = getModel();
-        Preconditions.checkState(model instanceof IgnoreFireContentsChangedComboBoxModel);
-        
-        final IgnoreFireContentsChangedComboBoxModel<E> castModel = (IgnoreFireContentsChangedComboBoxModel<E>) model;
-        return castModel;
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.hinters.HintListener#hinted(java.lang.Object)
-     */
-    @Override
-    public final void hint(Object item) {
-        Preconditions.checkNotNull(item);
-        
-        setSelectedValue(item);
     }
 }

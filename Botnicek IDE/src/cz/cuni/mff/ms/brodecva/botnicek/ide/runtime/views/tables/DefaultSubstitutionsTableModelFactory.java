@@ -18,7 +18,6 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.tables;
 
-
 /**
  * Výchozí implementace továrny na modely tabulek se substitucemi.
  * 
@@ -36,12 +35,15 @@ public class DefaultSubstitutionsTableModelFactory implements
     public static DefaultSubstitutionsTableModelFactory create() {
         return new DefaultSubstitutionsTableModelFactory();
     }
-    
+
     private DefaultSubstitutionsTableModelFactory() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.SubstitutionsTableModelFactory#create()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.
+     * SubstitutionsTableModelFactory#create()
      */
     @Override
     public SubstitutionsTableModel produce() {

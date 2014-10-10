@@ -44,40 +44,79 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.processor.set.DisplayStrategy;
  * @version 1.0
  */
 public class RuntimeSettings implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private static final RuntimeSettings DEFAULT;
-    
+
     static {
-        final BotConfiguration defaultBotConfiguration = AIMLBotConfiguration.of("My bot", Paths.get("files"), Paths.get("gossip/gossip.txt"), ImmutableMap.<String, String>of(), ImmutableList.<String>of(), ImmutableList.<String>of());
-        final LanguageConfiguration defaultLanguageConfiguration = AIMLLanguageConfiguration.of("Language", Pattern.compile("[\\.!;\\?]\\w*"), ImmutableMap.<Pattern, String>of(), ImmutableMap.<Pattern, String>of(), ImmutableMap.<Pattern, String>of(), ImmutableMap.<Pattern, String>of(), ImmutableMap.<Pattern, String>of(), ImmutableMap.<Pattern, String>of(), ImmutableMap.<Pattern, String>of());
-        final ConversationConfiguration defaultConversationConfiguration = AIMLConversationConfiguration.of(ImmutableMap.<String, String>of(), ImmutableMap.<String, DisplayStrategy>of());
-        
-        DEFAULT = create(defaultBotConfiguration, defaultLanguageConfiguration, defaultConversationConfiguration);
+        final BotConfiguration defaultBotConfiguration =
+                AIMLBotConfiguration.of("My bot", Paths.get("files"),
+                        Paths.get("gossip/gossip.txt"),
+                        ImmutableMap.<String, String> of(),
+                        ImmutableList.<String> of(),
+                        ImmutableList.<String> of());
+        final LanguageConfiguration defaultLanguageConfiguration =
+                AIMLLanguageConfiguration.of("Language",
+                        Pattern.compile("[\\.!;\\?]\\w*"),
+                        ImmutableMap.<Pattern, String> of(),
+                        ImmutableMap.<Pattern, String> of(),
+                        ImmutableMap.<Pattern, String> of(),
+                        ImmutableMap.<Pattern, String> of(),
+                        ImmutableMap.<Pattern, String> of(),
+                        ImmutableMap.<Pattern, String> of(),
+                        ImmutableMap.<Pattern, String> of());
+        final ConversationConfiguration defaultConversationConfiguration =
+                AIMLConversationConfiguration.of(
+                        ImmutableMap.<String, String> of(),
+                        ImmutableMap.<String, DisplayStrategy> of());
+
+        DEFAULT =
+                create(defaultBotConfiguration, defaultLanguageConfiguration,
+                        defaultConversationConfiguration);
     }
-    
-    private final BotConfiguration botConfiguration;
-    private final LanguageConfiguration languageConfiguration;
-    private final ConversationConfiguration conversationConfiguration;
-    
+
     /**
      * Vytvoří nastavení běhového prostředí sjednocením dílčích.
      * 
-     * @param botConfiguration nastavení robota
-     * @param languageConfiguration nastavení jazyka
-     * @param conversationConfiguration nastavení konverzace
+     * @param botConfiguration
+     *            nastavení robota
+     * @param languageConfiguration
+     *            nastavení jazyka
+     * @param conversationConfiguration
+     *            nastavení konverzace
      * @return nastavení běhového prostředí
      */
-    public static RuntimeSettings create(final BotConfiguration botConfiguration, final LanguageConfiguration languageConfiguration, final ConversationConfiguration conversationConfiguration) {
-        return new RuntimeSettings(botConfiguration, languageConfiguration, conversationConfiguration);
+    public static RuntimeSettings create(
+            final BotConfiguration botConfiguration,
+            final LanguageConfiguration languageConfiguration,
+            final ConversationConfiguration conversationConfiguration) {
+        return new RuntimeSettings(botConfiguration, languageConfiguration,
+                conversationConfiguration);
     }
-    
-    private RuntimeSettings(final BotConfiguration botConfiguration, final LanguageConfiguration languageConfiguration, final ConversationConfiguration conversationConfiguration) {
+
+    /**
+     * Vrátí výchozí nastavení.
+     * 
+     * @return výchozí nastavení
+     */
+    public static RuntimeSettings getDefault() {
+        return DEFAULT;
+    }
+
+    private final BotConfiguration botConfiguration;
+
+    private final LanguageConfiguration languageConfiguration;
+
+    private final ConversationConfiguration conversationConfiguration;
+
+    private RuntimeSettings(final BotConfiguration botConfiguration,
+            final LanguageConfiguration languageConfiguration,
+            final ConversationConfiguration conversationConfiguration) {
         Preconditions.checkNotNull(botConfiguration);
         Preconditions.checkNotNull(languageConfiguration);
         Preconditions.checkNotNull(conversationConfiguration);
-        
+
         this.botConfiguration = botConfiguration;
         this.languageConfiguration = languageConfiguration;
         this.conversationConfiguration = conversationConfiguration;
@@ -93,15 +132,6 @@ public class RuntimeSettings implements Serializable {
     }
 
     /**
-     * Vrátí nastavení jazyka.
-     * 
-     * @return nastavení jazyka
-     */
-    public LanguageConfiguration getLanguageConfiguration() {
-        return this.languageConfiguration;
-    }
-
-    /**
      * Vrátí nastavení konverzace.
      * 
      * @return nastavení konverzace
@@ -111,18 +141,18 @@ public class RuntimeSettings implements Serializable {
     }
 
     /**
-     * Vrátí výchozí nastavení.
+     * Vrátí nastavení jazyka.
      * 
-     * @return výchozí nastavení
+     * @return nastavení jazyka
      */
-    public static RuntimeSettings getDefault() {
-        return DEFAULT;
+    public LanguageConfiguration getLanguageConfiguration() {
+        return this.languageConfiguration;
     }
-    
+
     private void readObject(final ObjectInputStream objectInputStream)
             throws ClassNotFoundException, IOException {
         objectInputStream.defaultReadObject();
-        
+
         Preconditions.checkNotNull(this.botConfiguration);
         Preconditions.checkNotNull(this.languageConfiguration);
         Preconditions.checkNotNull(this.conversationConfiguration);

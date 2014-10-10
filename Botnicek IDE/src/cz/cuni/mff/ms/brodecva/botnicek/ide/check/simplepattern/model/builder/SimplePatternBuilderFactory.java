@@ -28,7 +28,8 @@ public interface SimplePatternBuilderFactory {
     /**
      * Vytvoří konstruktor.
      * 
-     * @param startContent počáteční obsah
+     * @param startContent
+     *            počáteční obsah
      * @return konstruktor
      */
     SimplePatternBuilder produce(final String startContent);

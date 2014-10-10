@@ -43,75 +43,91 @@ public class NormalWordTextField extends JTextField implements Clearable {
     /**
      * Vytvoří textové pole pro zadávání normálního slova.
      * 
-     * @param client klient pole
-     * @param validationController řadič validace normálních slov
+     * @param client
+     *            klient pole
+     * @param validationController
+     *            řadič validace normálních slov
      * @return textové pole
      */
-    public static NormalWordTextField create(final Source client, final NormalWordValidationController validationController) {
+    public static NormalWordTextField create(final Source client,
+            final NormalWordValidationController validationController) {
         Preconditions.checkNotNull(client);
         Preconditions.checkNotNull(validationController);
-        
-        final NormalWordTextField newInstance = new NormalWordTextField(validationController);
-        
+
+        final NormalWordTextField newInstance =
+                new NormalWordTextField(validationController);
+
         newInstance.getDocument().addDocumentListener(new DocumentListener() {
-            
-            @Override
-            public void removeUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance, document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
-            }
-            
-            @Override
-            public void insertUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance, document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
-            }
-            
+
             @Override
             public void changedUpdate(final DocumentEvent e) {
                 try {
                     final Document document = e.getDocument();
-                    validationController.check(client, newInstance, document.getText(0, document.getLength()));
+                    validationController.check(client, newInstance,
+                            document.getText(0, document.getLength()));
+                } catch (final BadLocationException ex) {
+                    throw new IllegalStateException(ex);
+                }
+            }
+
+            @Override
+            public void insertUpdate(final DocumentEvent e) {
+                try {
+                    final Document document = e.getDocument();
+                    validationController.check(client, newInstance,
+                            document.getText(0, document.getLength()));
+                } catch (final BadLocationException ex) {
+                    throw new IllegalStateException(ex);
+                }
+            }
+
+            @Override
+            public void removeUpdate(final DocumentEvent e) {
+                try {
+                    final Document document = e.getDocument();
+                    validationController.check(client, newInstance,
+                            document.getText(0, document.getLength()));
                 } catch (final BadLocationException ex) {
                     throw new IllegalStateException(ex);
                 }
             }
         });
-        
+
         return newInstance;
     }
 
     private final NormalWordValidationController validationController;
-    
-    private NormalWordTextField(final NormalWordValidationController validationController) {
+
+    private NormalWordTextField(
+            final NormalWordValidationController validationController) {
         this.validationController = validationController;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements.Clearable#clear()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements
+     * .Clearable#clear()
      */
     @Override
     public void clear() {
         this.validationController.clear(this);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements.Clearable#reset()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements
+     * .Clearable#reset()
      */
     @Override
     public void reset(final Source client) {
         Preconditions.checkNotNull(client);
-        
+
         setText("");
         this.validationController.check(client, this, getText());
-    }  
+    }
 
 }

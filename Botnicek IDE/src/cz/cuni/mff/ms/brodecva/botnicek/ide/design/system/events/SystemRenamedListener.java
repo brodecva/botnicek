@@ -30,7 +30,8 @@ public interface SystemRenamedListener {
     /**
      * Reaguje na přejmenování systému.
      * 
-     * @param system systém
+     * @param system
+     *            systém
      */
     void systemRenamed(System system);
 }

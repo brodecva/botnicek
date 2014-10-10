@@ -18,7 +18,9 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.easymock.EasyMock;
 import org.junit.After;
@@ -42,89 +44,64 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
  */
 public class DefaultNormalWordCheckerTest {
 
-    private DefaultNormalWordChecker permissiveTested = Intended.nullReference();
-    private NamingAuthority permissiveNamingAuthorityStub = Intended.nullReference();
-    private DefaultNormalWordChecker dismissiveTested = Intended.nullReference();
-    private NamingAuthority dismissiveNamingAuthorityStub = Intended.nullReference();
+    private DefaultNormalWordChecker permissiveTested = Intended
+            .nullReference();
+    private NamingAuthority permissiveNamingAuthorityStub = Intended
+            .nullReference();
+    private DefaultNormalWordChecker dismissiveTested = Intended
+            .nullReference();
+    private NamingAuthority dismissiveNamingAuthorityStub = Intended
+            .nullReference();
 
     /**
      * Vytvoří testované varianty.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @Before
     public void setUp() throws Exception {
-        this.permissiveNamingAuthorityStub = EasyMock.createStrictMock(NamingAuthority.class);
-        EasyMock.expect(this.permissiveNamingAuthorityStub.isUsable(EasyMock.notNull(String.class))).andStubReturn(true);
+        this.permissiveNamingAuthorityStub =
+                EasyMock.createStrictMock(NamingAuthority.class);
+        EasyMock.expect(
+                this.permissiveNamingAuthorityStub.isUsable(EasyMock
+                        .notNull(String.class))).andStubReturn(true);
         EasyMock.replay(this.permissiveNamingAuthorityStub);
-        
-        permissiveTested = DefaultNormalWordChecker.create(permissiveNamingAuthorityStub);
-        
-        this.dismissiveNamingAuthorityStub = EasyMock.createStrictMock(NamingAuthority.class);
-        EasyMock.expect(this.dismissiveNamingAuthorityStub.isUsable(EasyMock.notNull(String.class))).andStubReturn(false);
+
+        this.permissiveTested =
+                DefaultNormalWordChecker
+                        .create(this.permissiveNamingAuthorityStub);
+
+        this.dismissiveNamingAuthorityStub =
+                EasyMock.createStrictMock(NamingAuthority.class);
+        EasyMock.expect(
+                this.dismissiveNamingAuthorityStub.isUsable(EasyMock
+                        .notNull(String.class))).andStubReturn(false);
         EasyMock.replay(this.dismissiveNamingAuthorityStub);
-        
-        dismissiveTested = DefaultNormalWordChecker.create(dismissiveNamingAuthorityStub);
+
+        this.dismissiveTested =
+                DefaultNormalWordChecker
+                        .create(this.dismissiveNamingAuthorityStub);
     }
 
     /**
      * Uklidí testované varianty.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @After
     public void tearDown() throws Exception {
-        permissiveTested = Intended.nullReference();
-        permissiveNamingAuthorityStub = Intended.nullReference();
-        dismissiveTested = Intended.nullReference();
-        dismissiveNamingAuthorityStub = Intended.nullReference();
+        this.permissiveTested = Intended.nullReference();
+        this.permissiveNamingAuthorityStub = Intended.nullReference();
+        this.dismissiveTested = Intended.nullReference();
+        this.dismissiveNamingAuthorityStub = Intended.nullReference();
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenEmptyExpectInvalid() {
-        assertFalse(this.permissiveTested.check("").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenEmptyExpectColumnNumberZero() {
-        final CheckResult result = this.permissiveTested.check("");
-        
-        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER, result.getErrorLineNumber());
-        assertEquals(0, result.getErrorColumnNumber());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenDigitsOnlyExpectValid() {
-        assertTrue(this.permissiveTested.check("1234567890").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenUppercaseLettersOnlyExpectValid() {
-        assertTrue(this.permissiveTested.check("JSADJČÁŠKLK").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenContainsTitleCaseLetterExpectInvalid() {
-        assertFalse(this.permissiveTested.check("ǅᾊῌ").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
+     * .
      */
     @Test
     public void testCheckWhenCaselessLettersOnlyExpectValid() {
@@ -132,59 +109,130 @@ public class DefaultNormalWordCheckerTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
+     * .
      */
     @Test
     public void testCheckWhenContainsLowercaseLetterExpectInvalid() {
         assertFalse(this.permissiveTested.check("אبضAŠs890").isValid());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
+     * .
      */
     @Test
-    public void testCheckWhenContainsWhitespaceExpectInvalid() {
-        assertFalse(this.permissiveTested.check("אبضAŠ 890").isValid());
+    public void
+            testCheckWhenContainsNonnormalExpectColumnNumberFirstOccurence() {
+        final String input = "אبضAŠ89-0";
+        final int firstNonnormalIndex = CharMatcher.is('-').indexIn(input);
+
+        final CheckResult result = this.permissiveTested.check(input);
+
+        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER,
+                result.getErrorLineNumber());
+        assertEquals(firstNonnormalIndex + 1, result.getErrorColumnNumber());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
+     * .
      */
     @Test
     public void testCheckWhenContainsNonnormalExpectInvalid() {
         assertFalse(this.permissiveTested.check("אبضAŠ89-0").isValid());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
+     * .
      */
     @Test
-    public void testCheckWhenContainsNonnormalExpectColumnNumberFirstOccurence() {
-        final String input = "אبضAŠ89-0";
-        final int firstNonnormalIndex = CharMatcher.is('-').indexIn(input);
-        
-        final CheckResult result = this.permissiveTested.check(input);
-        
-        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER, result.getErrorLineNumber());
-        assertEquals(firstNonnormalIndex + 1, result.getErrorColumnNumber());
+    public void testCheckWhenContainsTitleCaseLetterExpectInvalid() {
+        assertFalse(this.permissiveTested.check("ǅᾊῌ").isValid());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
+     * .
      */
     @Test
-    public void testCheckWhenNotUsableExpectInvalid() {
-        assertFalse(this.dismissiveTested.check("ALREADYCONTAINEDFOREXAMPLE").isValid());
+    public void testCheckWhenContainsWhitespaceExpectInvalid() {
+        assertFalse(this.permissiveTested.check("אبضAŠ 890").isValid());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenDigitsOnlyExpectValid() {
+        assertTrue(this.permissiveTested.check("1234567890").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenEmptyExpectColumnNumberZero() {
+        final CheckResult result = this.permissiveTested.check("");
+
+        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER,
+                result.getErrorLineNumber());
+        assertEquals(0, result.getErrorColumnNumber());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenEmptyExpectInvalid() {
+        assertFalse(this.permissiveTested.check("").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
+     * .
      */
     @Test
     public void testCheckWhenNotUsableExpectColumnNumberZero() {
-        final CheckResult result = this.dismissiveTested.check("ALREADYCONTAINEDFOREXAMPLE");
-        
-        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER, result.getErrorLineNumber());
+        final CheckResult result =
+                this.dismissiveTested.check("ALREADYCONTAINEDFOREXAMPLE");
+
+        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER,
+                result.getErrorLineNumber());
         assertEquals(0, result.getErrorColumnNumber());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenNotUsableExpectInvalid() {
+        assertFalse(this.dismissiveTested.check("ALREADYCONTAINEDFOREXAMPLE")
+                .isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenUppercaseLettersOnlyExpectValid() {
+        assertTrue(this.permissiveTested.check("JSADJČÁŠKLK").isValid());
     }
 }

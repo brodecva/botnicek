@@ -42,59 +42,84 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.translate.TranslatorFactory;
  */
 public class DefaultCompiler implements Compiler {
 
-    private final TranslatorFactory translatorFactory;
-    private final DfsVisitorFactory dfsVisitorFactory;
-    
     /**
      * Vytvoří kompilátor s výchozími nastaveními.
      * 
-     * @param pullState název stavu začínajícího vyhození nezpracovaných stavů ze zásobníku
-     * @param pullStopState název stavu ukončujícího vyhození nezpracovaných stavů ze zásobníku
-     * @param successState název stavu pro úspěšný průchod podsítí
-     * @param returnState název stavu návratu z podsítě
-     * @param randomizeState název stavu pro zamíchání stavy
-     * @param testingPredicate název testovacího predikátu
+     * @param pullState
+     *            název stavu začínajícího vyhození nezpracovaných stavů ze
+     *            zásobníku
+     * @param pullStopState
+     *            název stavu ukončujícího vyhození nezpracovaných stavů ze
+     *            zásobníku
+     * @param successState
+     *            název stavu pro úspěšný průchod podsítí
+     * @param returnState
+     *            název stavu návratu z podsítě
+     * @param randomizeState
+     *            název stavu pro zamíchání stavy
+     * @param testingPredicate
+     *            název testovacího predikátu
      * @return kompilátor
      */
-    public static DefaultCompiler create(final NormalWord pullState, final NormalWord pullStopState,
-            final NormalWord successState, final NormalWord returnState, final NormalWord randomizeState, final NormalWord testingPredicate) {
-        final DefaultTranslatorFactory translatorFactory = DefaultTranslatorFactory.create(pullState, pullStopState, randomizeState, successState, returnState, testingPredicate);
-        
+    public static DefaultCompiler create(final NormalWord pullState,
+            final NormalWord pullStopState, final NormalWord successState,
+            final NormalWord returnState, final NormalWord randomizeState,
+            final NormalWord testingPredicate) {
+        final DefaultTranslatorFactory translatorFactory =
+                DefaultTranslatorFactory.create(pullState, pullStopState,
+                        randomizeState, successState, returnState,
+                        testingPredicate);
+
         return create(translatorFactory, DefaultDfsVisitorFactory.create());
     }
-    
+
     /**
-     * Vytvoří kompilátor, který bude pomocí návštěvníka (dodaného továrnou) procházet systém a nahlášené prvky grafu pak budou zpracovávány překládajícím pozorovatelem.
+     * Vytvoří kompilátor, který bude pomocí návštěvníka (dodaného továrnou)
+     * procházet systém a nahlášené prvky grafu pak budou zpracovávány
+     * překládajícím pozorovatelem.
      * 
-     * @param translatorFactory továrna na překládající pozorovatele průchodu grafem
-     * @param dfsVisitorFactory továrna na návštěvníky grafu
+     * @param translatorFactory
+     *            továrna na překládající pozorovatele průchodu grafem
+     * @param dfsVisitorFactory
+     *            továrna na návštěvníky grafu
      * @return kompilátor
      */
-    public static DefaultCompiler create(final TranslatorFactory translatorFactory, final DfsVisitorFactory dfsVisitorFactory) {
+    public static DefaultCompiler create(
+            final TranslatorFactory translatorFactory,
+            final DfsVisitorFactory dfsVisitorFactory) {
         Preconditions.checkNotNull(translatorFactory);
         Preconditions.checkNotNull(dfsVisitorFactory);
-        
+
         return new DefaultCompiler(translatorFactory, dfsVisitorFactory);
     }
-    
-    private DefaultCompiler(final TranslatorFactory translatorFactory, final DfsVisitorFactory dfsVisitorFactory) {
+
+    private final TranslatorFactory translatorFactory;
+
+    private final DfsVisitorFactory dfsVisitorFactory;
+
+    private DefaultCompiler(final TranslatorFactory translatorFactory,
+            final DfsVisitorFactory dfsVisitorFactory) {
         Preconditions.checkNotNull(translatorFactory);
         Preconditions.checkNotNull(dfsVisitorFactory);
-        
+
         this.translatorFactory = translatorFactory;
         this.dfsVisitorFactory = dfsVisitorFactory;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.model.Compiler#compile(java.lang.System)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.model.Compiler#compile(
+     * java.lang.System)
      */
     @Override
     public Map<Network, List<Topic>> compile(final System system) {
-        final TranslatingObserver translator =
-                this.translatorFactory.produce();
-        final DfsVisitor dfsVisitor = this.dfsVisitorFactory.produce(translator);
+        final TranslatingObserver translator = this.translatorFactory.produce();
+        final DfsVisitor dfsVisitor =
+                this.dfsVisitorFactory.produce(translator);
         system.accept(dfsVisitor);
-        
+
         return translator.getResult();
     }
 

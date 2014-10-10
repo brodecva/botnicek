@@ -27,28 +27,33 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public class NetworkRemovedEvent extends AbstractMappedEvent<Network, NetworkRemovedListener> {
-    
+public class NetworkRemovedEvent extends
+        AbstractMappedEvent<Network, NetworkRemovedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param network odstraněná síť
+     * @param network
+     *            odstraněná síť
      * @return událost
      */
     public static NetworkRemovedEvent create(final Network network) {
         return new NetworkRemovedEvent(network);
     }
-    
+
     private NetworkRemovedEvent(final Network network) {
         super(network);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final NetworkRemovedListener listener) {
         listener.removed(getKey());
     }
 }
- 

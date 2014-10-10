@@ -31,8 +31,10 @@ public interface ArcReprioritizedListener {
     /**
      * Reaguje na změnu priority hrany.
      * 
-     * @param oldVersion původní verze
-     * @param newVersion nová verze
+     * @param oldVersion
+     *            původní verze
+     * @param newVersion
+     *            nová verze
      */
     void arcReprioritized(Arc oldVersion, Arc newVersion);
 

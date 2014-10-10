@@ -29,8 +29,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.api.Visitor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Attribute;
 
 /**
- * Pomocná abstraktní třída obecného prvku stromu jazyka AIML.
- * Poskytuje výchozí implementace příslušných metod rozhraní, které obvykle vrací prázdný obsah.
+ * Pomocná abstraktní třída obecného prvku stromu jazyka AIML. Poskytuje výchozí
+ * implementace příslušných metod rozhraní, které obvykle vrací prázdný obsah.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -40,20 +40,24 @@ public abstract class AbstractElement implements Element {
     /**
      * Navštíví každý element.
      * 
-     * @param elements elementy
-     * @param visitor návštěvník
+     * @param elements
+     *            elementy
+     * @param visitor
+     *            návštěvník
      */
-    public static final void acceptForEach(final Iterable<? extends Element> elements, final Visitor visitor) {
+    public static final void acceptForEach(
+            final Iterable<? extends Element> elements, final Visitor visitor) {
         Preconditions.checkNotNull(elements);
         Preconditions.checkNotNull(visitor);
-        
+
         for (final Element element : elements) {
             element.accept(visitor);
         }
     }
-    
+
     /**
-     * Konstruktor abstraktní verze nepřijímá žádné parametry, neboť jím vytvořený prvek je zcela prázdný.
+     * Konstruktor abstraktní verze nepřijímá žádné parametry, neboť jím
+     * vytvořený prvek je zcela prázdný.
      */
     protected AbstractElement() {
     }
@@ -61,58 +65,24 @@ public abstract class AbstractElement implements Element {
     /**
      * {@inheritDoc}
      * 
-     * Dědící třídy mají zapovězeno měnit směr průchodu. Pro samotnou implementaci návrhového vzoru musí předefinovat metody {@link #visitEnter(Visitor)} a {@link #visitExit(Visitor)}.
+     * Dědící třídy mají zapovězeno měnit směr průchodu. Pro samotnou
+     * implementaci návrhového vzoru musí předefinovat metody
+     * {@link #visitEnter(Visitor)} a {@link #visitExit(Visitor)}.
      */
     @Override
     public final void accept(final Visitor visitor) {
         Preconditions.checkNotNull(visitor);
-        
+
         visitEnter(visitor);
-        
+
         final List<Element> children = getChildren();
         for (final Element child : children) {
             child.accept(visitor);
         }
-        
+
         visitExit(visitor);
     }
-    
-    /**
-     * <p>Metoda pro implementaci průchodu návštěvníka. Nutno předefinovat v podtřídě s obsahem:</p>
-     * <pre>
-     *      super.visitEnter(visitor);
-     *      
-     *      visitor.visitEnter(this);
-     * </pre>
-     * 
-     * @param visitor návštěvník
-     */
-    protected void visitEnter(final Visitor visitor) {
-        Preconditions.checkNotNull(visitor);
-    }
-    
-    /**
-     * <p>Metoda pro implementaci průchodu návštěvníka. Nutno předefinovat v podtřídě s obsahem:</p>
-     * <pre>
-     *      super.visitExit(visitor);
-     *      
-     *      visitor.visitExit(this);
-     * </pre>
-     * 
-     * @param visitor návštěvník
-     */
-    protected void visitExit(final Visitor visitor) {
-        Preconditions.checkNotNull(visitor);
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.Element#getChildren()
-     */
-    @Override
-    public List<Element> getChildren() {
-        return ImmutableList.of();
-    }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -121,25 +91,87 @@ public abstract class AbstractElement implements Element {
         return ImmutableSet.of();
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.Element#getName()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.Element
+     * #getChildren()
+     */
+    @Override
+    public List<Element> getChildren() {
+        return ImmutableList.of();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.Element
+     * #getName()
      */
     @Override
     public abstract String getLocalName();
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.Element#hasChildren()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.Element
+     * #getText()
+     */
+    @Override
+    public String getText() {
+        return "";
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.Element
+     * #hasChildren()
      */
     @Override
     public boolean hasChildren() {
         return !getChildren().isEmpty();
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.Element#getText()
+
+    /**
+     * <p>
+     * Metoda pro implementaci průchodu návštěvníka. Nutno předefinovat v
+     * podtřídě s obsahem:
+     * </p>
+     * 
+     * <pre>
+     * super.visitEnter(visitor);
+     * 
+     * visitor.visitEnter(this);
+     * </pre>
+     * 
+     * @param visitor
+     *            návštěvník
      */
-    @Override
-    public String getText() {
-        return "";
+    protected void visitEnter(final Visitor visitor) {
+        Preconditions.checkNotNull(visitor);
+    }
+
+    /**
+     * <p>
+     * Metoda pro implementaci průchodu návštěvníka. Nutno předefinovat v
+     * podtřídě s obsahem:
+     * </p>
+     * 
+     * <pre>
+     * super.visitExit(visitor);
+     * 
+     * visitor.visitExit(this);
+     * </pre>
+     * 
+     * @param visitor
+     *            návštěvník
+     */
+    protected void visitExit(final Visitor visitor) {
+        Preconditions.checkNotNull(visitor);
     }
 }

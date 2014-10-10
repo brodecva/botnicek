@@ -33,7 +33,8 @@ import com.google.common.collect.ImmutableSet;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultDfsVisitorFactory implements DfsVisitorFactory, Serializable {
+public final class DefaultDfsVisitorFactory implements DfsVisitorFactory,
+        Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -45,30 +46,39 @@ public final class DefaultDfsVisitorFactory implements DfsVisitorFactory, Serial
     public static DefaultDfsVisitorFactory create() {
         return new DefaultDfsVisitorFactory();
     }
-    
+
     private DefaultDfsVisitorFactory() {
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsVisitorFactory#produce(cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver[])
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsVisitorFactory
+     * #produce
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsObserver[])
      */
     @Override
     public DfsVisitor produce(final DfsObserver... observers) {
         Preconditions.checkNotNull(observers);
-        
+
         return DefaultDfsVisitor.create(ImmutableSet.copyOf(observers));
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsVisitorFactory#produce(java.util.Set)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DfsVisitorFactory
+     * #produce(java.util.Set)
      */
     @Override
     public DfsVisitor produce(final Set<? extends DfsObserver> observers) {
         Preconditions.checkNotNull(observers);
-        
+
         return DefaultDfsVisitor.create(ImmutableSet.copyOf(observers));
     }
-    
+
     private void readObject(final ObjectInputStream objectInputStream)
             throws ClassNotFoundException, IOException {
         objectInputStream.defaultReadObject();

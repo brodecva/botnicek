@@ -38,35 +38,51 @@ final class DummyArcsController implements ArcsController {
     public static ArcsController create() {
         return new DummyArcsController();
     }
-    
+
     private DummyArcsController() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java
+     * .lang.Object)
      */
     @Override
-    public void addView(ArcsView view) {
+    public void addView(final ArcsView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang
+     * .Object)
      */
     @Override
-    public void removeView(ArcsView view) {
+    public void fill(final ArcsView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcsController
+     * #removeArc(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
      */
     @Override
-    public void fill(ArcsView view) {
+    public void removeArc(final NormalWord name) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcsController#removeArc(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(
+     * java.lang.Object)
      */
     @Override
-    public void removeArc(NormalWord name) {
+    public void removeView(final ArcsView view) {
     }
 }

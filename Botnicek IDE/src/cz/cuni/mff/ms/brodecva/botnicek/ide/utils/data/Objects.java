@@ -31,13 +31,14 @@ public final class Objects {
     /**
      * Indikuje, zda-li je objekt {@code null}.
      * 
-     * @param object objekt
+     * @param object
+     *            objekt
      * @return zda-li je objekt {@code null}
      */
     public static boolean isNull(final Object object) {
         return object == Intended.nullReference();
     }
-    
+
     private Objects() {
     }
 }

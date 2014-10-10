@@ -31,7 +31,8 @@ public interface ArcRemovedListener {
     /**
      * Zpraví o odstranění hrany.
      * 
-     * @param arc odstraněná hrana
+     * @param arc
+     *            odstraněná hrana
      */
     void arcRemoved(Arc arc);
 

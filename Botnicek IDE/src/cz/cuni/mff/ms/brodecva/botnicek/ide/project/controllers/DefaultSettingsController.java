@@ -30,78 +30,99 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.AbstractController;
 
 /**
- * Výchozí implementace řadiče nastavení projektu. Pracuje přímo s modelem projektu.
+ * Výchozí implementace řadiče nastavení projektu. Pracuje přímo s modelem
+ * projektu.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultSettingsController extends AbstractController<SettingsView> implements SettingsController {
+public class DefaultSettingsController extends AbstractController<SettingsView>
+        implements SettingsController {
 
-    private final class DefaultSettingsChangedListener implements SettingsChangedListener {
+    private final class DefaultSettingsChangedListener implements
+            SettingsChangedListener {
 
         /**
-         * @{inheritDoc}
+         * @{inheritDoc
          * 
-         * <p>Předá pohledům novou verzi nastavení.</p>
+         *              <p>
+         *              Předá pohledům novou verzi nastavení.
+         *              </p>
          */
         @Override
         public void changed(final Settings settings) {
             Preconditions.checkNotNull(settings);
-            
+
             callViews(new Callback<SettingsView>() {
 
                 @Override
                 public void call(final SettingsView view) {
                     view.updateSettings(settings);
                 }
-                
+
             });
         }
-        
+
     }
-    
-    private final Project project;
-    
+
     /**
      * Vytvoří řadič nastavení pro daný projekt.
      * 
-     * @param project konfigurovaný projekt
-     * @param eventManager správce událostí
+     * @param project
+     *            konfigurovaný projekt
+     * @param eventManager
+     *            správce událostí
      * @return řadič
      */
-    public static DefaultSettingsController create(final Project project, final EventManager eventManager) {
-        final DefaultSettingsController newInstance = new DefaultSettingsController(project, eventManager);
-        
-        newInstance.addListener(SettingsChangedEvent.class, newInstance.new DefaultSettingsChangedListener());
-        
+    public static DefaultSettingsController create(final Project project,
+            final EventManager eventManager) {
+        final DefaultSettingsController newInstance =
+                new DefaultSettingsController(project, eventManager);
+
+        newInstance.addListener(SettingsChangedEvent.class,
+                newInstance.new DefaultSettingsChangedListener());
+
         return newInstance;
     }
-    
-    private DefaultSettingsController(final Project project, final EventManager eventManager) {
+
+    private final Project project;
+
+    private DefaultSettingsController(final Project project,
+            final EventManager eventManager) {
         super(eventManager);
-        
+
         Preconditions.checkNotNull(project);
-        
+
         this.project = project;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.SettingsController#setRandomizeState(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
-     */
-    @Override
-    public void set(final Settings settings) {
-        Preconditions.checkNotNull(settings);
-        
-        this.project.set(settings);
-    }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.SettingsController#fill(cz.cuni.mff.ms.brodecva.botnicek.ide.projects.views.SettingsView)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.SettingsController
+     * #fill(cz.cuni.mff.ms.brodecva.botnicek.ide.projects.views.SettingsView)
      */
     @Override
     public void fill(final SettingsView view) {
         Preconditions.checkNotNull(view);
-        
+
         view.updateSettings(this.project.getSettings());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.SettingsController
+     * #
+     * setRandomizeState(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord
+     * )
+     */
+    @Override
+    public void set(final Settings settings) {
+        Preconditions.checkNotNull(settings);
+
+        this.project.set(settings);
     }
 }

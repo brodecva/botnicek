@@ -18,9 +18,9 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.tables;
 
-
 /**
- * Továrna modelu tabulky upravující zobrazovací strategie pro nastavení hodnoty predikátů.
+ * Továrna modelu tabulky upravující zobrazovací strategie pro nastavení hodnoty
+ * predikátů.
  * 
  * @author Václav Brodec
  * @version 1.0

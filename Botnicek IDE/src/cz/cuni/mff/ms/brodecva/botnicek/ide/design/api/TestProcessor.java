@@ -19,11 +19,14 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.api;
 
 /**
- * Procesor analyzující přechodové hrany a generující instrukce, které odpovídají podmínce přechodu po dané hraně.
+ * Procesor analyzující přechodové hrany a generující instrukce, které
+ * odpovídají podmínce přechodu po dané hraně.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @param <T> výsledek zpracování
+ * @param <T>
+ *            výsledek zpracování
  */
-public interface TestProcessor<T> extends cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor<T> {
+public interface TestProcessor<T> extends
+        cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor<T> {
 }

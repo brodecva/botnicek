@@ -30,39 +30,49 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class ArcReprioritizedEvent extends AbstractMappedEvent<Network, ArcReprioritizedListener> {
-    
-    private final Arc oldVersion;
-    private final Arc newVersion;
-    
+public final class ArcReprioritizedEvent extends
+        AbstractMappedEvent<Network, ArcReprioritizedListener> {
+
     /**
      * Vytvoří událost přejmenování hrany.
      * 
-     * @param network síť, do které hrana náleží
-     * @param oldVersion původní verze
-     * @param newVersion nová verze
+     * @param network
+     *            síť, do které hrana náleží
+     * @param oldVersion
+     *            původní verze
+     * @param newVersion
+     *            nová verze
      * @return událost
      */
-    public static ArcReprioritizedEvent create(final Network network, final Arc oldVersion, final Arc newVersion) {
+    public static ArcReprioritizedEvent create(final Network network,
+            final Arc oldVersion, final Arc newVersion) {
         return new ArcReprioritizedEvent(network, oldVersion, newVersion);
     }
-    
-    private ArcReprioritizedEvent(final Network network, final Arc oldVersion, final Arc newVersion) {
+
+    private final Arc oldVersion;
+
+    private final Arc newVersion;
+
+    private ArcReprioritizedEvent(final Network network, final Arc oldVersion,
+            final Arc newVersion) {
         super(network);
-        
+
         Preconditions.checkNotNull(oldVersion);
         Preconditions.checkNotNull(newVersion);
-        
+
         this.oldVersion = oldVersion;
         this.newVersion = newVersion;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final ArcReprioritizedListener listener) {
         listener.arcReprioritized(this.oldVersion, this.newVersion);
     }
 }
- 

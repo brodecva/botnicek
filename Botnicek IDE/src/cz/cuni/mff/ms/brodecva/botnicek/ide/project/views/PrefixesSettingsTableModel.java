@@ -23,10 +23,12 @@ import java.net.URI;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.models.NameValueTableModel;
 
 /**
- * Model tabulky, která obsahuje v prvním sloupci URI prostoru jmen XML a v druhém pak výchozí prefix, které mu budou přiřazeny v dalším zpracování.
+ * Model tabulky, která obsahuje v prvním sloupci URI prostoru jmen XML a v
+ * druhém pak výchozí prefix, které mu budou přiřazeny v dalším zpracování.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public interface PrefixesSettingsTableModel extends NameValueTableModel<URI, String> {
+public interface PrefixesSettingsTableModel extends
+        NameValueTableModel<URI, String> {
 }

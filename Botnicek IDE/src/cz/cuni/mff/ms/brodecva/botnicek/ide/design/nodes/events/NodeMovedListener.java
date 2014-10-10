@@ -31,8 +31,10 @@ public interface NodeMovedListener {
     /**
      * Reaguje na přesun uzlu.
      * 
-     * @param oldVersion původní verze
-     * @param newVersion nová verze
+     * @param oldVersion
+     *            původní verze
+     * @param newVersion
+     *            nová verze
      */
     void nodeMoved(Node oldVersion, Node newVersion);
 

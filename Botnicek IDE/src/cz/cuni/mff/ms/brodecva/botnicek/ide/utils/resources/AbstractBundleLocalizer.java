@@ -43,21 +43,28 @@ import com.google.common.base.Preconditions;
 import cz.cuni.mff.ms.brodecva.botnicek.library.utils.Text;
 
 /**
- * <p>Překladač zpráv.</p>
- * <p>Využívá zdrojový balík zadaný dědící třídou. Dovoluje přitom užít parametrů, které nahradí v textu ze zdrojového balíku místa vyznačená pomocí složených závorek uzavírajících číslici s pořadím parametru.</p>
+ * <p>
+ * Překladač zpráv.
+ * </p>
+ * <p>
+ * Využívá zdrojový balík zadaný dědící třídou. Dovoluje přitom užít parametrů,
+ * které nahradí v textu ze zdrojového balíku místa vyznačená pomocí složených
+ * závorek uzavírajících číslici s pořadím parametru.
+ * </p>
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public class AbstractBundleLocalizer implements Localizer {
-    
+
     /**
      * Kořenový balík (výchozí umístění zdrojových balíků).
      */
-    protected static final String ROOT_PACKAGE = "cz.cuni.mff.ms.brodecva.botnicek.ide";
-    
+    protected static final String ROOT_PACKAGE =
+            "cz.cuni.mff.ms.brodecva.botnicek.ide";
+
     private final ResourceBundle locale;
-    
+
     /**
      * Konstruktor překladače zpráv pro výjimky.
      * 
@@ -70,16 +77,20 @@ public class AbstractBundleLocalizer implements Localizer {
         this.locale = locale;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.Localizer#getMessage(java.lang.String, java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.Localizer#getMessage
+     * (java.lang.String, java.lang.Object)
      */
     @Override
     public final String getMessage(final String key, final Object... params) {
         Preconditions.checkNotNull(key);
         Preconditions.checkNotNull(params);
-        
+
         final String rawLocalizedMessage = this.locale.getString(key);
-        
+
         final String stringFormatFormattedMessage =
                 Text.substituteBraceWildcards(rawLocalizedMessage);
 

@@ -33,6 +33,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
+
 import org.bounce.text.ScrollableEditorPanel;
 import org.bounce.text.xml.XMLEditorKit;
 import org.bounce.text.xml.XMLStyleConstants;
@@ -50,7 +51,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearab
  * @version 1.0
  */
 public final class CodeEditorPane extends JEditorPane implements Clearable {
-    
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -59,27 +60,100 @@ public final class CodeEditorPane extends JEditorPane implements Clearable {
      * @return editor
      */
     public static CodeEditorPane create() {
-        return create(new Source() {}, DummyCodeValidationController.create());
+        return create(new Source() {
+        }, DummyCodeValidationController.create());
     }
-    
+
+    /**
+     * Vytvoří editovací panel a napojí jej na řadič validace.
+     * 
+     * @param client
+     *            klient editoru
+     * @param validationController
+     *            řadič validace kódu
+     * @return editovací panel
+     */
+    public static CodeEditorPane create(final Source client,
+            final CodeValidationController validationController) {
+        Preconditions.checkNotNull(client);
+        Preconditions.checkNotNull(validationController);
+
+        final XMLEditorKit codeKit = new XMLEditorKit();
+        codeKit.setAutoIndentation(true);
+        codeKit.setTagCompletion(true);
+        codeKit.setStyle(XMLStyleConstants.ATTRIBUTE_NAME,
+                new Color(255, 0, 0), Font.BOLD);
+
+        final CodeEditorPane newInstance =
+                new CodeEditorPane(validationController);
+
+        newInstance.setEditorKit(codeKit);
+        newInstance.setFont(new Font("Courier", Font.PLAIN, 12));
+
+        final Document document = newInstance.getDocument();
+        document.putProperty(PlainDocument.tabSizeAttribute, new Integer(4));
+        document.addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(final DocumentEvent e) {
+                try {
+                    final Document document = e.getDocument();
+                    validationController.check(client, newInstance,
+                            document.getText(0, document.getLength()));
+                } catch (final BadLocationException ex) {
+                    throw new IllegalStateException(ex);
+                }
+            }
+
+            @Override
+            public void insertUpdate(final DocumentEvent e) {
+                try {
+                    final Document document = e.getDocument();
+                    validationController.check(client, newInstance,
+                            document.getText(0, document.getLength()));
+                } catch (final BadLocationException ex) {
+                    throw new IllegalStateException(ex);
+                }
+            }
+
+            @Override
+            public void removeUpdate(final DocumentEvent e) {
+                try {
+                    final Document document = e.getDocument();
+                    validationController.check(client, newInstance,
+                            document.getText(0, document.getLength()));
+                } catch (final BadLocationException ex) {
+                    throw new IllegalStateException(ex);
+                }
+            }
+        });
+
+        return newInstance;
+    }
+
     /**
      * Spustí testovací verzi.
      * 
-     * @param args argumenty
+     * @param args
+     *            argumenty
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                    
+                    UIManager.setLookAndFeel(UIManager
+                            .getSystemLookAndFeelClassName());
+
                     final JPanel contentPane = new JPanel(new BorderLayout());
-                    
+
                     final JEditorPane editorPane = CodeEditorPane.create();
-                    final ScrollableEditorPanel scrollableCodeEditorPanel = new ScrollableEditorPanel(editorPane);
-                    final JScrollPane scrollPane = new JScrollPane(scrollableCodeEditorPanel);
+                    final ScrollableEditorPanel scrollableCodeEditorPanel =
+                            new ScrollableEditorPanel(editorPane);
+                    final JScrollPane scrollPane =
+                            new JScrollPane(scrollableCodeEditorPanel);
                     contentPane.add(scrollPane, BorderLayout.CENTER);
-                    
+
                     final JFrame frame = new JFrame();
                     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     frame.setContentPane(contentPane);
@@ -91,87 +165,36 @@ public final class CodeEditorPane extends JEditorPane implements Clearable {
             }
         });
     }
-    
-    /**
-     * Vytvoří editovací panel a napojí jej na řadič validace.
-     * 
-     * @param client klient editoru
-     * @param validationController řadič validace kódu
-     * @return editovací panel
-     */
-    public static CodeEditorPane create(final Source client, final CodeValidationController validationController) {
-        Preconditions.checkNotNull(client);
-        Preconditions.checkNotNull(validationController);
-        
-        final XMLEditorKit codeKit = new XMLEditorKit(); 
-        codeKit.setAutoIndentation(true);
-        codeKit.setTagCompletion(true);
-        codeKit.setStyle(XMLStyleConstants.ATTRIBUTE_NAME, new Color(255, 0, 0), Font.BOLD);
-        
-        final CodeEditorPane newInstance = new CodeEditorPane(validationController);
-        
-        newInstance.setEditorKit(codeKit); 
-        newInstance.setFont(new Font("Courier", Font.PLAIN, 12));
-        
-        final Document document = newInstance.getDocument();
-        document.putProperty(PlainDocument.tabSizeAttribute, new Integer(4));
-        document.addDocumentListener(new DocumentListener() {
-            
-            @Override
-            public void removeUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance, document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
-            }
-            
-            @Override
-            public void insertUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance, document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
-            }
-            
-            @Override
-            public void changedUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance, document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
-            }
-        });
-        
-        return newInstance;
-    }
 
     private final CodeValidationController validationController;
-    
+
     private CodeEditorPane(final CodeValidationController validationController) {
         this.validationController = validationController;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements.Clearable#clear()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements
+     * .Clearable#clear()
      */
     @Override
     public void clear() {
         this.validationController.clear(this);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements.Clearable#reset()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements
+     * .Clearable#reset()
      */
     @Override
     public void reset(final Source client) {
         Preconditions.checkNotNull(client);
-        
+
         setText("");
         this.validationController.check(client, this, getText());
     }

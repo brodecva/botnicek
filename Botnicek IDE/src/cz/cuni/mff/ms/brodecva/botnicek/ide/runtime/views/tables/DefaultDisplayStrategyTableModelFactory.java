@@ -18,9 +18,9 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.tables;
 
-
 /**
- * Výchozí implementace továrny na modely tabulek s predikáty a jejich zobrazovacími strategii při nastavování hodnoty.
+ * Výchozí implementace továrny na modely tabulek s predikáty a jejich
+ * zobrazovacími strategii při nastavování hodnoty.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -36,12 +36,15 @@ public class DefaultDisplayStrategyTableModelFactory implements
     public static DefaultDisplayStrategyTableModelFactory create() {
         return new DefaultDisplayStrategyTableModelFactory();
     }
-    
+
     private DefaultDisplayStrategyTableModelFactory() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.SubstitutionsTableModelFactory#create()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.
+     * SubstitutionsTableModelFactory#create()
      */
     @Override
     public DisplayStrategyTableModel produce() {

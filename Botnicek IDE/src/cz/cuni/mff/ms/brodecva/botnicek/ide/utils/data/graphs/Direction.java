@@ -38,30 +38,31 @@ public enum Direction {
      * Hran směřující do uzlu.
      */
     IN,
-    
+
     /**
      * Hrana směřující z uzlu.
      */
     OUT;
-    
+
     /**
      * Vrátí opačnou orientaci.
      * 
-     * @param direction orientace 
+     * @param direction
+     *            orientace
      * @return opačná orientace
      */
     public static Direction getOpposite(final Direction direction) {
         Preconditions.checkNotNull(direction);
-        
+
         final Direction[] values = values();
         assert values.length == 2;
-        
+
         final Set<Direction> valuesSet = Sets.newHashSet(values);
         valuesSet.remove(direction);
-        
+
         return valuesSet.iterator().next();
     }
-    
+
     /**
      * Vrátí opačnou orientaci.
      * 

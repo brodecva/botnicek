@@ -47,65 +47,46 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.SimpleNormalizer;
  * @version 1.0
  */
 public final class NormalWords {
-    
+
     /**
      * Interní implementace.
      */
-    private static final class NormalWordImplementation implements NormalWord, Serializable {
+    private static final class NormalWordImplementation implements NormalWord,
+            Serializable {
         private static final long serialVersionUID = 1L;
-        
-        private final String text;
-        
+
         public static NormalWordImplementation create(final String text) {
             return new NormalWordImplementation(text);
         }
-        
+
+        private final String text;
+
         private NormalWordImplementation(final String text) {
             Preconditions.checkNotNull(text);
             Preconditions.checkArgument(!text.isEmpty());
-            
+
             this.text = text;
         }
 
-        @Override
-        public String getText() {
-            return this.text;
-        }
-
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.lang.Comparable#compareTo(java.lang.Object)
          */
         @Override
         public int compareTo(final NormalWord other) {
             Preconditions.checkNotNull(other);
-            
+
             return this.text.compareTo(other.getText());
         }
 
-        /* (non-Javadoc)
-         * @see java.lang.Object#toString()
-         */
-        @Override
-        public String toString() {
-            return "NormalWordImplementation [text=" + text + "]";
-        }
-
-        /* (non-Javadoc)
-         * @see java.lang.Object#hashCode()
-         */
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + text.hashCode();
-            return result;
-        }
-
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.lang.Object#equals(java.lang.Object)
          */
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             if (this == obj) {
                 return true;
             }
@@ -115,21 +96,49 @@ public final class NormalWords {
             if (!(obj instanceof NormalWord)) {
                 return false;
             }
-            NormalWord other = (NormalWord) obj;
-            if (!text.equals(other.getText())) {
+            final NormalWord other = (NormalWord) obj;
+            if (!this.text.equals(other.getText())) {
                 return false;
             }
             return true;
         }
-        
+
+        @Override
+        public String getText() {
+            return this.text;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.lang.Object#hashCode()
+         */
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + this.text.hashCode();
+            return result;
+        }
+
         private void readObject(final ObjectInputStream objectInputStream)
                 throws ClassNotFoundException, IOException {
             objectInputStream.defaultReadObject();
-            
+
             Preconditions.checkNotNull(this.text);
-            
-            final CheckResult result = checker.check(text);
+
+            final CheckResult result = checker.check(this.text);
             Preconditions.checkArgument(result.isValid(), result.getMessage());
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.lang.Object#toString()
+         */
+        @Override
+        public String toString() {
+            return "NormalWordImplementation [text=" + this.text + "]";
         }
 
         private void writeObject(final ObjectOutputStream objectOutputStream)
@@ -137,132 +146,145 @@ public final class NormalWords {
             objectOutputStream.defaultWriteObject();
         }
     }
-    
-    private static NormalWordChecker checker = DefaultNormalWordChecker.create();
+
+    private static NormalWordChecker checker = DefaultNormalWordChecker
+            .create();
     private static Normalizer normalizer = new SimpleNormalizer();
-    
-    /**
-     * Převede text vyhovující syntaxi normálního slova na normální slovo.
-     * 
-     * @param text text
-     * @return normální slovo
-     * @throws IllegalArgumentException v případě, že slovo nelze převést
-     */
-    public static NormalWord of(final String text) {
-        Preconditions.checkNotNull(text);
-        
-        final CheckResult result = checker.check(text);
-        Preconditions.checkArgument(result.isValid(), result.getMessage());
-        
-        return NormalWordImplementation.create(text);
-    }
-    
+
     /**
      * Vytvoří z textu normální slovo ve stylu "nejlepší snahy".
      * 
-     * @param text text
+     * @param text
+     *            text
      * @return normální slovo
-     * @throws IllegalArgumentException v případě, že slovo nelze převést
+     * @throws IllegalArgumentException
+     *             v případě, že slovo nelze převést
      */
     public static NormalWord from(final String text) {
         Preconditions.checkNotNull(text);
-        Preconditions.checkArgument(!text.isEmpty(), ExceptionLocalizer.print("EmptyText"));
-        
+        Preconditions.checkArgument(!text.isEmpty(),
+                ExceptionLocalizer.print("EmptyText"));
+
         final String converted = normalizer.convertToNormalChars(text);
-        Preconditions.checkArgument(!converted.isEmpty(), ExceptionLocalizer.print("CannotBeNormalized"));
-        
+        Preconditions.checkArgument(!converted.isEmpty(),
+                ExceptionLocalizer.print("CannotBeNormalized"));
+
         return NormalWordImplementation.create(converted);
     }
-    
+
     /**
      * Sloučí normální slova do jednoho.
      * 
-     * @param names normální slova
-     * @return spojené normální slovo
-     */
-    public static NormalWord join(final NormalWord... names) {
-        Preconditions.checkNotNull(names);
-        
-        return join(ImmutableList.copyOf(names));
-    }
-    
-    /**
-     * Sloučí normální slova do jednoho.
-     * 
-     * @param names normální slova
+     * @param names
+     *            normální slova
      * @return spojené normální slovo
      */
     public static NormalWord join(final List<NormalWord> names) {
         Preconditions.checkNotNull(names);
         Preconditions.checkArgument(!names.isEmpty());
-        
+
         final StringBuilder textBuilder = new StringBuilder();
         for (final NormalWord name : names) {
             Preconditions.checkNotNull(name);
-            
+
             textBuilder.append(name.getText());
         }
-        
+
         return of(textBuilder.toString());
     }
-    
-    /**
-     * Převede klíče v podobě normálních slov tabulky na řetězce.
-     * 
-     * @param from zdroj
-     * @return výstup
-     */
-    public static <V> Map<String, V> toUntyped(final Map<NormalWord, V> from) {
-        Preconditions.checkNotNull(from);
-        
-        return transformKeys(from, new Function<NormalWord, String>() {
 
-            @Override
-            public String apply(final NormalWord input) {
-                Preconditions.checkNotNull(input);
-                
-                return input.getText();
-            }
-            
-        });
-    }
-    
     /**
-     * Převede klíče v podobě řetězců tabulky na normální slova. Klíče musí vyhovovat syntaxi.
+     * Sloučí normální slova do jednoho.
      * 
-     * @param from zdroj
+     * @param names
+     *            normální slova
+     * @return spojené normální slovo
+     */
+    public static NormalWord join(final NormalWord... names) {
+        Preconditions.checkNotNull(names);
+
+        return join(ImmutableList.copyOf(names));
+    }
+
+    /**
+     * Převede text vyhovující syntaxi normálního slova na normální slovo.
+     * 
+     * @param text
+     *            text
+     * @return normální slovo
+     * @throws IllegalArgumentException
+     *             v případě, že slovo nelze převést
+     */
+    public static NormalWord of(final String text) {
+        Preconditions.checkNotNull(text);
+
+        final CheckResult result = checker.check(text);
+        Preconditions.checkArgument(result.isValid(), result.getMessage());
+
+        return NormalWordImplementation.create(text);
+    }
+
+    /**
+     * Převede klíče v podobě řetězců tabulky na normální slova. Klíče musí
+     * vyhovovat syntaxi.
+     * 
+     * @param from
+     *            zdroj
      * @return výstup
      */
     public static <V> Map<NormalWord, V> toTyped(final Map<String, V> from) {
         Preconditions.checkNotNull(from);
-        
+
         return transformKeys(from, new Function<String, NormalWord>() {
 
             @Override
             public NormalWord apply(final String input) {
                 Preconditions.checkNotNull(input);
-                
+
                 return of(input);
             }
         });
     }
-    
-    private static <K, V, L> Map<L, V> transformKeys(final Map<K, V> from, final Function<K, L> transformation) {
+
+    /**
+     * Převede klíče v podobě normálních slov tabulky na řetězce.
+     * 
+     * @param from
+     *            zdroj
+     * @return výstup
+     */
+    public static <V> Map<String, V> toUntyped(final Map<NormalWord, V> from) {
+        Preconditions.checkNotNull(from);
+
+        return transformKeys(from, new Function<NormalWord, String>() {
+
+            @Override
+            public String apply(final NormalWord input) {
+                Preconditions.checkNotNull(input);
+
+                return input.getText();
+            }
+
+        });
+    }
+
+    private static <K, V, L> Map<L, V> transformKeys(final Map<K, V> from,
+            final Function<K, L> transformation) {
         Preconditions.checkNotNull(from);
         Preconditions.checkNotNull(transformation);
-        
+
         final ImmutableMap.Builder<L, V> builder = ImmutableMap.builder();
         final Set<Entry<K, V>> fromEntries = from.entrySet();
         for (final Entry<K, V> entry : fromEntries) {
             final K key = entry.getKey();
             final V value = entry.getValue();
-            
+
             Preconditions.checkNotNull(key);
             Preconditions.checkNotNull(value);
-            
+
             builder.put(transformation.apply(key), value);
         }
-        
+
         return builder.build();
     }
 }

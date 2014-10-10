@@ -63,50 +63,31 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.storage.map.MapperFactory;
  * @version 1.0
  */
 public class DefaultRuntime implements Runtime {
-    
-    private final Dispatcher dispatcher;
-    
-    private final Loader loader;
-    private final Language language;
-    private final Splitter splitter;
-    private final Normalizer normalizer;
-    private final TemplateParserFactory parserFactory;
-    private final Map<String, String> defaultPredicates;
-    private final Map<String, DisplayStrategy> predicatesSetBehavior;
-    
-    private final RunFactory runFactory;
-    
-    /**
-     * Vytvoří instanci běhového prostředí dle nastavení v projektu.
-     * 
-     * @param runtimeSettings nastavení běhového prostředí projektu
-     * @param dispatcher rozesílač událostí
-     * @return běhové prostředí
-     * @throws SessionException pokud dojde k chybě při inicializaci
-     */
-    public static Runtime create(final RuntimeSettings runtimeSettings, final Dispatcher dispatcher) throws SessionException {
-        Preconditions.checkNotNull(runtimeSettings);
-        Preconditions.checkNotNull(dispatcher);
-        
-        return create(runtimeSettings.getBotConfiguration(), runtimeSettings.getLanguageConfiguration(), runtimeSettings.getConversationConfiguration(), dispatcher);
-    }
-    
+
     /**
      * Vytvoří instanci běhového prostředí dle přímých nastavení knihovny.
      * 
-     * @param botConfiguration nastavení robota
-     * @param languageConfiguration nastavení jazyka
-     * @param conversationConfiguration nastavení konverzace
-     * @param dispatcher rozesílač událostí
+     * @param botConfiguration
+     *            nastavení robota
+     * @param languageConfiguration
+     *            nastavení jazyka
+     * @param conversationConfiguration
+     *            nastavení konverzace
+     * @param dispatcher
+     *            rozesílač událostí
      * @return běhové prostředí
-     * @throws SessionException pokud dojde k chybě při inicializaci
+     * @throws SessionException
+     *             pokud dojde k chybě při inicializaci
      */
-    public static Runtime create(final BotConfiguration botConfiguration, final LanguageConfiguration languageConfiguration, final ConversationConfiguration conversationConfiguration, final Dispatcher dispatcher) throws SessionException {
+    public static Runtime create(final BotConfiguration botConfiguration,
+            final LanguageConfiguration languageConfiguration,
+            final ConversationConfiguration conversationConfiguration,
+            final Dispatcher dispatcher) throws SessionException {
         Preconditions.checkNotNull(botConfiguration);
         Preconditions.checkNotNull(languageConfiguration);
         Preconditions.checkNotNull(conversationConfiguration);
         Preconditions.checkNotNull(dispatcher);
-        
+
         final MapperFactory mapperFactory = new FrugalMapperFactory();
         final MatchingStructure matchingStructure = new WordTree(mapperFactory);
 
@@ -141,8 +122,9 @@ public class DefaultRuntime implements Runtime {
         final Map<String, String> predicates = botConfiguration.getPredicates();
         final List<String> beforeloadingOrder =
                 botConfiguration.getBeforeLoadingOrder();
-        final List<String> afterLoadingOrder = botConfiguration.getAfterLoadingOrder();
-        
+        final List<String> afterLoadingOrder =
+                botConfiguration.getAfterLoadingOrder();
+
         final Bot bot =
                 new AIMLBot(botName, language, filesLocation, gossipPath,
                         predicates, beforeloadingOrder, afterLoadingOrder);
@@ -159,32 +141,93 @@ public class DefaultRuntime implements Runtime {
             throw new SessionException(e);
         }
         final Map<String, String> defaultPredicates =
-                ImmutableMap.copyOf(conversationConfiguration.getDefaultPredicates());
+                ImmutableMap.copyOf(conversationConfiguration
+                        .getDefaultPredicates());
         final Map<String, DisplayStrategy> predicatesSetBehavior =
-                ImmutableMap.copyOf(conversationConfiguration.getDisplayStrategies());
-        
-        return new DefaultRuntime(loader, splitter, normalizer, parserFactory, language, defaultPredicates, predicatesSetBehavior, DefaultRunFactory.create(), dispatcher);
+                ImmutableMap.copyOf(conversationConfiguration
+                        .getDisplayStrategies());
+
+        return new DefaultRuntime(loader, splitter, normalizer, parserFactory,
+                language, defaultPredicates, predicatesSetBehavior,
+                DefaultRunFactory.create(), dispatcher);
     }
-    
+
     /**
      * Vytvoří instanci běhového prostředí z přímých nastavení.
      * 
-     * @param loader načítač definic robota
-     * @param splitter rozdělovač vět
-     * @param normalizer normalizér
-     * @param parserFactory továrna parseru
-     * @param language definici jazyka
-     * @param defaultPredicates výchozí predikáty
-     * @param predicatesSetBehavior nastavení chování nastavování predikátů (zobrazit výstup či jméno)
-     * @param runFactory továrna na testovací konverzace
-     * @param dispatcher rozesílač událostí
+     * @param loader
+     *            načítač definic robota
+     * @param splitter
+     *            rozdělovač vět
+     * @param normalizer
+     *            normalizér
+     * @param parserFactory
+     *            továrna parseru
+     * @param language
+     *            definici jazyka
+     * @param defaultPredicates
+     *            výchozí predikáty
+     * @param predicatesSetBehavior
+     *            nastavení chování nastavování predikátů (zobrazit výstup či
+     *            jméno)
+     * @param runFactory
+     *            továrna na testovací konverzace
+     * @param dispatcher
+     *            rozesílač událostí
      * @return běhové prostředí
      */
-    public static Runtime create(final Loader loader, final Splitter splitter, final Normalizer normalizer, final TemplateParserFactory parserFactory, final Language language, final Map<String, String> defaultPredicates, final Map<String, DisplayStrategy> predicatesSetBehavior, final RunFactory runFactory, final Dispatcher dispatcher) {
-        return new DefaultRuntime(loader, splitter, normalizer, parserFactory, language, defaultPredicates, predicatesSetBehavior, runFactory, dispatcher);
+    public static Runtime create(final Loader loader, final Splitter splitter,
+            final Normalizer normalizer,
+            final TemplateParserFactory parserFactory, final Language language,
+            final Map<String, String> defaultPredicates,
+            final Map<String, DisplayStrategy> predicatesSetBehavior,
+            final RunFactory runFactory, final Dispatcher dispatcher) {
+        return new DefaultRuntime(loader, splitter, normalizer, parserFactory,
+                language, defaultPredicates, predicatesSetBehavior, runFactory,
+                dispatcher);
     }
-    
-    private DefaultRuntime(final Loader loader, final Splitter splitter, final Normalizer normalizer, final TemplateParserFactory parserFactory, final Language language, final Map<String, String> defaultPredicates, final Map<String, DisplayStrategy> predicatesSetBehavior, final RunFactory runFactory, final Dispatcher dispatcher) {
+
+    /**
+     * Vytvoří instanci běhového prostředí dle nastavení v projektu.
+     * 
+     * @param runtimeSettings
+     *            nastavení běhového prostředí projektu
+     * @param dispatcher
+     *            rozesílač událostí
+     * @return běhové prostředí
+     * @throws SessionException
+     *             pokud dojde k chybě při inicializaci
+     */
+    public static Runtime create(final RuntimeSettings runtimeSettings,
+            final Dispatcher dispatcher) throws SessionException {
+        Preconditions.checkNotNull(runtimeSettings);
+        Preconditions.checkNotNull(dispatcher);
+
+        return create(runtimeSettings.getBotConfiguration(),
+                runtimeSettings.getLanguageConfiguration(),
+                runtimeSettings.getConversationConfiguration(), dispatcher);
+    }
+
+    private final Dispatcher dispatcher;
+    private final Loader loader;
+    private final Language language;
+    private final Splitter splitter;
+    private final Normalizer normalizer;
+
+    private final TemplateParserFactory parserFactory;
+
+    private final Map<String, String> defaultPredicates;
+
+    private final Map<String, DisplayStrategy> predicatesSetBehavior;
+
+    private final RunFactory runFactory;
+
+    private DefaultRuntime(final Loader loader, final Splitter splitter,
+            final Normalizer normalizer,
+            final TemplateParserFactory parserFactory, final Language language,
+            final Map<String, String> defaultPredicates,
+            final Map<String, DisplayStrategy> predicatesSetBehavior,
+            final RunFactory runFactory, final Dispatcher dispatcher) {
         Preconditions.checkNotNull(loader);
         Preconditions.checkNotNull(splitter);
         Preconditions.checkNotNull(normalizer);
@@ -194,7 +237,7 @@ public class DefaultRuntime implements Runtime {
         Preconditions.checkNotNull(predicatesSetBehavior);
         Preconditions.checkNotNull(runFactory);
         Preconditions.checkNotNull(dispatcher);
-        
+
         this.loader = loader;
         this.splitter = splitter;
         this.normalizer = normalizer;
@@ -205,25 +248,36 @@ public class DefaultRuntime implements Runtime {
         this.dispatcher = dispatcher;
         this.runFactory = runFactory;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.Runtime#load(java.lang.String, java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.Runtime#load(java.
+     * lang.String, java.lang.String)
      */
     @Override
-    public void load(final String documentName, final String text) throws LoaderException {
+    public void load(final String documentName, final String text)
+            throws LoaderException {
         Preconditions.checkNotNull(documentName);
         Preconditions.checkNotNull(text);
-        
-        final InputStream textStream = new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8));
-        
+
+        final InputStream textStream =
+                new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8));
+
         this.loader.loadFromStream(textStream, documentName);
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.Runtime#run()
      */
     @Override
     public Run run() {
-        return this.runFactory.produce(loader, splitter, normalizer, language, parserFactory, defaultPredicates, predicatesSetBehavior, dispatcher);
+        return this.runFactory.produce(this.loader, this.splitter,
+                this.normalizer, this.language, this.parserFactory,
+                this.defaultPredicates, this.predicatesSetBehavior,
+                this.dispatcher);
     }
 }

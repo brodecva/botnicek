@@ -38,46 +38,37 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 public abstract class AbstractCodeArc extends AbstractArc implements CodeArc {
 
     private static final long serialVersionUID = 1L;
-    
+
     private final Code code;
 
     /**
      * Vytvoří hranu.
      * 
-     * @param parent rodičovská síť
-     * @param name název hrany
-     * @param priority priorita
-     * @param code kód k provedení při posunu po hraně
+     * @param parent
+     *            rodičovská síť
+     * @param name
+     *            název hrany
+     * @param priority
+     *            priorita
+     * @param code
+     *            kód k provedení při posunu po hraně
      */
-    protected AbstractCodeArc(final Network parent, final NormalWord name, final Priority priority, final Code code) {
+    protected AbstractCodeArc(final Network parent, final NormalWord name,
+            final Priority priority, final Code code) {
         super(parent, name, priority);
-        
+
         Preconditions.checkNotNull(code);
-        
+
         this.code = code;
     }
-    
-    @Override
-    public final Code getCode() {
-        return this.code;
-    }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + code.hashCode();
-        return result;
-    }
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -87,17 +78,35 @@ public abstract class AbstractCodeArc extends AbstractArc implements CodeArc {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        AbstractCodeArc other = (AbstractCodeArc) obj;
-        if (!code.equals(other.code)) {
+        final AbstractCodeArc other = (AbstractCodeArc) obj;
+        if (!this.code.equals(other.code)) {
             return false;
         }
         return true;
     }
-    
+
+    @Override
+    public final Code getCode() {
+        return this.code;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + this.code.hashCode();
+        return result;
+    }
+
     private void readObject(final ObjectInputStream objectInputStream)
             throws ClassNotFoundException, IOException {
         objectInputStream.defaultReadObject();
-        
+
         Preconditions.checkNotNull(this.code);
     }
 

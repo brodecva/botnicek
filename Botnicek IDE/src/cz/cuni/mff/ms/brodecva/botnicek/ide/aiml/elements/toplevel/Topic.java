@@ -40,7 +40,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
  * Obsahuje kategorie a sám je obsažen v kořenovém prvku.
  * </p>
  * <p>
- * Blíže specifikováno prostým vzorem, který popisuje probíraná témata, jež tomuto tématu odpovídají.
+ * Blíže specifikováno prostým vzorem, který popisuje probíraná témata, jež
+ * tomuto tématu odpovídají.
  * </p>
  * 
  * @version 1.0
@@ -49,80 +50,100 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
  *      href="http://www.alicebot.org/TR/2011/#section-topic">http://www.alicebot.org/TR/2011/#section-topic</a>
  */
 public final class Topic extends AbstractProperElement implements Toplevel {
-    
+
     private static final String NAME = "topic";
-    
+
     private static final String ATT_NAME = "name";
-    
-    private final SimplePattern name;
-    
-    private final List<Category> categories;
-    
+
     /**
      * Vytvoří téma.
      * 
-     * @param name vzor tématu
-     * @param categories kategorie v tématu
+     * @param name
+     *            vzor tématu
+     * @param categories
+     *            kategorie v tématu
      * @return téma
      */
-    public static Topic create(final SimplePattern name, final Category... categories) {
+    public static Topic create(final SimplePattern name,
+            final Category... categories) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(categories);
-        
+
         return new Topic(name, categories);
     }
-    
+
     /**
      * Vytvoří téma.
      * 
-     * @param name vzor tématu
-     * @param categories kategorie v tématu
+     * @param name
+     *            vzor tématu
+     * @param categories
+     *            kategorie v tématu
      * @return téma
      */
-    public static Topic create(final SimplePattern name, final List<Category> categories) {
+    public static Topic create(final SimplePattern name,
+            final List<Category> categories) {
         return new Topic(name, categories);
     }
-    
+
+    private final SimplePattern name;
+
+    private final List<Category> categories;
+
     private Topic(final SimplePattern name, final Category... categories) {
         this(name, ImmutableList.copyOf(categories));
     }
-    
+
     private Topic(final SimplePattern name, final List<Category> categories) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(categories);
-        
+
         this.categories = ImmutableList.copyOf(categories);
         this.name = name;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.AbstractElement#getName()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement#
+     * getAttributes()
+     */
+    @Override
+    public Set<Attribute> getAttributes() {
+        return ImmutableSet.<Attribute> of(AttributeImplementation.create(
+                ATT_NAME, this.name.getText()));
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement#
+     * getChildren()
+     */
+    @Override
+    public List<Element> getChildren() {
+        return ImmutableList.<Element> copyOf(this.categories);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.AbstractElement
+     * #getName()
      */
     @Override
     public String getLocalName() {
         return NAME;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement#getChildren()
-     */
-    @Override
-    public List<Element> getChildren() {
-        return ImmutableList.<Element>copyOf(this.categories);
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement#getAttributes()
-     */
-    public Set<Attribute> getAttributes() {
-        return ImmutableSet.<Attribute>of(AttributeImplementation.create(ATT_NAME, this.name.getText()));
-    }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "Topic [name=" + name + "]";
+        return "Topic [name=" + this.name + "]";
     }
 }

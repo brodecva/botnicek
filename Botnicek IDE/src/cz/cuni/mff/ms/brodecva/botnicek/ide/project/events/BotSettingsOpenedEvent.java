@@ -27,28 +27,33 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class BotSettingsOpenedEvent extends AbstractMappedEvent<Project, BotSettingsOpenedListener> {
-    
+public final class BotSettingsOpenedEvent extends
+        AbstractMappedEvent<Project, BotSettingsOpenedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param project projekt, kterému bot náleží
+     * @param project
+     *            projekt, kterému bot náleží
      * @return událost
      */
     public static BotSettingsOpenedEvent create(final Project project) {
         return new BotSettingsOpenedEvent(project);
     }
-    
+
     private BotSettingsOpenedEvent(final Project project) {
         super(project);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event#dispatchTo(java
+     * .lang.Object)
      */
     @Override
     public void dispatchTo(final BotSettingsOpenedListener listener) {
         listener.settingsOpenedTo(getKey());
     }
 }
- 

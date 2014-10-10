@@ -26,7 +26,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.ShortcutEleme
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-short-cut-elements">http://www.alicebot.org/TR/2011/#section-short-cut-elements</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-short-cut-elements">http://www.alicebot.org/TR/2011/#section-short-cut-elements</a>
  */
 public class Sr extends AbstractProperElement implements ShortcutElement {
     private static final String NAME = "sr";
@@ -39,12 +40,15 @@ public class Sr extends AbstractProperElement implements ShortcutElement {
     public static Sr create() {
         return new Sr();
     }
-    
+
     private Sr() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {

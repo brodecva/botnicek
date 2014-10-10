@@ -27,7 +27,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.UnobscuredInt
  * @author Václav Brodec
  * @version 1.0
  */
-final class ReferrableInternalFrame extends UnobscuredInternalFrame implements Source {
+final class ReferrableInternalFrame extends UnobscuredInternalFrame implements
+        Source {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,11 +40,13 @@ final class ReferrableInternalFrame extends UnobscuredInternalFrame implements S
     public static ReferrableInternalFrame create() {
         return new ReferrableInternalFrame();
     }
-    
+
     private ReferrableInternalFrame() {
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override

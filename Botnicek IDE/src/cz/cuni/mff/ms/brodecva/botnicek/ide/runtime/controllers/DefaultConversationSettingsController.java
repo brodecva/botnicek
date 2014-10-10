@@ -30,77 +30,103 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.AbstractController;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.ConversationConfiguration;
 
 /**
- * Výchozí implementace řadiče nastavení běhového prostředí pro konverzaci konfiguruje přímo projekt.
+ * Výchozí implementace řadiče nastavení běhového prostředí pro konverzaci
+ * konfiguruje přímo projekt.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultConversationSettingsController extends AbstractController<ConversationSettingsView> implements ConversationSettingsController {
+public final class DefaultConversationSettingsController extends
+        AbstractController<ConversationSettingsView> implements
+        ConversationSettingsController {
 
-    private final class DefaultConversationSettingsChangedListener implements ConversationSettingsChangedListener {
+    private final class DefaultConversationSettingsChangedListener implements
+            ConversationSettingsChangedListener {
 
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.events.SettingsChangedListener#changed(cz.cuni.mff.ms.brodecva.botnicek.ide.projects.model.Settings)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.events.
+         * SettingsChangedListener
+         * #changed(cz.cuni.mff.ms.brodecva.botnicek.ide.projects
+         * .model.Settings)
          */
         @Override
         public void changed(final ConversationConfiguration settings) {
             Preconditions.checkNotNull(settings);
-            
+
             callViews(new Callback<ConversationSettingsView>() {
 
                 @Override
                 public void call(final ConversationSettingsView view) {
                     view.updateConversationConfiguration(settings);
                 }
-                
+
             });
         }
-        
+
     }
-    
-    private final Project project;
-    
+
     /**
      * Vytvoří řadič pro projekt a bude mu naslouchat na příslušné změny.
      * 
-     * @param project projekt
-     * @param eventManager správce událostí
+     * @param project
+     *            projekt
+     * @param eventManager
+     *            správce událostí
      * @return řadič
      */
-    public static DefaultConversationSettingsController create(final Project project, final EventManager eventManager) {
+    public static DefaultConversationSettingsController create(
+            final Project project, final EventManager eventManager) {
         Preconditions.checkNotNull(project);
         Preconditions.checkNotNull(eventManager);
-        
-        final DefaultConversationSettingsController newInstance = new DefaultConversationSettingsController(project, eventManager);
-        
-        newInstance.addListener(ConversationSettingsChangedEvent.class, newInstance.new DefaultConversationSettingsChangedListener());
-        
+
+        final DefaultConversationSettingsController newInstance =
+                new DefaultConversationSettingsController(project, eventManager);
+
+        newInstance.addListener(ConversationSettingsChangedEvent.class,
+                newInstance.new DefaultConversationSettingsChangedListener());
+
         return newInstance;
     }
-    
-    private DefaultConversationSettingsController(final Project project, final EventManager eventManager) {
+
+    private final Project project;
+
+    private DefaultConversationSettingsController(final Project project,
+            final EventManager eventManager) {
         super(eventManager);
-        
+
         this.project = project;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.ConversationSettingsController#set(cz.cuni.mff.ms.brodecva.botnicek.library.api.ConversationConfiguration)
-     */
-    @Override
-    public void set(final ConversationConfiguration configuration) {
-        Preconditions.checkNotNull(configuration);
-        
-        this.project.setConversationConfiguration(configuration);
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.ConversationSettingsController#fill(cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.ConversationSettingsView)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.
+     * ConversationSettingsController
+     * #fill(cz.cuni.mff.ms.brodecva.botnicek.ide.runtime
+     * .views.ConversationSettingsView)
      */
     @Override
     public void fill(final ConversationSettingsView view) {
         Preconditions.checkNotNull(view);
-        
-        view.updateConversationConfiguration(this.project.getConversationConfiguration());
+
+        view.updateConversationConfiguration(this.project
+                .getConversationConfiguration());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.
+     * ConversationSettingsController
+     * #set(cz.cuni.mff.ms.brodecva.botnicek.library
+     * .api.ConversationConfiguration)
+     */
+    @Override
+    public void set(final ConversationConfiguration configuration) {
+        Preconditions.checkNotNull(configuration);
+
+        this.project.setConversationConfiguration(configuration);
     }
 }

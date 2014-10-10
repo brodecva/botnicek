@@ -28,8 +28,10 @@ interface SelectionChangedListener {
     /**
      * Změní interval výběr v textu.
      * 
-     * @param start nový počátek
-     * @param end nový konec
+     * @param start
+     *            nový počátek
+     * @param end
+     *            nový konec
      */
     void changeSelection(int start, int end);
 }

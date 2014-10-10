@@ -18,15 +18,16 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import com.google.common.collect.ObjectArrays;
 
-import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
 import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.ObjectGenerator;
+import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
 
 /**
  * Testuje pomocné metody porovnávání objektů.
@@ -39,62 +40,79 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.ObjectGenerator;
 public class ComparisonsTest {
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}
+     * .
      */
     @Test
     public void testAllDifferentWhenAllDifferentReturnsTrue() {
-        assertTrue(Comparisons.allDifferent(ObjectGenerator.getUniqueObjects(10)));
+        assertTrue(Comparisons.allDifferent(ObjectGenerator
+                .getUniqueObjects(10)));
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}
+     * .
      */
     @Test
     public void testAllDifferentWhenAllEqualReturnsFalse() {
-        assertFalse(Comparisons.allDifferent(ObjectGenerator.getEqualObjects(10)));
+        assertFalse(Comparisons.allDifferent(ObjectGenerator
+                .getEqualObjects(10)));
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}.
-     */
-    @Test
-    public void testAllDifferentWhenSomeEqualReturnsFalse() {
-        final Object[] allDifferent = ObjectGenerator.getUniqueObjects(10);
-        final Object copy = allDifferent[4];
-        
-        assertFalse(Comparisons.allDifferent(ObjectArrays.concat(allDifferent, copy)));
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}.
-     */
-    @Test
-    public void testAllDifferentWhenEmptyReturnsTrue() {
-        assertTrue(Comparisons.allDifferent());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}.
-     */
-    @Test
-    public void testAllDifferentWhenOnlyOneReturnsTrue() {
-        assertTrue(Comparisons.allDifferent(new Object()));
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}
+     * .
      */
     @Test
     public void testAllDifferentWhenAutoboxedEqualReturnsFalse() {
         assertFalse(Comparisons.allDifferent(5, 5, 5));
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}
+     * .
      */
     @Test
     public void testAllDifferentWhenAutoboxedUniqueReturnsTrue() {
         assertTrue(Comparisons.allDifferent(5, 6, 9));
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}
+     * .
+     */
+    @Test
+    public void testAllDifferentWhenEmptyReturnsTrue() {
+        assertTrue(Comparisons.allDifferent());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}
+     * .
+     */
+    @Test
+    public void testAllDifferentWhenOnlyOneReturnsTrue() {
+        assertTrue(Comparisons.allDifferent(new Object()));
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}
+     * .
+     */
+    @Test
+    public void testAllDifferentWhenSomeEqualReturnsFalse() {
+        final Object[] allDifferent = ObjectGenerator.getUniqueObjects(10);
+        final Object copy = allDifferent[4];
+
+        assertFalse(Comparisons.allDifferent(ObjectArrays.concat(allDifferent,
+                copy)));
     }
 
 }

@@ -29,121 +29,131 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 
-
 /**
- * Rozhraní uzlu poskytuje metody pro analýzu jeho okolí, místa v systému a zjištění jeho vlastností.
+ * Rozhraní uzlu poskytuje metody pro analýzu jeho okolí, místa v systému a
+ * zjištění jeho vlastností.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public interface Node extends Visitable, DispatchProcessible, ProceedProcessible, StackProcessible {
-    
-    /**
-     * Vrátí název uzlu.
-     * 
-     * @return název uzlu
-     */
-    NormalWord getName();
-    
-    /**
-     * Vrátí souřadnici polohy uzlu na ose x.
-     * 
-     * @return souřadnice polohy uzlu na ose x
-     */
-    int getX();
-    
-    /**
-     * Vrátí souřadnici polohy uzlu na ose y.
-     * 
-     * @return souřadnice polohy uzlu na ose y
-     */
-    int getY();
-    
-    /**
-     * Vrátí související hrany v daném směru. 
-     * 
-     * @param direction konec, kterým jsou připojeny
-     * @return související hrany
-     */
-    Set<Arc> getConnections(Direction direction);
-    
-    /**
-     * Vrátí odchozí hrany z uzlu.
-     * 
-     * @return odchozí hrany
-     */
-    Set<Arc> getOuts();
-    
-    /**
-     * Vrátí příchozí hrany do uzlu.
-     * 
-     * @return příchozí hrany
-     */
-    Set<Arc> getIns();
-    
+public interface Node extends Visitable, DispatchProcessible,
+        ProceedProcessible, StackProcessible {
+
     /**
      * Indikuje, zda-li uzel v daném směru sousedí s tímto.
      * 
-     * @param node uzel sítě 
-     * @param direction směr
+     * @param node
+     *            uzel sítě
+     * @param direction
+     *            směr
      * @return zda-li uzel v daném směru sousedí s tímto
      */
     boolean adjoins(Node node, Direction direction);
-    
+
     /**
-     * Indikuje, zda-li z tohoto uzlu vede hrana do zadaného.
-     * 
-     * @param node daný uzel
-     * @return zda-li z tohoto uzlu vede hrana do zadaného
+     * Porovná objekt s uzlem. Shoduje se pouze, pokud jde o uzel stejného typu,
+     * názvu a umístění.
      */
-    boolean pointsTo(Node node);
-    
+    @Override
+    public boolean equals(Object obj);
+
     /**
-     * Indikuje, zda-li z daného uzlu vede hrana do tohoto.
+     * Vrátí související hrany v daném směru.
      * 
-     * @param node daný uzel
-     * @return zda-li z daného uzlu vede hrana do tohoto
+     * @param direction
+     *            konec, kterým jsou připojeny
+     * @return související hrany
      */
-    boolean isPointedAtBy(Node node);
-    
+    Set<Arc> getConnections(Direction direction);
+
     /**
      * Vrátí stupeň uzlu v dané orientaci.
      * 
-     * @param direction směr
+     * @param direction
+     *            směr
      * @return stupeň uzlu v dané orientaci
      */
     int getDegree(Direction direction);
-    
-    /**
-     * Vrátí výstupní stupeň uzlu.
-     * 
-     * @return výstupní stupeň uzlu
-     */
-    int getOutDegree();
-    
+
     /**
      * Vrátí vstupní stupeň uzlu.
      * 
      * @return vstupní stupeň uzlu
      */
     int getInDegree();
-    
+
+    /**
+     * Vrátí příchozí hrany do uzlu.
+     * 
+     * @return příchozí hrany
+     */
+    Set<Arc> getIns();
+
+    /**
+     * Vrátí název uzlu.
+     * 
+     * @return název uzlu
+     */
+    NormalWord getName();
+
     /**
      * Vrátí rodičovskou síť uzlu.
      * 
      * @return rodičovská síť
      */
     Network getNetwork();
-    
+
     /**
-     * Porovná objekt s uzlem. Shoduje se pouze, pokud jde o uzel stejného typu, názvu a umístění.
+     * Vrátí výstupní stupeň uzlu.
+     * 
+     * @return výstupní stupeň uzlu
      */
-    @Override
-    public boolean equals(Object obj);
-    
-    /* (non-Javadoc)
+    int getOutDegree();
+
+    /**
+     * Vrátí odchozí hrany z uzlu.
+     * 
+     * @return odchozí hrany
+     */
+    Set<Arc> getOuts();
+
+    /**
+     * Vrátí souřadnici polohy uzlu na ose x.
+     * 
+     * @return souřadnice polohy uzlu na ose x
+     */
+    int getX();
+
+    /**
+     * Vrátí souřadnici polohy uzlu na ose y.
+     * 
+     * @return souřadnice polohy uzlu na ose y
+     */
+    int getY();
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
     public int hashCode();
+
+    /**
+     * Indikuje, zda-li z daného uzlu vede hrana do tohoto.
+     * 
+     * @param node
+     *            daný uzel
+     * @return zda-li z daného uzlu vede hrana do tohoto
+     */
+    boolean isPointedAtBy(Node node);
+
+    /**
+     * Indikuje, zda-li z tohoto uzlu vede hrana do zadaného.
+     * 
+     * @param node
+     *            daný uzel
+     * @return zda-li z tohoto uzlu vede hrana do zadaného
+     */
+    boolean pointsTo(Node node);
 }

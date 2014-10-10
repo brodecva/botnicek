@@ -28,54 +28,69 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.NormalWord
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
 
 /**
- * Výchozí implementace vezme přímý validátor a obalí jej mechanismem zasílání událostí.
+ * Výchozí implementace vezme přímý validátor a obalí jej mechanismem zasílání
+ * událostí.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class DefaultNormalWordValidator implements NormalWordValidator {
-    
-    private final NormalWordChecker checker;
-    private final Dispatcher dispatcher;
-    
+
     /**
      * Vytvoří vysílací validátor.
      * 
-     * @param checker přímý validátor
-     * @param dispatcher rozesílač událostí
+     * @param checker
+     *            přímý validátor
+     * @param dispatcher
+     *            rozesílač událostí
      * @return vysílací validátor
      */
-    public static DefaultNormalWordValidator create(final NormalWordChecker checker, final Dispatcher dispatcher) {
+    public static DefaultNormalWordValidator create(
+            final NormalWordChecker checker, final Dispatcher dispatcher) {
         return new DefaultNormalWordValidator(checker, dispatcher);
     }
-    
-    private DefaultNormalWordValidator(final NormalWordChecker checker, final Dispatcher dispatcher) {
+
+    private final NormalWordChecker checker;
+
+    private final Dispatcher dispatcher;
+
+    private DefaultNormalWordValidator(final NormalWordChecker checker,
+            final Dispatcher dispatcher) {
         Preconditions.checkNotNull(checker);
         Preconditions.checkNotNull(dispatcher);
-        
+
         this.checker = checker;
         this.dispatcher = dispatcher;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.edit.check.mixedpattern.MixedPatternValidator#validate(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Validator#clear
+     * (java.lang.Object)
      */
     @Override
-    public void validate(final Source source, Object subject, final String content) {
+    public void clear(final Object subject) {
+        Preconditions.checkNotNull(subject);
+
+        this.dispatcher.fire(CheckEvent.create(DefaultCheckResult.succeed(this,
+                subject)));
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.edit.check.mixedpattern.
+     * MixedPatternValidator#validate(java.lang.String)
+     */
+    @Override
+    public void validate(final Source source, final Object subject,
+            final String content) {
         Preconditions.checkNotNull(source);
         Preconditions.checkNotNull(content);
-        
+
         final CheckResult result = this.checker.check(source, subject, content);
         this.dispatcher.fire(CheckEvent.create(result));
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Validator#clear(java.lang.Object)
-     */
-    @Override
-    public void clear(Object subject) {
-        Preconditions.checkNotNull(subject);
-        
-        this.dispatcher.fire(CheckEvent.create(DefaultCheckResult.succeed(this, subject)));
     }
 }

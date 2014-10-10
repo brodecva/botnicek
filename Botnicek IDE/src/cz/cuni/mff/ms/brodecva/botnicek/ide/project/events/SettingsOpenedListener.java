@@ -31,7 +31,8 @@ public interface SettingsOpenedListener {
     /**
      * Vyzve k otevření nastavení.
      * 
-     * @param project projekt
+     * @param project
+     *            projekt
      */
     void settingsOpenedTo(Project project);
 

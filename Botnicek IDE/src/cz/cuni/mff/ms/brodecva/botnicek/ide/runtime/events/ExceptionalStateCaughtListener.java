@@ -31,7 +31,8 @@ public interface ExceptionalStateCaughtListener {
     /**
      * Reaguje na výjimečný stav.
      * 
-     * @param exceptionalState popis výjimečného stavu
+     * @param exceptionalState
+     *            popis výjimečného stavu
      */
     void caught(ExceptionalState exceptionalState);
 

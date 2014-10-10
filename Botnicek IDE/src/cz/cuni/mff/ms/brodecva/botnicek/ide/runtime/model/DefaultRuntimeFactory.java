@@ -46,18 +46,24 @@ public class DefaultRuntimeFactory implements RuntimeFactory, Serializable {
     public static DefaultRuntimeFactory create() {
         return new DefaultRuntimeFactory();
     }
-    
+
     private DefaultRuntimeFactory() {
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.RuntimeFactory#produce(cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.RuntimeSettings, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.RuntimeFactory#produce
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.RuntimeSettings,
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher)
      */
     @Override
-    public Runtime produce(final RuntimeSettings settings, final Dispatcher dispatcher) throws SessionException {
+    public Runtime produce(final RuntimeSettings settings,
+            final Dispatcher dispatcher) throws SessionException {
         Preconditions.checkNotNull(settings);
         Preconditions.checkNotNull(dispatcher);
-        
+
         return DefaultRuntime.create(settings, dispatcher);
     }
 

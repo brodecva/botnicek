@@ -23,42 +23,52 @@ import java.util.Set;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.AtomicElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Attribute;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.AttributeImplementation;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.Index;
 
 /**
- * <p>Abstraktní třída prvku který má jednorozměrný kladný celočíselný index zapsaný v atributu index.</p>
- * <p>Tento typ indexu používají některé prvky (a příslušné implementace by měly dědit od této třídy), které odkazují na jiný text (část zachycené promluvy...).</p>
- * <p>Volitelně lze vynechat, pak značí index s číslem 1.</p>
+ * <p>
+ * Abstraktní třída prvku který má jednorozměrný kladný celočíselný index
+ * zapsaný v atributu index.
+ * </p>
+ * <p>
+ * Tento typ indexu používají některé prvky (a příslušné implementace by měly
+ * dědit od této třídy), které odkazují na jiný text (část zachycené
+ * promluvy...).
+ * </p>
+ * <p>
+ * Volitelně lze vynechat, pak značí index s číslem 1.
+ * </p>
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public abstract class AbstractIndexedElement extends AbstractProperElement implements AtomicElement {
-    
+public abstract class AbstractIndexedElement extends AbstractProperElement
+        implements AtomicElement {
+
     private static final String ATT_INDEX = "index";
-    
+
     private final Optional<Index> index;
-    
+
     /**
      * Vytvoří prvek s implicitním indexem 1.
      */
     protected AbstractIndexedElement() {
-        this(Optional.<Index>absent());
+        this(Optional.<Index> absent());
     }
-    
+
     /**
      * Vytvoří prvek s explicitním indexem.
      * 
-     * @param index index
+     * @param index
+     *            index
      */
     protected AbstractIndexedElement(final Index index) {
         this(Optional.of(index));
     }
-    
+
     private AbstractIndexedElement(final Optional<Index> index) {
         this.index = index;
     }
@@ -71,18 +81,21 @@ public abstract class AbstractIndexedElement extends AbstractProperElement imple
     @Override
     public Set<Attribute> getAttributes() {
         if (this.index.isPresent()) {
-            return ImmutableSet.<Attribute>of(AttributeImplementation.create(ATT_INDEX, String.valueOf(this.index.get().getValue())));
+            return ImmutableSet.<Attribute> of(AttributeImplementation.create(
+                    ATT_INDEX, String.valueOf(this.index.get().getValue())));
         } else {
             return ImmutableSet.of();
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "AbstractIndexedElement [index=" + index + ", getClass()="
+        return "AbstractIndexedElement [index=" + this.index + ", getClass()="
                 + getClass() + "]";
     }
 }

@@ -31,7 +31,8 @@ public interface NetworkDisplayedListener {
     /**
      * Reaguje na pokyn k zobrazení sítě.
      * 
-     * @param network síť
+     * @param network
+     *            síť
      */
     void displayed(Network network);
 

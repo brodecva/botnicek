@@ -31,10 +31,12 @@ public interface Clearable {
      * Vyzve řadiče k smazání záznamů o chybách.
      */
     void clear();
-    
+
     /**
      * Odstraní z formulářového prvku obsah.
-     * @param client klient resetu
+     * 
+     * @param client
+     *            klient resetu
      */
     void reset(Source client);
 }

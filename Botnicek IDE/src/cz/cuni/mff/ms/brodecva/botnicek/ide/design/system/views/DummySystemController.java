@@ -20,6 +20,7 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.views;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.controllers.SystemController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.SystemName;
 
 /**
  * Atrapa řadiče.
@@ -37,64 +38,102 @@ public class DummySystemController implements SystemController {
     public static DummySystemController create() {
         return new DummySystemController();
     }
-    
+
     private DummySystemController() {
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.controllers.
+     * SystemController#addNetwork(java.lang.String)
      */
     @Override
-    public void addView(SystemView view) {
+    public void addNetwork(final String name) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java
+     * .lang.Object)
+     */
+    @Override
+    public void addView(final SystemView view) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang
+     * .Object)
+     */
+    @Override
+    public void fill(final SystemView view) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.controllers.
+     * SystemController#removeNetwork(java.lang.String)
+     */
+    @Override
+    public void removeNetwork(final SystemName name) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(
+     * java.lang.Object)
+     */
+    @Override
+    public void removeView(final SystemView view) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.controllers.
+     * SystemController
+     * #renameNetwork(cz.cuni.mff.ms.brodecva.botnicek.ide.design
+     * .networks.model.Network, java.lang.String)
+     */
+    @Override
+    public void renameNetwork(final Network network, final String newName) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.controllers.
+     * SystemController#renameSystem(java.lang.String)
+     */
+    @Override
+    public void renameSystem(final String newName) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.controllers.
+     * SystemController
+     * #selectNetwork(cz.cuni.mff.ms.brodecva.botnicek.ide.design
+     * .networks.model.Network)
+     */
+    @Override
+    public void selectNetwork(final Network selected) {
     }
 
     /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(java.lang.Object)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.controllers.SystemController#removeNetwork(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)
      */
     @Override
-    public void removeView(SystemView view) {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang.Object)
-     */
-    @Override
-    public void fill(SystemView view) {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.controllers.SystemController#addNetwork(java.lang.String)
-     */
-    @Override
-    public void addNetwork(String name) {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.controllers.SystemController#removeNetwork(java.lang.String)
-     */
-    @Override
-    public void removeNetwork(String name) {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.controllers.SystemController#renameNetwork(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network, java.lang.String)
-     */
-    @Override
-    public void renameNetwork(Network network, String newName) {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.controllers.SystemController#selectNetwork(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)
-     */
-    @Override
-    public void selectNetwork(Network selected) {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.controllers.SystemController#renameSystem(java.lang.String)
-     */
-    @Override
-    public void renameSystem(String newName) {
+    public void removeNetwork(Network removed) {
     }
 
 }

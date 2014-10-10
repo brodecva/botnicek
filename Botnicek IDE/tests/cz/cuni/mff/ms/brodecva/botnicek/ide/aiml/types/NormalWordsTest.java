@@ -18,7 +18,7 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.easymock.EasyMock;
 import org.junit.After;
@@ -55,7 +55,7 @@ public class NormalWordsTest {
     private static final String INVALID_RESULT_MESSAGE = "Invalid";
     private static final String FIRST_WORD_TEXT = "FIRST";
     private static final String SECOND_WORD_TEXT = "SECOND";
-    
+
     private NormalWord firstWordStub = Intended.nullReference();
     private NormalWord secondWordStub = Intended.nullReference();
     private Object firstValueDummy = Intended.nullReference();
@@ -64,119 +64,79 @@ public class NormalWordsTest {
     /**
      * Vytvoří testovací objekty.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @Before
     public void setUp() throws Exception {
-        firstWordStub = EasyMock.createStrictMock(NormalWord.class);
-        EasyMock.expect(firstWordStub.getText()).andStubReturn(FIRST_WORD_TEXT);
-        EasyMock.replay(firstWordStub);
-        
-        secondWordStub = EasyMock.createStrictMock(NormalWord.class);
-        EasyMock.expect(secondWordStub.getText()).andStubReturn(SECOND_WORD_TEXT);
-        EasyMock.replay(secondWordStub);
-        
-        firstValueDummy = new Object();
-        secondValueDummy = new Object();
+        this.firstWordStub = EasyMock.createStrictMock(NormalWord.class);
+        EasyMock.expect(this.firstWordStub.getText()).andStubReturn(
+                FIRST_WORD_TEXT);
+        EasyMock.replay(this.firstWordStub);
+
+        this.secondWordStub = EasyMock.createStrictMock(NormalWord.class);
+        EasyMock.expect(this.secondWordStub.getText()).andStubReturn(
+                SECOND_WORD_TEXT);
+        EasyMock.replay(this.secondWordStub);
+
+        this.firstValueDummy = new Object();
+        this.secondValueDummy = new Object();
     }
 
     /**
      * Uklidí testovací objekty.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @After
     public void tearDown() throws Exception {
-        firstWordStub = Intended.nullReference();
-        secondWordStub = Intended.nullReference();
-        
-        firstValueDummy = Intended.nullReference();
-        secondValueDummy = Intended.nullReference();
+        this.firstWordStub = Intended.nullReference();
+        this.secondWordStub = Intended.nullReference();
+
+        this.firstValueDummy = Intended.nullReference();
+        this.secondValueDummy = Intended.nullReference();
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#of(String)}.
-     */
-    @Test
-    public void testOfWhenValid() {
-        final CheckResult validCheckResultStub = EasyMock.createNiceMock(CheckResult.class);
-        EasyMock.expect(validCheckResultStub.isValid()).andStubReturn(true);
-        EasyMock.replay(validCheckResultStub);
-        
-        final NormalWordChecker checkerStub = EasyMock.createStrictMock(NormalWordChecker.class);
-        EasyMock.expect(checkerStub.check(CREATED_WORD_VALID_NAME)).andStubReturn(validCheckResultStub);
-        EasyMock.replay(checkerStub);
-        Whitebox.setInternalState(NormalWords.class, "checker", checkerStub);
-        
-        assertEquals(CREATED_WORD_VALID_NAME, NormalWords.of(CREATED_WORD_VALID_NAME).getText());
-        
-        EasyMock.verify(validCheckResultStub);
-        EasyMock.verify(checkerStub);
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#of(String)}.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testOfWhenInvalid() {
-        final CheckResult invalidCheckResultStub = EasyMock.createNiceMock(CheckResult.class);
-        EasyMock.expect(invalidCheckResultStub.isValid()).andStubReturn(false);
-        EasyMock.expect(invalidCheckResultStub.getMessage()).andStubReturn(INVALID_RESULT_MESSAGE);
-        EasyMock.replay(invalidCheckResultStub);
-        
-        final NormalWordChecker checkerStub = EasyMock.createStrictMock(NormalWordChecker.class);
-        EasyMock.expect(checkerStub.check(CREATED_WORD_NOT_FIXABLE_NAME)).andStubReturn(invalidCheckResultStub);
-        EasyMock.replay(checkerStub);
-        Whitebox.setInternalState(NormalWords.class, "checker", checkerStub);
-        
-        try {
-            NormalWords.of(CREATED_WORD_NOT_FIXABLE_NAME);
-        } finally {
-            EasyMock.verify(invalidCheckResultStub);
-            EasyMock.verify(checkerStub);
-        }
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#from(String)}.
-     */
-    @Test
-    public void testFromWhenValid() {
-        final Normalizer normalizerStub = EasyMock.createStrictMock(Normalizer.class);
-        EasyMock.expect(normalizerStub.convertToNormalChars(CREATED_WORD_VALID_NAME)).andStubReturn(CREATED_WORD_VALID_NAME);
-        EasyMock.replay(normalizerStub);
-        Whitebox.setInternalState(NormalWords.class, "normalizer", normalizerStub);
-        
-        assertEquals(CREATED_WORD_VALID_NAME, NormalWords.from(CREATED_WORD_VALID_NAME).getText());
-        
-        EasyMock.verify(normalizerStub);
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#from(String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#from(String)}
+     * .
      */
     @Test
     public void testFromWhenFixable() {
-        final Normalizer normalizerStub = EasyMock.createStrictMock(Normalizer.class);
-        EasyMock.expect(normalizerStub.convertToNormalChars(CREATED_WORD_FIXABLE_NAME)).andStubReturn(CREATED_WORD_VALID_NAME);
+        final Normalizer normalizerStub =
+                EasyMock.createStrictMock(Normalizer.class);
+        EasyMock.expect(
+                normalizerStub.convertToNormalChars(CREATED_WORD_FIXABLE_NAME))
+                .andStubReturn(CREATED_WORD_VALID_NAME);
         EasyMock.replay(normalizerStub);
-        Whitebox.setInternalState(NormalWords.class, "normalizer", normalizerStub);
-        
-        assertEquals(CREATED_WORD_VALID_NAME, NormalWords.from(CREATED_WORD_FIXABLE_NAME).getText());
-        
+        Whitebox.setInternalState(NormalWords.class, "normalizer",
+                normalizerStub);
+
+        assertEquals(CREATED_WORD_VALID_NAME,
+                NormalWords.from(CREATED_WORD_FIXABLE_NAME).getText());
+
         EasyMock.verify(normalizerStub);
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#from(String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#from(String)}
+     * .
      */
     @Test(expected = IllegalArgumentException.class)
     public void testFromWhenNotFixable() {
-        final Normalizer normalizerStub = EasyMock.createStrictMock(Normalizer.class);
-        EasyMock.expect(normalizerStub.convertToNormalChars(CREATED_WORD_NOT_FIXABLE_NAME)).andStubReturn("");
+        final Normalizer normalizerStub =
+                EasyMock.createStrictMock(Normalizer.class);
+        EasyMock.expect(
+                normalizerStub
+                        .convertToNormalChars(CREATED_WORD_NOT_FIXABLE_NAME))
+                .andStubReturn("");
         EasyMock.replay(normalizerStub);
-        Whitebox.setInternalState(NormalWords.class, "normalizer", normalizerStub);
-        
+        Whitebox.setInternalState(NormalWords.class, "normalizer",
+                normalizerStub);
+
         try {
             NormalWords.from(CREATED_WORD_NOT_FIXABLE_NAME);
         } finally {
@@ -185,59 +145,155 @@ public class NormalWordsTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#join(java.util.List)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#from(String)}
+     * .
+     */
+    @Test
+    public void testFromWhenValid() {
+        final Normalizer normalizerStub =
+                EasyMock.createStrictMock(Normalizer.class);
+        EasyMock.expect(
+                normalizerStub.convertToNormalChars(CREATED_WORD_VALID_NAME))
+                .andStubReturn(CREATED_WORD_VALID_NAME);
+        EasyMock.replay(normalizerStub);
+        Whitebox.setInternalState(NormalWords.class, "normalizer",
+                normalizerStub);
+
+        assertEquals(CREATED_WORD_VALID_NAME,
+                NormalWords.from(CREATED_WORD_VALID_NAME).getText());
+
+        EasyMock.verify(normalizerStub);
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#join(java.util.List)}
+     * .
      */
     @Test(expected = IllegalArgumentException.class)
     public void testJoinListOfNormalWordWhenEmpty() {
-        NormalWords.join(ImmutableList.<NormalWord>of());
+        NormalWords.join(ImmutableList.<NormalWord> of());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#join(java.util.List)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#join(java.util.List)}
+     * .
      */
     @Test
     public void testJoinListOfNormalWordWhenNotEmpty() {
         final NormalWord resultDummy = EasyMock.createMock(NormalWord.class);
         EasyMock.replay(resultDummy);
-        
+
         PowerMock.mockStaticPartialStrict(NormalWords.class, "of");
         EasyMock.expect(NormalWords.of("FIRSTSECOND")).andReturn(resultDummy);
         PowerMock.replay(NormalWords.class);
-        
-        NormalWords.join(ImmutableList.of(firstWordStub, secondWordStub));
-        
+
+        NormalWords.join(ImmutableList.of(this.firstWordStub,
+                this.secondWordStub));
+
         PowerMock.verify(NormalWords.class);
-        EasyMock.verify(firstWordStub);
-        EasyMock.verify(secondWordStub);
+        EasyMock.verify(this.firstWordStub);
+        EasyMock.verify(this.secondWordStub);
         EasyMock.verify(resultDummy);
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#toUntyped(java.util.Map)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#of(String)}
+     * .
      */
-    @Test
-    public void testToUntyped() {        
-        assertEquals(ImmutableMap.of(FIRST_WORD_TEXT, firstValueDummy, SECOND_WORD_TEXT, secondValueDummy), NormalWords.toUntyped(ImmutableMap.of(firstWordStub, firstValueDummy, secondWordStub, secondValueDummy)));
-        
-        EasyMock.verify(firstWordStub);
-        EasyMock.verify(secondWordStub);
+    @Test(expected = IllegalArgumentException.class)
+    public void testOfWhenInvalid() {
+        final CheckResult invalidCheckResultStub =
+                EasyMock.createNiceMock(CheckResult.class);
+        EasyMock.expect(invalidCheckResultStub.isValid()).andStubReturn(false);
+        EasyMock.expect(invalidCheckResultStub.getMessage()).andStubReturn(
+                INVALID_RESULT_MESSAGE);
+        EasyMock.replay(invalidCheckResultStub);
+
+        final NormalWordChecker checkerStub =
+                EasyMock.createStrictMock(NormalWordChecker.class);
+        EasyMock.expect(checkerStub.check(CREATED_WORD_NOT_FIXABLE_NAME))
+                .andStubReturn(invalidCheckResultStub);
+        EasyMock.replay(checkerStub);
+        Whitebox.setInternalState(NormalWords.class, "checker", checkerStub);
+
+        try {
+            NormalWords.of(CREATED_WORD_NOT_FIXABLE_NAME);
+        } finally {
+            EasyMock.verify(invalidCheckResultStub);
+            EasyMock.verify(checkerStub);
+        }
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#toTyped(java.util.Map)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#of(String)}
+     * .
+     */
+    @Test
+    public void testOfWhenValid() {
+        final CheckResult validCheckResultStub =
+                EasyMock.createNiceMock(CheckResult.class);
+        EasyMock.expect(validCheckResultStub.isValid()).andStubReturn(true);
+        EasyMock.replay(validCheckResultStub);
+
+        final NormalWordChecker checkerStub =
+                EasyMock.createStrictMock(NormalWordChecker.class);
+        EasyMock.expect(checkerStub.check(CREATED_WORD_VALID_NAME))
+                .andStubReturn(validCheckResultStub);
+        EasyMock.replay(checkerStub);
+        Whitebox.setInternalState(NormalWords.class, "checker", checkerStub);
+
+        assertEquals(CREATED_WORD_VALID_NAME,
+                NormalWords.of(CREATED_WORD_VALID_NAME).getText());
+
+        EasyMock.verify(validCheckResultStub);
+        EasyMock.verify(checkerStub);
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#toTyped(java.util.Map)}
+     * .
      */
     @Test
     public void testToTyped() {
         PowerMock.mockStaticPartial(NormalWords.class, "of");
-        EasyMock.expect(NormalWords.of("FIRST")).andStubReturn(firstWordStub);
-        EasyMock.expect(NormalWords.of("SECOND")).andStubReturn(secondWordStub);
+        EasyMock.expect(NormalWords.of("FIRST")).andStubReturn(
+                this.firstWordStub);
+        EasyMock.expect(NormalWords.of("SECOND")).andStubReturn(
+                this.secondWordStub);
         PowerMock.replay(NormalWords.class);
-        
-        assertEquals(ImmutableMap.of(firstWordStub, firstValueDummy, secondWordStub, secondValueDummy), NormalWords.toTyped(ImmutableMap.of(FIRST_WORD_TEXT, firstValueDummy, SECOND_WORD_TEXT, secondValueDummy)));
-        
+
+        assertEquals(ImmutableMap.of(this.firstWordStub, this.firstValueDummy,
+                this.secondWordStub, this.secondValueDummy),
+                NormalWords.toTyped(ImmutableMap.of(FIRST_WORD_TEXT,
+                        this.firstValueDummy, SECOND_WORD_TEXT,
+                        this.secondValueDummy)));
+
         PowerMock.verify(NormalWords.class);
-        EasyMock.verify(firstWordStub);
-        EasyMock.verify(secondWordStub);
+        EasyMock.verify(this.firstWordStub);
+        EasyMock.verify(this.secondWordStub);
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#toUntyped(java.util.Map)}
+     * .
+     */
+    @Test
+    public void testToUntyped() {
+        assertEquals(ImmutableMap.of(FIRST_WORD_TEXT, this.firstValueDummy,
+                SECOND_WORD_TEXT, this.secondValueDummy),
+                NormalWords.toUntyped(ImmutableMap.of(this.firstWordStub,
+                        this.firstValueDummy, this.secondWordStub,
+                        this.secondValueDummy)));
+
+        EasyMock.verify(this.firstWordStub);
+        EasyMock.verify(this.secondWordStub);
     }
 
 }

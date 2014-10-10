@@ -29,35 +29,41 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class ArcChangedEvent extends AbstractMappedEvent<Arc, ArcChangedListener> {
-    
-    private final Arc newArc;
-    
+public final class ArcChangedEvent extends
+        AbstractMappedEvent<Arc, ArcChangedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param arc původní podoba hrany
-     * @param newArc nová podoba hrany
+     * @param arc
+     *            původní podoba hrany
+     * @param newArc
+     *            nová podoba hrany
      * @return událost
      */
     public static ArcChangedEvent create(final Arc arc, final Arc newArc) {
         return new ArcChangedEvent(arc, newArc);
     }
-    
+
+    private final Arc newArc;
+
     private ArcChangedEvent(final Arc arc, final Arc newArc) {
         super(arc);
-        
+
         Preconditions.checkNotNull(newArc);
-        
+
         this.newArc = newArc;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final ArcChangedListener listener) {
         listener.arcChanged(this.newArc);
     }
 }
- 

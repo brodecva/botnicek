@@ -33,7 +33,8 @@ public interface AvailableReferencesExtendedListener {
     /**
      * Reaguje na rozšíření.
      * 
-     * @param additionalReferences uzly navíc
+     * @param additionalReferences
+     *            uzly navíc
      */
     void referencesExtended(Set<EnterNode> additionalReferences);
 

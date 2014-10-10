@@ -31,66 +31,80 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
  */
 public interface DfsObserver {
     /**
-     * Zpraví pozorovatele o navštívení kořene systému sítí.
-     * 
-     * @param visited navštívený kořen
-     */
-    void notifyVisit(System visited);
-    
-    /**
-     * Zpraví pozorovatele o navštívení sítě.
-     * 
-     * @param visited navštívená síť
-     */
-    void notifyVisit(Network visited);
-    
-    /**
-     * Zpraví pozorovatele o objevení uzlu sítě.
-     * 
-     * @param discovered objevený uzel
-     */
-    void notifyDiscovery(Node discovered);
-    
-    /**
-     * Zpraví pozorovatele o ukončení zpracování uzlu sítě.
-     * 
-     * @param finished zpracovaný uzel
-     */
-    void notifyFinish(Node finished);
-    
-    /**
-     * <p>Zpraví pozorovatele o prozkoumání hrany sítě.</p>
-     * <p>Implementace návštěvníka musí zavolat nad hranou tuto metodu před voláním metody specifikující typ hrany (stromová, zpětná, příčná).</p>
-     * 
-     * @param examined prozkoumaná hrana
-     */
-    void notifyExamination(Arc examined);
-    
-    /**
-     * Zpraví pozorovatele o navštívení stromové hrany sítě.
-     * 
-     * @param tree stromová hrana
-     */
-    void notifyTree(Arc tree);
-    
-    /**
-     * Zpraví pozorovatele o navštívení dopředné hrany sítě.
-     * 
-     * @param forward dopředná hrana
-     */
-    void notifyForward(Arc forward);
-    
-    /**
      * Zpraví pozorovatele o objevení zpětné hrany sítě.
      * 
-     * @param back zpětná hrana
+     * @param back
+     *            zpětná hrana
      */
     void notifyBack(Arc back);
-    
+
     /**
      * Zpraví pozorovatele o příčné hraně sítě.
      * 
-     * @param cross příčná hrana
+     * @param cross
+     *            příčná hrana
      */
     void notifyCross(Arc cross);
+
+    /**
+     * Zpraví pozorovatele o objevení uzlu sítě.
+     * 
+     * @param discovered
+     *            objevený uzel
+     */
+    void notifyDiscovery(Node discovered);
+
+    /**
+     * <p>
+     * Zpraví pozorovatele o prozkoumání hrany sítě.
+     * </p>
+     * <p>
+     * Implementace návštěvníka musí zavolat nad hranou tuto metodu před voláním
+     * metody specifikující typ hrany (stromová, zpětná, příčná).
+     * </p>
+     * 
+     * @param examined
+     *            prozkoumaná hrana
+     */
+    void notifyExamination(Arc examined);
+
+    /**
+     * Zpraví pozorovatele o ukončení zpracování uzlu sítě.
+     * 
+     * @param finished
+     *            zpracovaný uzel
+     */
+    void notifyFinish(Node finished);
+
+    /**
+     * Zpraví pozorovatele o navštívení dopředné hrany sítě.
+     * 
+     * @param forward
+     *            dopředná hrana
+     */
+    void notifyForward(Arc forward);
+
+    /**
+     * Zpraví pozorovatele o navštívení stromové hrany sítě.
+     * 
+     * @param tree
+     *            stromová hrana
+     */
+    void notifyTree(Arc tree);
+
+    /**
+     * Zpraví pozorovatele o navštívení sítě.
+     * 
+     * @param visited
+     *            navštívená síť
+     */
+    void notifyVisit(Network visited);
+
+    /**
+     * Zpraví pozorovatele o navštívení kořene systému sítí.
+     * 
+     * @param visited
+     *            navštívený kořen
+     */
+    void notifyVisit(System visited);
 }

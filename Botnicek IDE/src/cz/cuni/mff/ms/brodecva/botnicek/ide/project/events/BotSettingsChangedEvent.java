@@ -30,35 +30,43 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class BotSettingsChangedEvent extends AbstractMappedEvent<Project, BotSettingsChangedListener> {
-    
-    private final BotConfiguration settings;
-    
+public final class BotSettingsChangedEvent extends
+        AbstractMappedEvent<Project, BotSettingsChangedListener> {
+
     /**
      * Vytoří událost.
      * 
-     * @param project projekt, kterému bot patří
-     * @param settings nová nastavení
+     * @param project
+     *            projekt, kterému bot patří
+     * @param settings
+     *            nová nastavení
      * @return událost
      */
-    public static BotSettingsChangedEvent create(final Project project, final BotConfiguration settings) {
+    public static BotSettingsChangedEvent create(final Project project,
+            final BotConfiguration settings) {
         return new BotSettingsChangedEvent(project, settings);
     }
-    
-    private BotSettingsChangedEvent(final Project project, final BotConfiguration settings) {
+
+    private final BotConfiguration settings;
+
+    private BotSettingsChangedEvent(final Project project,
+            final BotConfiguration settings) {
         super(project);
-        
+
         Preconditions.checkNotNull(settings);
-        
+
         this.settings = settings;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final BotSettingsChangedListener listener) {
         listener.changed(this.settings);
     }
 }
- 

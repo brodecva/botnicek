@@ -29,18 +29,18 @@ import java.net.URI;
 public interface Attribute {
 
     /**
+     * Atribut je shodný s objektem, pokud to je též atribut a má stejné jméno a
+     * URI prostoru jmen.
+     */
+    @Override
+    boolean equals(final Object obj);
+
+    /**
      * Vrátí název atributu.
      * 
      * @return název
      */
     String getName();
-
-    /**
-     * Vrátí hodnotu atributu.
-     * 
-     * @return hodnota
-     */
-    String getValue();
 
     /**
      * Vrátí prostor jmen atributu.
@@ -49,13 +49,18 @@ public interface Attribute {
      */
     URI getNamespace();
 
-    /* (non-Javadoc)
+    /**
+     * Vrátí hodnotu atributu.
+     * 
+     * @return hodnota
+     */
+    String getValue();
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
+    @Override
     int hashCode();
-
-    /**
-     * Atribut je shodný s objektem, pokud to je též atribut a má stejné jméno a URI prostoru jmen.
-     */
-    boolean equals(final Object obj);
 }

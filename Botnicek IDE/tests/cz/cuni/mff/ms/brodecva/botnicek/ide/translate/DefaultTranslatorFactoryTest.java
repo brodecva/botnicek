@@ -41,30 +41,64 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
 public class DefaultTranslatorFactoryTest {
 
     private final static class UniqueNormalWordStub implements NormalWord {
-        
+
         private static AtomicInteger counter = new AtomicInteger();
-        
+
         private final int order = counter.getAndIncrement();
-        
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord#getText()
-         */
-        @Override
-        public String getText() {
-            return String.valueOf(order);
-        }
-        
-        /* (non-Javadoc)
+
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.lang.Comparable#compareTo(java.lang.Object)
          */
         @Override
         public int compareTo(final NormalWord other) {
             Preconditions.checkNotNull(other);
-            
-            return this.getText().compareTo(other.getText());
+
+            return getText().compareTo(other.getText());
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.lang.Object#equals(java.lang.Object)
+         */
+        @Override
+        public boolean equals(final Object obj) {
+            if (this == obj) {
+                return true;
+            }
+
+            if (obj == null) {
+                return false;
+            }
+
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+
+            final UniqueNormalWordStub other = (UniqueNormalWordStub) obj;
+            if (this.order != other.order) {
+                return false;
+            }
+
+            return true;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord#getText()
+         */
+        @Override
+        public String getText() {
+            return String.valueOf(this.order);
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.lang.Object#hashCode()
          */
         @Override
@@ -74,31 +108,6 @@ public class DefaultTranslatorFactoryTest {
             result = prime * result + this.order;
             return result;
         }
-
-        /* (non-Javadoc)
-         * @see java.lang.Object#equals(java.lang.Object)
-         */
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            
-            if (obj == null) {
-                return false;
-            }
-            
-            if (getClass() != obj.getClass()) {
-                return false;
-            }
-            
-            final UniqueNormalWordStub other = (UniqueNormalWordStub) obj;
-            if (this.order != other.order) {
-                return false;
-            }
-            
-            return true;
-        }
     }
 
     private DefaultTranslatorFactory tested = Intended.nullReference();
@@ -106,43 +115,60 @@ public class DefaultTranslatorFactoryTest {
     /**
      * Vytvoří testovanou instanci.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @Before
     public void setUp() throws Exception {
-        this.tested = DefaultTranslatorFactory.create(new UniqueNormalWordStub(), new UniqueNormalWordStub(), new UniqueNormalWordStub(), new UniqueNormalWordStub(), new UniqueNormalWordStub(), new UniqueNormalWordStub());
+        this.tested =
+                DefaultTranslatorFactory.create(new UniqueNormalWordStub(),
+                        new UniqueNormalWordStub(), new UniqueNormalWordStub(),
+                        new UniqueNormalWordStub(), new UniqueNormalWordStub(),
+                        new UniqueNormalWordStub());
     }
 
     /**
      * Uklidí testovanou instance.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @After
     public void tearDown() throws Exception {
-        this.tested  = Intended.nullReference();
+        this.tested = Intended.nullReference();
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatorFactory#create(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)}.
-     */
-    @Test
-    public void testCreateWhenStatesDifferent() {
-        DefaultTranslatorFactory.create(new UniqueNormalWordStub(), new UniqueNormalWordStub(), new UniqueNormalWordStub(), new UniqueNormalWordStub(), new UniqueNormalWordStub(), new UniqueNormalWordStub());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatorFactory#create(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatorFactory#create(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)}
+     * .
      */
     @Test(expected = IllegalArgumentException.class)
     public void testCreateWhenSomeStatesEqual() {
         final NormalWord copy = new UniqueNormalWordStub();
-        
-        DefaultTranslatorFactory.create(new UniqueNormalWordStub(), copy, copy, new UniqueNormalWordStub(), new UniqueNormalWordStub(), new UniqueNormalWordStub());
+
+        DefaultTranslatorFactory.create(new UniqueNormalWordStub(), copy, copy,
+                new UniqueNormalWordStub(), new UniqueNormalWordStub(),
+                new UniqueNormalWordStub());
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatorFactory#produce()}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatorFactory#create(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)}
+     * .
+     */
+    @Test
+    public void testCreateWhenStatesDifferent() {
+        DefaultTranslatorFactory.create(new UniqueNormalWordStub(),
+                new UniqueNormalWordStub(), new UniqueNormalWordStub(),
+                new UniqueNormalWordStub(), new UniqueNormalWordStub(),
+                new UniqueNormalWordStub());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatorFactory#produce()}
+     * .
      */
     @Test
     public void testProduce() {

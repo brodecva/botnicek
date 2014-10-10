@@ -34,86 +34,48 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDire
 import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
 
 /**
- * Testuje výchozí implementaci grafu s vrcholy typu {@link Node}, hranami typu {@link Arc} a popisky typu {@link NormalWord}.
+ * Testuje výchozí implementaci grafu s vrcholy typu {@link Node}, hranami typu
+ * {@link Arc} a popisky typu {@link NormalWord}.
  * 
  * @author Václav Brodec
  * @version 1.0
  * @see DefaultDirectedGraph
  */
 @Category(UnitTest.class)
-public class DefaultLabeledDirectedGraphNodeArcTest extends AbstractDefaultLabeledDirectedGraphTest<Node, NormalWord, Arc, NormalWord>{
+public class DefaultLabeledDirectedGraphNodeArcTest
+        extends
+        AbstractDefaultLabeledDirectedGraphTest<Node, NormalWord, Arc, NormalWord> {
 
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.AbstractDefaultDirectedGraphTest#createUniqueVertices(int)
-     */
-    @Override
-    protected Node[] createUniqueVertices(int count) {
-        final List<Node> dummies = createDummies(count, Node.class);
-        
-        final Node[] dummiesArray = dummies.toArray(new Node[count]);
-        EasyMock.replay((Object[]) dummiesArray);
-        
-        return dummiesArray;
-    }
-
-    private <T> List<T> createDummies(int count, final Class<T> type) {
+    private <T> List<T> createDummies(final int count, final Class<T> type) {
         final ImmutableList.Builder<T> resultBuilder = ImmutableList.builder();
-        
+
         for (int i = 0; i < count; i++) {
             final T dummy = EasyMock.createStrictMock(type);
-            
+
             resultBuilder.add(dummy);
         }
-        
+
         return resultBuilder.build();
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.AbstractDefaultDirectedGraphTest#createUniqueEdges(int)
-     */
-    @Override
-    protected Arc[] createUniqueEdges(int count) {
-        final List<Arc> dummies = createDummies(count, Arc.class);
-        
-        final Arc[] dummiesArray = dummies.toArray(new Arc[count]);
-        EasyMock.replay((Object[]) dummiesArray);
-        
-        return dummiesArray;
-    }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.AbstractDefaultLabeledDirectedGraphTest#createEmpty()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.
+     * AbstractDefaultLabeledDirectedGraphTest#createEmpty()
      */
     @Override
     protected DefaultLabeledDirectedGraph<Node, NormalWord, Arc, NormalWord>
             createEmpty() {
-        return DefaultLabeledDirectedGraph.<Node, NormalWord, Arc, NormalWord>create();
+        return DefaultLabeledDirectedGraph
+                .<Node, NormalWord, Arc, NormalWord> create();
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.AbstractDefaultLabeledDirectedGraphTest#createUniqueVertexLabels(int)
-     */
-    @Override
-    protected NormalWord[] createUniqueVertexLabels(int count) {
-        final List<NormalWord> dummies = createDummies(count, NormalWord.class);
-        
-        final NormalWord[] dummiesArray = dummies.toArray(new NormalWord[count]);
-        EasyMock.replay((Object[]) dummiesArray);
-        
-        return dummiesArray;
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.AbstractDefaultLabeledDirectedGraphTest#createUniqueEdgeLabels(int)
-     */
-    @Override
-    protected NormalWord[] createUniqueEdgeLabels(int count) {
-        return createUniqueVertexLabels(count);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.AbstractDefaultDirectedGraphTest#createHookCounter()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.
+     * AbstractDefaultDirectedGraphTest#createHookCounter()
      */
     @Override
     protected
@@ -121,5 +83,65 @@ public class DefaultLabeledDirectedGraphNodeArcTest extends AbstractDefaultLabel
             createHookCounter() {
         return new HookCountingDirectedGraph<>();
     }
-    
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.
+     * AbstractDefaultLabeledDirectedGraphTest#createUniqueEdgeLabels(int)
+     */
+    @Override
+    protected NormalWord[] createUniqueEdgeLabels(final int count) {
+        return createUniqueVertexLabels(count);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.
+     * AbstractDefaultDirectedGraphTest#createUniqueEdges(int)
+     */
+    @Override
+    protected Arc[] createUniqueEdges(final int count) {
+        final List<Arc> dummies = createDummies(count, Arc.class);
+
+        final Arc[] dummiesArray = dummies.toArray(new Arc[count]);
+        EasyMock.replay((Object[]) dummiesArray);
+
+        return dummiesArray;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.
+     * AbstractDefaultLabeledDirectedGraphTest#createUniqueVertexLabels(int)
+     */
+    @Override
+    protected NormalWord[] createUniqueVertexLabels(final int count) {
+        final List<NormalWord> dummies = createDummies(count, NormalWord.class);
+
+        final NormalWord[] dummiesArray =
+                dummies.toArray(new NormalWord[count]);
+        EasyMock.replay((Object[]) dummiesArray);
+
+        return dummiesArray;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.
+     * AbstractDefaultDirectedGraphTest#createUniqueVertices(int)
+     */
+    @Override
+    protected Node[] createUniqueVertices(final int count) {
+        final List<Node> dummies = createDummies(count, Node.class);
+
+        final Node[] dummiesArray = dummies.toArray(new Node[count]);
+        EasyMock.replay((Object[]) dummiesArray);
+
+        return dummiesArray;
+    }
+
 }

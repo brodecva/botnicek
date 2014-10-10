@@ -31,7 +31,8 @@ public interface NodeAddedListener {
     /**
      * Reaguje na přidání uzlu.
      * 
-     * @param node přidaný uzel
+     * @param node
+     *            přidaný uzel
      */
     void nodeAdded(Node node);
 

@@ -28,41 +28,48 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateEleme
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-srai">http://www.alicebot.org/TR/2011/#section-srai</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-srai">http://www.alicebot.org/TR/2011/#section-srai</a>
  */
-public final class Srai extends AbstractCompoundElement implements TemplateElement {
+public final class Srai extends AbstractCompoundElement implements
+        TemplateElement {
     private static final String NAME = "srai";
 
     /**
      * Vytvoří prvek.
      * 
-     * @param content potomci
-     * @return prvek
-     */
-    public static Srai create(final TemplateElement... content) {
-        return new Srai(content);
-    }
-    
-    /**
-     * Vytvoří prvek.
-     * 
-     * @param content potomci
+     * @param content
+     *            potomci
      * @return prvek
      */
     public static Srai create(final List<TemplateElement> content) {
         return new Srai(content);
     }
-    
-    private Srai(final TemplateElement... content) {
-        super(content);
+
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content
+     *            potomci
+     * @return prvek
+     */
+    public static Srai create(final TemplateElement... content) {
+        return new Srai(content);
     }
-    
+
     private Srai(final List<TemplateElement> content) {
         super(content);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    private Srai(final TemplateElement... content) {
+        super(content);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {

@@ -31,24 +31,24 @@ enum PositionalType {
      * Izolovaný.
      */
     ISOLATED(Color.YELLOW),
-    
+
     /**
      * Vnitřní.
      */
     INNER(Color.BLACK),
-    
+
     /**
      * Vstupní.
      */
     ENTER(Color.BLUE),
-    
+
     /**
      * Výstupní.
      */
     EXIT(Color.GREEN);
-    
+
     private final Color rim;
-    
+
     private PositionalType(final Color rim) {
         this.rim = rim;
     }
@@ -59,6 +59,6 @@ enum PositionalType {
      * @return barva okraje
      */
     public final Color getRim() {
-        return rim;
+        return this.rim;
     }
 }

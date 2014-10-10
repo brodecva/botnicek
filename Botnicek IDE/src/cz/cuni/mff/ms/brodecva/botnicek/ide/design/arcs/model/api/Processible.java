@@ -28,7 +28,8 @@ public interface Processible {
     /**
      * Přijme procesor.
      * 
-     * @param processor procesor
+     * @param processor
+     *            procesor
      * @return návratová hodnota zpracování
      */
     <T> T accept(Processor<T> processor);

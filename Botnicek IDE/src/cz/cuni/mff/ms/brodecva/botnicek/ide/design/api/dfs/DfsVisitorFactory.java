@@ -30,15 +30,17 @@ public interface DfsVisitorFactory {
     /**
      * Vytvoří návštěvníka, jehož kroky jsou sledovány pozorovateli.
      * 
-     * @param observers unikátní pozorovatelé průchodu
+     * @param observers
+     *            unikátní pozorovatelé průchodu
      * @return návštěvník
      */
     DfsVisitor produce(DfsObserver... observers);
-    
+
     /**
      * Vytvoří návštěvníka, jehož kroky jsou sledovány pozorovateli.
      * 
-     * @param observers unikátní pozorovatelé průchodu
+     * @param observers
+     *            unikátní pozorovatelé průchodu
      * @return návštěvník
      */
     DfsVisitor produce(Set<? extends DfsObserver> observers);

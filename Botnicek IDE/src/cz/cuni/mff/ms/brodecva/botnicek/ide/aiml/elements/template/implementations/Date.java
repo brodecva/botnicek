@@ -26,7 +26,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.SystemDefined
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-system-defined-predicates">http://www.alicebot.org/TR/2011/#section-system-defined-predicates</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-system-defined-predicates">http://www.alicebot.org/TR/2011/#section-system-defined-predicates</a>
  */
 public class Date extends AbstractProperElement implements SystemDefinedElement {
     private static final String NAME = "date";
@@ -39,12 +40,15 @@ public class Date extends AbstractProperElement implements SystemDefinedElement 
     public static Date create() {
         return new Date();
     }
-    
+
     private Date() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {

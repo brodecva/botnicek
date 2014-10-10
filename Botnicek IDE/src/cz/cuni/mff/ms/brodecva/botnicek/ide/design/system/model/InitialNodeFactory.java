@@ -29,15 +29,20 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode;
  * @version 1.0
  */
 public interface InitialNodeFactory {
-    
+
     /**
      * Vytvoří uzel.
      * 
-     * @param name název uzlu
-     * @param network rodičovská síť
-     * @param x poloha na souřadnici osy x
-     * @param y poloha na souřadnici osy y
+     * @param name
+     *            název uzlu
+     * @param network
+     *            rodičovská síť
+     * @param x
+     *            poloha na souřadnici osy x
+     * @param y
+     *            poloha na souřadnici osy y
      * @return uzel
      */
-    IsolatedNode produce(final NormalWord name, final Network network, final int x, final int y);
+    IsolatedNode produce(final NormalWord name, final Network network,
+            final int x, final int y);
 }

@@ -31,69 +31,79 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 
 /**
- * Hrana, jež neprovádí žádný test a v případě, že přijde na řadu, výpočet po ní projde dál.
+ * Hrana, jež neprovádí žádný test a v případě, že přijde na řadu, výpočet po ní
+ * projde dál.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class TransitionArc extends AbstractCodeArc implements Serializable {
-    
+public final class TransitionArc extends AbstractCodeArc implements
+        Serializable {
+
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Vytvoří hranu.
+     * 
+     * @param parent
+     *            rodičovská síť
+     * @param name
+     *            název hrany
+     * @param priority
+     *            priorita
+     * @param code
+     *            kód, který se vždy provede
+     * @return hrana
+     */
+    public static TransitionArc create(final Network parent,
+            final NormalWord name, final Priority priority, final Code code) {
+        return new TransitionArc(parent, name, priority, code);
+    }
 
     /**
      * Vrátí výchozí hranu sítě.
      * 
-     * @param parent rodičovská síť
-     * @param name název hrany
+     * @param parent
+     *            rodičovská síť
+     * @param name
+     *            název hrany
      * @return hrana
      */
-    public static TransitionArc getInitial(final Network parent, final NormalWord name) {
+    public static TransitionArc getInitial(final Network parent,
+            final NormalWord name) {
         return new TransitionArc(parent, name);
     }
-    
-    /**
-     * Vytvoří hranu.
-     * 
-     * @param parent rodičovská síť
-     * @param name název hrany
-     * @param priority priorita
-     * @param code kód, který se vždy provede
-     * @return hrana
-     */
-    public static TransitionArc create(final Network parent, final NormalWord name, final Priority priority, final Code code) {
-        return new TransitionArc(parent, name, priority, code);
-    }
-    
+
     private TransitionArc(final Network parent, final NormalWord name) {
         this(parent, name, DEFAULT_PRIORITY, Codes.createEmpty());
     }
-    
-    private TransitionArc(final Network parent, final NormalWord name, final Priority priority, final Code code) {
+
+    private TransitionArc(final Network parent, final NormalWord name,
+            final Priority priority, final Code code) {
         super(parent, name, priority, code);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.arcs.api.Visitable#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.arcs.api.Visitor)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.arcs.api.
+     * Visitable
+     * #accept(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design
+     * .arcs.api.Visitor)
      */
     @Override
     public <T> T accept(final Processor<T> processor) {
         return processor.process(this);
     }
-    
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int result = super.hashCode();
-        return result;
-    }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -106,19 +116,33 @@ public final class TransitionArc extends AbstractCodeArc implements Serializable
         return true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int result = super.hashCode();
+        return result;
+    }
+
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
         return "TransitionArc [getName()=" + getName() + ", getNetwork()="
-                + getNetwork().getName() + ", getFrom()=" + getFrom().getName() + ", getTo()="
-                + getTo().getName() + ", getPriority()=" + getPriority().getValue() + "]";
-    }
-    
-    private void readObject(final ObjectInputStream objectInputStream)
-            throws ClassNotFoundException, IOException {
-        objectInputStream.defaultReadObject();
+                + getNetwork().getName().getText() + ", getFrom()=" + getFrom().getName()
+                + ", getTo()=" + getTo().getName() + ", getPriority()="
+                + getPriority().getValue() + "]";
     }
 
     private void writeObject(final ObjectOutputStream objectOutputStream)

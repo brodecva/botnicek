@@ -38,35 +38,51 @@ final class DummyLanguageSettingsController implements
     public static LanguageSettingsController create() {
         return new DummyLanguageSettingsController();
     }
-    
+
     private DummyLanguageSettingsController() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java
+     * .lang.Object)
      */
     @Override
-    public void addView(LanguageSettingsView view) {
+    public void addView(final LanguageSettingsView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang
+     * .Object)
      */
     @Override
-    public void removeView(LanguageSettingsView view) {
+    public void fill(final LanguageSettingsView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(
+     * java.lang.Object)
      */
     @Override
-    public void fill(LanguageSettingsView view) {
+    public void removeView(final LanguageSettingsView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.LanguageSettingsController#set(cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.
+     * LanguageSettingsController
+     * #set(cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration)
      */
     @Override
-    public void set(LanguageConfiguration configuration) {
+    public void set(final LanguageConfiguration configuration) {
     }
 }

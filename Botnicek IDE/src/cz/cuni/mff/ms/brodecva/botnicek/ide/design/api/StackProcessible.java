@@ -19,7 +19,8 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.api;
 
 /**
- * Rozhraní prvků systému sítí, které jsou zpracovatelné procesorem pro úpravu zásobníku.
+ * Rozhraní prvků systému sítí, které jsou zpracovatelné procesorem pro úpravu
+ * zásobníku.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -29,7 +30,8 @@ public interface StackProcessible {
     /**
      * Přijme procesor.
      * 
-     * @param processor procesor pro zásobník
+     * @param processor
+     *            procesor pro zásobník
      * @return výsledek zpracování
      */
     <T> T accept(StackProcessor<T> processor);

@@ -38,64 +38,96 @@ class DummyNodesController implements NodesController {
     public static DummyNodesController create() {
         return new DummyNodesController();
     }
-    
+
     private DummyNodesController() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java
+     * .lang.Object)
      */
     @Override
-    public void addView(NodesView view) {
+    public void addView(final NodesView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang
+     * .Object)
      */
     @Override
-    public void removeView(NodesView view) {
+    public void fill(final NodesView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController
+     * #changeNode(java.lang.String, int, int)
      */
     @Override
-    public void fill(NodesView view) {
+    public void changeNode(final NormalWord nodeName, final int x, final int y) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController#rename(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController
+     * #removeNode(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
      */
     @Override
-    public void rename(NormalWord nodeName, String proposedName) {
+    public void removeNode(final NormalWord name) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController#changeNode(java.lang.String, int, int)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(
+     * java.lang.Object)
      */
     @Override
-    public void changeNode(NormalWord nodeName, int x, int y) {
+    public void removeView(final NodesView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController#toggleNodeProceedType(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController
+     * #rename(java.lang.String, java.lang.String)
      */
     @Override
-    public void toggleNodeProceedType(NormalWord nodeName) {
+    public void rename(final NormalWord nodeName, final String proposedName) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController#toggleNodeDispatchType(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController
+     * #toggleNodeDispatchType(java.lang.String)
      */
     @Override
-    public void toggleNodeDispatchType(NormalWord nodeName) {
+    public void toggleNodeDispatchType(final NormalWord nodeName) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController#removeNode(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController
+     * #toggleNodeProceedType(java.lang.String)
      */
     @Override
-    public void removeNode(NormalWord name) {
+    public void toggleNodeProceedType(final NormalWord nodeName) {
     }
 
 }

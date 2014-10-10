@@ -18,7 +18,6 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
 
 /**
  * Rozhraní pro provedení kontroly.
@@ -30,17 +29,21 @@ public interface Checker {
     /**
      * Zkontroluje textový řetězec, zda-li odpovídá požadavkům.
      * 
-     * @param source zdroj řetězce
-     * @param subject identifikátor opakovaných pokusů o kontrolu
-     * @param content vstupní řetězec
+     * @param source
+     *            zdroj řetězce
+     * @param subject
+     *            identifikátor opakovaných pokusů o kontrolu
+     * @param content
+     *            vstupní řetězec
      * @return výsledek
      */
     CheckResult check(Source source, Object subject, String content);
-    
+
     /**
      * Zkontroluje textový řetězec, zda-li odpovídá požadavkům.
      * 
-     * @param content vstupní řetězec
+     * @param content
+     *            vstupní řetězec
      * @return výsledek
      */
     CheckResult check(String content);

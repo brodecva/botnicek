@@ -37,102 +37,156 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 abstract class AbstractPartPanel extends JPanel implements PartView {
 
     private static final long serialVersionUID = 1L;
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedType(java.lang.Class)
-     */
-    @Override
-    public void updateType(Class<? extends Arc> arcClass) {
-    }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedName(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
-     */
-    @Override
-    public void updateName(final NormalWord name) {
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedPriority(int)
-     */
-    @Override
-    public void updatePriority(Priority priority) {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedCode(cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code)
-     */
-    @Override
-    public void updatedCode(Code code) {        
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedPrepare(cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code)
-     */
-    @Override
-    public void updatedPrepare(Code code) {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedTested(cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code)
-     */
-    @Override
-    public void updatedTested(Code code) {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedValue(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern)
-     */
-    @Override
-    public void updatedValue(SimplePattern value) {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedPredicate(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
-     */
-    @Override
-    public void updatedPredicate(NormalWord name) {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedTarget(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode)
-     */
-    @Override
-    public void updatedTarget(EnterNode target) {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedPattern(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern)
-     */
-    @Override
-    public void updatedPattern(MixedPattern pattern) {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedThat(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern)
-     */
-    @Override
-    public void updatedThat(MixedPattern that) {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#removed()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#removed()
      */
     @Override
     public void removed() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedFrom(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedCode
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code)
      */
     @Override
-    public void updateFrom(NormalWord name) {
+    public void updatedCode(final Code code) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedTo(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedPattern
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern)
      */
     @Override
-    public void updateTo(NormalWord name) {
+    public void updatedPattern(final MixedPattern pattern) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#
+     * updatedPredicate
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+     */
+    @Override
+    public void updatedPredicate(final NormalWord name) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedPrepare
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code)
+     */
+    @Override
+    public void updatedPrepare(final Code code) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedTarget
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode)
+     */
+    @Override
+    public void updatedTarget(final EnterNode target) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedTested
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Code)
+     */
+    @Override
+    public void updatedTested(final Code code) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedThat
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern)
+     */
+    @Override
+    public void updatedThat(final MixedPattern that) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedValue
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern)
+     */
+    @Override
+    public void updatedValue(final SimplePattern value) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedFrom
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+     */
+    @Override
+    public void updateFrom(final NormalWord name) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedName
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+     */
+    @Override
+    public void updateName(final NormalWord name) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#
+     * updatedPriority(int)
+     */
+    @Override
+    public void updatePriority(final Priority priority) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedTo
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+     */
+    @Override
+    public void updateTo(final NormalWord name) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.ArcView#updatedType
+     * (java.lang.Class)
+     */
+    @Override
+    public void updateType(final Class<? extends Arc> arcClass) {
     }
 }

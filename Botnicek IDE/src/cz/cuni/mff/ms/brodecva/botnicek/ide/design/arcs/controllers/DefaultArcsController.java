@@ -43,129 +43,160 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.AbstractController;
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultArcsController extends AbstractController<ArcsView> implements ArcsController {
-    
+public class DefaultArcsController extends AbstractController<ArcsView>
+        implements ArcsController {
+
     private class DefaultArcRemovedEventListener implements ArcRemovedListener {
-        
+
         @Override
         public void arcRemoved(final Arc arc) {
             Preconditions.checkNotNull(arc);
-            
+
             callViews(new Callback<ArcsView>() {
 
                 @Override
                 public void call(final ArcsView view) {
                     view.arcRemoved(arc);
-                }                
+                }
             });
         }
-        
+
     }
-    
+
     private final class DefaultArcRenamedListener implements ArcRenamedListener {
 
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.ArcRenamedListener#arcRenamed(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.
+         * ArcRenamedListener
+         * #arcRenamed(cz.cuni.mff.ms.brodecva.botnicek.ide.design
+         * .arcs.model.Arc,
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
          */
         @Override
         public void arcRenamed(final Arc oldVersion, final Arc newVersion) {
             Preconditions.checkNotNull(oldVersion);
             Preconditions.checkNotNull(newVersion);
-            
+
             callViews(new Callback<ArcsView>() {
 
                 @Override
                 public void call(final ArcsView view) {
                     Preconditions.checkNotNull(view);
-                    
+
                     view.arcRenamed(oldVersion, newVersion);
                 }
-                
+
             });
         }
-        
-    }
-    
-    private final class DefaultArcReprioritizedListener implements ArcReprioritizedListener {
 
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.ArcReprioritizedListener#arcReprioritized(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
+    }
+
+    private final class DefaultArcReprioritizedListener implements
+            ArcReprioritizedListener {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.
+         * ArcReprioritizedListener
+         * #arcReprioritized(cz.cuni.mff.ms.brodecva.botnicek
+         * .ide.design.arcs.model.Arc,
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
          */
         @Override
-        public void arcReprioritized(final Arc oldVersion, final Arc newVersion) {
+        public void
+                arcReprioritized(final Arc oldVersion, final Arc newVersion) {
             Preconditions.checkNotNull(oldVersion);
             Preconditions.checkNotNull(newVersion);
-            
+
             callViews(new Callback<ArcsView>() {
 
                 @Override
                 public void call(final ArcsView view) {
                     Preconditions.checkNotNull(view);
-                    
+
                     view.arcReprioritized(oldVersion, newVersion);
                 }
-                
+
             });
         }
-        
+
     }
-    
+
     private final class DefaultArcRetypedListener implements ArcRetypedListener {
 
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.ArcRetypedListener#arcRetyped(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.
+         * ArcRetypedListener
+         * #arcRetyped(cz.cuni.mff.ms.brodecva.botnicek.ide.design
+         * .arcs.model.Arc,
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)
          */
         @Override
         public void arcRetyped(final Arc oldVersion, final Arc newVersion) {
             Preconditions.checkNotNull(oldVersion);
             Preconditions.checkNotNull(newVersion);
-            
+
             callViews(new Callback<ArcsView>() {
 
                 @Override
                 public void call(final ArcsView view) {
                     Preconditions.checkNotNull(view);
-                    
+
                     view.arcRetyped(oldVersion, newVersion);
                 }
-                
+
             });
         }
-        
+
     }
-    
-    private final System system;
-    
+
     /**
      * Vytvoří řadič.
      * 
-     * @param system systém všech sítí
-     * @param network síť s hranami
-     * @param eventManager správce událostí
+     * @param system
+     *            systém všech sítí
+     * @param network
+     *            síť s hranami
+     * @param eventManager
+     *            správce událostí
      * 
      * @return řadič
      */
-    public static DefaultArcsController create(final System system, final Network network, final EventManager eventManager) {
+    public static DefaultArcsController create(final System system,
+            final Network network, final EventManager eventManager) {
         Preconditions.checkNotNull(system);
         Preconditions.checkNotNull(network);
         Preconditions.checkNotNull(eventManager);
-        
-        final DefaultArcsController newInstance = new DefaultArcsController(system, eventManager);
-        
-        newInstance.addListener(ArcRenamedEvent.class, network, newInstance.new DefaultArcRenamedListener());
-        newInstance.addListener(ArcReprioritizedEvent.class, network, newInstance.new DefaultArcReprioritizedListener());
-        newInstance.addListener(ArcRetypedEvent.class, network, newInstance.new DefaultArcRetypedListener());
-        newInstance.addListener(ArcRemovedEvent.class, network, newInstance.new DefaultArcRemovedEventListener());
-        
+
+        final DefaultArcsController newInstance =
+                new DefaultArcsController(system, eventManager);
+
+        newInstance.addListener(ArcRenamedEvent.class, network,
+                newInstance.new DefaultArcRenamedListener());
+        newInstance.addListener(ArcReprioritizedEvent.class, network,
+                newInstance.new DefaultArcReprioritizedListener());
+        newInstance.addListener(ArcRetypedEvent.class, network,
+                newInstance.new DefaultArcRetypedListener());
+        newInstance.addListener(ArcRemovedEvent.class, network,
+                newInstance.new DefaultArcRemovedEventListener());
+
         return newInstance;
     }
 
-    private DefaultArcsController(final System system, final EventManager eventManager) {
+    private final System system;
+
+    private DefaultArcsController(final System system,
+            final EventManager eventManager) {
         super(eventManager);
-        
+
         this.system = system;
     }
-    
+
     @Override
     public void removeArc(final NormalWord name) {
         this.system.removeArc(name);

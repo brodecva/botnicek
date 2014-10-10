@@ -19,8 +19,12 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model;
 
 /**
- * <p>Běžící testovací konverzace.</p>
- * <p>Poskytuje rozhraní pro uživatelský vstup.</p>
+ * <p>
+ * Běžící testovací konverzace.
+ * </p>
+ * <p>
+ * Poskytuje rozhraní pro uživatelský vstup.
+ * </p>
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -30,7 +34,8 @@ public interface Run {
     /**
      * Zadá uživatelský vstup.
      * 
-     * @param content obsah promluvy ke stroji
+     * @param content
+     *            obsah promluvy ke stroji
      */
     void tell(final String content);
 

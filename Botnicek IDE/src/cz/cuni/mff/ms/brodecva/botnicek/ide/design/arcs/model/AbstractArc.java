@@ -33,7 +33,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 
-
 /**
  * Abstraktní hrana.
  * 
@@ -41,129 +40,60 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
  * @version 1.0
  */
 public abstract class AbstractArc implements Arc, Serializable {
-    
+
     private static final long serialVersionUID = 1L;
 
     /**
-     * Výchozí priorita hrany. 
+     * Výchozí priorita hrany.
      */
     protected final static Priority DEFAULT_PRIORITY = Priority.of(1);
-    
+
     private final Network parent;
     private final NormalWord name;
     private final Priority priority;
-    
+
     /**
      * Vytvoří hranu.
      * 
-     * @param parent rodičovská síť
-     * @param name název hrany
-     * @param priority priorita
+     * @param parent
+     *            rodičovská síť
+     * @param name
+     *            název hrany
+     * @param priority
+     *            priorita
      */
-    protected AbstractArc(final Network parent, final NormalWord name, final Priority priority) {
+    protected AbstractArc(final Network parent, final NormalWord name,
+            final Priority priority) {
         Preconditions.checkNotNull(parent);
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(priority);
-        
+
         this.parent = parent;
         this.name = name;
         this.priority = priority;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getName()
-     */
-    public final NormalWord getName() {
-        return this.name;
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#isFrom(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
-     */
-    public final boolean isFrom(final Node node) {
-        return isAttached(node, Direction.OUT);
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#isTo(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
-     */
-    public final boolean isTo(final Node node) {
-        return isAttached(node, Direction.IN);
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#isAttached(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
-     */
-    public final boolean isAttached(final Node node, final Direction direction) {
-        final Node attached = getAttached(direction);
-        
-        return attached.equals(node);
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getFrom()
-     */
-    public final Node getFrom() {
-        return getAttached(Direction.IN);
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getTo()
-     */
-    public final Node getTo() {
-        return getAttached(Direction.OUT);
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getAttached(cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
-     */
-    public final Node getAttached(final Direction direction) {
-        Preconditions.checkNotNull(direction);
-        
-        return this.parent.getAttached(this, direction);
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getPriority()
-     */
-    public final Priority getPriority() {
-        return this.priority;
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.Visitable#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.Visitor)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.Visitable
+     * #accept
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.Visitor)
      */
     @Override
     public final void accept(final Visitor visitor) {
         visitor.visit(this);
-        
+
         final Node to = getTo();
         if (!visitor.visited(to)) {
-            to.accept(visitor);            
+            to.accept(visitor);
         }
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getNetwork()
-     */
-    public final Network getNetwork() {
-        return this.parent;
-    }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + name.hashCode();
-        result = prime * result + parent.hashCode();
-        result = prime * result + priority.hashCode();
-        return result;
-    }
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -171,32 +101,152 @@ public abstract class AbstractArc implements Arc, Serializable {
         if (this == obj) {
             return true;
         }
-        
+
         if (Objects.isNull(obj)) {
             return false;
         }
-        
+
         if (getClass() != obj.getClass()) {
             return false;
         }
-        
+
         final AbstractArc other = (AbstractArc) obj;
-        if (!name.equals(other.name)) {
+        if (!this.name.equals(other.name)) {
             return false;
         }
-        if (!parent.equals(other.parent)) {
+        if (!this.parent.equals(other.parent)) {
             return false;
         }
-        if (priority != other.priority) {
+        if (this.priority != other.priority) {
             return false;
         }
         return true;
     }
-    
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getAttached
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
+     */
+    @Override
+    public final Node getAttached(final Direction direction) {
+        Preconditions.checkNotNull(direction);
+
+        return this.parent.getAttached(this, direction);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getFrom()
+     */
+    @Override
+    public final Node getFrom() {
+        return getAttached(Direction.IN);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getName()
+     */
+    @Override
+    public final NormalWord getName() {
+        return this.name;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getNetwork()
+     */
+    @Override
+    public final Network getNetwork() {
+        return this.parent;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getPriority()
+     */
+    @Override
+    public final Priority getPriority() {
+        return this.priority;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#getTo()
+     */
+    @Override
+    public final Node getTo() {
+        return getAttached(Direction.OUT);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + this.name.hashCode();
+        result = prime * result + this.parent.hashCode();
+        result = prime * result + this.priority.hashCode();
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#isAttached
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node,
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
+     */
+    @Override
+    public final boolean isAttached(final Node node, final Direction direction) {
+        final Node attached = getAttached(direction);
+
+        return attached.equals(node);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#isFrom(cz.
+     * cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
+     */
+    @Override
+    public final boolean isFrom(final Node node) {
+        return isAttached(node, Direction.OUT);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc#isTo(cz.cuni
+     * .mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
+     */
+    @Override
+    public final boolean isTo(final Node node) {
+        return isAttached(node, Direction.IN);
+    }
+
     private void readObject(final ObjectInputStream objectInputStream)
             throws ClassNotFoundException, IOException {
         objectInputStream.defaultReadObject();
-        
+
         Preconditions.checkNotNull(this.name);
         Preconditions.checkNotNull(this.parent);
         Preconditions.checkNotNull(this.priority);

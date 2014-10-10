@@ -30,39 +30,49 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class FromRenamedEvent extends AbstractMappedEvent<Arc, FromRenamedListener> {
-    
-    private final Node oldVersion;
-    private final Node newVersion;
-    
+public final class FromRenamedEvent extends
+        AbstractMappedEvent<Arc, FromRenamedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param arc hrana
-     * @param oldVersion původní verze uzlu
-     * @param newVersion nová verze uzlu
+     * @param arc
+     *            hrana
+     * @param oldVersion
+     *            původní verze uzlu
+     * @param newVersion
+     *            nová verze uzlu
      * @return událost
      */
-    public static FromRenamedEvent create(final Arc arc, final Node oldVersion, final Node newVersion) {
+    public static FromRenamedEvent create(final Arc arc, final Node oldVersion,
+            final Node newVersion) {
         return new FromRenamedEvent(arc, oldVersion, newVersion);
     }
-    
-    private FromRenamedEvent(final Arc arc, final Node oldVersion, final Node newVersion) {
+
+    private final Node oldVersion;
+
+    private final Node newVersion;
+
+    private FromRenamedEvent(final Arc arc, final Node oldVersion,
+            final Node newVersion) {
         super(arc);
-        
+
         Preconditions.checkNotNull(oldVersion);
         Preconditions.checkNotNull(newVersion);
-                
+
         this.oldVersion = oldVersion;
         this.newVersion = newVersion;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final FromRenamedListener listener) {
         listener.fromRenamed(this.oldVersion, this.newVersion);
     }
 }
- 

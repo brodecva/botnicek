@@ -31,8 +31,10 @@ public interface FromRenamedListener {
     /**
      * Reaguje na změnu názvu výchozího uzlu hrany.
      * 
-     * @param oldVersion původní verze výchozího uzlu
-     * @param newVersion nová verze výchozího uzlu
+     * @param oldVersion
+     *            původní verze výchozího uzlu
+     * @param newVersion
+     *            nová verze výchozího uzlu
      */
     void fromRenamed(Node oldVersion, Node newVersion);
 

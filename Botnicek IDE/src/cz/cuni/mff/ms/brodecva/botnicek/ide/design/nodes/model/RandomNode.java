@@ -18,7 +18,6 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model;
 
-
 /**
  * Uzel náhodného sledu navštívení odchozích hran.
  * 

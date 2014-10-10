@@ -18,7 +18,9 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
@@ -46,7 +48,8 @@ public class DefaultSimplePatternCheckerTest {
     /**
      * Vytvoří testovanou instanci.
      * 
-     * @throws java.lang.Exception pokud dojde  vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde vyhození výjimky
      */
     @Before
     public void setUp() throws Exception {
@@ -56,23 +59,92 @@ public class DefaultSimplePatternCheckerTest {
     /**
      * Uklidí testovanou instanci.
      * 
-     * @throws java.lang.Exception pokud dojde  vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde vyhození výjimky
      */
     @After
     public void tearDown() throws Exception {
-        tested = Intended.nullReference();
+        this.tested = Intended.nullReference();
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenEmptyPatternExpectColumnPositionZero() {
+        final CheckResult result = this.tested.check("");
+
+        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER,
+                result.getErrorLineNumber());
+        assertEquals(0, result.getErrorColumnNumber());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenEmptyPatternExpectInvalid() {
+        assertFalse(this.tested.check("").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
+     * .
      */
     @Test
     public void testCheckWhenLiteralSimplePatternExpectValid() {
         assertTrue(this.tested.check("ONE TWO THREE").isValid());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public
+            void
+            testCheckWhenNonnormalWordsExpectColumnsPositionFirstNonnormalOccurence() {
+        final String input = "One Two";
+        final int firstNonnormalIndex =
+                CharMatcher.JAVA_LOWER_CASE.indexIn(input);
+
+        final CheckResult result = this.tested.check(input);
+
+        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER,
+                result.getErrorLineNumber());
+        assertEquals(firstNonnormalIndex + 1, result.getErrorColumnNumber());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenNonnormalWordsExpectInvalid() {
+        assertFalse(this.tested.check("One Two").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenSimplePatternWithOnlyWildcardsExpectValid() {
+        assertTrue(this.tested.check("_ * _ * *").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
+     * .
      */
     @Test
     public void testCheckWhenSimplePatternWithStarWildcardExpectValid() {
@@ -80,83 +152,45 @@ public class DefaultSimplePatternCheckerTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
+     * .
      */
     @Test
     public void testCheckWhenSimplePatternWithUnderscoreWildcardExpectValid() {
         assertTrue(this.tested.check("ONE _ THREE").isValid());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
+     * .
      */
     @Test
-    public void testCheckWhenSimplePatternWithOnlyWildcardsExpectValid() {
-        assertTrue(this.tested.check("_ * _ * *").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenEmptyPatternExpectInvalid() {
-        assertFalse(this.tested.check("").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenEmptyPatternExpectColumnPositionZero() {
-        final CheckResult result = this.tested.check("");
-        
-        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER, result.getErrorLineNumber());
-        assertEquals(0, result.getErrorColumnNumber());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenNonnormalWordsExpectInvalid() {
-        assertFalse(this.tested.check("One Two").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenNonnormalWordsExpectColumnsPositionFirstNonnormalOccurence() {
-        final String input = "One Two";
-        final int firstNonnormalIndex = CharMatcher.JAVA_LOWER_CASE.indexIn(input);
-        
+    public
+            void
+            testCheckWhenSuperfluousSpacesExpectColumnsPositionFirstSuperfluousSpaceOccurence() {
+        final String input = "ONE   TWO  THREE";
+
+        final int firstSpaceIndex = CharMatcher.is(' ').indexIn(input);
+        final int firstSuperfluousSpaceIndex =
+                CharMatcher.is(' ').indexIn(input, firstSpaceIndex + 1);
+
         final CheckResult result = this.tested.check(input);
-        
-        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER, result.getErrorLineNumber());
-        assertEquals(firstNonnormalIndex + 1, result.getErrorColumnNumber());
+
+        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER,
+                result.getErrorLineNumber());
+        assertEquals(firstSuperfluousSpaceIndex + 1,
+                result.getErrorColumnNumber());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
+     * .
      */
     @Test
     public void testCheckWhenSuperfluousSpacesExpectInvalid() {
         assertFalse(this.tested.check("ONE   TWO  THREE").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenSuperfluousSpacesExpectColumnsPositionFirstSuperfluousSpaceOccurence() {
-        final String input = "ONE   TWO  THREE";
-        
-        final int firstSpaceIndex = CharMatcher.is(' ').indexIn(input);
-        final int firstSuperfluousSpaceIndex = CharMatcher.is(' ').indexIn(input, firstSpaceIndex + 1);
-        
-        final CheckResult result = this.tested.check(input);
-        
-        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER, result.getErrorLineNumber());
-        assertEquals(firstSuperfluousSpaceIndex + 1, result.getErrorColumnNumber());
     }
 }

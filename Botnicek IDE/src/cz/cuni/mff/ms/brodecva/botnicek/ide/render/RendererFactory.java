@@ -31,7 +31,8 @@ public interface RendererFactory {
     /**
      * Vytvoří generátor zdrojového kódu.
      * 
-     * @param namespacesToPrefixes zobrazení URI prostorů jmen na implicitní prefixy
+     * @param namespacesToPrefixes
+     *            zobrazení URI prostorů jmen na implicitní prefixy
      * @return generátor zdrojového kódu
      */
     Renderer produce(final Map<URI, String> namespacesToPrefixes);

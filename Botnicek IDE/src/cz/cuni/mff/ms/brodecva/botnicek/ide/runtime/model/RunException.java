@@ -31,12 +31,25 @@ public class RunException extends Exception {
     private static final long serialVersionUID = -2721319082755784746L;
 
     /**
-     * Vytvoří novou výjimku s {@code null} místo podrobné zprávy. Příčina
-     * není inicializována, může být dodatečně nastavena voláním
+     * Vytvoří novou výjimku s {@code null} místo podrobné zprávy. Příčina není
+     * inicializována, může být dodatečně nastavena voláním
      * {@link Throwable#initCause(java.lang.Throwable)}.
      */
     public RunException() {
         super();
+    }
+
+    /**
+     * Vytvoří novou výjimku s podrobnou zprávou. Příčina není inicializována,
+     * může být dodatečně nastavena voláním
+     * {@link Throwable#initCause(java.lang.Throwable)}.
+     * 
+     * @param message
+     *            podrobná zpráva. Podrobná zprava je uložena por pozdější
+     *            získání pomocí metody {@link Throwable#getMessage()}.
+     */
+    public RunException(final String message) {
+        super(message);
     }
 
     /**
@@ -57,24 +70,10 @@ public class RunException extends Exception {
     }
 
     /**
-     * Vytvoří novou výjimku s podrobnou zprávou. Příčina není inicializována,
-     * může být dodatečně nastavena voláním
-     * {@link Throwable#initCause(java.lang.Throwable)}.
-     * 
-     * @param message
-     *            podrobná zpráva. Podrobná zprava je uložena por pozdější
-     *            získání pomocí metody {@link Throwable#getMessage()}.
-     */
-    public RunException(final String message) {
-        super(message);
-    }
-
-    /**
      * Vytvoří novou výjimku s danou příčinou a podrobnou zprávou
-     * {@code (cause==null \? null : cause.toString()} (což typicky
-     * obsahuje třídu a podrobnou zprávu o příčině). Tento konstruktor je
-     * užitečný pro výjimky, které nejsou nic víc než obaly pro jiné vyhoditelné
-     * objekty.
+     * {@code (cause==null \? null : cause.toString()} (což typicky obsahuje
+     * třídu a podrobnou zprávu o příčině). Tento konstruktor je užitečný pro
+     * výjimky, které nejsou nic víc než obaly pro jiné vyhoditelné objekty.
      * 
      * @param cause
      *            příčina (která je uložena pro pozdější získání pomocí metody

@@ -18,7 +18,7 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -36,21 +36,25 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
 public class DirectionTest {
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction#getOpposite(cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)}.
-     */
-    @Test
-    public void testGetOppositeDirection() {
-        assertEquals(Direction.OUT, Direction.getOpposite(Direction.IN));
-        assertEquals(Direction.IN, Direction.getOpposite(Direction.OUT));
-    }
-
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction#getOpposite()}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction#getOpposite()}
+     * .
      */
     @Test
     public void testGetOpposite() {
         assertEquals(Direction.OUT, Direction.IN.getOpposite());
         assertEquals(Direction.IN, Direction.OUT.getOpposite());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction#getOpposite(cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)}
+     * .
+     */
+    @Test
+    public void testGetOppositeDirection() {
+        assertEquals(Direction.OUT, Direction.getOpposite(Direction.IN));
+        assertEquals(Direction.IN, Direction.getOpposite(Direction.OUT));
     }
 
 }

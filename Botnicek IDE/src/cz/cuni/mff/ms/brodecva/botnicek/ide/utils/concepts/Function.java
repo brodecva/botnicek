@@ -19,18 +19,22 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts;
 
 /**
- * Funkce. Implementující třídy by se měly vystříhat postranních efektů (včetně vyhození výjimky).
+ * Funkce. Implementující třídy by se měly vystříhat postranních efektů (včetně
+ * vyhození výjimky).
  * 
  * @author Václav Brodec
  * @version 1.0
- * @param <A> typ argumentu
- * @param <R> typ návratové hodnoty
+ * @param <A>
+ *            typ argumentu
+ * @param <R>
+ *            typ návratové hodnoty
  */
 public interface Function<A, R> {
     /**
      * Aplikuje funkci na vstupní argument.
      * 
-     * @param argument vstupní argument
+     * @param argument
+     *            vstupní argument
      * @return návratová hodnota
      */
     R apply(A argument);

@@ -33,8 +33,9 @@ public interface BotSettingsController extends Controller<BotSettingsView> {
     /**
      * Nastaví spravované běhové prostředí robota.
      * 
-     * @param configuration nastavení
+     * @param configuration
+     *            nastavení
      */
     void set(BotConfiguration configuration);
-    
+
 }

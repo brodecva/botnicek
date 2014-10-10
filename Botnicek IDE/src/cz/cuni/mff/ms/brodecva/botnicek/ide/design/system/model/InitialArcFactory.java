@@ -32,8 +32,10 @@ public interface InitialArcFactory {
     /**
      * Vytvoří hranu.
      * 
-     * @param network rodičovská síť
-     * @param name název hrany
+     * @param network
+     *            rodičovská síť
+     * @param name
+     *            název hrany
      * @return hrana
      */
     Arc produce(final Network network, final NormalWord name);

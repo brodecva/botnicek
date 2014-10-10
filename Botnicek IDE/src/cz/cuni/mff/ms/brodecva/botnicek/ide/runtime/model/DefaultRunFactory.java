@@ -38,8 +38,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.processor.set.DisplayStrategy;
  */
 public final class DefaultRunFactory implements RunFactory {
 
-    private final ConversationFactory conversationFactory;
-    
     /**
      * Vytvoří továrnu.
      * 
@@ -48,29 +46,44 @@ public final class DefaultRunFactory implements RunFactory {
     public static DefaultRunFactory create() {
         return create(AimlConversationFactory.create());
     }
-    
+
     /**
      * Vytvoří továrnu.
      * 
-     * @param conversationFactory továrna na konverzaci
+     * @param conversationFactory
+     *            továrna na konverzaci
      * @return továrna
      */
-    public static DefaultRunFactory create(final ConversationFactory conversationFactory) {
+    public static DefaultRunFactory create(
+            final ConversationFactory conversationFactory) {
         Preconditions.checkNotNull(conversationFactory);
-        
+
         return new DefaultRunFactory(conversationFactory);
     }
-    
+
+    private final ConversationFactory conversationFactory;
+
     private DefaultRunFactory(final ConversationFactory conversationFactory) {
         this.conversationFactory = conversationFactory;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.RunFactory#produce(cz.cuni.mff.ms.brodecva.botnicek.library.loader.Loader, cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Splitter, cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Normalizer, cz.cuni.mff.ms.brodecva.botnicek.library.language.Language, cz.cuni.mff.ms.brodecva.botnicek.library.parser.TemplateParserFactory, java.util.Map, java.util.Map, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.RunFactory#produce
+     * (cz.cuni.mff.ms.brodecva.botnicek.library.loader.Loader,
+     * cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Splitter,
+     * cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Normalizer,
+     * cz.cuni.mff.ms.brodecva.botnicek.library.language.Language,
+     * cz.cuni.mff.ms.brodecva.botnicek.library.parser.TemplateParserFactory,
+     * java.util.Map, java.util.Map,
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher)
      */
     @Override
-    public Run produce(final Loader loader, final Splitter splitter, final Normalizer normalizer,
-            final Language language, final TemplateParserFactory parserFactory,
+    public Run produce(final Loader loader, final Splitter splitter,
+            final Normalizer normalizer, final Language language,
+            final TemplateParserFactory parserFactory,
             final Map<String, String> defaultPredicates,
             final Map<String, DisplayStrategy> predicatesSetBehavior,
             final Dispatcher dispatcher) {
@@ -81,9 +94,11 @@ public final class DefaultRunFactory implements RunFactory {
         Preconditions.checkNotNull(parserFactory);
         Preconditions.checkNotNull(defaultPredicates);
         Preconditions.checkNotNull(predicatesSetBehavior);
-        Preconditions.checkNotNull(dispatcher); 
-        
-        return DefaultRun.create(this.conversationFactory.produce(loader, splitter, normalizer, language, parserFactory, defaultPredicates, predicatesSetBehavior), dispatcher);
+        Preconditions.checkNotNull(dispatcher);
+
+        return DefaultRun.create(this.conversationFactory.produce(loader,
+                splitter, normalizer, language, parserFactory,
+                defaultPredicates, predicatesSetBehavior), dispatcher);
     }
 
 }

@@ -30,35 +30,42 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public class NodeRemovedEvent extends AbstractMappedEvent<Network, NodeRemovedListener> {
-    
-    private final Node node;
-    
+public class NodeRemovedEvent extends
+        AbstractMappedEvent<Network, NodeRemovedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param network síť
-     * @param node odebraný uzel
+     * @param network
+     *            síť
+     * @param node
+     *            odebraný uzel
      * @return událost
      */
-    public static NodeRemovedEvent create(final Network network, final Node node) {
+    public static NodeRemovedEvent
+            create(final Network network, final Node node) {
         return new NodeRemovedEvent(network, node);
     }
-    
+
+    private final Node node;
+
     private NodeRemovedEvent(final Network network, final Node node) {
         super(network);
-        
+
         Preconditions.checkNotNull(node);
-        
+
         this.node = node;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final NodeRemovedListener listener) {
         listener.nodeRemoved(this.node);
     }
 }
- 

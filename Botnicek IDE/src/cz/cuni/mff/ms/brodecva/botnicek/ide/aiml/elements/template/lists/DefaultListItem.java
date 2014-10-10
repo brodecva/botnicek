@@ -23,40 +23,46 @@ import java.util.List;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 
 /**
- * Výchozí položka seznamu nemá žádné významné atributy. Je buďto nepovinnou spádovou možností v bloku podmínek, pokud žádná jiná neuspěje, nebo jednou z možností náhodného výběru.
+ * Výchozí položka seznamu nemá žádné významné atributy. Je buďto nepovinnou
+ * spádovou možností v bloku podmínek, pokud žádná jiná neuspěje, nebo jednou z
+ * možností náhodného výběru.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-condition">http://www.alicebot.org/TR/2011/#section-condition</a>
- * @see <a href="http://www.alicebot.org/TR/2011/#section-random">http://www.alicebot.org/TR/2011/#section-random</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-condition">http://www.alicebot.org/TR/2011/#section-condition</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-random">http://www.alicebot.org/TR/2011/#section-random</a>
  */
 public final class DefaultListItem extends AbstractListItem {
-    
+
     /**
      * Vytvoří položku.
      * 
-     * @param content potomci prvku
-     * @return vytvoří výchozího položku
-     */
-    public static DefaultListItem create(final TemplateElement... content) {
-        return new DefaultListItem(content);
-    }
-    
-    /**
-     * Vytvoří položku.
-     * 
-     * @param content potomci prvku
+     * @param content
+     *            potomci prvku
      * @return vytvoří výchozího položku
      */
     public static DefaultListItem create(final List<TemplateElement> content) {
         return new DefaultListItem(content);
     }
 
-    private DefaultListItem(final TemplateElement... content) {
+    /**
+     * Vytvoří položku.
+     * 
+     * @param content
+     *            potomci prvku
+     * @return vytvoří výchozího položku
+     */
+    public static DefaultListItem create(final TemplateElement... content) {
+        return new DefaultListItem(content);
+    }
+
+    private DefaultListItem(final List<TemplateElement> content) {
         super(content);
     }
-    
-    private DefaultListItem(final List<TemplateElement> content) {
+
+    private DefaultListItem(final TemplateElement... content) {
         super(content);
     }
 }

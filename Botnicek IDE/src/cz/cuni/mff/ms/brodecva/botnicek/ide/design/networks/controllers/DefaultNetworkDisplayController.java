@@ -44,66 +44,94 @@ public class DefaultNetworkDisplayController extends
         AbstractController<NetworkDisplayView> implements
         NetworkDisplayController {
 
-    private final class DefaultNetworkPropertiesDisplayedListener implements NetworkDisplayedListener {
+    private final class DefaultNetworkPropertiesDisplayedListener implements
+            NetworkDisplayedListener {
 
         @Override
         public void displayed(final Network network) {
             Preconditions.checkNotNull(network);
-            
-            final NetworkController networkController = DefaultNetworkController.create(network, getEventManager());
-            final NodesController nodesController = DefaultNodesController.create(system, network, getEventManager());
-            final ArcsController arcsController = DefaultArcsController.create(system, network, getEventManager());
-            
+
+            final NetworkController networkController =
+                    DefaultNetworkController.create(network, getEventManager());
+            final NodesController nodesController =
+                    DefaultNodesController.create(
+                            DefaultNetworkDisplayController.this.system,
+                            network, getEventManager());
+            final ArcsController arcsController =
+                    DefaultArcsController.create(
+                            DefaultNetworkDisplayController.this.system,
+                            network, getEventManager());
+
             callViews(new Callback<NetworkDisplayView>() {
 
                 @Override
                 public void call(final NetworkDisplayView view) {
                     Preconditions.checkNotNull(view);
-                    
-                    view.displayNetwork(networkController, arcsController, nodesController, arcPropertiesController);
+
+                    view.displayNetwork(
+                            networkController,
+                            arcsController,
+                            nodesController,
+                            DefaultNetworkDisplayController.this.arcPropertiesController);
                 }
-                
+
             });
         }
-        
+
     }
-    
-    private final System system;
-    private final ArcPropertiesDisplayController arcPropertiesController;
-    
+
     /**
      * Vytvoří řadič a zaregistruje posluchače pro zobrazení sítí.
      * 
-     * @param system model rodičovského systému sítí
-     * @param arcPropertiesController řadič zobrazovače vlastností hran
-     * @param eventManager správce událostí
+     * @param system
+     *            model rodičovského systému sítí
+     * @param arcPropertiesController
+     *            řadič zobrazovače vlastností hran
+     * @param eventManager
+     *            správce událostí
      * @return řadič
      */
-    public static DefaultNetworkDisplayController create(final System system, final ArcPropertiesDisplayController arcPropertiesController, final EventManager eventManager) {
-        final DefaultNetworkDisplayController newInstance = new DefaultNetworkDisplayController(system, arcPropertiesController, eventManager);
-        
-        newInstance.addListener(NetworkDisplayedEvent.class, system, newInstance.new DefaultNetworkPropertiesDisplayedListener());
-        
+    public static DefaultNetworkDisplayController create(final System system,
+            final ArcPropertiesDisplayController arcPropertiesController,
+            final EventManager eventManager) {
+        final DefaultNetworkDisplayController newInstance =
+                new DefaultNetworkDisplayController(system,
+                        arcPropertiesController, eventManager);
+
+        newInstance.addListener(NetworkDisplayedEvent.class, system,
+                newInstance.new DefaultNetworkPropertiesDisplayedListener());
+
         return newInstance;
     }
-    
-    private DefaultNetworkDisplayController(final System system, final ArcPropertiesDisplayController arcPropertiesContorller, final EventManager eventManager) {
+
+    private final System system;
+
+    private final ArcPropertiesDisplayController arcPropertiesController;
+
+    private DefaultNetworkDisplayController(final System system,
+            final ArcPropertiesDisplayController arcPropertiesContorller,
+            final EventManager eventManager) {
         super(eventManager);
-        
+
         Preconditions.checkNotNull(system);
         Preconditions.checkNotNull(arcPropertiesContorller);
-        
+
         this.system = system;
         this.arcPropertiesController = arcPropertiesContorller;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.controllers.NetworkPropertiesController#displayNetwork(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.NetworkInfo)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.controllers.
+     * NetworkPropertiesController
+     * #displayNetwork(cz.cuni.mff.ms.brodecva.botnicek
+     * .ide.design.networks.model.NetworkInfo)
      */
     @Override
     public void displayNetwork(final Network network) {
         Preconditions.checkNotNull(network);
-        
+
         fire(NetworkDisplayedEvent.create(this.system, network));
     }
 }

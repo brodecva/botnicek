@@ -31,46 +31,59 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateEleme
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.lists.DefaultListItem;
 
 /**
- * Vybírá s rovnoměrným rozdělením jednu z obsažených položek, jejíž výstup vrátí jako svůj.
+ * Vybírá s rovnoměrným rozdělením jednu z obsažených položek, jejíž výstup
+ * vrátí jako svůj.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-random">http://www.alicebot.org/TR/2011/#section-random</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-random">http://www.alicebot.org/TR/2011/#section-random</a>
  */
 public class Random extends AbstractProperElement implements CompoundElement {
     private static final String NAME = "random";
-    
-    private final List< List<TemplateElement> > choices;
-    
+
     /**
      * Vytvoří prvek.
      * 
-     * @param choices možnosti
+     * @param choices
+     *            možnosti
      * @return prvek
      */
-    public static Random create(final List< List<TemplateElement> > choices) {
+    public static Random create(final List<List<TemplateElement>> choices) {
         return new Random(choices);
     }
-    
-    private Random(final List< List<TemplateElement> > choices) {
+
+    private final List<List<TemplateElement>> choices;
+
+    private Random(final List<List<TemplateElement>> choices) {
         Preconditions.checkNotNull(choices);
-        
-        final Builder<List<TemplateElement>> listBuilder = ImmutableList.builder();
+
+        final Builder<List<TemplateElement>> listBuilder =
+                ImmutableList.builder();
         for (final List<TemplateElement> choice : choices) {
             Preconditions.checkNotNull(choice);
-            
+
             listBuilder.add(ImmutableList.copyOf(choice));
         }
-        
+
         this.choices = listBuilder.build();
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement#
+     * getChildren()
      */
     @Override
-    public String getLocalName() {
-        return NAME;
+    public List<Element> getChildren() {
+        final ImmutableList.Builder<Element> listBuilder =
+                ImmutableList.builder();
+        for (final List<TemplateElement> choice : this.choices) {
+            listBuilder.add(DefaultListItem.create(choice));
+        }
+
+        return listBuilder.build();
     }
 
     /**
@@ -78,20 +91,18 @@ public class Random extends AbstractProperElement implements CompoundElement {
      * 
      * @return možnosti
      */
-    public List< List<TemplateElement> > getChoices() {
+    public List<List<TemplateElement>> getChoices() {
         return this.choices;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement#getChildren()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
-    public List<Element> getChildren() {
-        final ImmutableList.Builder<Element> listBuilder = ImmutableList.builder();
-        for (final List<TemplateElement> choice : this.choices) {
-            listBuilder.add(DefaultListItem.create(choice));
-        }
-        
-        return listBuilder.build();
+    public String getLocalName() {
+        return NAME;
     }
 }

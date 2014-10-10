@@ -26,7 +26,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 
 /**
- * Kompilátor systému sítí ve smyslu ATN do témat jazyka AIML pro jednotlivé sítě.
+ * Kompilátor systému sítí ve smyslu ATN do témat jazyka AIML pro jednotlivé
+ * sítě.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -35,7 +36,8 @@ public interface Compiler {
     /**
      * Zkompiluje systém sítí.
      * 
-     * @param system systém sítí
+     * @param system
+     *            systém sítí
      * @return sítě a témata, jež z nich byla vytvořena
      */
     Map<Network, List<Topic>> compile(final System system);

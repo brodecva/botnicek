@@ -19,12 +19,15 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events;
 
 /**
- * Mapovaná událost. Specifikuje klíč, podle kterého může rozesílací aparát zúžit okruh příjemců.
+ * Mapovaná událost. Specifikuje klíč, podle kterého může rozesílací aparát
+ * zúžit okruh příjemců.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @param <K> typ klíče
- * @param <L> typ posluchače
+ * @param <K>
+ *            typ klíče
+ * @param <L>
+ *            typ posluchače
  */
 public interface MappedEvent<K, L> extends Event<L> {
     /**

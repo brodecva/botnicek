@@ -18,68 +18,89 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs;
 
-
 /**
- * <p>Graf s nepovinnými, ale jednoznačnými popisky vrcholů a hran jednotných typů.</p>
- * <p>Umožňuje k označeným vrcholům přistupovat přes popisek.</p> 
+ * <p>
+ * Graf s nepovinnými, ale jednoznačnými popisky vrcholů a hran jednotných typů.
+ * </p>
+ * <p>
+ * Umožňuje k označeným vrcholům přistupovat přes popisek.
+ * </p>
  * 
  * @author Václav Brodec
  * @version 1.0
- * @param <V> typ vrcholu
- * @param <L> typ popisku vrcholu
- * @param <E> typ hrany
- * @param <M> typ popisku hrany
+ * @param <V>
+ *            typ vrcholu
+ * @param <L>
+ *            typ popisku vrcholu
+ * @param <E>
+ *            typ hrany
+ * @param <M>
+ *            typ popisku hrany
  */
 public interface LabeledDirectedGraph<V, L, E, M> extends DirectedGraph<V, E> {
     /**
-     * Vrátí uzel s daným popiskem.
+     * Přidá hranu do grafu.
      * 
-     * @param label popisek uzlu
-     * @return uzel
+     * @param edge
+     *            hrana
+     * @param label
+     *            popisek hrany
+     * @param from
+     *            výchozí vrchol hrany
+     * @param to
+     *            cílový vrchol hrany
      */
-    V getVertex(L label);
-    
-    /**
-     * Vrátí hranu s daným popiskem.
-     * 
-     * @param label popisek hrany
-     * @return hrana
-     */
-    E getEdge(M label);
-    
+    void add(E edge, M label, V from, V to);
+
     /**
      * Přidá vrchol do grafu.
      * 
-     * @param vertex vrchol
-     * @param label popisek vrcholu
+     * @param vertex
+     *            vrchol
+     * @param label
+     *            popisek vrcholu
      */
     void add(V vertex, L label);
-    
+
     /**
-     * Přidá hranu do grafu.
+     * Vrátí hranu s daným popiskem.
      * 
-     * @param edge hrana
-     * @param label popisek hrany
-     * @param from výchozí vrchol hrany
-     * @param to cílový vrchol hrany
+     * @param label
+     *            popisek hrany
+     * @return hrana
      */
-    void add(E edge, M label, V from, V to);
-    
+    E getEdge(M label);
+
     /**
-     * Nahradí vrchol a jeho popisek.
+     * Vrátí uzel s daným popiskem.
      * 
-     * @param old starý vrchol
-     * @param fresh nový vrchol
-     * @param freshLabel popisek nového vrcholu
+     * @param label
+     *            popisek uzlu
+     * @return uzel
      */
-    void replaceVertex(final V old, final V fresh, final L freshLabel);
-    
+    V getVertex(L label);
+
     /**
      * Nahradí hranu a její popisek.
      * 
-     * @param old stará hrana
-     * @param fresh nová hrana
-     * @param freshLabel popisek nové hrany
+     * @param old
+     *            stará hrana
+     * @param fresh
+     *            nová hrana
+     * @param freshLabel
+     *            popisek nové hrany
      */
     void replaceEdge(final E old, final E fresh, final M freshLabel);
+
+    /**
+     * Nahradí vrchol a jeho popisek.
+     * 
+     * @param old
+     *            starý vrchol
+     * @param fresh
+     *            nový vrchol
+     * @param freshLabel
+     *            popisek nového vrcholu
+     */
+    void replaceVertex(final V old, final V fresh, final L freshLabel);
 }

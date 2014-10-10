@@ -28,38 +28,43 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RandomNode;
  * 
  * @author Václav Brodec
  * @version 1.0
- * @param <T> výsledek zpracování
+ * @param <T>
+ *            výsledek zpracování
  */
 public interface DispatchProcessor<T> {
     /**
-     * Zpracuje uzel náhodného výběru.
+     * Zpracuje výstupní uzel.
      * 
-     * @param node uzel náhodného výběru
+     * @param node
+     *            výstupní uzel
      * @return výsledek zpracování
      */
-    T process(RandomNode node);
-    
+    T process(ExitNode node);
+
+    /**
+     * Zpracuje izolovaný uzel.
+     * 
+     * @param node
+     *            izolovaný uzel
+     * @return výsledek zpracování
+     */
+    T process(IsolatedNode node);
+
     /**
      * Zpracuje uzel uspořádaného výběru.
      * 
-     * @param node uzel uspořádaného výběru
+     * @param node
+     *            uzel uspořádaného výběru
      * @return výsledek zpracování
      */
     T process(OrderedNode node);
 
     /**
-     * Zpracuje výstupní uzel.
+     * Zpracuje uzel náhodného výběru.
      * 
-     * @param node výstupní uzel
+     * @param node
+     *            uzel náhodného výběru
      * @return výsledek zpracování
      */
-    T process(ExitNode node);
-    
-    /**
-     * Zpracuje izolovaný uzel.
-     * 
-     * @param node izolovaný uzel
-     * @return výsledek zpracování
-     */
-    T process(IsolatedNode node);
+    T process(RandomNode node);
 }

@@ -27,28 +27,33 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public class NetworkSelectedEvent extends AbstractMappedEvent<Network, NetworkSelectedListener> {
-    
+public class NetworkSelectedEvent extends
+        AbstractMappedEvent<Network, NetworkSelectedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param network vybraná síť
+     * @param network
+     *            vybraná síť
      * @return událost
      */
     public static NetworkSelectedEvent create(final Network network) {
         return new NetworkSelectedEvent(network);
     }
-    
+
     private NetworkSelectedEvent(final Network network) {
         super(network);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final NetworkSelectedListener listener) {
         listener.selected(getKey());
     }
 }
- 

@@ -23,7 +23,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 
-
 /**
  * Návštěvník (návrhový vzor) systému sítí.
  * 
@@ -32,45 +31,51 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
  */
 public interface Visitor {
     /**
-     * Navštíví systém.
+     * Navštíví hranu sítě.
      * 
-     * @param system systém
+     * @param arc
+     *            hrana mezi uzly jedné sítě
      */
-    void visit(System system);
-    
+    void visit(Arc arc);
+
     /**
      * Navštíví síť.
      * 
-     * @param network síť
+     * @param network
+     *            síť
      */
     void visit(Network network);
-        
+
     /**
-     * Vstoupí do uzlu sítě.
+     * Navštíví systém.
      * 
-     * @param node uzel sítě.
+     * @param system
+     *            systém
      */
-    void visitEnter(Node node);
-        
-    /**
-     * Vystoupí z uzlu sítě.
-     * 
-     * @param node uzel sítě.
-     */
-    void visitExit(Node node);
-        
-    /**
-     * Navštíví hranu sítě.
-     * 
-     * @param arc hrana mezi uzly jedné sítě
-     */
-    void visit(Arc arc);
-        
+    void visit(System system);
+
     /**
      * Indikuje, zda-li byl uzel již navštíven.
      * 
-     * @param node uzel
+     * @param node
+     *            uzel
      * @return zda-li byl uzen návštěvníkem již navštíven
      */
     boolean visited(Node node);
+
+    /**
+     * Vstoupí do uzlu sítě.
+     * 
+     * @param node
+     *            uzel sítě.
+     */
+    void visitEnter(Node node);
+
+    /**
+     * Vystoupí z uzlu sítě.
+     * 
+     * @param node
+     *            uzel sítě.
+     */
+    void visitExit(Node node);
 }

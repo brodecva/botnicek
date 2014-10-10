@@ -35,50 +35,63 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.responder.Listener;
  * @version 1.0
  */
 public class DefaultRun implements Run {
-    
+
     private static final String USER = "Uživatel";
-    
-    private final Conversation conversation;
-    private final Dispatcher dispatcher;
-    
+
     /**
      * Vytvoří instanci běžící konverzace.
      * 
-     * @param conversation konverzace
-     * @param dispatcher rozesílač událostí
+     * @param conversation
+     *            konverzace
+     * @param dispatcher
+     *            rozesílač událostí
      * @return instance běžící konverzace
      */
-    public static Run create(final Conversation conversation, final Dispatcher dispatcher) {
+    public static Run create(final Conversation conversation,
+            final Dispatcher dispatcher) {
         return new DefaultRun(conversation, dispatcher);
     }
-    
-    private DefaultRun(final Conversation conversation, final Dispatcher dispatcher) {
+
+    private final Conversation conversation;
+
+    private final Dispatcher dispatcher;
+
+    private DefaultRun(final Conversation conversation,
+            final Dispatcher dispatcher) {
         Preconditions.checkNotNull(conversation);
         Preconditions.checkNotNull(dispatcher);
-        
+
         this.conversation = conversation;
         this.dispatcher = dispatcher;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.Run#tell(java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.Run#tell(java.lang
+     * .String)
      */
     @Override
     public void tell(final String content) {
         Preconditions.checkNotNull(content);
-        
-        this.dispatcher.fire(SpokenEvent.create(DefaultRun.this, USER, content));
-        
+
+        this.dispatcher
+                .fire(SpokenEvent.create(DefaultRun.this, USER, content));
+
         this.conversation.talk(content, new Listener() {
-            
-            @Override
-            public void exceptionalStateCaught(final ExceptionalState status) {
-                dispatcher.fire(ExceptionalStateCaughtEvent.create(DefaultRun.this, status));
-            }
-            
+
             @Override
             public void answerReceived(final Answer answer) {
-                dispatcher.fire(SpokenEvent.create(DefaultRun.this, conversation.getBot().getName(), answer.getAnswer()));
+                DefaultRun.this.dispatcher.fire(SpokenEvent.create(
+                        DefaultRun.this, DefaultRun.this.conversation.getBot()
+                                .getName(), answer.getAnswer()));
+            }
+
+            @Override
+            public void exceptionalStateCaught(final ExceptionalState status) {
+                DefaultRun.this.dispatcher.fire(ExceptionalStateCaughtEvent
+                        .create(DefaultRun.this, status));
             }
         });
     }

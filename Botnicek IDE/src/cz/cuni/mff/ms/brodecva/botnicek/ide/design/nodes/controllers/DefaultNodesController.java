@@ -57,180 +57,224 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultNodesController extends AbstractController<NodesView> implements NodesController {
-    
-    private class DefaultNodeRemovedEventListener implements NodeRemovedListener {
-        
-        @Override
-        public void nodeRemoved(final Node node) {
-            Preconditions.checkNotNull(node);
-            
-            callViews(new Callback<NodesView>() {
-                @Override
-                public void call(final NodesView view) {
-                    view.nodeRemoved(node);
-                }                
-            });
-        }
-        
-    }    
-    private class DefaultNodeTypeChangedListener implements NodeTypeChangedListener {
-        
-        @Override
-        public void nodeTypeChanged(final Node oldVersion, final Node newVersion) {
-            Preconditions.checkNotNull(oldVersion);
-            Preconditions.checkNotNull(newVersion);
-            
-            callViews(new Callback<NodesView>() {
-                @Override
-                public void call(final NodesView view) {
-                    Preconditions.checkNotNull(view);
-                    
-                    view.nodeRetyped(oldVersion, newVersion);
-                }                
-            });
-        }
-        
-    }
-    
-    private class DefaultNodeRenamedListener implements NodeRenamedListener {
-        
-        @Override
-        public void nodeRenamed(final Node oldVersion, final Node newVersion) {
-            Preconditions.checkNotNull(oldVersion);
-            Preconditions.checkNotNull(newVersion);
-            
-            callViews(new Callback<NodesView>() {
-                @Override
-                public void call(final NodesView view) {
-                    Preconditions.checkNotNull(view);
-                    
-                    view.nodeRenamed(oldVersion, newVersion);
-                }                
-            });
-        }
-        
-    }
-    
+public class DefaultNodesController extends AbstractController<NodesView>
+        implements NodesController {
+
     private class DefaultNodeMovedListener implements NodeMovedListener {
-        
+
         @Override
         public void nodeMoved(final Node oldVersion, final Node newVersion) {
             Preconditions.checkNotNull(oldVersion);
             Preconditions.checkNotNull(newVersion);
-            
+
             callViews(new Callback<NodesView>() {
                 @Override
                 public void call(final NodesView view) {
                     Preconditions.checkNotNull(view);
-                    
+
                     view.nodeMoved(oldVersion, newVersion);
-                }                
+                }
             });
         }
-        
+
     }
-    
-    private final static Iterable<Class<? extends ProceedNode>> CYCLIC_NODE_TYPES = Iterables.cycle(ImmutableList.of(InputNode.class, ProcessingNode.class));
-    private static final Iterable<Class<? extends DispatchNode>> CYCLIC_NODE_DISPATCH_TYPES = Iterables.cycle(ImmutableList.of(OrderedNode.class, RandomNode.class));
-    
-    private final System system;
-    
+
+    private class DefaultNodeRemovedEventListener implements
+            NodeRemovedListener {
+
+        @Override
+        public void nodeRemoved(final Node node) {
+            Preconditions.checkNotNull(node);
+
+            callViews(new Callback<NodesView>() {
+                @Override
+                public void call(final NodesView view) {
+                    view.nodeRemoved(node);
+                }
+            });
+        }
+
+    }
+
+    private class DefaultNodeRenamedListener implements NodeRenamedListener {
+
+        @Override
+        public void nodeRenamed(final Node oldVersion, final Node newVersion) {
+            Preconditions.checkNotNull(oldVersion);
+            Preconditions.checkNotNull(newVersion);
+
+            callViews(new Callback<NodesView>() {
+                @Override
+                public void call(final NodesView view) {
+                    Preconditions.checkNotNull(view);
+
+                    view.nodeRenamed(oldVersion, newVersion);
+                }
+            });
+        }
+
+    }
+
+    private class DefaultNodeTypeChangedListener implements
+            NodeTypeChangedListener {
+
+        @Override
+        public void
+                nodeTypeChanged(final Node oldVersion, final Node newVersion) {
+            Preconditions.checkNotNull(oldVersion);
+            Preconditions.checkNotNull(newVersion);
+
+            callViews(new Callback<NodesView>() {
+                @Override
+                public void call(final NodesView view) {
+                    Preconditions.checkNotNull(view);
+
+                    view.nodeRetyped(oldVersion, newVersion);
+                }
+            });
+        }
+
+    }
+
+    private final static Iterable<Class<? extends ProceedNode>> CYCLIC_NODE_TYPES =
+            Iterables.cycle(ImmutableList.of(InputNode.class,
+                    ProcessingNode.class));
+    private static final Iterable<Class<? extends DispatchNode>> CYCLIC_NODE_DISPATCH_TYPES =
+            Iterables.cycle(ImmutableList.of(OrderedNode.class,
+                    RandomNode.class));
+
     /**
      * Vytvoří řadič a zaregistruje posluchače na změny.
      * 
-     * @param system systém sítí
-     * @param network rodičovská síť
-     * @param eventManager správce událostí
+     * @param system
+     *            systém sítí
+     * @param network
+     *            rodičovská síť
+     * @param eventManager
+     *            správce událostí
      * @return řadič
      */
-    public static DefaultNodesController create(final System system, final Network network, final EventManager eventManager) {
+    public static DefaultNodesController create(final System system,
+            final Network network, final EventManager eventManager) {
         Preconditions.checkNotNull(system);
         Preconditions.checkNotNull(network);
         Preconditions.checkNotNull(eventManager);
-        
-        final DefaultNodesController newInstance = new DefaultNodesController(system, eventManager);
-        
-        newInstance.addListener(NodeMovedEvent.class, network, newInstance.new DefaultNodeMovedListener());
-        newInstance.addListener(NodeRenamedEvent.class, network, newInstance.new DefaultNodeRenamedListener());
-        newInstance.addListener(NodeTypeChangedEvent.class, network, newInstance.new DefaultNodeTypeChangedListener());
-        newInstance.addListener(NodeRemovedEvent.class, network, newInstance.new DefaultNodeRemovedEventListener());
-        
+
+        final DefaultNodesController newInstance =
+                new DefaultNodesController(system, eventManager);
+
+        newInstance.addListener(NodeMovedEvent.class, network,
+                newInstance.new DefaultNodeMovedListener());
+        newInstance.addListener(NodeRenamedEvent.class, network,
+                newInstance.new DefaultNodeRenamedListener());
+        newInstance.addListener(NodeTypeChangedEvent.class, network,
+                newInstance.new DefaultNodeTypeChangedListener());
+        newInstance.addListener(NodeRemovedEvent.class, network,
+                newInstance.new DefaultNodeRemovedEventListener());
+
         return newInstance;
     }
-    
+
+    private final System system;
+
     private DefaultNodesController(final System system,
             final EventManager eventManager) {
         super(eventManager);
-        
+
         Preconditions.checkNotNull(system);
-        
+
         this.system = system;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController#toggleNodeProceedType(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController
+     * #changeNodeLocation(java.lang.String, int, int)
      */
     @Override
-    public void toggleNodeProceedType(final NormalWord nodeName) {
-        toggleNodeType(nodeName, CYCLIC_NODE_TYPES);
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController#toggleNodeDispatchType(java.lang.String)
-     */
-    @Override
-    public void toggleNodeDispatchType(NormalWord nodeName) {
-        toggleNodeType(nodeName, CYCLIC_NODE_DISPATCH_TYPES);
-    }
-    
-    private void toggleNodeType(final NormalWord name, final Iterable<? extends Class<? extends FunctionalNode>> types) {
-        final Node node = this.system.getNode(name);
-        
-        final UnmodifiableIterator<? extends Class<? extends FunctionalNode>> cyclicUnmodifiableIterator = Iterators.unmodifiableIterator(types.iterator());
-        Optional<?> visited = Optional.absent();
-        while (cyclicUnmodifiableIterator.hasNext()) {
-            final Class<? extends Node> type = cyclicUnmodifiableIterator.next();
-            if (type.isAssignableFrom(node.getClass())) {
-                this.system.changeNode(name, cyclicUnmodifiableIterator.next());
-                return;
-            }
-            
-            if (visited.isPresent()) {
-                return;
-            } else {                
-                visited = Optional.of(type);
-            }
-        }
+    public void changeNode(final NormalWord nodeName, final int x, final int y) {
+        this.system.changeNode(nodeName, x, y);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController#rename(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController
+     * #removeNode(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+     */
+    @Override
+    public void removeNode(final NormalWord name) {
+        this.system.removeNode(name);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController
+     * #rename(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord,
+     * java.lang.String)
      */
     @Override
     public void rename(final NormalWord nodeName, final String proposedName) {
         Preconditions.checkNotNull(nodeName);
         Preconditions.checkNotNull(proposedName);
-        Preconditions.checkArgument(!proposedName.isEmpty(), ExceptionLocalizer.print("ProposedNodeNameEmpty"));
-        
+        Preconditions.checkArgument(!proposedName.isEmpty(),
+                ExceptionLocalizer.print("ProposedNodeNameEmpty"));
+
         final NormalWord normalName = NormalWords.from(proposedName);
-        
+
         this.system.changeNode(nodeName, normalName);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController#changeNodeLocation(java.lang.String, int, int)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController
+     * #toggleNodeDispatchType(java.lang.String)
      */
     @Override
-    public void changeNode(NormalWord nodeName, int x, int y) {
-        this.system.changeNode(nodeName, x, y);
+    public void toggleNodeDispatchType(final NormalWord nodeName) {
+        toggleNodeType(nodeName, CYCLIC_NODE_DISPATCH_TYPES);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController#removeNode(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.controllers.NodesController
+     * #toggleNodeProceedType(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.
+     * NormalWord)
      */
     @Override
-    public void removeNode(final NormalWord name) {
-        this.system.removeNode(name);
+    public void toggleNodeProceedType(final NormalWord nodeName) {
+        toggleNodeType(nodeName, CYCLIC_NODE_TYPES);
+    }
+
+    private void toggleNodeType(final NormalWord name,
+            final Iterable<? extends Class<? extends FunctionalNode>> types) {
+        final Node node = this.system.getNode(name);
+
+        final UnmodifiableIterator<? extends Class<? extends FunctionalNode>> cyclicUnmodifiableIterator =
+                Iterators.unmodifiableIterator(types.iterator());
+        Optional<?> visited = Optional.absent();
+        while (cyclicUnmodifiableIterator.hasNext()) {
+            final Class<? extends Node> type =
+                    cyclicUnmodifiableIterator.next();
+            if (type.isAssignableFrom(node.getClass())) {
+                this.system.changeNode(name, cyclicUnmodifiableIterator.next());
+                return;
+            }
+
+            if (visited.isPresent()) {
+                return;
+            } else {
+                visited = Optional.of(type);
+            }
+        }
     }
 }

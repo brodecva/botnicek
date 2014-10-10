@@ -34,49 +34,40 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.NodeModifier;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RealignmentProcessor;
 
 /**
- * Výchozí implementace procesoru pro opravu typu uzlů dle umístění v grafu po změně.
+ * Výchozí implementace procesoru pro opravu typu uzlů dle umístění v grafu po
+ * změně.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultRealignmentProcessor implements RealignmentProcessor, Serializable {
-    
+public class DefaultRealignmentProcessor implements RealignmentProcessor,
+        Serializable {
+
     private static final long serialVersionUID = 1L;
-    
-    private final NodeModifier changeProcessor;
 
     /**
      * Vytvoří procesor.
      * 
-     * @param modifier modifikátor uzlů
+     * @param modifier
+     *            modifikátor uzlů
      * @return procesor
      */
-    public static DefaultRealignmentProcessor create(final NodeModifier modifier) {
+    public static DefaultRealignmentProcessor
+            create(final NodeModifier modifier) {
         return new DefaultRealignmentProcessor(modifier);
     }
-    
+
+    private final NodeModifier changeProcessor;
+
     private DefaultRealignmentProcessor(final NodeModifier changeProcessor) {
         Preconditions.checkNotNull(changeProcessor);
-        
+
         this.changeProcessor = changeProcessor;
     }
-    
-    /**
-     * {@inheritDoc}
-     * 
-     * <p>Zkoumá stupně uzlu. Z toho usoudí, nachází-li se po změně uzel uvnitř či na okrajích sítě.</p>
-     */
-    @Override
-    public Node realign(final Node node) {
-        Preconditions.checkNotNull(node);
-        
-        final Class<? extends Node> type = determineType(node);
-        return this.changeProcessor.change(node, type);
-    }
-    
+
     private Class<? extends Node> determineType(final Node node) {
-        final int inDegree =  node.getInDegree();
-        
+        final int inDegree = node.getInDegree();
+
         if (node.getOutDegree() == 0) {
             if (inDegree == 0) {
                 return IsolatedNode.class;
@@ -91,12 +82,28 @@ public class DefaultRealignmentProcessor implements RealignmentProcessor, Serial
             }
         }
     }
-    
+
     private void readObject(final ObjectInputStream objectInputStream)
             throws ClassNotFoundException, IOException {
         objectInputStream.defaultReadObject();
-        
+
         Preconditions.checkNotNull(this.changeProcessor);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * Zkoumá stupně uzlu. Z toho usoudí, nachází-li se po změně uzel uvnitř či
+     * na okrajích sítě.
+     * </p>
+     */
+    @Override
+    public Node realign(final Node node) {
+        Preconditions.checkNotNull(node);
+
+        final Class<? extends Node> type = determineType(node);
+        return this.changeProcessor.change(node, type);
     }
 
     private void writeObject(final ObjectOutputStream objectOutputStream)

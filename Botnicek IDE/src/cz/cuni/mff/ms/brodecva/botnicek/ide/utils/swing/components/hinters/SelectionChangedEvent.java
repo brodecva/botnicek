@@ -30,41 +30,51 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-final class SelectionChangedEvent extends AbstractEvent<SelectionChangedListener> implements Serializable {
-    
+final class SelectionChangedEvent extends
+        AbstractEvent<SelectionChangedListener> implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    
-    private final int start;
-    private final int end;
-    
+
     /**
      * Vytvoří událost.
      * 
-     * @param start počátek
-     * @param end konec
+     * @param start
+     *            počátek
+     * @param end
+     *            konec
      * @return událost
      */
-    public static <E> SelectionChangedEvent create(final int start, final int end) {
+    public static <E> SelectionChangedEvent create(final int start,
+            final int end) {
         return new SelectionChangedEvent(start, end);
     }
-    
+
+    private final int start;
+
+    private final int end;
+
     private SelectionChangedEvent(final int start, final int end) {
         Preconditions.checkArgument(start >= 0);
         Preconditions.checkArgument(end >= start);
-        
+
         this.start = start;
         this.end = end;
     }
-    
-    /**
-     * Vrátí počátek.
+
+    /*
+     * (non-Javadoc)
      * 
-     * @return počátek
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event#dispatchTo(java
+     * .lang.Object)
      */
-    public int getStart() {
-        return this.start;
+    @Override
+    public void dispatchTo(final SelectionChangedListener listener) {
+        Preconditions.checkNotNull(listener);
+
+        listener.changeSelection(this.start, this.end);
     }
-    
+
     /**
      * Vrátí konec.
      * 
@@ -74,13 +84,12 @@ final class SelectionChangedEvent extends AbstractEvent<SelectionChangedListener
         return this.end;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event#dispatchTo(java.lang.Object)
+    /**
+     * Vrátí počátek.
+     * 
+     * @return počátek
      */
-    @Override
-    public void dispatchTo(final SelectionChangedListener listener) {
-        Preconditions.checkNotNull(listener);
-        
-        listener.changeSelection(this.start, this.end);
+    public int getStart() {
+        return this.start;
     }
 }

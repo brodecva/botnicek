@@ -30,18 +30,22 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller;
  */
 public interface CheckController extends Controller<CheckView> {
     /**
-     * Zkontroluje textový řetězec, zda-li odpovídá požadavkům validátoru.
-     * 
-     * @param client zdroj řetězce
-     * @param subject identifikátor opakovaných pokusů o kontrolu
-     * @param value vstupní řetězec
-     */
-    void check(Source client, Object subject, String value);
-    
-    /**
      * Odstraní výsledky pro daný předmět.
      * 
-     * @param subject předmět. 
+     * @param subject
+     *            předmět.
      */
     void clear(Object subject);
+
+    /**
+     * Zkontroluje textový řetězec, zda-li odpovídá požadavkům validátoru.
+     * 
+     * @param client
+     *            zdroj řetězce
+     * @param subject
+     *            identifikátor opakovaných pokusů o kontrolu
+     * @param value
+     *            vstupní řetězec
+     */
+    void check(Source client, Object subject, String value);
 }

@@ -18,7 +18,7 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.print;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
@@ -43,25 +43,29 @@ public class DefaultPrettyPrinterTest {
     /**
      * Vytvoří testovací objekt.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @Before
     public void setUp() throws Exception {
-        tested = DefaultPrettyPrinter.create(TEST_INDENT);
+        this.tested = DefaultPrettyPrinter.create(TEST_INDENT);
     }
 
     /**
      * Uklidí testovací objekt.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @After
     public void tearDown() throws Exception {
-        tested = Intended.nullReference();
+        this.tested = Intended.nullReference();
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.print.DefaultPrettyPrinter#create(int)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.print.DefaultPrettyPrinter#create(int)}
+     * .
      */
     @Test
     public void testCreate() {
@@ -78,12 +82,10 @@ public class DefaultPrettyPrinterTest {
      */
     @Test
     public void testPrint() throws PrintException {
-        assertEquals(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEW_LINE +
-                "<root>" + NEW_LINE +
-                    "    <element>Text</element>" + NEW_LINE +
-                "</root>" + NEW_LINE,
-                tested.print("<root><element>Text</element></root>"));
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEW_LINE
+                + "<root>" + NEW_LINE + "    <element>Text</element>"
+                + NEW_LINE + "</root>" + NEW_LINE,
+                this.tested.print("<root><element>Text</element></root>"));
     }
 
 }

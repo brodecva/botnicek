@@ -28,37 +28,45 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.platform.XML;
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-comments">http://www.alicebot.org/TR/2011/#section-comments</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-comments">http://www.alicebot.org/TR/2011/#section-comments</a>
  */
 public class Comment extends AbstractRawElement implements TemplateElement {
-    private final String content;
-    
     /**
      * Vytvoří komentář.
      * 
-     * @param content text komentáře
+     * @param content
+     *            text komentáře
      * @return komentář
      */
     public static Comment create(final String content) {
         return new Comment(content);
     }
-    
+
+    private final String content;
+
     private Comment(final String content) {
         Preconditions.checkNotNull(content);
-        
+
         this.content = content;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {
         return "comment";
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getText()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getText()
      */
     @Override
     public String getText() {

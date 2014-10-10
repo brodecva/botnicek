@@ -27,11 +27,12 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.Settings;
  * @version 1.0
  */
 public interface SettingsView {
-    
+
     /**
      * Aktualizuje zobrazená nastavení.
      * 
-     * @param settings nastavení projektu
+     * @param settings
+     *            nastavení projektu
      */
     void updateSettings(Settings settings);
 }

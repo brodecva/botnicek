@@ -26,48 +26,71 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons;
 
 /**
- * <p>Výchozí implementace továrny překládajících pozorovatelů.</p>
- * <p>Je konfigurovatelná názvy pomocných stavů.</p>
+ * <p>
+ * Výchozí implementace továrny překládajících pozorovatelů.
+ * </p>
+ * <p>
+ * Je konfigurovatelná názvy pomocných stavů.
+ * </p>
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultTranslatorFactory implements TranslatorFactory, Serializable {
-    
+public final class DefaultTranslatorFactory implements TranslatorFactory,
+        Serializable {
+
     private static final long serialVersionUID = 1L;
-    
+
+    /**
+     * Vytvoří továrna s daným nastavením názvů pomocných stavů.
+     * 
+     * @param pullState
+     *            slovo popisující stav, který je vložen na zásobník po průchodu
+     *            sítí až do koncového uzlu, a spustí tak proceduru uvolňování
+     *            nezpracovaných stavů z něj
+     * @param pullStopState
+     *            slovo popisující stav, který slouží jako zarážka při
+     *            uvolňování nezpracovaných stavů úspěšně prošlé sítě ze
+     *            zásobníku
+     * @param randomizeState
+     *            slovo popisující stav, který provede zamíchá přechody dle
+     *            jejich priority před vložením na zásobník
+     * @param successState
+     *            slovo popisující stav, který indikuje úspěšné projití podsítě
+     *            odkazované z následujícího stavu na zásobníku
+     * @param returnState
+     *            slovo popisující stav, který indikuje zpracování podsítě
+     * @param testingPredicate
+     *            rezervovaný název predikátu sloužící pro interní testy
+     * @return továrna na překladače
+     */
+    public static DefaultTranslatorFactory create(final NormalWord pullState,
+            final NormalWord pullStopState, final NormalWord randomizeState,
+            final NormalWord successState, final NormalWord returnState,
+            final NormalWord testingPredicate) {
+        Preconditions.checkNotNull(pullState);
+        Preconditions.checkNotNull(pullStopState);
+        Preconditions.checkNotNull(randomizeState);
+        Preconditions.checkNotNull(testingPredicate);
+        Preconditions.checkArgument(Comparisons.allDifferent(pullState,
+                pullStopState, randomizeState, successState, returnState));
+
+        return new DefaultTranslatorFactory(pullState, pullStopState,
+                randomizeState, successState, returnState, testingPredicate);
+    }
+
     private final NormalWord pullState;
     private final NormalWord pullStopState;
     private final NormalWord randomizeState;
     private final NormalWord successState;
     private final NormalWord returnState;
-    private final NormalWord testingPredicate;
-    
-    /**
-     * Vytvoří továrna s daným nastavením názvů pomocných stavů.
-     * 
-     * @param pullState slovo popisující stav, který je vložen na zásobník po průchodu sítí až do koncového uzlu, a spustí tak proceduru uvolňování nezpracovaných stavů z něj 
-     * @param pullStopState slovo popisující stav, který slouží jako zarážka při uvolňování nezpracovaných stavů úspěšně prošlé sítě ze zásobníku
-     * @param randomizeState slovo popisující stav, který provede zamíchá přechody dle jejich priority před vložením na zásobník
-     * @param successState slovo popisující stav, který indikuje úspěšné projití podsítě odkazované z následujícího stavu na zásobníku
-     * @param returnState slovo popisující stav, který indikuje zpracování podsítě
-     * @param testingPredicate rezervovaný název predikátu sloužící pro interní testy
-     * @return továrna na překladače
-     */
-    public static DefaultTranslatorFactory create(final NormalWord pullState, final NormalWord pullStopState, final NormalWord randomizeState,
-            NormalWord successState, NormalWord returnState, final NormalWord testingPredicate) {
-        Preconditions.checkNotNull(pullState);
-        Preconditions.checkNotNull(pullStopState);
-        Preconditions.checkNotNull(randomizeState);
-        Preconditions.checkNotNull(testingPredicate);
-        Preconditions.checkArgument(Comparisons.allDifferent(pullState, pullStopState, randomizeState, successState, returnState));
-        
-        return new DefaultTranslatorFactory(pullState, pullStopState, randomizeState, successState, returnState, testingPredicate);
-    }
 
-    
-    private DefaultTranslatorFactory(final NormalWord pullState, final NormalWord pullStopState, final NormalWord randomizeState,
-            NormalWord successState, NormalWord returnState, final NormalWord testingPredicate) {
+    private final NormalWord testingPredicate;
+
+    private DefaultTranslatorFactory(final NormalWord pullState,
+            final NormalWord pullStopState, final NormalWord randomizeState,
+            final NormalWord successState, final NormalWord returnState,
+            final NormalWord testingPredicate) {
         this.pullState = pullState;
         this.pullStopState = pullStopState;
         this.randomizeState = randomizeState;
@@ -75,12 +98,18 @@ public final class DefaultTranslatorFactory implements TranslatorFactory, Serial
         this.returnState = returnState;
         this.testingPredicate = testingPredicate;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.translate.TranslatorFactory#produce()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.translate.TranslatorFactory#produce
+     * ()
      */
     @Override
     public TranslatingObserver produce() {
-        return DefaultTranslatingObserver.create(this.pullState, this.pullStopState, this.randomizeState, this.successState, this.returnState, this.testingPredicate);
+        return DefaultTranslatingObserver.create(this.pullState,
+                this.pullStopState, this.randomizeState, this.successState,
+                this.returnState, this.testingPredicate);
     }
 }

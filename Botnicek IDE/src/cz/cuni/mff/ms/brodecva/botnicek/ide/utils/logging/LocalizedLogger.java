@@ -46,15 +46,16 @@ import java.util.logging.Logger;
  */
 public final class LocalizedLogger {
 
-    private static final String ROOT_PACKAGE = "cz.cuni.mff.ms.brodecva.botnicek.ide";
+    private static final String ROOT_PACKAGE =
+            "cz.cuni.mff.ms.brodecva.botnicek.ide";
 
     /**
      * Lokální umístění překladu logů.
      */
     public static final String BUNDLE_PACKAGE_NAME = ".logging";
 
-    private static final String DEFAULT_LOCALE_NAME =
-            ROOT_PACKAGE + BUNDLE_PACKAGE_NAME;
+    private static final String DEFAULT_LOCALE_NAME = ROOT_PACKAGE
+            + BUNDLE_PACKAGE_NAME;
 
     /**
      * Vrací lokalizovaný logger.

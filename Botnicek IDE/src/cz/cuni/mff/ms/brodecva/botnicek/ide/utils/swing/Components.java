@@ -37,25 +37,29 @@ public final class Components {
     /**
      * Indikuje, zda-li komponenta má rodiče.
      * 
-     * @param getParentResult výsledek volání metody {@link Component#getParent()}
+     * @param getParentResult
+     *            výsledek volání metody {@link Component#getParent()}
      * @return zda-li komponenta má rodiče
      * @see Component
      */
     public static boolean hasParent(final Container getParentResult) {
         return getParentResult != Intended.nullReference();
     }
-    
+
     /**
      * Indikuje, zda-li uživatel zrušil zadávání vstupu do vstupního dialogu.
      * 
-     * @param showDialogResult výsledek volání metody {@link JOptionPane#showInputDialog(Object)} či jejích přetížení
+     * @param showDialogResult
+     *            výsledek volání metody
+     *            {@link JOptionPane#showInputDialog(Object)} či jejích
+     *            přetížení
      * @return zda-li uživatel zrušil zadávání vstupu do vstupního dialogu
      * @see JOptionPane
      */
     public static boolean hasUserCanceledInput(final Object showDialogResult) {
         return showDialogResult == Intended.nullReference();
     }
-    
+
     private Components() {
     }
 

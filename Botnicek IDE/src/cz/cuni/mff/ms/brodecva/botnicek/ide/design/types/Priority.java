@@ -28,74 +28,60 @@ import com.google.common.base.Preconditions;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 
 /**
- * <p>Priorita hrany určuje pořadí, v jakém je vyzkoušena hrana při průchodu sítí.</p>
- * <p>Podle typu výchozího uzlu je tomu tak přímo, či je při náhodném výběru následující hrany v poměru priorit znásobena pravděpodobnost výběru.</p> 
+ * <p>
+ * Priorita hrany určuje pořadí, v jakém je vyzkoušena hrana při průchodu sítí.
+ * </p>
+ * <p>
+ * Podle typu výchozího uzlu je tomu tak přímo, či je při náhodném výběru
+ * následující hrany v poměru priorit znásobena pravděpodobnost výběru.
+ * </p>
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class Priority implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
 
     /**
      * Minimální hodnota priority.
      */
     public static final int MIN_VALUE = 0;
-    
+
     /**
      * Maximální hodnota priority.
      */
     public static final int MAX_VALUE = 5;
-    
+
     /**
      * Výchozí hodnota priority.
      */
     public static final int DEFAULT = 1;
-    
-    private final int value;
-    
+
     /**
      * Vytvoří míru priority.
      * 
-     * @param value hodnota priority
+     * @param value
+     *            hodnota priority
      * @return priorita
      */
     public static Priority of(final int value) {
         return new Priority(value);
     }
-    
+
+    private final int value;
+
     private Priority(final int value) {
         Preconditions.checkArgument(value >= 0);
-        
-        this.value = value;
-    }
-    
-    /**
-     * Vrátí hodnotu priority.
-     * 
-     * @return hodnota
-     */
-    public int getValue() {
-        return this.value;
-    }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + value;
-        return result;
+        this.value = value;
     }
 
     /**
      * Porovná prioritu s objektem. Shoduje se pouze s prioritou stejné hodnoty.
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -105,26 +91,50 @@ public final class Priority implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        Priority other = (Priority) obj;
-        if (value != other.value) {
+        final Priority other = (Priority) obj;
+        if (this.value != other.value) {
             return false;
         }
         return true;
     }
 
-    /* (non-Javadoc)
+    /**
+     * Vrátí hodnotu priority.
+     * 
+     * @return hodnota
+     */
+    public int getValue() {
+        return this.value;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + this.value;
+        return result;
+    }
+
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+
+        Preconditions.checkArgument(this.value >= 0);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "Priority [value=" + value + "]";
-    }
-    
-    private void readObject(final ObjectInputStream objectInputStream)
-            throws ClassNotFoundException, IOException {
-        objectInputStream.defaultReadObject();
-        
-        Preconditions.checkArgument(this.value >= 0);
+        return "Priority [value=" + this.value + "]";
     }
 
     private void writeObject(final ObjectOutputStream objectOutputStream)

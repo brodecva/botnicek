@@ -21,7 +21,6 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.ArcView;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearable;
 
-
 /**
  * Pohled na část z vlastností hrany.
  * 
@@ -29,8 +28,4 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearab
  * @version 1.0
  */
 interface PartView extends ArcView, Clearable {
-    /**
-     * Uzavře část.
-     */
-    void close();
 }

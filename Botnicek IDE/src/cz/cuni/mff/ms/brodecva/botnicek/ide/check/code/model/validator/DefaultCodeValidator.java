@@ -28,54 +28,69 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
 
 /**
- * Výchozí implementace vezme přímý validátor a obalí jej mechanismem zasílání událostí.
+ * Výchozí implementace vezme přímý validátor a obalí jej mechanismem zasílání
+ * událostí.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class DefaultCodeValidator implements CodeValidator {
-    
-    private final CodeChecker checker;
-    private final Dispatcher dispatcher;
-    
+
     /**
      * Vytvoří vysílací validátor.
      * 
-     * @param checker přímý validátor
-     * @param dispatcher rozesílač událostí
+     * @param checker
+     *            přímý validátor
+     * @param dispatcher
+     *            rozesílač událostí
      * @return vysílací validátor
      */
-    public static DefaultCodeValidator create(final CodeChecker checker, final Dispatcher dispatcher) {
+    public static DefaultCodeValidator create(final CodeChecker checker,
+            final Dispatcher dispatcher) {
         return new DefaultCodeValidator(checker, dispatcher);
     }
-    
-    private DefaultCodeValidator(final CodeChecker checker, final Dispatcher dispatcher) {
+
+    private final CodeChecker checker;
+
+    private final Dispatcher dispatcher;
+
+    private DefaultCodeValidator(final CodeChecker checker,
+            final Dispatcher dispatcher) {
         Preconditions.checkNotNull(checker);
         Preconditions.checkNotNull(dispatcher);
-        
+
         this.checker = checker;
         this.dispatcher = dispatcher;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.edit.check.mixedpattern.MixedPatternValidator#validate(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Validator#clear
+     * (java.lang.Object)
      */
     @Override
-    public void validate(final Source source, Object subject, final String content) {
-        Preconditions.checkNotNull(source);
-        Preconditions.checkNotNull(content);
-        
-        final CheckResult result = this.checker.check(source, subject, content);
-        this.dispatcher.fire(CheckEvent.create(result));
+    public void clear(final Object subject) {
+        Preconditions.checkNotNull(subject);
+
+        this.dispatcher.fire(CheckEvent.create(DefaultCheckResult.succeed(this,
+                subject)));
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Validator#clear(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.edit.check.mixedpattern.
+     * MixedPatternValidator#validate(java.lang.String)
      */
     @Override
-    public void clear(Object subject) {
-        Preconditions.checkNotNull(subject);
-        
-        this.dispatcher.fire(CheckEvent.create(DefaultCheckResult.succeed(this, subject)));
+    public void validate(final Source source, final Object subject,
+            final String content) {
+        Preconditions.checkNotNull(source);
+        Preconditions.checkNotNull(content);
+
+        final CheckResult result = this.checker.check(source, subject, content);
+        this.dispatcher.fire(CheckEvent.create(result));
     }
 }

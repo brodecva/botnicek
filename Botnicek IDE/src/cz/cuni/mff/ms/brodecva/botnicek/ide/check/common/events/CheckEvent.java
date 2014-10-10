@@ -30,33 +30,37 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractEvent;
  * @version 1.0
  */
 public final class CheckEvent extends AbstractEvent<CheckListener> {
-    
-    private final CheckResult result;
-    
+
     /**
      * Vytvoří událost.
      * 
-     * @param result výsledek kontroly
+     * @param result
+     *            výsledek kontroly
      * @return událost
      */
     public static CheckEvent create(final CheckResult result) {
         return new CheckEvent(result);
     }
-    
+
+    private final CheckResult result;
+
     private CheckEvent(final CheckResult result) {
         Preconditions.checkNotNull(result);
-        
+
         this.result = result;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final CheckListener listener) {
         Preconditions.checkNotNull(listener);
-        
+
         listener.checked(this.result);
     }
 }
- 

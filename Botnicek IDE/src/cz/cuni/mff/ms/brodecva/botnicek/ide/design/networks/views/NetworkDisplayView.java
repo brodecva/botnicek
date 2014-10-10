@@ -33,10 +33,16 @@ public interface NetworkDisplayView {
     /**
      * Zobrazí síť řízenou danými řadiči.
      * 
-     * @param networkController řadič sítě
-     * @param arcsController řadič hran sítě
-     * @param nodesController řadič uzlů sítě
-     * @param arcDisplayController řadič zobrazovače hran 
+     * @param networkController
+     *            řadič sítě
+     * @param arcsController
+     *            řadič hran sítě
+     * @param nodesController
+     *            řadič uzlů sítě
+     * @param arcDisplayController
+     *            řadič zobrazovače hran
      */
-    void displayNetwork(NetworkController networkController, ArcsController arcsController, NodesController nodesController, ArcPropertiesDisplayController arcDisplayController);
+    void displayNetwork(NetworkController networkController,
+            ArcsController arcsController, NodesController nodesController,
+            ArcPropertiesDisplayController arcDisplayController);
 }

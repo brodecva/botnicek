@@ -26,9 +26,11 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.SystemDefined
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-system-defined-predicates">http://www.alicebot.org/TR/2011/#section-system-defined-predicates</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-system-defined-predicates">http://www.alicebot.org/TR/2011/#section-system-defined-predicates</a>
  */
-public class Version extends AbstractProperElement implements SystemDefinedElement {
+public class Version extends AbstractProperElement implements
+        SystemDefinedElement {
     private static final String NAME = "version";
 
     /**
@@ -39,12 +41,15 @@ public class Version extends AbstractProperElement implements SystemDefinedEleme
     public static Version create() {
         return new Version();
     }
-    
+
     private Version() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {

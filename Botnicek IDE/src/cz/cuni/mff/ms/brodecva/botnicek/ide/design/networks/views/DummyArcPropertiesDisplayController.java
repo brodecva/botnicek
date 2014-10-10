@@ -22,7 +22,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcPropertiesDisplayController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.ArcPropertiesDisplayView;
 
-
 /**
  * Atrapa řadiče zobrazování podrobností hran.
  * 
@@ -40,36 +39,53 @@ final class DummyArcPropertiesDisplayController implements
     public static DummyArcPropertiesDisplayController create() {
         return new DummyArcPropertiesDisplayController();
     }
-    
+
     private DummyArcPropertiesDisplayController() {
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java
+     * .lang.Object)
      */
     @Override
-    public void addView(ArcPropertiesDisplayView view) {
+    public void addView(final ArcPropertiesDisplayView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.
+     * ArcPropertiesController
+     * #displayProperties(cz.cuni.mff.ms.brodecva.botnicek
+     * .ide.aiml.types.NormalWord)
      */
     @Override
-    public void removeView(ArcPropertiesDisplayView view) {
+    public void displayArcProperties(final NormalWord name) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang
+     * .Object)
      */
     @Override
-    public void fill(ArcPropertiesDisplayView view) {
+    public void fill(final ArcPropertiesDisplayView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcPropertiesController#displayProperties(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(
+     * java.lang.Object)
      */
     @Override
-    public void displayArcProperties(NormalWord name) {
+    public void removeView(final ArcPropertiesDisplayView view) {
     }
 
 }

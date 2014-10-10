@@ -35,13 +35,28 @@ public interface ArcPropertiesDisplayView {
     /**
      * Zobrazí vlastnosti hrany obsluhované danými řadiči.
      * 
-     * @param arcController řadič hrany
-     * @param availableReferencesController řadič pro dostupné reference
-     * @param nameValidationController řadič validace názvů stavů
-     * @param codeValidationController řadič validace zdrojových kódu
-     * @param simplePatternValidationController řadič validace prostých vzorů
-     * @param mixedPatternValidationController řadič validace složených vzorů
-     * @param predicateNameValidationController řadič validace názvů predikátů
+     * @param arcController
+     *            řadič hrany
+     * @param availableReferencesController
+     *            řadič pro dostupné reference
+     * @param nameValidationController
+     *            řadič validace názvů stavů
+     * @param codeValidationController
+     *            řadič validace zdrojových kódu
+     * @param simplePatternValidationController
+     *            řadič validace prostých vzorů
+     * @param mixedPatternValidationController
+     *            řadič validace složených vzorů
+     * @param predicateNameValidationController
+     *            řadič validace názvů predikátů
      */
-    void arcDisplayed(ArcController arcController, AvailableReferencesController availableReferencesController, NormalWordValidationController nameValidationController, CodeValidationController codeValidationController, SimplePatternValidationController simplePatternValidationController, MixedPatternValidationController mixedPatternValidationController, NormalWordValidationController predicateNameValidationController);
+            void
+            arcDisplayed(
+                    ArcController arcController,
+                    AvailableReferencesController availableReferencesController,
+                    NormalWordValidationController nameValidationController,
+                    CodeValidationController codeValidationController,
+                    SimplePatternValidationController simplePatternValidationController,
+                    MixedPatternValidationController mixedPatternValidationController,
+                    NormalWordValidationController predicateNameValidationController);
 }

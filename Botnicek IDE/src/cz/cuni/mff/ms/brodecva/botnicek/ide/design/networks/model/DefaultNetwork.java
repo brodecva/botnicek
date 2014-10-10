@@ -37,7 +37,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.SystemName;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 
-
 /**
  * Výchozí implementace sítě deleguje většinu metod na systém sítí.
  * 
@@ -45,74 +44,59 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
  * @version 1.0
  */
 public final class DefaultNetwork implements Visitable, Network, Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
-    private final System system;
-    private final UUID id;
-    
-    /**
-     * Vytvoří prázdnou síť.
-     * 
-     * @param id identifikátor sítě
-     * @param parent rodičovský systém sítí
-     * @return síť
-     */
-    public static Network create(final UUID id, final System parent) {
-        return new DefaultNetwork(id, parent);
-    }
-    
+
     /**
      * Vytvoří prázdnou síť s náhodně přiděleným globálním identifikátorem.
      * 
-     * @param parent rodičovský systém sítí
+     * @param parent
+     *            rodičovský systém sítí
      * @return síť
      */
     public static DefaultNetwork create(final System parent) {
         return new DefaultNetwork(UUID.randomUUID(), parent);
     }
-    
+
+    /**
+     * Vytvoří prázdnou síť.
+     * 
+     * @param id
+     *            identifikátor sítě
+     * @param parent
+     *            rodičovský systém sítí
+     * @return síť
+     */
+    public static Network create(final UUID id, final System parent) {
+        return new DefaultNetwork(id, parent);
+    }
+
+    private final System system;
+
+    private final UUID id;
+
     private DefaultNetwork(final UUID id, final System parent) {
         Preconditions.checkNotNull(id);
         Preconditions.checkNotNull(parent);
-        
+
         this.id = id;
         this.system = parent;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getId()
-     */
-    @Override
-    public UUID getId() {
-        return id;
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.AutonomousComponent#getName()
-     */
-    @Override
-    public SystemName getName() {
-        return this.system.getNetworkName(this);
-    }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getSystem()
-     */
-    @Override
-    public final System getSystem() {
-        return system;
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.Visitable#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.Visitor)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.Visitable
+     * #accept
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.design.Visitor)
      */
     @Override
     public void accept(final Visitor visitor) {
         Preconditions.checkNotNull(visitor);
-        
+
         visitor.visit(this);
-        
+
         final Set<Node> nodes = this.system.getNodes(this);
         for (final Node node : nodes) {
             if (!visitor.visited(node)) {
@@ -120,76 +104,52 @@ public final class DefaultNetwork implements Visitable, Network, Serializable {
             }
         }
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#addNode(int, int)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#addArc
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord,
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord,
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+     */
+    @Override
+    public void addArc(final NormalWord name, final NormalWord fromName,
+            final NormalWord toName) {
+        this.system.addArc(this, name, fromName, toName);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#addNode
+     * (int, int)
      */
     @Override
     public void addNode(final int x, final int y) {
         this.system.addNode(this, x, y);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#addArc(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
-     */
-    @Override
-    public void addArc(final NormalWord name, final NormalWord fromName, NormalWord toName) {
-        this.system.addArc(this, name, fromName, toName);
-    }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getOuts(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#adjoins
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node,
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node,
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Direction)
      */
     @Override
-    public Set<Arc> getOuts(final Node node) {
-        return this.system.getOuts(node);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getIns(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
-     */
-    @Override
-    public Set<Arc> getIns(final Node node) {
-        return this.system.getIns(node);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getAttached(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
-     */
-    @Override
-    public Node getAttached(final Arc arc, final Direction direction) {
-        return this.system.getAttached(arc, direction);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getConnections(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
-     */
-    @Override
-    public Set<Arc> getConnections(final Node node, final Direction direction) {
-        return this.system.getConnections(node, direction);
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#adjoins(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.design.utils.Direction)
-     */
-    @Override
-    public boolean adjoins(Node first, Node second, Direction direction) {
+    public boolean adjoins(final Node first, final Node second,
+            final Direction direction) {
         return this.system.adjoins(first, second, direction);
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + id.hashCode();
-        result = prime * result + system.hashCode();
-        return result;
-    }
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -204,30 +164,131 @@ public final class DefaultNetwork implements Visitable, Network, Serializable {
             return false;
         }
         final Network other = (Network) obj;
-        if (!id.equals(other.getId())) {
+        if (!this.id.equals(other.getId())) {
             return false;
         }
-        if (!system.equals(other.getSystem())) {
+        if (!this.system.equals(other.getSystem())) {
             return false;
         }
         return true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#
+     * getAttached(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc,
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
+     */
+    @Override
+    public Node getAttached(final Arc arc, final Direction direction) {
+        return this.system.getAttached(arc, direction);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#
+     * getConnections
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node,
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
+     */
+    @Override
+    public Set<Arc> getConnections(final Node node, final Direction direction) {
+        return this.system.getConnections(node, direction);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getId
+     * ()
+     */
+    @Override
+    public UUID getId() {
+        return this.id;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getIns
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
+     */
+    @Override
+    public Set<Arc> getIns(final Node node) {
+        return this.system.getIns(node);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.AutonomousComponent#getName
+     * ()
+     */
+    @Override
+    public SystemName getName() {
+        return this.system.getNetworkName(this);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getOuts
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)
+     */
+    @Override
+    public Set<Arc> getOuts(final Node node) {
+        return this.system.getOuts(node);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network#getSystem
+     * ()
+     */
+    @Override
+    public final System getSystem() {
+        return this.system;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + this.id.hashCode();
+        result = prime * result + this.system.hashCode();
+        return result;
+    }
+
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+
+        Preconditions.checkNotNull(this.system);
+        Preconditions.checkNotNull(this.id);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "DefaultNetwork [id=" + id
-                + ", system=" + system + "]";
-    }
-    
-    private void readObject(final ObjectInputStream objectInputStream)
-            throws ClassNotFoundException, IOException {
-        objectInputStream.defaultReadObject();
-        
-        Preconditions.checkNotNull(this.system);
-        Preconditions.checkNotNull(this.id);
+        return "DefaultNetwork [id=" + this.id + ", system=" + this.system
+                + "]";
     }
 
     private void writeObject(final ObjectOutputStream objectOutputStream)

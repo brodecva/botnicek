@@ -18,7 +18,6 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model;
 
-
 /**
  * Vstupní uzel.
  * 

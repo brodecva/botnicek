@@ -30,39 +30,49 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class ArcRenamedEvent extends AbstractMappedEvent<Network, ArcRenamedListener> {
-    
-    private final Arc oldVersion;
-    private final Arc newVersion;
-    
+public final class ArcRenamedEvent extends
+        AbstractMappedEvent<Network, ArcRenamedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param network síť, do které hrana náleží
-     * @param oldVersion původní verze
-     * @param newVersion přejmenovaná verze
+     * @param network
+     *            síť, do které hrana náleží
+     * @param oldVersion
+     *            původní verze
+     * @param newVersion
+     *            přejmenovaná verze
      * @return událost
      */
-    public static ArcRenamedEvent create(final Network network, final Arc oldVersion, final Arc newVersion) {
+    public static ArcRenamedEvent create(final Network network,
+            final Arc oldVersion, final Arc newVersion) {
         return new ArcRenamedEvent(network, oldVersion, newVersion);
     }
-    
-    private ArcRenamedEvent(final Network network, final Arc oldVersion, final Arc newVersion) {
+
+    private final Arc oldVersion;
+
+    private final Arc newVersion;
+
+    private ArcRenamedEvent(final Network network, final Arc oldVersion,
+            final Arc newVersion) {
         super(network);
-        
+
         Preconditions.checkNotNull(oldVersion);
         Preconditions.checkNotNull(newVersion);
-                
+
         this.oldVersion = oldVersion;
         this.newVersion = newVersion;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final ArcRenamedListener listener) {
         listener.arcRenamed(this.oldVersion, this.newVersion);
     }
 }
- 

@@ -23,19 +23,26 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.graph.ArcsView;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller;
 
 /**
- * <p>Řadič poskytující dostupné metody pro ovládání hran sítě pomocí jejich grafické reprezentace.</p>
- * <p>V této verzi neposkytuje žádné metody modifikace, neboť nelze vlastnosti hran editovat jinak než pomocí dedikovaného okna.</p>
+ * <p>
+ * Řadič poskytující dostupné metody pro ovládání hran sítě pomocí jejich
+ * grafické reprezentace.
+ * </p>
+ * <p>
+ * V této verzi neposkytuje žádné metody modifikace, neboť nelze vlastnosti hran
+ * editovat jinak než pomocí dedikovaného okna.
+ * </p>
  * 
  * @author Václav Brodec
  * @version 1.0
  * @see ArcController řadič pro změnu vlastností hrany
  */
 public interface ArcsController extends Controller<ArcsView> {
-    
+
     /**
      * Odebere hranu sítě.
      * 
-     * @param name název odebírané hrany
+     * @param name
+     *            název odebírané hrany
      */
     void removeArc(NormalWord name);
 }

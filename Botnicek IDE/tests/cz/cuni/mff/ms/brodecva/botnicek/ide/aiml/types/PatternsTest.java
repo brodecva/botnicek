@@ -18,7 +18,7 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -47,40 +47,37 @@ public class PatternsTest {
     private static final String INVALID_RESULT_MESSAGE = "Invalid";
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Patterns#create(String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Codes#createEmpty()}
+     * .
      */
     @Test
-    public void testCreateWhenValid() {
-        final CheckResult validCheckResultStub = EasyMock.createNiceMock(CheckResult.class);
-        EasyMock.expect(validCheckResultStub.isValid()).andStubReturn(true);
-        EasyMock.replay(validCheckResultStub);
-        
-        final SimplePatternChecker checkerStub = EasyMock.createStrictMock(SimplePatternChecker.class);
-        EasyMock.expect(checkerStub.check(VALID_PATTERN_TEXT)).andStubReturn(validCheckResultStub);
-        EasyMock.replay(checkerStub);
-        Whitebox.setInternalState(Patterns.class, "checker", checkerStub);
-        
-        assertEquals(VALID_PATTERN_TEXT, Patterns.create(VALID_PATTERN_TEXT).getText());
-        
-        EasyMock.verify(validCheckResultStub);
-        EasyMock.verify(checkerStub);
+    public void testCreateEmpty() {
+        assertEquals(AIML.STAR_WILDCARD.getValue(), Patterns.createUniversal()
+                .getText());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Patterns#create(String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Patterns#create(String)}
+     * .
      */
     @Test(expected = IllegalArgumentException.class)
     public void testCreateWhenInvalid() {
-        final CheckResult invalidCheckResultStub = EasyMock.createNiceMock(CheckResult.class);
+        final CheckResult invalidCheckResultStub =
+                EasyMock.createNiceMock(CheckResult.class);
         EasyMock.expect(invalidCheckResultStub.isValid()).andStubReturn(false);
-        EasyMock.expect(invalidCheckResultStub.getMessage()).andStubReturn(INVALID_RESULT_MESSAGE);
+        EasyMock.expect(invalidCheckResultStub.getMessage()).andStubReturn(
+                INVALID_RESULT_MESSAGE);
         EasyMock.replay(invalidCheckResultStub);
-        
-        final SimplePatternChecker checkerStub = EasyMock.createStrictMock(SimplePatternChecker.class);
-        EasyMock.expect(checkerStub.check(INVALID_PATTERN_TEXT)).andStubReturn(invalidCheckResultStub);
+
+        final SimplePatternChecker checkerStub =
+                EasyMock.createStrictMock(SimplePatternChecker.class);
+        EasyMock.expect(checkerStub.check(INVALID_PATTERN_TEXT)).andStubReturn(
+                invalidCheckResultStub);
         EasyMock.replay(checkerStub);
         Whitebox.setInternalState(Patterns.class, "checker", checkerStub);
-        
+
         try {
             Patterns.create(INVALID_PATTERN_TEXT);
         } finally {
@@ -88,12 +85,30 @@ public class PatternsTest {
             EasyMock.verify(checkerStub);
         }
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Codes#createEmpty()}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Patterns#create(String)}
+     * .
      */
     @Test
-    public void testCreateEmpty() {
-        assertEquals(AIML.STAR_WILDCARD.getValue(), Patterns.createUniversal().getText());
+    public void testCreateWhenValid() {
+        final CheckResult validCheckResultStub =
+                EasyMock.createNiceMock(CheckResult.class);
+        EasyMock.expect(validCheckResultStub.isValid()).andStubReturn(true);
+        EasyMock.replay(validCheckResultStub);
+
+        final SimplePatternChecker checkerStub =
+                EasyMock.createStrictMock(SimplePatternChecker.class);
+        EasyMock.expect(checkerStub.check(VALID_PATTERN_TEXT)).andStubReturn(
+                validCheckResultStub);
+        EasyMock.replay(checkerStub);
+        Whitebox.setInternalState(Patterns.class, "checker", checkerStub);
+
+        assertEquals(VALID_PATTERN_TEXT, Patterns.create(VALID_PATTERN_TEXT)
+                .getText());
+
+        EasyMock.verify(validCheckResultStub);
+        EasyMock.verify(checkerStub);
     }
 }

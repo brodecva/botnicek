@@ -32,48 +32,34 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.Mix
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 
 /**
- * Výchozí implementace konstruktoru validního složeného vzoru dle specifikace jazyka AIML.
+ * Výchozí implementace konstruktoru validního složeného vzoru dle specifikace
+ * jazyka AIML.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public class DefaultMixedPatternBuilder implements MixedPatternBuilder, Source {
-    
-    private final static class MixedPatternImplementation implements MixedPattern, Serializable {
+
+    private final static class MixedPatternImplementation implements
+            MixedPattern, Serializable {
         private static final long serialVersionUID = 1L;
-        
-        private final String text;
-        
-        public static MixedPatternImplementation create(final String rawContent) {
+
+        public static MixedPatternImplementation
+                create(final String rawContent) {
             return new MixedPatternImplementation(rawContent);
         }
-        
+
+        private final String text;
+
         private MixedPatternImplementation(final String rawContent) {
             Preconditions.checkNotNull(rawContent);
-            
+
             this.text = rawContent;
         }
 
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.Pattern#getText()
-         */
-        @Override
-        public String getText() {
-            return this.text;
-        }
-
-        /* (non-Javadoc)
-         * @see java.lang.Object#hashCode()
-         */
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + text.hashCode();
-            return result;
-        }
-
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.lang.Object#equals(java.lang.Object)
          */
         @Override
@@ -88,16 +74,41 @@ public class DefaultMixedPatternBuilder implements MixedPatternBuilder, Source {
                 return false;
             }
             final MixedPattern other = (MixedPattern) obj;
-            if (!text.equals(other.getText())) {
+            if (!this.text.equals(other.getText())) {
                 return false;
             }
             return true;
         }
-        
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.Pattern
+         * #getText()
+         */
+        @Override
+        public String getText() {
+            return this.text;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.lang.Object#hashCode()
+         */
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + this.text.hashCode();
+            return result;
+        }
+
         private void readObject(final ObjectInputStream objectInputStream)
                 throws ClassNotFoundException, IOException {
             objectInputStream.defaultReadObject();
-            
+
             Preconditions.checkNotNull(this.text);
         }
 
@@ -106,61 +117,83 @@ public class DefaultMixedPatternBuilder implements MixedPatternBuilder, Source {
             objectOutputStream.defaultWriteObject();
         }
     }
-    
-    private final StringBuilder contentBuilder;
-    private final MixedPatternChecker checker;
-    
+
     /**
      * Vytvoří konstruktor.
      * 
-     * @param checker přímý validátor
-     * @param startContent úvodní řetězec k sestavení
+     * @param checker
+     *            přímý validátor
+     * @param startContent
+     *            úvodní řetězec k sestavení
      * @return konstruktor
      */
-    public static DefaultMixedPatternBuilder create(final MixedPatternChecker checker, final String startContent) {
+    public static DefaultMixedPatternBuilder create(
+            final MixedPatternChecker checker, final String startContent) {
         return new DefaultMixedPatternBuilder(checker, startContent);
     }
-    
-    private DefaultMixedPatternBuilder(final MixedPatternChecker checker, final String startContent) {
+
+    private final StringBuilder contentBuilder;
+
+    private final MixedPatternChecker checker;
+
+    private DefaultMixedPatternBuilder(final MixedPatternChecker checker,
+            final String startContent) {
         Preconditions.checkNotNull(checker);
         Preconditions.checkNotNull(startContent);
-        
+
         this.checker = checker;
         this.contentBuilder = new StringBuilder(startContent);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.ContentAggregator#add(java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.
+     * ContentAggregator#add(java.lang.String)
      */
+    @Override
     public void add(final String content) {
         this.contentBuilder.append(content);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.editor.checker.PatternContentBuilder#isValid()
-     */
-    @Override
-    public boolean isValid() {
-        return check().isValid();
-    }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.editor.checker.PatternContentBuilder#build()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.editor.checker.PatternContentBuilder
+     * #build()
      */
     @Override
     public MixedPattern build() {
         if (!isValid()) {
             throw new IllegalStateException();
         }
-        
-        return MixedPatternImplementation.create(this.contentBuilder.toString());
+
+        return MixedPatternImplementation
+                .create(this.contentBuilder.toString());
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.editor.checker.PatternContentBuilder#check()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.editor.checker.PatternContentBuilder
+     * #check()
      */
     @Override
     public CheckResult check() {
         return this.checker.check(this, this, this.contentBuilder.toString());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.editor.checker.PatternContentBuilder
+     * #isValid()
+     */
+    @Override
+    public boolean isValid() {
+        return check().isValid();
     }
 }

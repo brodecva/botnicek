@@ -19,7 +19,10 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources;
 
 /**
- * <p>Překladač řetězců. Dovoluje specifikovat parametry, která se dosadí na vyznačená místa.</p>
+ * <p>
+ * Překladač řetězců. Dovoluje specifikovat parametry, která se dosadí na
+ * vyznačená místa.
+ * </p>
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -30,8 +33,7 @@ public interface Localizer {
      * Vrátí přeloženou zprávu.
      * 
      * @param key
-     *            klíč pro hledaný řetězec, musí pro něj
-     *            existovat překlad
+     *            klíč pro hledaný řetězec, musí pro něj existovat překlad
      * @param params
      *            objekty k substituci do lokalizované zprávy
      * @return řetězec pro daný klíč

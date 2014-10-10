@@ -31,7 +31,8 @@ public interface ArcAddedListener {
     /**
      * Reaguje na přidání hrany do její sítě.
      * 
-     * @param arc přidaná hrana
+     * @param arc
+     *            přidaná hrana
      */
     void arcAdded(Arc arc);
 

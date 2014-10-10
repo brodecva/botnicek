@@ -23,30 +23,34 @@ import java.util.Set;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 
 /**
- * Zobrazovač dostupných referencí (míst do kterých lze zanořit výpočet) v systému. 
+ * Zobrazovač dostupných referencí (míst do kterých lze zanořit výpočet) v
+ * systému.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface AvailableReferencesView {
     /**
-     * Aktualizuje množinu zobrazených dostupných referencí.
-     * 
-     * @param references množina dostupných referencí
-     */
-    void updateAvailableReferences(Set<EnterNode> references);
-    
-    /**
      * Rozšíří množinu zobrazených dostupných referencí.
      * 
-     * @param extension rozšiřující množina dostupných referencí
+     * @param extension
+     *            rozšiřující množina dostupných referencí
      */
     void extendAvailableReferences(Set<EnterNode> extension);
-    
+
     /**
      * Zmenší množinu dostupných referencí.
      * 
-     * @param removed odstraněná množina dostupných referencí
+     * @param removed
+     *            odstraněná množina dostupných referencí
      */
     void removeAvailableReferences(Set<EnterNode> removed);
+
+    /**
+     * Aktualizuje množinu zobrazených dostupných referencí.
+     * 
+     * @param references
+     *            množina dostupných referencí
+     */
+    void updateAvailableReferences(Set<EnterNode> references);
 }

@@ -31,48 +31,72 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.AttributeImplementation;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
 
 /**
- * Položka pouze s hodnotou obsahuje jediný významný atribut hodnota. Nachází se výlučně v jednopredikátovém podmínkovém bloku, kde je porovnáván vzor hodnoty s hodnotou predikátu společného pro všechny položky bloku.
+ * Položka pouze s hodnotou obsahuje jediný významný atribut hodnota. Nachází se
+ * výlučně v jednopredikátovém podmínkovém bloku, kde je porovnáván vzor hodnoty
+ * s hodnotou predikátu společného pro všechny položky bloku.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-condition">http://www.alicebot.org/TR/2011/#section-condition</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-condition">http://www.alicebot.org/TR/2011/#section-condition</a>
  */
 public final class ValueOnlyListItem extends AbstractListItem {
     private static final String ATT_VALUE = "value";
+
+    /**
+     * Vytvoří položku.
+     * 
+     * @param value
+     *            vzor hodnoty
+     * @param content
+     *            potomci prvku
+     * @return položka
+     */
+    public static ValueOnlyListItem create(final SimplePattern value,
+            final List<TemplateElement> content) {
+        return new ValueOnlyListItem(value, content);
+    }
+
+    /**
+     * Vytvoří položku.
+     * 
+     * @param value
+     *            vzor hodnoty
+     * @param content
+     *            potomci prvku
+     * @return položka
+     */
+    public static ValueOnlyListItem create(final SimplePattern value,
+            final TemplateElement... content) {
+        return new ValueOnlyListItem(value, content);
+    }
+
     private final SimplePattern value;
-    
-    /**
-     * Vytvoří položku.
-     * 
-     * @param value vzor hodnoty
-     * @param content potomci prvku
-     * @return položka
-     */
-    public static ValueOnlyListItem create(final SimplePattern value, final TemplateElement... content) {
-        return new ValueOnlyListItem(value, content);
+
+    private ValueOnlyListItem(final SimplePattern value,
+            final List<TemplateElement> content) {
+        super(content);
+
+        Preconditions.checkNotNull(value);
+
+        this.value = value;
     }
-    
-    /**
-     * Vytvoří položku.
-     * 
-     * @param value vzor hodnoty
-     * @param content potomci prvku
-     * @return položka
-     */
-    public static ValueOnlyListItem create(final SimplePattern value, final List<TemplateElement> content) {        
-        return new ValueOnlyListItem(value, content);
-    }
-    
-    private ValueOnlyListItem(final SimplePattern value, final TemplateElement... content) {
+
+    private ValueOnlyListItem(final SimplePattern value,
+            final TemplateElement... content) {
         this(value, ImmutableList.copyOf(content));
     }
-    
-    private ValueOnlyListItem(final SimplePattern value, final List<TemplateElement> content) {
-        super(content);
-        
-        Preconditions.checkNotNull(value);
-        
-        this.value = value;
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getAttributes()
+     */
+    @Override
+    public Set<Attribute> getAttributes() {
+        return ImmutableSet.<Attribute> of(AttributeImplementation.create(
+                ATT_VALUE, this.value.getText()));
     }
 
     /**
@@ -81,14 +105,6 @@ public final class ValueOnlyListItem extends AbstractListItem {
      * @return vzor hodnoty
      */
     public SimplePattern getValue() {
-        return value;
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getAttributes()
-     */
-    @Override
-    public Set<Attribute> getAttributes() {
-        return ImmutableSet.<Attribute>of(AttributeImplementation.create(ATT_VALUE, value.getText()));
+        return this.value;
     }
 }

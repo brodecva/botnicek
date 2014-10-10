@@ -22,8 +22,6 @@ import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.SimplePatternChecker;
 
-
-
 /**
  * Výchozí implementace {@link SimplePatternBuilderFactory}.
  * 
@@ -33,32 +31,38 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.Si
 public final class DefaultSimplePatternBuilderFactory implements
         SimplePatternBuilderFactory {
 
-    private final SimplePatternChecker checker;
-    
     /**
      * Vytvoří továrnu.
      * 
-     * @param checker validátor
+     * @param checker
+     *            validátor
      * @return továrna
      */
-    public static DefaultSimplePatternBuilderFactory create(final SimplePatternChecker checker) {
+    public static DefaultSimplePatternBuilderFactory create(
+            final SimplePatternChecker checker) {
         Preconditions.checkNotNull(checker);
-        
+
         return new DefaultSimplePatternBuilderFactory(checker);
     }
-    
-    private DefaultSimplePatternBuilderFactory(final SimplePatternChecker checker) {
+
+    private final SimplePatternChecker checker;
+
+    private DefaultSimplePatternBuilderFactory(
+            final SimplePatternChecker checker) {
         this.checker = checker;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder.SimplePatternBuilderFactory#produce(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder.
+     * SimplePatternBuilderFactory#produce(java.lang.String)
      */
     @Override
     public SimplePatternBuilder produce(final String start) {
         Preconditions.checkNotNull(start);
-        
-        return DefaultSimplePatternBuilder.create(checker, start);
+
+        return DefaultSimplePatternBuilder.create(this.checker, start);
     }
 
 }

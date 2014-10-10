@@ -29,32 +29,37 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class ProjectOpenedEvent extends AbstractEvent<ProjectOpenedListener> {
-    
-    private final Project project;
-    
+public final class ProjectOpenedEvent extends
+        AbstractEvent<ProjectOpenedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param project otevřený projekt
+     * @param project
+     *            otevřený projekt
      * @return událost
      */
     public static ProjectOpenedEvent create(final Project project) {
         return new ProjectOpenedEvent(project);
     }
-    
+
+    private final Project project;
+
     private ProjectOpenedEvent(final Project project) {
         Preconditions.checkNotNull(project);
-        
+
         this.project = project;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final ProjectOpenedListener listener) {
         listener.opened(this.project);
     }
 }
- 

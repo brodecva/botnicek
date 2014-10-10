@@ -21,12 +21,14 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.translate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
+
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Text;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Topic;
@@ -48,62 +50,33 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 
 /**
- * <p>Výchozí implementace překladače.</p>
- * <p>Užívá několika speciálních stavů, které pomáhají simulovat chod systému ATN, především rekurzivní zanořování, testování predikátů a nedeterminismus.</p>
+ * <p>
+ * Výchozí implementace překladače.
+ * </p>
+ * <p>
+ * Užívá několika speciálních stavů, které pomáhají simulovat chod systému ATN,
+ * především rekurzivní zanořování, testování predikátů a nedeterminismus.
+ * </p>
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultTranslatingObserver extends AbstractDfsObserver implements TranslatingObserver {
-    
-    private final NodeTopicFactory nodeTopicFactory;
-    private final StackProcessor<List<TemplateElement>> stackProcessor;
-    private final DispatchProcessor<List<TemplateElement>> dispatchProcessor;
-    private final ProceedProcessor<List<TemplateElement>> proceedProcessor;
-    private final TestProcessor<List<Topic>> testProcessor;
-    
-    private final ListMultimap<Network, Topic> units = ArrayListMultimap.create();
-    
-    private Optional<Network> current = Optional.absent();
-    
-    /**
-     * Vytvoří překladač s výchozími procesory.
-     * 
-     * @param pullState slovo popisující stav, který je vložen na zásobník po průchodu sítí až do koncového uzlu, a spustí tak proceduru uvolňování nezpracovaných stavů z něj 
-     * @param pullStopState slovo popisující stav, který slouží jako zarážka při uvolňování nezpracovaných stavů úspěšně prošlé sítě ze zásobníku
-     * @param randomizeState slovo popisující stav, který provede zamíchá přechody dle jejich priority před vložením na zásobník
-     * @param successState slovo popisující stav, který indikuje úspěšné projití podsítě odkazované z následujícího stavu na zásobníku
-     * @param returnState slovo popisující stav, který indikuje zpracování podsítě
-     * @param testingPredicate rezervovaný název predikátu sloužící pro interní testy
-     * @return překladač
-     */
-    public static DefaultTranslatingObserver create(final NormalWord pullState, final NormalWord pullStopState,
-            final NormalWord randomizeState, NormalWord successState, NormalWord returnState, final NormalWord testingPredicate) {
-        Preconditions.checkNotNull(pullState);
-        Preconditions.checkNotNull(pullStopState);
-        Preconditions.checkNotNull(randomizeState);
-        Preconditions.checkNotNull(successState);
-        Preconditions.checkNotNull(returnState);
-        Preconditions.checkNotNull(testingPredicate);
-        Preconditions.checkArgument(Comparisons.allDifferent(pullState, pullStopState, randomizeState, successState, returnState));
-        
-        return new DefaultTranslatingObserver(
-                DefaultNodeTopicFactory.create(),
-                DefaultStackProcessor.create(pullState, pullStopState),
-                DefaultDispatchProcessor.create(randomizeState),
-                DefaultProceedProcessor.create(),
-                DefaultTestProcessor.create(testingPredicate, successState, returnState)
-        );
-    }
-    
+public final class DefaultTranslatingObserver extends AbstractDfsObserver
+        implements TranslatingObserver {
+
     /**
      * Vytvoří překladač.
      * 
-     * @param nodeTopicFactory továrna na témata reprezentující uzel
-     * @param stackProcessor instance {@link StackProcessor}
-     * @param dispatchProcessor instance {@link DispatchProcessor}
-     * @param proceedProcessor instance {@link ProceedProcessor}
-     * @param testProcessor instance {@link TestProcessor} 
+     * @param nodeTopicFactory
+     *            továrna na témata reprezentující uzel
+     * @param stackProcessor
+     *            instance {@link StackProcessor}
+     * @param dispatchProcessor
+     *            instance {@link DispatchProcessor}
+     * @param proceedProcessor
+     *            instance {@link ProceedProcessor}
+     * @param testProcessor
+     *            instance {@link TestProcessor}
      * @return překladač
      */
     public static DefaultTranslatingObserver create(
@@ -116,11 +89,69 @@ public final class DefaultTranslatingObserver extends AbstractDfsObserver implem
         Preconditions.checkNotNull(dispatchProcessor);
         Preconditions.checkNotNull(proceedProcessor);
         Preconditions.checkNotNull(testProcessor);
-        
-        return new DefaultTranslatingObserver(nodeTopicFactory, stackProcessor, dispatchProcessor, proceedProcessor, testProcessor);
+
+        return new DefaultTranslatingObserver(nodeTopicFactory, stackProcessor,
+                dispatchProcessor, proceedProcessor, testProcessor);
     }
-    
-    private DefaultTranslatingObserver(final NodeTopicFactory nodeTopicFactory, final StackProcessor<List<TemplateElement>> stackProcessor,
+
+    /**
+     * Vytvoří překladač s výchozími procesory.
+     * 
+     * @param pullState
+     *            slovo popisující stav, který je vložen na zásobník po průchodu
+     *            sítí až do koncového uzlu, a spustí tak proceduru uvolňování
+     *            nezpracovaných stavů z něj
+     * @param pullStopState
+     *            slovo popisující stav, který slouží jako zarážka při
+     *            uvolňování nezpracovaných stavů úspěšně prošlé sítě ze
+     *            zásobníku
+     * @param randomizeState
+     *            slovo popisující stav, který provede zamíchá přechody dle
+     *            jejich priority před vložením na zásobník
+     * @param successState
+     *            slovo popisující stav, který indikuje úspěšné projití podsítě
+     *            odkazované z následujícího stavu na zásobníku
+     * @param returnState
+     *            slovo popisující stav, který indikuje zpracování podsítě
+     * @param testingPredicate
+     *            rezervovaný název predikátu sloužící pro interní testy
+     * @return překladač
+     */
+    public static DefaultTranslatingObserver create(final NormalWord pullState,
+            final NormalWord pullStopState, final NormalWord randomizeState,
+            final NormalWord successState, final NormalWord returnState,
+            final NormalWord testingPredicate) {
+        Preconditions.checkNotNull(pullState);
+        Preconditions.checkNotNull(pullStopState);
+        Preconditions.checkNotNull(randomizeState);
+        Preconditions.checkNotNull(successState);
+        Preconditions.checkNotNull(returnState);
+        Preconditions.checkNotNull(testingPredicate);
+        Preconditions.checkArgument(Comparisons.allDifferent(pullState,
+                pullStopState, randomizeState, successState, returnState));
+
+        return new DefaultTranslatingObserver(DefaultNodeTopicFactory.create(),
+                DefaultStackProcessor.create(pullState, pullStopState),
+                DefaultDispatchProcessor.create(randomizeState),
+                DefaultProceedProcessor.create(), DefaultTestProcessor.create(
+                        testingPredicate, successState, returnState));
+    }
+
+    private final NodeTopicFactory nodeTopicFactory;
+    private final StackProcessor<List<TemplateElement>> stackProcessor;
+    private final DispatchProcessor<List<TemplateElement>> dispatchProcessor;
+
+    private final ProceedProcessor<List<TemplateElement>> proceedProcessor;
+
+    private final TestProcessor<List<Topic>> testProcessor;
+
+    private final ListMultimap<Network, Topic> units = ArrayListMultimap
+            .create();
+
+    private Optional<Network> current = Optional.absent();
+
+    private DefaultTranslatingObserver(final NodeTopicFactory nodeTopicFactory,
+            final StackProcessor<List<TemplateElement>> stackProcessor,
             final DispatchProcessor<List<TemplateElement>> dispatchProcessor,
             final ProceedProcessor<List<TemplateElement>> proceedProcessor,
             final TestProcessor<List<Topic>> testProcessor) {
@@ -130,110 +161,154 @@ public final class DefaultTranslatingObserver extends AbstractDfsObserver implem
         this.proceedProcessor = proceedProcessor;
         this.testProcessor = testProcessor;
     }
-    
+
     /**
-     * {@inheritDoc}
+     * Přidá témata do aktuální sítě.
      * 
-     * <p>Systém nehraje při překladu žádnou roli, a tak je v této implementaci ignorován.</p>
+     * @param added
+     *            nové témata
      */
-    public void notifyVisit(final System system) {
-        Preconditions.checkNotNull(system);
+    private void add(final List<Topic> added) {
+        assert this.current.isPresent();
+
+        final Network currentRaw = this.current.get();
+        this.units.putAll(currentRaw, added);
     }
 
     /**
-     * {@inheritDoc}
+     * Přidá témata do aktuální sítě.
      * 
-     * <p>Tato implementace pouze nastaví aktuálně zpracovanou síť. V případě, že její obsah nevygeneruje žádná témata, neobjeví se ve výsledku {@link #getResult()}.</p>
+     * @param added
+     *            nové témata
+     */
+    private void add(final Topic... added) {
+        add(ImmutableList.copyOf(added));
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.translate.TranslatingObserver#getResult
+     * ()
      */
     @Override
-    public void notifyVisit(final Network network) {
-        Preconditions.checkNotNull(network);
-        
-        this.current = Optional.of(network);
+    public Map<Network, List<Topic>> getResult() {
+        final Map<Network, Collection<Topic>> collectionResult =
+                this.units.asMap();
+        final Map<Network, ? extends Collection<Topic>> rawResult =
+                collectionResult;
+
+        @SuppressWarnings("unchecked")
+        final Map<Network, List<Topic>> castResult =
+                (Map<Network, List<Topic>>) rawResult;
+        return castResult;
     }
 
-    /** 
+    /**
      * {@inheritDoc}
      * 
-     * <p>Překladač na objevení uzlu reaguje tak, že jej nechá zpracovat třemi procesory, které mají na starost vygenerování kódu pro modifikaci zásobníku, způsob a volbu přechod do dalších uzlů sítě a konečně to, zda-li takový přechod proběhne ihned, či až jako reakce na uživatelský vstup.
-     * <p>Co uzel, to téma s jedinou kategorií. Téma je označeno vzorem "Název_uzlu žolík", který je možné porovnat s aktuálním tématem a přejít tak v případě shody do tohoto uzlu. Kategorie projde vždy, neboť je označena jen žolíky.</p>
+     * <p>
+     * Překladač na objevení uzlu reaguje tak, že jej nechá zpracovat třemi
+     * procesory, které mají na starost vygenerování kódu pro modifikaci
+     * zásobníku, způsob a volbu přechod do dalších uzlů sítě a konečně to,
+     * zda-li takový přechod proběhne ihned, či až jako reakce na uživatelský
+     * vstup.
+     * <p>
+     * Co uzel, to téma s jedinou kategorií. Téma je označeno vzorem
+     * "Název_uzlu žolík", který je možné porovnat s aktuálním tématem a přejít
+     * tak v případě shody do tohoto uzlu. Kategorie projde vždy, neboť je
+     * označena jen žolíky.
+     * </p>
      */
     @Override
     public void notifyDiscovery(final Node node) {
         Preconditions.checkNotNull(node);
         Preconditions.checkState(this.current.isPresent());
-        
-        final List<TemplateElement> stackProcessorResult = node.accept(this.stackProcessor);
-        final List<TemplateElement> dispatchProcessorResult = node.accept(this.dispatchProcessor);
-        final List<TemplateElement> proceedProcessorResult = node.accept(this.proceedProcessor);
-        
-        final ImmutableList.Builder<TemplateElement> codeBuilder = ImmutableList.builder();
-        codeBuilder.add(pushToStack(stackProcessorResult, dispatchProcessorResult));
+
+        final List<TemplateElement> stackProcessorResult =
+                node.accept(this.stackProcessor);
+        final List<TemplateElement> dispatchProcessorResult =
+                node.accept(this.dispatchProcessor);
+        final List<TemplateElement> proceedProcessorResult =
+                node.accept(this.proceedProcessor);
+
+        final ImmutableList.Builder<TemplateElement> codeBuilder =
+                ImmutableList.builder();
+        codeBuilder.add(pushToStack(stackProcessorResult,
+                dispatchProcessorResult));
         codeBuilder.addAll(proceedProcessorResult);
-        
+
         add(this.nodeTopicFactory.produce(node, codeBuilder.build()));
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * Překladač podle toho, o jaký typ hrany jde vygeneruje kód pro daný typ
+     * testu.
+     * </p>
+     * <p>
+     * Hrana stejně jako uzel tvoří vlastní témata, v nichž se nachází určitě
+     * množství kategorií podle typu testu.
+     * </p>
+     */
+    @Override
+    public void notifyExamination(final Arc arc) {
+        Preconditions.checkNotNull(arc);
+        Preconditions.checkState(this.current.isPresent());
+
+        final List<Topic> testProcessorResult = arc.accept(this.testProcessor);
+
+        add(testProcessorResult);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * Tato implementace pouze nastaví aktuálně zpracovanou síť. V případě, že
+     * její obsah nevygeneruje žádná témata, neobjeví se ve výsledku
+     * {@link #getResult()}.
+     * </p>
+     */
+    @Override
+    public void notifyVisit(final Network network) {
+        Preconditions.checkNotNull(network);
+
+        this.current = Optional.of(network);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * Systém nehraje při překladu žádnou roli, a tak je v této implementaci
+     * ignorován.
+     * </p>
+     */
+    @Override
+    public void notifyVisit(final System system) {
+        Preconditions.checkNotNull(system);
     }
 
     private TemplateElement pushToStack(
             final List<TemplateElement> stackProcessorResult,
             final List<TemplateElement> dispatchProcessorResult) {
         final Iterable<TemplateElement> pushed;
-        if (!dispatchProcessorResult.isEmpty() && !stackProcessorResult.isEmpty()) {
-            pushed = Iterables.<TemplateElement>concat(dispatchProcessorResult, ImmutableList.of(Text.create(AIML.WORD_DELIMITER.getValue())), stackProcessorResult);
+        if (!dispatchProcessorResult.isEmpty()
+                && !stackProcessorResult.isEmpty()) {
+            pushed =
+                    Iterables.<TemplateElement> concat(dispatchProcessorResult,
+                            ImmutableList.of(Text.create(AIML.WORD_DELIMITER
+                                    .getValue())), stackProcessorResult);
         } else {
-            pushed = Iterables.<TemplateElement>concat(dispatchProcessorResult, stackProcessorResult);
+            pushed =
+                    Iterables.<TemplateElement> concat(dispatchProcessorResult,
+                            stackProcessorResult);
         }
-        
-        return Stack.popAndPush(ImmutableList.copyOf(pushed));
-    }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * <p>Překladač podle toho, o jaký typ hrany jde vygeneruje kód pro daný typ testu.</p>
-     * <p>Hrana stejně jako uzel tvoří vlastní témata, v nichž se nachází určitě množství kategorií podle typu testu.</p>
-     */
-    @Override
-    public void notifyExamination(final Arc arc) {
-        Preconditions.checkNotNull(arc);
-        Preconditions.checkState(this.current.isPresent());
-        
-        final List<Topic> testProcessorResult = arc.accept(this.testProcessor);
-        
-        add(testProcessorResult);
-    }
-    
-    /**
-     * Přidá témata do aktuální sítě.
-     * 
-     * @param added nové témata
-     */
-    private void add(final Topic... added) {
-        add(ImmutableList.copyOf(added));
-    }
-    
-    /**
-     * Přidá témata do aktuální sítě.
-     * 
-     * @param added nové témata
-     */
-    private void add(final List<Topic> added) {
-        assert this.current.isPresent();
-        
-        final Network currentRaw = this.current.get();
-        this.units.putAll(currentRaw, added);
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.translate.TranslatingObserver#getResult()
-     */
-    @Override
-    public Map<Network, List<Topic>> getResult() {
-        final Map<Network, Collection<Topic>> collectionResult = this.units.asMap();
-        final Map<Network, ? extends Collection<Topic>> rawResult = collectionResult;
-        
-        @SuppressWarnings("unchecked")
-        final Map<Network, List<Topic>> castResult = (Map<Network, List<Topic>>) rawResult; 
-        return castResult;
+        return Stack.popAndPush(ImmutableList.copyOf(pushed));
     }
 }

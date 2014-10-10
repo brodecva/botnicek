@@ -28,12 +28,14 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration;
  * @author Václav Brodec
  * @version 1.0
  */
-public interface LanguageSettingsController extends Controller<LanguageSettingsView> {
-    
+public interface LanguageSettingsController extends
+        Controller<LanguageSettingsView> {
+
     /**
      * Nastaví spravované běhové prostředí robota.
      * 
-     * @param configuration nastavení jazyka
+     * @param configuration
+     *            nastavení jazyka
      */
-    void set(LanguageConfiguration configuration);   
+    void set(LanguageConfiguration configuration);
 }

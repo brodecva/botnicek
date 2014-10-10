@@ -29,35 +29,38 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
  * @version 1.0
  */
 public interface NetworkView {
-    
-    /**
-     * Aktualizuje zobrazení sítě tak, aby zahrnovalo přidaný uzel.
-     * 
-     * @param node přidaný uzel
-     */
-    void nodeAdded(Node node);
-    
+
     /**
      * Aktualizuje zobrazení sítě tak, aby zahrnovalo přidanou hranu.
      * 
-     * @param arc přidaná hrana
+     * @param arc
+     *            přidaná hrana
      */
     void arcAdded(Arc arc);
-        
+
     /**
-     * Aktualizuje zobrazení názvu sítě.
+     * Aktualizuje zobrazení sítě tak, aby zahrnovalo přidaný uzel.
      * 
-     * @param network nová verze sítě
+     * @param node
+     *            přidaný uzel
      */
-    void renamed(Network network);
-    
+    void nodeAdded(Node node);
+
     /**
      * Zpraví pohled o odebrání sítě.s
      */
     void removed();
-    
+
     /**
-     * Vybere síť pro uživatele.
+     * Aktualizuje zobrazení názvu sítě.
+     * 
+     * @param network
+     *            nová verze sítě
+     */
+    void renamed(Network network);
+
+    /**
+     * Vybere síť pro uživatele (posunem dopředu).
      */
     void selected();
 }

@@ -34,40 +34,51 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element;
  */
 public final class DefaultRenderer implements Renderer {
 
-    private final RenderingVisitorFactory renderingVisitorFactory;
-    
-    private final Map<URI, String> namespacesToPrefixes;
-    
     /**
      * Vytvoří generátor.
      * 
-     * @param visitorFactory továrna na návštěvníky stromu dokumentu
-     * @param namespacesToPrefixes nastavení prefixů pro prostory jmen
+     * @param visitorFactory
+     *            továrna na návštěvníky stromu dokumentu
+     * @param namespacesToPrefixes
+     *            nastavení prefixů pro prostory jmen
      * @return generátor
      */
-    public static Renderer create(final RenderingVisitorFactory visitorFactory, final Map<URI, String> namespacesToPrefixes) {
+    public static Renderer create(final RenderingVisitorFactory visitorFactory,
+            final Map<URI, String> namespacesToPrefixes) {
         return new DefaultRenderer(visitorFactory, namespacesToPrefixes);
     }
-    
-    private DefaultRenderer(final RenderingVisitorFactory visitorFactory, final Map<URI, String> namespacesToPrefixes) {
+
+    private final RenderingVisitorFactory renderingVisitorFactory;
+
+    private final Map<URI, String> namespacesToPrefixes;
+
+    private DefaultRenderer(final RenderingVisitorFactory visitorFactory,
+            final Map<URI, String> namespacesToPrefixes) {
         Preconditions.checkNotNull(visitorFactory);
         Preconditions.checkNotNull(namespacesToPrefixes);
-        
-        final Map<URI, String> namespacesToPrefixesCopy = ImmutableMap.copyOf(namespacesToPrefixes);
-        
+
+        final Map<URI, String> namespacesToPrefixesCopy =
+                ImmutableMap.copyOf(namespacesToPrefixes);
+
         this.renderingVisitorFactory = visitorFactory;
         this.namespacesToPrefixes = namespacesToPrefixesCopy;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.render.Renderer#render(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.Element)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.render.Renderer#render(cz.cuni.mff
+     * .ms.brodecva.botnicek.ide.aiml.elements.Element)
      */
+    @Override
     public String render(final Element element) {
         Preconditions.checkNotNull(element);
-        
-        final RenderingVisitor visitor = this.renderingVisitorFactory.produce(this.namespacesToPrefixes);
+
+        final RenderingVisitor visitor =
+                this.renderingVisitorFactory.produce(this.namespacesToPrefixes);
         element.accept(visitor);
-        
+
         return visitor.getResult();
     }
 }

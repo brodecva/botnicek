@@ -19,7 +19,8 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.events;
 
 /**
- * Posluchač události promluvy. Typicky implementovaný objekty, které by měli na promluvu reagovat.
+ * Posluchač události promluvy. Typicky implementovaný objekty, které by měli na
+ * promluvu reagovat.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -29,8 +30,10 @@ public interface SpokenListener {
     /**
      * Zpracuje událost promluvy.
      * 
-     * @param author odesílatel promluvy
-     * @param content promluva
+     * @param author
+     *            odesílatel promluvy
+     * @param content
+     *            promluva
      */
     void spoken(String author, String content);
 

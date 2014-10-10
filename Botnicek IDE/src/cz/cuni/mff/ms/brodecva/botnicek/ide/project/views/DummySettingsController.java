@@ -37,35 +37,51 @@ final class DummySettingsController implements SettingsController {
     public static DummySettingsController create() {
         return new DummySettingsController();
     }
-    
+
     private DummySettingsController() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java
+     * .lang.Object)
      */
     @Override
-    public void addView(SettingsView view) {
+    public void addView(final SettingsView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.SettingsController
+     * #fill(cz.cuni.mff.ms.brodecva.botnicek.ide.projects.views.SettingsView)
      */
     @Override
-    public void removeView(SettingsView view) {
+    public void fill(final SettingsView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.SettingsController#set(cz.cuni.mff.ms.brodecva.botnicek.ide.projects.model.Settings)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(
+     * java.lang.Object)
      */
     @Override
-    public void set(Settings create) {
+    public void removeView(final SettingsView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.SettingsController#fill(cz.cuni.mff.ms.brodecva.botnicek.ide.projects.views.SettingsView)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.SettingsController
+     * #set(cz.cuni.mff.ms.brodecva.botnicek.ide.projects.model.Settings)
      */
     @Override
-    public void fill(SettingsView view) {
+    public void set(final Settings create) {
     }
 }

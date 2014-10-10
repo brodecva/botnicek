@@ -27,28 +27,33 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public class NetworkRenamedEvent extends AbstractMappedEvent<Network, NetworkRenamedListener> {
-    
+public class NetworkRenamedEvent extends
+        AbstractMappedEvent<Network, NetworkRenamedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param network přejmenovaná síť
+     * @param network
+     *            přejmenovaná síť
      * @return událost
      */
     public static NetworkRenamedEvent create(final Network network) {
         return new NetworkRenamedEvent(network);
     }
-    
+
     private NetworkRenamedEvent(final Network network) {
         super(network);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final NetworkRenamedListener listener) {
         listener.renamed(getKey());
     }
 }
- 

@@ -31,8 +31,10 @@ public interface ArcRetypedListener {
     /**
      * Reaguje na změnu typu hrany.
      * 
-     * @param oldVersion původní verze
-     * @param newVersion nová verze
+     * @param oldVersion
+     *            původní verze
+     * @param newVersion
+     *            nová verze
      */
     void arcRetyped(Arc oldVersion, Arc newVersion);
 

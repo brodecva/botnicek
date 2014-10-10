@@ -27,95 +27,125 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts;
 public final class Intended {
 
     /**
-     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
+     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí
+     * programátora, nikoli jako např. výsledek generování dočasné hodnoty.
      * 
-     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
-     */
-    public static <T> T nullReference() {
-        return null;
-    }
-    
-    /**
-     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
-     * 
-     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
+     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí
+     *         programátora, nikoli jako např. výsledek generování dočasné
+     *         hodnoty.
      */
     public static <T> T[] arrayNull() {
         return null;
     }
-    
+
     /**
-     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
+     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí
+     * programátora, nikoli jako např. výsledek generování dočasné hodnoty.
      * 
-     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
-     */
-    public static byte[] byteArrayNull() {
-        return null;
-    }
-    
-    /**
-     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
-     * 
-     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
-     */
-    public static short[] shortArrayNull() {
-        return null;
-    }
-    
-    /**
-     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
-     * 
-     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
-     */
-    public static int[] intArrayNull() {
-        return null;
-    }
-    
-    /**
-     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
-     * 
-     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
-     */
-    public static long[] longArrayNull() {
-        return null;
-    }
-    
-    /**
-     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
-     * 
-     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
-     */
-    public static float[] floatArrayNull() {
-        return null;
-    }
-    
-    /**
-     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
-     * 
-     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
-     */
-    public static double[] doubleArrayNull() {
-        return null;
-    }
-    
-    /**
-     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
-     * 
-     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
-     */
-    public static char[] charArrayNull() {
-        return null;
-    }
-    
-    /**
-     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
-     * 
-     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí programátora, nikoli jako např. výsledek generování dočasné hodnoty.
+     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí
+     *         programátora, nikoli jako např. výsledek generování dočasné
+     *         hodnoty.
      */
     public static boolean[] booleanArrayNull() {
         return null;
     }
-    
+
+    /**
+     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí
+     * programátora, nikoli jako např. výsledek generování dočasné hodnoty.
+     * 
+     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí
+     *         programátora, nikoli jako např. výsledek generování dočasné
+     *         hodnoty.
+     */
+    public static byte[] byteArrayNull() {
+        return null;
+    }
+
+    /**
+     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí
+     * programátora, nikoli jako např. výsledek generování dočasné hodnoty.
+     * 
+     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí
+     *         programátora, nikoli jako např. výsledek generování dočasné
+     *         hodnoty.
+     */
+    public static double[] doubleArrayNull() {
+        return null;
+    }
+
+    /**
+     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí
+     * programátora, nikoli jako např. výsledek generování dočasné hodnoty.
+     * 
+     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí
+     *         programátora, nikoli jako např. výsledek generování dočasné
+     *         hodnoty.
+     */
+    public static float[] floatArrayNull() {
+        return null;
+    }
+
+    /**
+     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí
+     * programátora, nikoli jako např. výsledek generování dočasné hodnoty.
+     * 
+     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí
+     *         programátora, nikoli jako např. výsledek generování dočasné
+     *         hodnoty.
+     */
+    public static char[] charArrayNull() {
+        return null;
+    }
+
+    /**
+     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí
+     * programátora, nikoli jako např. výsledek generování dočasné hodnoty.
+     * 
+     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí
+     *         programátora, nikoli jako např. výsledek generování dočasné
+     *         hodnoty.
+     */
+    public static int[] intArrayNull() {
+        return null;
+    }
+
+    /**
+     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí
+     * programátora, nikoli jako např. výsledek generování dočasné hodnoty.
+     * 
+     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí
+     *         programátora, nikoli jako např. výsledek generování dočasné
+     *         hodnoty.
+     */
+    public static long[] longArrayNull() {
+        return null;
+    }
+
+    /**
+     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí
+     * programátora, nikoli jako např. výsledek generování dočasné hodnoty.
+     * 
+     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí
+     *         programátora, nikoli jako např. výsledek generování dočasné
+     *         hodnoty.
+     */
+    public static <T> T nullReference() {
+        return null;
+    }
+
+    /**
+     * Vrátí {@code null} použitý v kontextu, kdy je projevem rozhodnutí
+     * programátora, nikoli jako např. výsledek generování dočasné hodnoty.
+     * 
+     * @return {@code null} použit v kontextu, kdy je projevem rozhodnutí
+     *         programátora, nikoli jako např. výsledek generování dočasné
+     *         hodnoty.
+     */
+    public static short[] shortArrayNull() {
+        return null;
+    }
+
     private Intended() {
     }
 }

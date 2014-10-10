@@ -21,33 +21,38 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 
 /**
- * Pomocné metody pro práci s návratovými hodnotami či argumenty metod, jež vrací {@code null} jako indikátor nepřítomnosti výsledku či argumentu.
+ * Pomocné metody pro práci s návratovými hodnotami či argumenty metod, jež
+ * vrací {@code null} jako indikátor nepřítomnosti výsledku či argumentu.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class Presence {
-    
-    /**
-     * Indikuje přítomnou hodnotu podle toho, zda-li je vstup {@code null}.
-     * 
-     * @param nullForAbsent výsledek, který je {@code null}, pokud nebyla požadovaná hodnota přítomna
-     * @return zda-li je je hodnota přítomna
-     */
-    public static boolean isPresent(final Object nullForAbsent) {
-        return nullForAbsent != Intended.nullReference();
-    }
-    
+
     /**
      * Indikuje nepřítomnou hodnotu podle toho, zda-li je vstup {@code null}.
      * 
-     * @param nullForAbsent výsledek, který je {@code null}, pokud nebyla požadovaná hodnota přítomna
+     * @param nullForAbsent
+     *            výsledek, který je {@code null}, pokud nebyla požadovaná
+     *            hodnota přítomna
      * @return zda-li je je hodnota nepřítomna
      */
     public static boolean isAbsent(final Object nullForAbsent) {
         return !isPresent(nullForAbsent);
     }
-    
+
+    /**
+     * Indikuje přítomnou hodnotu podle toho, zda-li je vstup {@code null}.
+     * 
+     * @param nullForAbsent
+     *            výsledek, který je {@code null}, pokud nebyla požadovaná
+     *            hodnota přítomna
+     * @return zda-li je je hodnota přítomna
+     */
+    public static boolean isPresent(final Object nullForAbsent) {
+        return nullForAbsent != Intended.nullReference();
+    }
+
     private Presence() {
     }
 }

@@ -22,6 +22,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.GroupLayout;
@@ -39,7 +40,6 @@ import javax.swing.border.EmptyBorder;
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.RunController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.library.responder.ExceptionalState;
 
@@ -51,45 +51,22 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.responder.ExceptionalState;
  */
 public class TestPanel extends JPanel implements RunView {
 
-    private static final long serialVersionUID = 1L;
-
-    private static final float RESULTS_AREA_FONT_SIZE = 12f;
-
     private final class SendAction extends AbstractAction {
-        
+
         private static final long serialVersionUID = 1L;
 
         @Override
         public void actionPerformed(final ActionEvent e) {
-            final String input = inputTextField.getText();
-            inputTextField.setText("");
-            
-            runController.tell(input);
+            final String input = TestPanel.this.inputTextField.getText();
+            TestPanel.this.inputTextField.setText("");
+
+            TestPanel.this.runController.tell(input);
         }
     }
-    
-    /**
-     * Spustí testovací verzi.
-     * 
-     * @param args argumenty
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    final JFrame frame = new JFrame();
-                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    
-                    frame.setContentPane(TestPanel.create());
-                    
-                    frame.pack();
-                    frame.setVisible(true);
-                } catch (final Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+
+    private static final long serialVersionUID = 1L;
+
+    private static final float RESULTS_AREA_FONT_SIZE = 12f;
 
     private static final String SPEECH_SEPARATOR = System.lineSeparator();
 
@@ -105,114 +82,187 @@ public class TestPanel extends JPanel implements RunView {
 
     private static final int BORDER_SIZE = 2;
 
-    private final RunController runController;
-    
-    private final JTextArea resultsTextArea = new JTextArea();
-    private final JScrollPane resultsTextScrollPane = new JScrollPane(resultsTextArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-    private final JTextField inputTextField = new JTextField();
-    private final JButton sendButton = new JButton(UiLocalizer.print("Input"));
-    private final Action sendAction = new SendAction();
-    
-    private final GroupLayout contentPaneLayout = new GroupLayout(this);
-    
     private static TestPanel create() {
         return create(DummyRunController.create());
     }
-    
+
     /**
      * Vytvoří panel konverzace.
      * 
-     * @param runController řadič běžící konverzace
+     * @param runController
+     *            řadič běžící konverzace
      * @return panel konverzace
      */
     public static TestPanel create(final RunController runController) {
         Preconditions.checkNotNull(runController);
-        
+
         final TestPanel newInstance = new TestPanel(runController);
-        
+
         runController.addView(newInstance);
-        
+
         newInstance.sendButton.addActionListener(newInstance.sendAction);
         newInstance.inputTextField.addActionListener(newInstance.sendAction);
-        
+
         newInstance.addFocusListener(new FocusAdapter() {
-            
-            /* (non-Javadoc)
-             * @see java.awt.event.FocusAdapter#focusGained(java.awt.event.FocusEvent)
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * java.awt.event.FocusAdapter#focusGained(java.awt.event.FocusEvent
+             * )
              */
             @Override
             public void focusGained(final FocusEvent e) {
                 newInstance.inputTextField.requestFocusInWindow();
             }
         });
-        
+
         return newInstance;
     }
-    
+
+    /**
+     * Spustí testovací verzi.
+     * 
+     * @param args
+     *            argumenty
+     */
+    public static void main(final String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final JFrame frame = new JFrame();
+                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+                    frame.setContentPane(TestPanel.create());
+
+                    frame.pack();
+                    frame.setVisible(true);
+                } catch (final Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private final RunController runController;
+    private final JTextArea resultsTextArea = new JTextArea();
+    private final JScrollPane resultsTextScrollPane = new JScrollPane(
+            this.resultsTextArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    private final JTextField inputTextField = new JTextField();
+
+    private final JButton sendButton = new JButton(UiLocalizer.print("Input"));
+
+    private final Action sendAction = new SendAction();
+
+    private final GroupLayout contentPaneLayout = new GroupLayout(this);
+
     private TestPanel(final RunController runController) {
         Preconditions.checkNotNull(runController);
-        
+
         this.runController = runController;
-        
-        this.resultsTextArea.setFont(this.resultsTextArea.getFont().deriveFont(RESULTS_AREA_FONT_SIZE));
+
+        this.resultsTextArea.setFont(this.resultsTextArea.getFont().deriveFont(
+                RESULTS_AREA_FONT_SIZE));
         this.resultsTextArea.setEditable(false);
         this.resultsTextArea.setLineWrap(true);
         this.resultsTextArea.setWrapStyleWord(true);
-        
-        this.contentPaneLayout.setHorizontalGroup(
-                contentPaneLayout.createParallelGroup(Alignment.LEADING)
-                    .addGroup(contentPaneLayout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(this.resultsTextScrollPane, GroupLayout.DEFAULT_SIZE,  GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE))
-                    .addGroup(contentPaneLayout.createSequentialGroup()
-                        .addComponent(this.inputTextField, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(this.sendButton, GroupLayout.PREFERRED_SIZE, BUTTON_PREFERRED_WIDTH, GroupLayout.PREFERRED_SIZE))
-        );
-        this.contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createSequentialGroup()
-                    .addGroup(contentPaneLayout.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(this.resultsTextScrollPane, GroupLayout.DEFAULT_SIZE, AREA_PREFERRED_HEIGHT, Short.MAX_VALUE))
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(this.inputTextField, GroupLayout.PREFERRED_SIZE, FIELD_PREFERRED_HEIGHT, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(this.sendButton, GroupLayout.PREFERRED_SIZE, BUTTON_PREFERRED_HEIGHT, GroupLayout.PREFERRED_SIZE))
-        );
-        this.setLayout(this.contentPaneLayout);
-        this.setBorder(new EmptyBorder(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE));
-        this.revalidate();
-    }
-    
-    private void appendText(final String author, final String content) {
-        this.resultsTextArea.append(String.format("%1$s%2$s%3$s%4$s", author, AUTHOR_CONTENT_SEPARATOR, content, SPEECH_SEPARATOR));
-        this.resultsTextArea.setCaretPosition(this.resultsTextArea.getDocument().getLength());
+
+        this.contentPaneLayout.setHorizontalGroup(this.contentPaneLayout
+                .createParallelGroup(Alignment.LEADING)
+                .addGroup(
+                        this.contentPaneLayout.createParallelGroup(
+                                Alignment.LEADING).addComponent(
+                                this.resultsTextScrollPane,
+                                GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.DEFAULT_SIZE))
+                .addGroup(
+                        this.contentPaneLayout
+                                .createSequentialGroup()
+                                .addComponent(this.inputTextField,
+                                        GroupLayout.DEFAULT_SIZE,
+                                        GroupLayout.DEFAULT_SIZE,
+                                        Short.MAX_VALUE)
+                                .addComponent(this.sendButton,
+                                        GroupLayout.PREFERRED_SIZE,
+                                        BUTTON_PREFERRED_WIDTH,
+                                        GroupLayout.PREFERRED_SIZE)));
+        this.contentPaneLayout.setVerticalGroup(this.contentPaneLayout
+                .createSequentialGroup()
+                .addGroup(
+                        this.contentPaneLayout.createParallelGroup(
+                                Alignment.BASELINE).addComponent(
+                                this.resultsTextScrollPane,
+                                GroupLayout.DEFAULT_SIZE,
+                                AREA_PREFERRED_HEIGHT, Short.MAX_VALUE))
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addGroup(
+                        this.contentPaneLayout
+                                .createParallelGroup(Alignment.BASELINE)
+                                .addComponent(this.inputTextField,
+                                        GroupLayout.PREFERRED_SIZE,
+                                        FIELD_PREFERRED_HEIGHT,
+                                        GroupLayout.PREFERRED_SIZE)
+                                .addComponent(this.sendButton,
+                                        GroupLayout.PREFERRED_SIZE,
+                                        BUTTON_PREFERRED_HEIGHT,
+                                        GroupLayout.PREFERRED_SIZE)));
+        setLayout(this.contentPaneLayout);
+        setBorder(new EmptyBorder(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE,
+                BORDER_SIZE));
+        revalidate();
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.RunView#received(java.lang.String, java.lang.String)
+    private void appendText(final String author, final String content) {
+        this.resultsTextArea.append(String.format("%1$s%2$s%3$s%4$s", author,
+                AUTHOR_CONTENT_SEPARATOR, content, SPEECH_SEPARATOR));
+        this.resultsTextArea.setCaretPosition(this.resultsTextArea
+                .getDocument().getLength());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.RunView#
+     * exceptionalStateCaught
+     * (cz.cuni.mff.ms.brodecva.botnicek.library.responder.ExceptionalState)
+     */
+    @Override
+    public void exceptionalStateCaught(final ExceptionalState state) {
+        Preconditions.checkNotNull(state);
+
+        JOptionPane.showMessageDialog(
+                this,
+                UiLocalizer.print("EXCEPTIONAL_STATE_MESSAGE"),
+                UiLocalizer.print("EXCEPTIONAL_STATE_TITLE"),
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.RunView#received(java
+     * .lang.String, java.lang.String)
      */
     @Override
     public void receive(final String author, final String content) {
         Preconditions.checkNotNull(author);
         Preconditions.checkNotNull(content);
-        
+
         appendText(author, content);
-        
+
         this.inputTextField.requestFocusInWindow();
     }
 
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.RunView#exceptionalStateCaught(cz.cuni.mff.ms.brodecva.botnicek.library.responder.ExceptionalState)
-     */
-    @Override
-    public void exceptionalStateCaught(final ExceptionalState state) {
-        Preconditions.checkNotNull(state);
-        
-        final String message = state.getThrowable().getMessage();
-        JOptionPane.showMessageDialog(this, UiLocalizer.print("EXCEPTIONAL_STATE_MESSAGE") + (Presence.isPresent(message) ? message : ""), UiLocalizer.print("EXCEPTIONAL_STATE_TITLE"), JOptionPane.ERROR_MESSAGE);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.RunView#terminated()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.RunView#terminated()
      */
     @Override
     public void terminate() {

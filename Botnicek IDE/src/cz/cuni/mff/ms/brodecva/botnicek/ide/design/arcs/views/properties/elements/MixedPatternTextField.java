@@ -36,80 +36,97 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearab
  * @author Václav Brodec
  * @version 1.0
  */
-public final class MixedPatternTextField extends JTextField implements Clearable {
+public final class MixedPatternTextField extends JTextField implements
+        Clearable {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * Vytvoří textové pole.
      * 
-     * @param client klient pole
-     * @param validationController řadič validace vzoru
+     * @param client
+     *            klient pole
+     * @param validationController
+     *            řadič validace vzoru
      * @return textové pole
      */
-    public static MixedPatternTextField create(final Source client, final MixedPatternValidationController validationController) {
+    public static MixedPatternTextField create(final Source client,
+            final MixedPatternValidationController validationController) {
         Preconditions.checkNotNull(client);
         Preconditions.checkNotNull(validationController);
-        
-        final MixedPatternTextField newInstance = new MixedPatternTextField(validationController);
-        
+
+        final MixedPatternTextField newInstance =
+                new MixedPatternTextField(validationController);
+
         newInstance.getDocument().addDocumentListener(new DocumentListener() {
-            
-            @Override
-            public void removeUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance, document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
-            }
-            
-            @Override
-            public void insertUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance, document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
-            }
-            
+
             @Override
             public void changedUpdate(final DocumentEvent e) {
                 try {
                     final Document document = e.getDocument();
-                    validationController.check(client, newInstance, document.getText(0, document.getLength()));
+                    validationController.check(client, newInstance,
+                            document.getText(0, document.getLength()));
+                } catch (final BadLocationException ex) {
+                    throw new IllegalStateException(ex);
+                }
+            }
+
+            @Override
+            public void insertUpdate(final DocumentEvent e) {
+                try {
+                    final Document document = e.getDocument();
+                    validationController.check(client, newInstance,
+                            document.getText(0, document.getLength()));
+                } catch (final BadLocationException ex) {
+                    throw new IllegalStateException(ex);
+                }
+            }
+
+            @Override
+            public void removeUpdate(final DocumentEvent e) {
+                try {
+                    final Document document = e.getDocument();
+                    validationController.check(client, newInstance,
+                            document.getText(0, document.getLength()));
                 } catch (final BadLocationException ex) {
                     throw new IllegalStateException(ex);
                 }
             }
         });
-        
+
         return newInstance;
     }
 
     private final MixedPatternValidationController validationController;
-    
-    private MixedPatternTextField(final MixedPatternValidationController validationController) {
+
+    private MixedPatternTextField(
+            final MixedPatternValidationController validationController) {
         this.validationController = validationController;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements.Clearable#clear()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements
+     * .Clearable#clear()
      */
     @Override
     public void clear() {
         this.validationController.clear(this);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements.Clearable#reset()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements
+     * .Clearable#reset()
      */
     @Override
-    public void reset(Source client) {
+    public void reset(final Source client) {
         Preconditions.checkNotNull(client);
-        
+
         setText("");
         this.validationController.check(client, this, getText());
     }

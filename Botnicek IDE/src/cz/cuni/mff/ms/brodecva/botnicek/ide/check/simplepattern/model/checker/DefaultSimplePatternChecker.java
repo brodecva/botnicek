@@ -24,15 +24,16 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 
-
 /**
- * Výchozí implementace aplikuje vlastní implementaci normalizéru prostého vzoru jazyka AIML.
+ * Výchozí implementace aplikuje vlastní implementaci normalizéru prostého vzoru
+ * jazyka AIML.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultSimplePatternChecker implements SimplePatternChecker, Source {
-    
+public final class DefaultSimplePatternChecker implements SimplePatternChecker,
+        Source {
+
     /**
      * Vytvoří validátor.
      * 
@@ -42,45 +43,66 @@ public final class DefaultSimplePatternChecker implements SimplePatternChecker, 
         return new DefaultSimplePatternChecker();
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker#check(cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source, java.lang.Object, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker#check
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source,
+     * java.lang.Object, java.lang.String)
      */
     @Override
-    public CheckResult check(final Source source, Object subject, final String patternContent) {
+    public CheckResult check(final Source source, final Object subject,
+            final String patternContent) {
         if (patternContent.isEmpty()) {
-            return DefaultCheckResult.fail(0, ExceptionLocalizer.print("EmptyPattern"), source, subject);
+            return DefaultCheckResult.fail(0,
+                    ExceptionLocalizer.print("EmptyPattern"), source, subject);
         }
-        
+
         boolean inWord = false;
-        
+
         final char[] characters = patternContent.toCharArray();
         for (int index = 0; index < characters.length; index++) {
             final int position = index + 1;
-            final char character = characters[index]; 
-            
+            final char character = characters[index];
+
             if (character == ' ') {
                 if (!inWord || index == characters.length - 1) {
-                    return DefaultCheckResult.fail(position, ExceptionLocalizer.print("ExcessiveWhitespace"), source, subject);
+                    return DefaultCheckResult.fail(position,
+                            ExceptionLocalizer.print("ExcessiveWhitespace"),
+                            source, subject);
                 }
                 inWord = false;
             } else if (Character.isDigit(character)) {
                 inWord = true;
             } else if (Character.isUpperCase(character)) {
                 inWord = true;
-            } else if (Character.isLetter(character) && !Character.isLowerCase(character) && !Character.isUpperCase(character) && !Character.isTitleCase(character)) {
+            } else if (Character.isLetter(character)
+                    && !Character.isLowerCase(character)
+                    && !Character.isUpperCase(character)
+                    && !Character.isTitleCase(character)) {
                 inWord = true;
-            } else if (AIML.STAR_WILDCARD.getValue().equals(Character.toString(character)) || AIML.UNDERSCORE_WILDCARD.getValue().equals(Character.toString(character))) {
+            } else if (AIML.STAR_WILDCARD.getValue().equals(
+                    Character.toString(character))
+                    || AIML.UNDERSCORE_WILDCARD.getValue().equals(
+                            Character.toString(character))) {
                 inWord = true;
             } else {
-                return DefaultCheckResult.fail(position, ExceptionLocalizer.print("InvalidCharacter"), source, subject);
+                return DefaultCheckResult.fail(position,
+                        ExceptionLocalizer.print("InvalidCharacter"), source,
+                        subject);
             }
         }
-        
+
         return DefaultCheckResult.succeed(source, subject);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker#check(java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker#check
+     * (java.lang.String)
      */
     @Override
     public CheckResult check(final String content) {

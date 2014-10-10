@@ -30,35 +30,42 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class SettingsChangedEvent extends AbstractMappedEvent<Project, SettingsChangedListener> {
-    
-    private final Settings settings;
-    
+public final class SettingsChangedEvent extends
+        AbstractMappedEvent<Project, SettingsChangedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param project projekt
-     * @param settings nastavení
+     * @param project
+     *            projekt
+     * @param settings
+     *            nastavení
      * @return událost
      */
-    public static SettingsChangedEvent create(final Project project, final Settings settings) {
+    public static SettingsChangedEvent create(final Project project,
+            final Settings settings) {
         return new SettingsChangedEvent(project, settings);
     }
-    
+
+    private final Settings settings;
+
     private SettingsChangedEvent(final Project project, final Settings settings) {
         super(project);
-        
+
         Preconditions.checkNotNull(settings);
-        
+
         this.settings = settings;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final SettingsChangedListener listener) {
         listener.changed(this.settings);
     }
 }
- 

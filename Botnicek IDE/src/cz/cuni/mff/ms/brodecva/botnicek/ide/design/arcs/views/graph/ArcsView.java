@@ -28,33 +28,40 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
  */
 public interface ArcsView {
     /**
+     * Aktualizuje zobrazení hran tak, aby nezahrnovalo odebranou hranu.
+     * 
+     * @param arc
+     *            odebraná hrana
+     */
+    void arcRemoved(Arc arc);
+
+    /**
      * Změní zobrazení názvu hrany ze staré verze na novou.
      * 
-     * @param oldVersion stará verze hrany
-     * @param newVersion nová verze hrany
+     * @param oldVersion
+     *            stará verze hrany
+     * @param newVersion
+     *            nová verze hrany
      */
     void arcRenamed(Arc oldVersion, Arc newVersion);
-    
+
     /**
      * Změní zobrazení priority hrany ze staré verze na novou.
      * 
-     * @param oldVersion stará verze hrany
-     * @param newVersion nová verze hrany
+     * @param oldVersion
+     *            stará verze hrany
+     * @param newVersion
+     *            nová verze hrany
      */
     void arcReprioritized(Arc oldVersion, Arc newVersion);
-    
+
     /**
      * Změní zobrazení typu hrany ze staré verze na novou.
      * 
-     * @param oldVersion stará verze hrany
-     * @param newVersion nová verze hrany
+     * @param oldVersion
+     *            stará verze hrany
+     * @param newVersion
+     *            nová verze hrany
      */
     void arcRetyped(Arc oldVersion, Arc newVersion);
-    
-    /**
-     * Aktualizuje zobrazení hran tak, aby nezahrnovalo odebranou hranu.
-     * 
-     * @param arc odebraná hrana
-     */
-    void arcRemoved(Arc arc);
 }

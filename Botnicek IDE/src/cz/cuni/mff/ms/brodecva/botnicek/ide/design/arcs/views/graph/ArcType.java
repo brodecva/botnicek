@@ -35,47 +35,38 @@ enum ArcType {
      * 
      */
     PATTERN(Color.MAGENTA, new BasicStroke()),
-    
+
     /**
      * 
      */
     PREDICATE_TEST(Color.YELLOW, new BasicStroke()),
-    
+
     /**
      * 
      */
     CODE_TEST(Color.ORANGE, new BasicStroke()),
-    
+
     /**
      * 
      */
     TRANSITION(Color.BLACK, new BasicStroke()),
-    
+
     /**
      * 
      */
     RECURENT(Color.RED, new BasicStroke());
-    
+
     private final Color color;
     private final Stroke stroke;
 
     private ArcType(final Color color, final Stroke stroke) {
         Preconditions.checkNotNull(color);
         Preconditions.checkNotNull(stroke);
-        
+
         this.color = color;
         this.stroke = stroke;
     }
-    
-    /**
-     * Vrátí štětec pro vykreslení spojnice hrany.
-     * 
-     * @return štětec
-     */
-    public Stroke getStroke() {
-        return this.stroke;
-    }
-    
+
     /**
      * Vrátí barvu spojnice hrany.
      * 
@@ -83,5 +74,14 @@ enum ArcType {
      */
     public Color getColor() {
         return this.color;
+    }
+
+    /**
+     * Vrátí štětec pro vykreslení spojnice hrany.
+     * 
+     * @return štětec
+     */
+    public Stroke getStroke() {
+        return this.stroke;
     }
 }

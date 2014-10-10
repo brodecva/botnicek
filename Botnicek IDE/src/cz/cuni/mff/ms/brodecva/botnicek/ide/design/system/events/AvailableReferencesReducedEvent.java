@@ -28,40 +28,49 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
 
 /**
- * Událost zmenšení dostupné množiny vstupních uzlů sítí (do kterých je možné se zanořit).
+ * Událost zmenšení dostupné množiny vstupních uzlů sítí (do kterých je možné se
+ * zanořit).
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class AvailableReferencesReducedEvent extends AbstractMappedEvent<System, AvailableReferencesReducedListener> {
-    
-    private final Set<EnterNode> removedReferences;
-    
+public class AvailableReferencesReducedEvent extends
+        AbstractMappedEvent<System, AvailableReferencesReducedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param system systém sítí
-     * @param removedReferences odstraněné vstupní uzly
+     * @param system
+     *            systém sítí
+     * @param removedReferences
+     *            odstraněné vstupní uzly
      * @return událost
      */
-    public static AvailableReferencesReducedEvent create(final System system, final Set<EnterNode> removedReferences) {
+    public static AvailableReferencesReducedEvent create(final System system,
+            final Set<EnterNode> removedReferences) {
         return new AvailableReferencesReducedEvent(system, removedReferences);
     }
-    
-    private AvailableReferencesReducedEvent(final System system, final Set<EnterNode> removedReferences) {
+
+    private final Set<EnterNode> removedReferences;
+
+    private AvailableReferencesReducedEvent(final System system,
+            final Set<EnterNode> removedReferences) {
         super(system);
-        
+
         Preconditions.checkNotNull(removedReferences);
-        
+
         this.removedReferences = ImmutableSet.copyOf(removedReferences);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final AvailableReferencesReducedListener listener) {
         listener.referencesReduced(this.removedReferences);
     }
 }
- 

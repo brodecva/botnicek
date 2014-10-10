@@ -21,7 +21,8 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.render;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.api.Visitor;
 
 /**
- * Návštěvník stromu objektového modelu dokumentu, který generuje zdrojový kód, jak prochází jednotlivými uzly.
+ * Návštěvník stromu objektového modelu dokumentu, který generuje zdrojový kód,
+ * jak prochází jednotlivými uzly.
  * 
  * @author Václav Brodec
  * @version 1.0

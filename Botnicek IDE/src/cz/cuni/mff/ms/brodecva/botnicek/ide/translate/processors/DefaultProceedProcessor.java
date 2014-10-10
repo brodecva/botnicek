@@ -29,13 +29,15 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InputNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode;
 
 /**
- * Výchozí implementace procesoru, který generuje rekurzivní značky do šablony podle toho, zda-li má výpočet probíhat dál, či čekat na vstup.
+ * Výchozí implementace procesoru, který generuje rekurzivní značky do šablony
+ * podle toho, zda-li má výpočet probíhat dál, či čekat na vstup.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultProceedProcessor implements ProceedProcessor<List<TemplateElement>> {
-    
+public final class DefaultProceedProcessor implements
+        ProceedProcessor<List<TemplateElement>> {
+
     /**
      * Vytvoří procesor.
      * 
@@ -44,25 +46,33 @@ public final class DefaultProceedProcessor implements ProceedProcessor<List<Temp
     public static DefaultProceedProcessor create() {
         return new DefaultProceedProcessor();
     }
-    
+
     private DefaultProceedProcessor() {
     }
 
-    /** 
+    /**
      * {@inheritDoc}
      * 
-     * <p>Procesní uzel přidá do šablony instrukci pro rekurzivní zanoření výpočtu nad vstupem ze vzoru.</p>
+     * <p>
+     * Zadávací uzel nepřidá do šablony žádný kód. Výpočet se tedy přeruší v
+     * daném tématu a bude vyčkávat na zadání od uživatele.
+     * </p>
      */
-    public List<TemplateElement> process(final ProcessingNode node) {
-        return ImmutableList.<TemplateElement>of(Sr.create());
-    }
-    
-    /** 
-     * {@inheritDoc}
-     * 
-     * <p>Zadávací uzel nepřidá do šablony žádný kód. Výpočet se tedy přeruší v daném tématu a bude vyčkávat na zadání od uživatele.</p>
-     */
+    @Override
     public List<TemplateElement> process(final InputNode node) {
         return ImmutableList.of();
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * Procesní uzel přidá do šablony instrukci pro rekurzivní zanoření výpočtu
+     * nad vstupem ze vzoru.
+     * </p>
+     */
+    @Override
+    public List<TemplateElement> process(final ProcessingNode node) {
+        return ImmutableList.<TemplateElement> of(Sr.create());
     }
 }

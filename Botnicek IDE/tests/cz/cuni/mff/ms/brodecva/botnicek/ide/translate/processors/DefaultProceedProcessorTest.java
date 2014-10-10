@@ -18,7 +18,8 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.easymock.EasyMock;
 import org.junit.After;
@@ -37,7 +38,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 
 /**
- * Testuje výchozí implementaci procesoru, který generuje rekurzivní značky do šablony podle toho, zda-li má výpočet probíhat dál, či čekat na vstup.
+ * Testuje výchozí implementaci procesoru, který generuje rekurzivní značky do
+ * šablony podle toho, zda-li má výpočet probíhat dál, či čekat na vstup.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -51,24 +53,26 @@ public class DefaultProceedProcessorTest {
     private InputNode inputNodeDummy = Intended.nullReference();
     private ProcessingNode processingNodeDummy = Intended.nullReference();
     private Sr srDummy = Intended.nullReference();
-    
+
     /**
      * Inicializuje testovací objekty.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @Before
     public void setUp() throws Exception {
         PowerMock.mockStatic(Sr.class);
-        
+
         this.tested = DefaultProceedProcessor.create();
-        
+
         this.inputNodeDummy = EasyMock.createStrictMock(InputNode.class);
         EasyMock.replay(this.inputNodeDummy);
-        
-        this.processingNodeDummy = EasyMock.createStrictMock(ProcessingNode.class);
+
+        this.processingNodeDummy =
+                EasyMock.createStrictMock(ProcessingNode.class);
         EasyMock.replay(this.processingNodeDummy);
-        
+
         this.srDummy = EasyMock.createStrictMock(Sr.class);
         EasyMock.replay(this.srDummy);
     }
@@ -76,16 +80,19 @@ public class DefaultProceedProcessorTest {
     /**
      * Uklidí testovací objekty.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @After
     public void tearDown() throws Exception {
-        tested = Intended.nullReference();
-        inputNodeDummy = Intended.nullReference();
+        this.tested = Intended.nullReference();
+        this.inputNodeDummy = Intended.nullReference();
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultProceedProcessor#create()}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultProceedProcessor#create()}
+     * .
      */
     @Test
     public void testCreate() {
@@ -93,28 +100,33 @@ public class DefaultProceedProcessorTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultProceedProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode)}.
-     */
-    @Test
-    public void testProcessProcessingNode() {
-        EasyMock.expect(Sr.create()).andStubReturn(srDummy);
-        PowerMock.replay(Sr.class);
-        
-        assertEquals(ImmutableList.of(srDummy), this.tested.process(processingNodeDummy));
-        
-        PowerMock.verify(Sr.class);
-        EasyMock.verify(srDummy);
-        EasyMock.verify(processingNodeDummy);
-    }
-
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultProceedProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InputNode)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultProceedProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InputNode)}
+     * .
      */
     @Test
     public void testProcessInputNode() {
-        assertTrue(this.tested.process(inputNodeDummy).isEmpty());
-        
+        assertTrue(this.tested.process(this.inputNodeDummy).isEmpty());
+
         EasyMock.verify(this.inputNodeDummy);
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultProceedProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode)}
+     * .
+     */
+    @Test
+    public void testProcessProcessingNode() {
+        EasyMock.expect(Sr.create()).andStubReturn(this.srDummy);
+        PowerMock.replay(Sr.class);
+
+        assertEquals(ImmutableList.of(this.srDummy),
+                this.tested.process(this.processingNodeDummy));
+
+        PowerMock.verify(Sr.class);
+        EasyMock.verify(this.srDummy);
+        EasyMock.verify(this.processingNodeDummy);
     }
 
 }

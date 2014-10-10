@@ -34,66 +34,88 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
 
 /**
- * Podmínka, která testuje hodnotu predikátu oproti vzoru. V případě úspěchu vrátí výstup potomků.
+ * Podmínka, která testuje hodnotu predikátu oproti vzoru. V případě úspěchu
+ * vrátí výstup potomků.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-conditional-elements">http://www.alicebot.org/TR/2011/#section-conditional-elements</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-conditional-elements">http://www.alicebot.org/TR/2011/#section-conditional-elements</a>
  */
-public final class BlockCondition extends AbstractCompoundElement implements ConditionElement {
+public final class BlockCondition extends AbstractCompoundElement implements
+        ConditionElement {
     private static final String NAME = "condition";
     private static final String ATT_NAME = "name";
     private static final String ATT_VALUE = "value";
-    
-    private final NormalWord name;
-    private final SimplePattern value;
-    
+
     /**
      * Vytvoří prvek.
      * 
-     * @param name název testovaného predikátu
-     * @param value vzor hodnoty predikátu
-     * @param content potomci
+     * @param name
+     *            název testovaného predikátu
+     * @param value
+     *            vzor hodnoty predikátu
+     * @param content
+     *            potomci
      * @return prvek
      */
-    public static BlockCondition create(final NormalWord name, final SimplePattern value, final TemplateElement... content) {
-        return new BlockCondition(name, value, ImmutableList.copyOf(content));
-    }
-    
-    /**
-     * Vytvoří prvek.
-     * 
-     * @param name název testovaného predikátu
-     * @param value vzor hodnoty predikátu
-     * @param content potomci
-     * @return prvek
-     */
-    public static BlockCondition create(final NormalWord name, final SimplePattern value, final List<TemplateElement> content) {
+    public static BlockCondition create(final NormalWord name,
+            final SimplePattern value, final List<TemplateElement> content) {
         return new BlockCondition(name, value, content);
     }
-    
-    private BlockCondition(final NormalWord name, final SimplePattern value, final List<TemplateElement> content) {
+
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param name
+     *            název testovaného predikátu
+     * @param value
+     *            vzor hodnoty predikátu
+     * @param content
+     *            potomci
+     * @return prvek
+     */
+    public static BlockCondition create(final NormalWord name,
+            final SimplePattern value, final TemplateElement... content) {
+        return new BlockCondition(name, value, ImmutableList.copyOf(content));
+    }
+
+    private final NormalWord name;
+
+    private final SimplePattern value;
+
+    private BlockCondition(final NormalWord name, final SimplePattern value,
+            final List<TemplateElement> content) {
         super(content);
-        
+
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(value);
-        
+
         this.name = name;
         this.value = value;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getAttributes()
+     */
+    @Override
+    public Set<Attribute> getAttributes() {
+        return ImmutableSet
+                .<Attribute> of(
+                        AttributeImplementation.create(ATT_NAME,
+                                this.name.getText()),
+                        AttributeImplementation.create(ATT_VALUE,
+                                this.value.getText()));
     }
 
     /**
      * @return the name
      */
+    @Override
     public String getLocalName() {
         return NAME;
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getAttributes()
-     */
-    @Override
-    public Set<Attribute> getAttributes() {
-        return ImmutableSet.<Attribute>of(AttributeImplementation.create(ATT_NAME, name.getText()), AttributeImplementation.create(ATT_VALUE, value.getText()));
     }
 }

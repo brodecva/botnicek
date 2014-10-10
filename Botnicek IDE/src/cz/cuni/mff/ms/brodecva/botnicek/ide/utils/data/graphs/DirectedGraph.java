@@ -28,125 +28,148 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Function;
  * 
  * @author Václav Brodec
  * @version 1.0
- * @param <V> typu vrcholu
- * @param <E> typ hrany
+ * @param <V>
+ *            typu vrcholu
+ * @param <E>
+ *            typ hrany
  */
 public interface DirectedGraph<V, E> {
     /**
-     * Indikuje přítomnost vrcholu v grafu.
+     * Přidá mezi vrcholy hranu.
      * 
-     * @param vertex vrchol
-     * @return zda-li graf obsahuje vrchol
+     * @param edge
+     *            hrana
+     * @param from
+     *            výchozí vrchol
+     * @param to
+     *            cílový vrchol
      */
-    boolean containsVertex(V vertex);
-    
-    /**
-     * Indikuje přítomnost hrany v grafu.
-     * 
-     * @param edge hrana
-     * @return zda-li graf obsahuje hranu
-     */
-    boolean containsEdge(E edge);
-    
+    void add(E edge, V from, V to);
+
     /**
      * Přidá izolovaný vrchol do grafu.
      * 
-     * @param vertex vrchol
+     * @param vertex
+     *            vrchol
      */
     void add(V vertex);
-    
+
     /**
-     * Přidá mezi vrcholy hranu.
+     * Indikuje přítomnost hrany v grafu.
      * 
-     * @param edge hrana
-     * @param from výchozí vrchol
-     * @param to cílový vrchol
+     * @param edge
+     *            hrana
+     * @return zda-li graf obsahuje hranu
      */
-    void add(E edge, V from, V to);
-    
+    boolean containsEdge(E edge);
+
     /**
-     * Odstraní vrchol a související hrany.
+     * Indikuje přítomnost vrcholu v grafu.
      * 
-     * @param vertex vrchol
+     * @param vertex
+     *            vrchol
+     * @return zda-li graf obsahuje vrchol
      */
-    void removeVertex(V vertex);
-    
-    /**
-     * Odebere vrchol z grafu a opraví okolí.
-     * 
-     * @param vertex odstraňovaný vrchol
-     * @param neighboursRepair funkce změny okolních vrcholů
-     * @param neighbours zpětné volání pro každého souseda
-     * @param connections zpětné volání pro každou odebranou související hranu
-     */
-    void extractVertex(V vertex, Function<V, V> neighboursRepair, Callback<V> neighbours, Callback<E> connections);
-    
-    /**
-     * Odstraní hranu.
-     * 
-     * @param edge hrana
-     */
-    void removeEdge(E edge);
-    
-    /**
-     * Nahradí vrchol.
-     * 
-     * @param old starý vrchol
-     * @param fresh nový vrchol
-     */
-    void replaceVertex(V old, V fresh);
-    
-    /**
-     * Nahradí hranu.
-     * 
-     * @param old stará hrana
-     * @param fresh nová hrana
-     */
-    void replaceEdge(E old, E fresh);
-    
-    /**
-     * Vrátí množinu vrcholů grafu.
-     * 
-     * @return množina vrcholů
-     */
-    Set<V> vertices();
-    
+    boolean containsVertex(V vertex);
+
     /**
      * Vrátí množinu hran grafu.
      * 
      * @return množina hran
      */
     Set<E> edges();
-    
+
     /**
-     * Vrátí množinu hran vstupujících do vrcholu.
+     * Odebere vrchol z grafu a opraví okolí.
      * 
-     * @param vertex vrchol
-     * @return množina vstupujících hran
+     * @param vertex
+     *            odstraňovaný vrchol
+     * @param neighboursRepair
+     *            funkce změny okolních vrcholů
+     * @param neighbours
+     *            zpětné volání pro každého souseda
+     * @param connections
+     *            zpětné volání pro každou odebranou související hranu
      */
-    Set<E> ins(V vertex);
-    
-    /**
-     * Vrátí množinu hran vystupujících do vrcholu.
-     * 
-     * @param vertex vrchol
-     * @return množina vystupujících hran
-     */
-    Set<E> outs(V vertex);
-    
+    void extractVertex(V vertex, Function<V, V> neighboursRepair,
+            Callback<V> neighbours, Callback<E> connections);
+
     /**
      * Vrátí výchozí vrchol hrany.
      * 
-     * @param arc hrana
+     * @param arc
+     *            hrana
      * @return výchozí vrchol
      */
     V from(E arc);
-    
+
+    /**
+     * Vrátí množinu hran vstupujících do vrcholu.
+     * 
+     * @param vertex
+     *            vrchol
+     * @return množina vstupujících hran
+     */
+    Set<E> ins(V vertex);
+
+    /**
+     * Vrátí množinu hran vystupujících do vrcholu.
+     * 
+     * @param vertex
+     *            vrchol
+     * @return množina vystupujících hran
+     */
+    Set<E> outs(V vertex);
+
+    /**
+     * Odstraní hranu.
+     * 
+     * @param edge
+     *            hrana
+     */
+    void removeEdge(E edge);
+
+    /**
+     * Odstraní vrchol a související hrany.
+     * 
+     * @param vertex
+     *            vrchol
+     */
+    void removeVertex(V vertex);
+
+    /**
+     * Nahradí hranu.
+     * 
+     * @param old
+     *            stará hrana
+     * @param fresh
+     *            nová hrana
+     */
+    void replaceEdge(E old, E fresh);
+
+    /**
+     * Nahradí vrchol.
+     * 
+     * @param old
+     *            starý vrchol
+     * @param fresh
+     *            nový vrchol
+     */
+    void replaceVertex(V old, V fresh);
+
     /**
      * Vrátí cílový vrchol hrany.
      * 
-     * @param arc hrana
+     * @param arc
+     *            hrana
      * @return cílový vrchol
      */
     V to(E arc);
+
+    /**
+     * Vrátí množinu vrcholů grafu.
+     * 
+     * @return množina vrcholů
+     */
+    Set<V> vertices();
 }

@@ -31,7 +31,8 @@ public interface LanguageSettingsChangedListener {
     /**
      * Reaguje na změnu nastavení.
      * 
-     * @param settings nastavení
+     * @param settings
+     *            nastavení
      */
     void changed(LanguageConfiguration settings);
 

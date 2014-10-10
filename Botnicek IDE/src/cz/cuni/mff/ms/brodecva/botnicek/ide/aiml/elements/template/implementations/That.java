@@ -24,15 +24,17 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.platform.Index;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.TwoDimensionalIndex;
 
 /**
- * Vrátí předchozí výstup robota určený první (kolikátý zpět) a druhou (pořadí věty) položkou indexu.
+ * Vrátí předchozí výstup robota určený první (kolikátý zpět) a druhou (pořadí
+ * věty) položkou indexu.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-template-side-that">http://www.alicebot.org/TR/2011/#section-template-side-that</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-template-side-that">http://www.alicebot.org/TR/2011/#section-template-side-that</a>
  */
 public class That extends AbstractDoubleIndexedElement implements AtomicElement {
     private static final String NAME = "that";
-    
+
     /**
      * Vytvoří prvek s implicitním indexem.
      * 
@@ -41,41 +43,46 @@ public class That extends AbstractDoubleIndexedElement implements AtomicElement 
     public static That create() {
         return new That();
     }
-    
+
     /**
      * Vytvoří prvek.
      * 
-     * @param index částečně explicitní index
+     * @param index
+     *            částečně explicitní index
      * @return prvek
      */
     public static That create(final Index index) {
         return new That(index);
     }
-    
+
     /**
      * Vytvoří prvek.
      * 
-     * @param index2d explicitní index
+     * @param index2d
+     *            explicitní index
      * @return prvek
      */
     public static That create(final TwoDimensionalIndex index2d) {
         return new That(index2d);
     }
-    
+
     private That() {
         super();
     }
-    
+
     private That(final Index index) {
         super(index);
     }
-    
+
     private That(final TwoDimensionalIndex index2d) {
         super(index2d);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {

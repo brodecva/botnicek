@@ -27,28 +27,33 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class ProjectClosedEvent extends AbstractMappedEvent<Project, ProjectClosedListener> {
-    
+public final class ProjectClosedEvent extends
+        AbstractMappedEvent<Project, ProjectClosedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param project uzavřený projekt
+     * @param project
+     *            uzavřený projekt
      * @return událost
      */
     public static ProjectClosedEvent create(final Project project) {
         return new ProjectClosedEvent(project);
     }
-    
+
     private ProjectClosedEvent(final Project project) {
         super(project);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final ProjectClosedListener listener) {
         listener.closed(getKey());
     }
 }
- 

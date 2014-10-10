@@ -30,37 +30,44 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public class NetworkDisplayedEvent extends AbstractMappedEvent<System, NetworkDisplayedListener> {
-    
-    private final Network network;
-    
+public class NetworkDisplayedEvent extends
+        AbstractMappedEvent<System, NetworkDisplayedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param system rodičovský systém sítí
-     * @param network síť
+     * @param system
+     *            rodičovský systém sítí
+     * @param network
+     *            síť
      * @return událost
      */
-    public static NetworkDisplayedEvent create(final System system, final Network network) {
+    public static NetworkDisplayedEvent create(final System system,
+            final Network network) {
         return new NetworkDisplayedEvent(system, network);
     }
-    
+
+    private final Network network;
+
     private NetworkDisplayedEvent(final System system, final Network network) {
         super(system);
-        
+
         Preconditions.checkNotNull(network);
-        
+
         this.network = network;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final NetworkDisplayedListener listener) {
         Preconditions.checkNotNull(listener);
-        
+
         listener.displayed(this.network);
     }
 }
- 

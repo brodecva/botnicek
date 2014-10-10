@@ -28,7 +28,8 @@ interface HintListener {
     /**
      * Nabídne daný prvek.
      * 
-     * @param item nabízený prvek
+     * @param item
+     *            nabízený prvek
      */
     void hint(Object item);
 }

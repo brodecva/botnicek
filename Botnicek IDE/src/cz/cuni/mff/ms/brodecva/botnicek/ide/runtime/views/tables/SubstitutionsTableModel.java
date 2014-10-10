@@ -29,31 +29,36 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.models.AbstractNameValueTableModel;
 
 /**
- * Model tabulky se dvěma sloupci. První obsahuje regulární výrazy, jimiž zachycené úseky textu budou nahrazeny odpovídajícím textem v druhém.
+ * Model tabulky se dvěma sloupci. První obsahuje regulární výrazy, jimiž
+ * zachycené úseky textu budou nahrazeny odpovídajícím textem v druhém.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class SubstitutionsTableModel extends AbstractNameValueTableModel<Pattern, String> {
+public class SubstitutionsTableModel extends
+        AbstractNameValueTableModel<Pattern, String> {
 
     /**
-     * Porovnává regulární výrazy podle výchozího porovnání řetězců, jimiž jsou zapsány.
+     * Porovnává regulární výrazy podle výchozího porovnání řetězců, jimiž jsou
+     * zapsány.
      */
     private static final class PatternComparator implements Comparator<Pattern> {
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
         @Override
         public int compare(final Pattern first, final Pattern second) {
             Preconditions.checkNotNull(first);
             Preconditions.checkNotNull(second);
-            
+
             return first.toString().compareTo(second.toString());
         }
     }
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     /**
      * Vytvoří prázdný model.
      * 
@@ -62,41 +67,54 @@ public class SubstitutionsTableModel extends AbstractNameValueTableModel<Pattern
     public static SubstitutionsTableModel create() {
         return new SubstitutionsTableModel();
     }
-    
+
     /**
      * Vytvoří předvyplněný model.
      * 
-     * @param patternsToSubs původní obsah
+     * @param patternsToSubs
+     *            původní obsah
      * @return model
      */
-    public static SubstitutionsTableModel create(final Map<Pattern, String> patternsToSubs) {
+    public static SubstitutionsTableModel create(
+            final Map<Pattern, String> patternsToSubs) {
         return new SubstitutionsTableModel(patternsToSubs);
     }
 
     private SubstitutionsTableModel() {
-        super(new PatternComparator(), UiLocalizer.print("PATTERN_COLUMN_NAME"), UiLocalizer.print("VALUE_COLUMN_NAME"));
-    }
-    
-    private SubstitutionsTableModel(final Map<Pattern, String> patternsToSubs) {
-        super(patternsToSubs, new PatternComparator(), UiLocalizer.print("PATTERN_COLUMN_NAME"),
-                UiLocalizer.print("VALUE_COLUMN_NAME"));
+        super(new PatternComparator(),
+                UiLocalizer.print("PATTERN_COLUMN_NAME"), UiLocalizer
+                        .print("VALUE_COLUMN_NAME"));
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.NameValueTableModel#emptyValue()
+    private SubstitutionsTableModel(final Map<Pattern, String> patternsToSubs) {
+        super(patternsToSubs, new PatternComparator(), UiLocalizer
+                .print("PATTERN_COLUMN_NAME"), UiLocalizer
+                .print("VALUE_COLUMN_NAME"));
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.NameValueTableModel#
+     * emptyValue()
      */
     @Override
     protected String defaultValue() {
         return "";
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.NameValueTableModel#nameOf(String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.NameValueTableModel#
+     * nameOf(String)
      */
     @Override
     protected Pattern nameOf(final String nameString) {
         Preconditions.checkNotNull(nameString);
-        
+
         try {
             return Pattern.compile(nameString);
         } catch (final PatternSyntaxException e) {
@@ -104,13 +122,17 @@ public class SubstitutionsTableModel extends AbstractNameValueTableModel<Pattern
         }
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.NameValueTableModel#valueOf(String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.NameValueTableModel#
+     * valueOf(String)
      */
     @Override
     protected String valueOf(final String valueString) {
         Preconditions.checkNotNull(valueString);
-        
+
         return valueString;
     }
 }

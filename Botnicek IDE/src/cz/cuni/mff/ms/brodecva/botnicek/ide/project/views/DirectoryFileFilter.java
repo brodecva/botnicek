@@ -31,7 +31,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
  * @version 1.0
  */
 final class DirectoryFileFilter extends FileFilter {
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
      */
     @Override
@@ -39,7 +41,9 @@ final class DirectoryFileFilter extends FileFilter {
         return file.isDirectory();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.swing.filechooser.FileFilter#getDescription()
      */
     @Override

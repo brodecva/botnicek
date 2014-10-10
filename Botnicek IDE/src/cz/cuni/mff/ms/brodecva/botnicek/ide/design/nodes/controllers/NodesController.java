@@ -30,40 +30,51 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller;
  */
 public interface NodesController extends Controller<NodesView> {
     /**
-     * Přejmenuje uzel (pokud nový název vyhovuje požadavkům na název uzlu).
-     * 
-     * @param nodeName původní název
-     * @param proposedName navržený název
-     */
-    void rename(NormalWord nodeName, String proposedName);
-    
-    /**
      * Změní umístění uzlu v rovině grafu.
      * 
-     * @param nodeName název
-     * @param x souřadnice nové polohy na ose x
-     * @param y souřadnice nové polohy na ose y
+     * @param nodeName
+     *            název
+     * @param x
+     *            souřadnice nové polohy na ose x
+     * @param y
+     *            souřadnice nové polohy na ose y
      */
     void changeNode(NormalWord nodeName, int x, int y);
-    
-    /**
-     * Přepne typ interaktivity uzlu. Rotuje se mezi zastavením výpočtu pro uživatelský vstup a postupem bez přerušení.
-     * 
-     * @param nodeName název uzlu
-     */
-    void toggleNodeProceedType(NormalWord nodeName);
-    
-    /**
-     * Přepne typy ovlivňující míru determinismu uzlu. Rotuje se mezi postupem přes odchozí hrany v pořadí dle klesající priority a náhodným pořadím s prioritou jako vahou.
-     * 
-     * @param nodeName název uzlu
-     */
-    void toggleNodeDispatchType(NormalWord nodeName);
-    
+
     /**
      * Odebere uzel sítě.
      * 
-     * @param name název odebraného uzlu
+     * @param name
+     *            název odebraného uzlu
      */
     void removeNode(NormalWord name);
+
+    /**
+     * Přejmenuje uzel (pokud nový název vyhovuje požadavkům na název uzlu).
+     * 
+     * @param nodeName
+     *            původní název
+     * @param proposedName
+     *            navržený název
+     */
+    void rename(NormalWord nodeName, String proposedName);
+
+    /**
+     * Přepne typy ovlivňující míru determinismu uzlu. Rotuje se mezi postupem
+     * přes odchozí hrany v pořadí dle klesající priority a náhodným pořadím s
+     * prioritou jako vahou.
+     * 
+     * @param nodeName
+     *            název uzlu
+     */
+    void toggleNodeDispatchType(NormalWord nodeName);
+
+    /**
+     * Přepne typ interaktivity uzlu. Rotuje se mezi zastavením výpočtu pro
+     * uživatelský vstup a postupem bez přerušení.
+     * 
+     * @param nodeName
+     *            název uzlu
+     */
+    void toggleNodeProceedType(NormalWord nodeName);
 }

@@ -29,6 +29,6 @@ import org.junit.runners.Suite.SuiteClasses;
  * @version 1.0
  */
 @RunWith(Suite.class)
-@SuiteClasses({AllUnitJunitTests.class, AllUnitPowerMockTests.class })
+@SuiteClasses({ AllUnitJunitTests.class, AllUnitPowerMockTests.class })
 public final class AllUnitTests {
 }

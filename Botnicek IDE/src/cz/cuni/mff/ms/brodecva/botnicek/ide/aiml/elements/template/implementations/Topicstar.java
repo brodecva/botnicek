@@ -27,7 +27,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.platform.Index;
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-topicstar">http://www.alicebot.org/TR/2011/#section-topicstar</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-topicstar">http://www.alicebot.org/TR/2011/#section-topicstar</a>
  */
 public class Topicstar extends AbstractIndexedElement implements AtomicElement {
     private static final String NAME = "topicstar";
@@ -40,27 +41,31 @@ public class Topicstar extends AbstractIndexedElement implements AtomicElement {
     public static Topicstar create() {
         return new Topicstar();
     }
-    
+
     /**
      * Vytvoří prvek.
      * 
-     * @param index explicitní index
+     * @param index
+     *            explicitní index
      * @return prvek
      */
     public static Topicstar create(final Index index) {
         return new Topicstar(index);
     }
-    
+
     private Topicstar() {
         super();
     }
-    
+
     private Topicstar(final Index index) {
         super(index);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {

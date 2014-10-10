@@ -25,5 +25,5 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template;
  * @version 1.0
  */
 public interface CompoundElement extends TemplateElement {
-    
+
 }

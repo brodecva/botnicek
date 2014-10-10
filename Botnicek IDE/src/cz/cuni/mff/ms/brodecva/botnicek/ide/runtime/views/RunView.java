@@ -28,20 +28,23 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.responder.ExceptionalState;
  */
 public interface RunView {
     /**
-     * Přijme odpověď a zobrazí.
-     * 
-     * @param author odesílatel odpovědi
-     * @param content obsah odpovědi
-     */
-    void receive(String author, String content);
-    
-    /**
      * Reaguje na výjimečný stav.
      * 
-     * @param state výjimečný stav v zpracování konverzace
+     * @param state
+     *            výjimečný stav v zpracování konverzace
      */
     void exceptionalStateCaught(ExceptionalState state);
-    
+
+    /**
+     * Přijme odpověď a zobrazí.
+     * 
+     * @param author
+     *            odesílatel odpovědi
+     * @param content
+     *            obsah odpovědi
+     */
+    void receive(String author, String content);
+
     /**
      * Zpraví a reaguje na ukončení konverzace.
      */

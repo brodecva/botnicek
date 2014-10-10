@@ -28,7 +28,8 @@ public interface CodeContentBuilderFactory {
     /**
      * Vytvoří konstruktor.
      * 
-     * @param startContent počáteční obsah
+     * @param startContent
+     *            počáteční obsah
      * @return konstruktor
      */
     CodeContentBuilder produce(final String startContent);

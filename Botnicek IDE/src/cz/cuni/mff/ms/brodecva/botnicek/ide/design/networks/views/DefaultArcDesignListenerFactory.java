@@ -45,21 +45,27 @@ public class DefaultArcDesignListenerFactory implements
     public static DefaultArcDesignListenerFactory create() {
         return new DefaultArcDesignListenerFactory();
     }
-    
+
     private DefaultArcDesignListenerFactory() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.views.ArcDesignListenerFactory#produce()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.views.
+     * ArcDesignListenerFactory#produce()
      */
     @Override
-    public ArcDesignListener produce(final JPanel designPanel, final Set<NodeUI> nodes, final Set<ArcUI> arcs, final NetworkController networkController) {
+    public ArcDesignListener produce(final JPanel designPanel,
+            final Set<NodeUI> nodes, final Set<ArcUI> arcs,
+            final NetworkController networkController) {
         Preconditions.checkNotNull(designPanel);
         Preconditions.checkNotNull(nodes);
         Preconditions.checkNotNull(arcs);
         Preconditions.checkNotNull(networkController);
-        
-        return DefaultArcDesignListener.create(designPanel, nodes, arcs, networkController);
+
+        return DefaultArcDesignListener.create(designPanel, nodes, arcs,
+                networkController);
     }
 
 }

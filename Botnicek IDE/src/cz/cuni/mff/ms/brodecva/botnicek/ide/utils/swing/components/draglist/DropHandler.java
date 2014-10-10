@@ -29,53 +29,65 @@ import javax.swing.TransferHandler;
 import com.google.common.base.Preconditions;
 
 /**
- * <p>Obsluhuje přesunutí prvku v seznamu vybraného pomocí tahu.</p>
- * <p>Jeho index získá z přesouvaného řetězcového obsahu.</p>
+ * <p>
+ * Obsluhuje přesunutí prvku v seznamu vybraného pomocí tahu.
+ * </p>
+ * <p>
+ * Jeho index získá z přesouvaného řetězcového obsahu.
+ * </p>
  * 
  * @author Václav Brodec
  * @version 1.0
- * @param <E> typ přesouvaného prvku
+ * @param <E>
+ *            typ přesouvaného prvku
  * @see DragListener pro původce přesouvaného obsahu
  */
 final class DropHandler<E> extends TransferHandler {
-    
+
     private static final long serialVersionUID = 1L;
-    
-    private final DragOrderableList<E> moved;
-    
+
     /**
      * Vytvořený obslužný objekt pro přesunutí prvku v rámci seznamu.
      * 
-     * @param moved obsluhovaný seznam
+     * @param moved
+     *            obsluhovaný seznam
      * @return obslužný objekt
      */
     public static <E> DropHandler<E> create(final DragOrderableList<E> moved) {
         Preconditions.checkNotNull(moved);
-        
+
         return new DropHandler<E>(moved);
     }
-    
+
+    private final DragOrderableList<E> moved;
+
     private DropHandler(final DragOrderableList<E> moved) {
         this.moved = moved;
     }
-    
-    /* (non-Javadoc)
-     * @see javax.swing.TransferHandler#canImport(javax.swing.TransferHandler.TransferSupport)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.swing.TransferHandler#canImport(javax.swing.TransferHandler.
+     * TransferSupport)
      */
     @Override
     public boolean canImport(final TransferHandler.TransferSupport support) {
         if (!support.isDataFlavorSupported(DataFlavor.stringFlavor)) {
             return false;
         }
-        
+
         final JList.DropLocation dropLocation =
                 (JList.DropLocation) support.getDropLocation();
-        
+
         return dropLocation.getIndex() != -1;
     }
 
-    /* (non-Javadoc)
-     * @see javax.swing.TransferHandler#importData(javax.swing.TransferHandler.TransferSupport)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.swing.TransferHandler#importData(javax.swing.TransferHandler.
+     * TransferSupport)
      */
     @Override
     public boolean importData(final TransferHandler.TransferSupport support) {
@@ -92,14 +104,14 @@ final class DropHandler<E> extends TransferHandler {
         } catch (final UnsupportedFlavorException | IOException e) {
             return false;
         }
-        
+
         final int sourceIndex;
         try {
             sourceIndex = Integer.parseInt(indexString);
         } catch (final NumberFormatException e) {
             return false;
         }
-        
+
         final JList.DropLocation dropLocation =
                 (JList.DropLocation) support.getDropLocation();
         final int targetIndex = dropLocation.getIndex();
@@ -109,7 +121,7 @@ final class DropHandler<E> extends TransferHandler {
         } catch (final IllegalStateException e) {
             return false;
         }
-        
+
         return true;
     }
 }

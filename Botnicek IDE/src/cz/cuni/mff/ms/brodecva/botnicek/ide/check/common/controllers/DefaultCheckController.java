@@ -31,20 +31,28 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.AbstractController;
 
 /**
- * Výchozí implementace řadiče kontroly obsahuje validátor, který provádí vlastní validaci.
+ * Výchozí implementace řadiče kontroly obsahuje validátor, který provádí
+ * vlastní validaci.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultCheckController extends AbstractController<CheckView> implements CheckController {
+public final class DefaultCheckController extends AbstractController<CheckView>
+        implements CheckController {
 
     /**
-     * Posluchač událost provedené kontroly, který aktualizuje zaregistrované pohledy novými výsledky.
+     * Posluchač událost provedené kontroly, který aktualizuje zaregistrované
+     * pohledy novými výsledky.
      */
     private class DefaultCheckListener implements CheckListener {
 
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.edit.check.input.events.CodeCheckListener#checked(cz.cuni.mff.ms.brodecva.botnicek.ide.edit.check.input.model.CodeCheckResult)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.edit.check.input.events.
+         * CodeCheckListener
+         * #checked(cz.cuni.mff.ms.brodecva.botnicek.ide.edit.check
+         * .input.model.CodeCheckResult)
          */
         @Override
         public void checked(final CheckResult result) {
@@ -54,55 +62,70 @@ public final class DefaultCheckController extends AbstractController<CheckView> 
                 public void call(final CheckView view) {
                     view.updateResult(result);
                 }
-                
+
             });
         }
-        
+
     }
-    
-    private final Validator validator;
-    
+
     /**
      * Vytvoří řadič.
      * 
-     * @param validator validátor provádějící vlastní validaci
-     * @param eventManager správce událostí
+     * @param validator
+     *            validátor provádějící vlastní validaci
+     * @param eventManager
+     *            správce událostí
      * @return řadič
      */
-    public static DefaultCheckController create(final Validator validator, final EventManager eventManager) {
-        final DefaultCheckController newInstance = new DefaultCheckController(validator, eventManager);
-        
-        newInstance.addListener(CheckEvent.class, newInstance.new DefaultCheckListener());
-        
+    public static DefaultCheckController create(final Validator validator,
+            final EventManager eventManager) {
+        final DefaultCheckController newInstance =
+                new DefaultCheckController(validator, eventManager);
+
+        newInstance.addListener(CheckEvent.class,
+                newInstance.new DefaultCheckListener());
+
         return newInstance;
     }
-    
-    private DefaultCheckController(final Validator validator, final EventManager eventManager) {
+
+    private final Validator validator;
+
+    private DefaultCheckController(final Validator validator,
+            final EventManager eventManager) {
         super(eventManager);
-        
+
         Preconditions.checkNotNull(validator);
-        
+
         this.validator = validator;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController#check(java.lang.Object, java.lang.String)
-     */
-    @Override
-    public void check(final Source client, Object subject, final String value) {
-        Preconditions.checkNotNull(client);
-        Preconditions.checkNotNull(value);
-        
-        this.validator.validate(client, subject, value);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController#clear(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController
+     * #clear(java.lang.Object)
      */
     @Override
     public void clear(final Object subject) {
         Preconditions.checkNotNull(subject);
-        
+
         this.validator.clear(subject);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController
+     * #check(java.lang.Object, java.lang.String)
+     */
+    @Override
+    public void check(final Source client, final Object subject,
+            final String value) {
+        Preconditions.checkNotNull(client);
+        Preconditions.checkNotNull(value);
+
+        this.validator.validate(client, subject, value);
     }
 }

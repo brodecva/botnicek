@@ -36,35 +36,52 @@ final class DummyBotSettingsController implements BotSettingsController {
     public static DummyBotSettingsController create() {
         return new DummyBotSettingsController();
     }
-    
+
     private DummyBotSettingsController() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java
+     * .lang.Object)
      */
     @Override
-    public void addView(BotSettingsView view) {
+    public void addView(final BotSettingsView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.
+     * BotSettingsController
+     * #fill(cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.BotSettingsView)
      */
     @Override
-    public void removeView(BotSettingsView view) {
+    public void fill(final BotSettingsView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.BotSettingsController#setBotConfiguration(cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(
+     * java.lang.Object)
      */
     @Override
-    public void set(BotConfiguration configuration) {
+    public void removeView(final BotSettingsView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.BotSettingsController#fill(cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.BotSettingsView)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.
+     * BotSettingsController
+     * #setBotConfiguration(cz.cuni.mff.ms.brodecva.botnicek
+     * .library.api.BotConfiguration)
      */
     @Override
-    public void fill(BotSettingsView view) {
+    public void set(final BotConfiguration configuration) {
     }
 }

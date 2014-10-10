@@ -19,7 +19,6 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.ArcView;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 
 /**
@@ -38,71 +37,110 @@ final class DummyArcController implements ArcController {
     public static DummyArcController create() {
         return new DummyArcController();
     }
-    
+
     /**
      * 
      */
     private DummyArcController() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java
+     * .lang.Object)
      */
     @Override
-    public void addView(ArcView view) {
+    public void addView(final ArcView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang
+     * .Object)
      */
     @Override
-    public void removeView(ArcView view) {
+    public void fill(final ArcView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(
+     * java.lang.Object)
      */
     @Override
-    public void fill(ArcView view) {
+    public void removeView(final ArcView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcController#updatePattern(java.lang.String, int, java.lang.String, java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcController
+     * #updateCodeTest(java.lang.String, int, java.lang.String,
+     * java.lang.String, java.lang.String)
      */
     @Override
-    public void updatePattern(String newName, int priority, String pattern,
-            String that, String code) {
+    public void updateCodeTest(final String newName, final int priority,
+            final String code, final String testedCode, final String value) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcController#updateCodeTest(java.lang.String, int, java.lang.String, java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcController
+     * #updatePattern(java.lang.String, int, java.lang.String, java.lang.String,
+     * java.lang.String)
      */
     @Override
-    public void updateCodeTest(String newName, int priority, String code,
-            String testedCode, String value) {
+    public void updatePattern(final String newName, final int priority,
+            final String pattern, final String that, final String code) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcController#updatePredicateTest(java.lang.String, int, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcController
+     * #updatePredicateTest(java.lang.String, int, java.lang.String,
+     * java.lang.String, java.lang.String, java.lang.String)
      */
     @Override
-    public void updatePredicateTest(String newName, int priority, String code,
-            String prepareCode, String name, String value) {
+    public void updatePredicateTest(final String newName, final int priority,
+            final String code, final String prepareCode, final String name,
+            final String value) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcController#updateRecurent(java.lang.String, int, java.lang.String, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcController
+     * #updateRecurent(java.lang.String, int, java.lang.String,
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode,
+     * java.lang.String)
      */
     @Override
-    public void updateRecurent(String newName, int priority, String code,
-            EnterNode targetName) {
+    public void updateRecurent(final String newName, final int priority,
+            final String code, final EnterNode targetName) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcController#updateTransition(java.lang.String, int, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcController
+     * #updateTransition(java.lang.String, int, java.lang.String)
      */
     @Override
-    public void updateTransition(String newName, int priority, String code) {
+    public void updateTransition(final String newName, final int priority,
+            final String code) {
     }
 
 }

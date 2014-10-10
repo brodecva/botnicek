@@ -18,9 +18,9 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.tables;
 
-
 /**
- * Výchozí implementace továrny na modely tabulek s predikáty a jejich hodnotami.
+ * Výchozí implementace továrny na modely tabulek s predikáty a jejich
+ * hodnotami.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -36,12 +36,15 @@ public class DefaultPredicatesTableModelFactory implements
     public static DefaultPredicatesTableModelFactory create() {
         return new DefaultPredicatesTableModelFactory();
     }
-    
+
     private DefaultPredicatesTableModelFactory() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.SubstitutionsTableModelFactory#create()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.
+     * SubstitutionsTableModelFactory#create()
      */
     @Override
     public PredicatesTableModel produce() {

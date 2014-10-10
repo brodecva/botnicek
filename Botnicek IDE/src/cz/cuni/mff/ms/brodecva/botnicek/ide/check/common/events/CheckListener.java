@@ -31,7 +31,8 @@ public interface CheckListener {
     /**
      * Reaguje na provedení kontroly.
      * 
-     * @param result výsledek
+     * @param result
+     *            výsledek
      */
     void checked(final CheckResult result);
 

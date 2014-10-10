@@ -29,11 +29,12 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller;
  * @version 1.0
  */
 public interface SettingsController extends Controller<SettingsView> {
-    
+
     /**
      * Nastaví volby na projektu.
      * 
-     * @param settings nastavení 
+     * @param settings
+     *            nastavení
      */
     void set(Settings settings);
 }

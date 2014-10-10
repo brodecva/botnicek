@@ -31,10 +31,15 @@ public interface RuntimeFactory {
     /**
      * Vytvoří běhové prostředí dle nastavení.
      * 
-     * @param settings nastavení běhového prostředí
-     * @param dispatcher rozesílač událostí
+     * @param settings
+     *            nastavení běhového prostředí
+     * @param dispatcher
+     *            rozesílač událostí
      * @return běhové prostředí
-     * @throws SessionException chyba při inicializaci
+     * @throws SessionException
+     *             chyba při inicializaci
      */
-    Runtime produce(final RuntimeSettings settings, final Dispatcher dispatcher) throws SessionException;
+            Runtime
+            produce(final RuntimeSettings settings, final Dispatcher dispatcher)
+                    throws SessionException;
 }

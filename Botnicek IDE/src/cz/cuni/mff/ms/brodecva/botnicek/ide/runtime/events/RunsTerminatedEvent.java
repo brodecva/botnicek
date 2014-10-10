@@ -27,7 +27,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractEvent;
  * @version 1.0
  */
 public class RunsTerminatedEvent extends AbstractEvent<RunsTerminatedListener> {
-    
+
     /**
      * Vytvoří událost.
      * 
@@ -36,16 +36,19 @@ public class RunsTerminatedEvent extends AbstractEvent<RunsTerminatedListener> {
     public static RunsTerminatedEvent create() {
         return new RunsTerminatedEvent();
     }
-    
+
     private RunsTerminatedEvent() {
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final RunsTerminatedListener listener) {
         listener.terminated();
     }
 }
- 

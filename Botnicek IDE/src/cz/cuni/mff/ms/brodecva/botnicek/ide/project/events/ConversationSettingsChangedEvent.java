@@ -30,35 +30,43 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.api.ConversationConfiguration;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class ConversationSettingsChangedEvent extends AbstractMappedEvent<Project, ConversationSettingsChangedListener> {
-    
-    private final ConversationConfiguration settings;
-    
+public final class ConversationSettingsChangedEvent extends
+        AbstractMappedEvent<Project, ConversationSettingsChangedListener> {
+
     /**
      * Vytvoří událost
      * 
-     * @param project projekt, kterému náleží konverzace
-     * @param settings nová nastavení konverzace
+     * @param project
+     *            projekt, kterému náleží konverzace
+     * @param settings
+     *            nová nastavení konverzace
      * @return událost
      */
-    public static ConversationSettingsChangedEvent create(final Project project, final ConversationConfiguration settings) {
+    public static ConversationSettingsChangedEvent create(
+            final Project project, final ConversationConfiguration settings) {
         return new ConversationSettingsChangedEvent(project, settings);
     }
-    
-    private ConversationSettingsChangedEvent(final Project project, final ConversationConfiguration settings) {
+
+    private final ConversationConfiguration settings;
+
+    private ConversationSettingsChangedEvent(final Project project,
+            final ConversationConfiguration settings) {
         super(project);
-        
+
         Preconditions.checkNotNull(settings);
-        
+
         this.settings = settings;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final ConversationSettingsChangedListener listener) {
         listener.changed(this.settings);
     }
 }
- 

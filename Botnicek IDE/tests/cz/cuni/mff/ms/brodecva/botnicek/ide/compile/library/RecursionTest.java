@@ -18,7 +18,7 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.compile.library;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
@@ -35,7 +35,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.IntegrationTest;
 
 /**
- * Testuje knihovnu tématy pro vyhodnocení úspěchu zanoření do podsítě a průchodu celým systémem.
+ * Testuje knihovnu tématy pro vyhodnocení úspěchu zanoření do podsítě a
+ * průchodu celým systémem.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -49,31 +50,37 @@ public class RecursionTest {
     private static final String SUCCESS = "SUCCESS";
     private static final String FAIL = "FAIL";
     private static final String RETURN = "RETURN";
-    
+
     private RenderingVisitor renderer = Intended.nullReference();
 
     /**
      * Inicializuje vykreslovač.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @Before
     public void setUp() throws Exception {
-        this.renderer = DefaultRenderingVisitor.create(Settings.getDefault().getNamespacesToPrefixes());
+        this.renderer =
+                DefaultRenderingVisitor.create(Settings.getDefault()
+                        .getNamespacesToPrefixes());
     }
 
     /**
      * Uklidí vykreslovač.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @After
     public void tearDown() throws Exception {
-        renderer = Intended.nullReference();
+        this.renderer = Intended.nullReference();
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.compile.library.Recursion#getLibrary(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.compile.library.Recursion#getLibrary(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)}
+     * .
      */
     @Test
     public void testGetLibrary() {
@@ -82,121 +89,56 @@ public class RecursionTest {
         final NormalWord successState = NormalWords.of(SUCCESS);
         final NormalWord failState = NormalWords.of(FAIL);
         final NormalWord returnState = NormalWords.of(RETURN);
-        
-        AbstractElement.acceptForEach(Recursion.getLibrary(pullState, pullStopState, successState, failState, returnState), this.renderer);
+
+        AbstractElement.acceptForEach(Recursion.getLibrary(pullState,
+                pullStopState, successState, failState, returnState),
+                this.renderer);
         assertEquals("<topic name=\"" + PULL + " * " + PULLSTOP + " *\">"
-            + "<category>"
-                + "<pattern>*</pattern>"
-                + "<that>*</that>"
-                + "<template>"
-                    + "<think>"
-                        + "<set name=\"TOPIC\">"
-                            + PULL + " " + PULLSTOP + " "
-                            + "<topicstar index=\"2\"/>"
-                        + "</set>"
-                    + "</think>"
-                    + "<sr/>"
-                + "</template>"
-            + "</category>"
-        + "</topic>"
-            
-        + "<topic name=\"" + PULL + " " + PULLSTOP + " " + RETURN + " *\">"
-            + "<category>"
-                + "<pattern>*</pattern>"
-                + "<that>*</that>"
-                + "<template>"
-                    + "<think>"
-                        + "<set name=\"TOPIC\">"
-                            + SUCCESS + " "
-                            + "<topicstar/>"
-                        + "</set>"
-                    + "</think>"
-                    + "<sr/>"
-                + "</template>"
-            + "</category>"        
-        + "</topic>"
-        
-        + "<topic name=\"" + PULL + " " + PULLSTOP + " *\">"
-            + "<category>"
-                + "<pattern>*</pattern>"
-                + "<that>*</that>"
-                + "<template>"
-                    + "<think>"
-                        + "<set name=\"TOPIC\">"
-                            + "<topicstar/>"
-                        + "</set>"
-                    + "</think>"
-                    + "<sr/>"
-                + "</template>"
-            + "</category>"        
-        + "</topic>"
-            
-        + "<topic name=\"" + PULL + " " + PULLSTOP + "\">"
-            + "<category>"
-                + "<pattern>*</pattern>"
-                + "<that>*</that>"
-                + "<template>"
-                    + "<think>"
-                        + "<set name=\"TOPIC\">"
-                            + SUCCESS
-                        + "</set>"
-                    + "</think>"
-                    + "<sr/>"
-                + "</template>"
-            + "</category>"        
-        + "</topic>"
-    
-        + "<topic name=\"" + PULLSTOP + " " + RETURN + " * *\">"
-            + "<category>"
-                + "<pattern>*</pattern>"
-                + "<that>*</that>"
-                + "<template>"
-                    + "<think>"
-                        + "<set name=\"TOPIC\">"
-                            + "<topicstar index=\"2\"/>"
-                        + "</set>"
-                    + "</think>"
-                    + "<sr/>"
-                + "</template>"
-            + "</category>"        
-        + "</topic>"
-            
-        + "<topic name=\"" + PULLSTOP + " *\">"
-            + "<category>"
-                + "<pattern>*</pattern>"
-                + "<that>*</that>"
-                + "<template>"
-                    + "<think>"
-                        + "<set name=\"TOPIC\">"
-                            + "<topicstar/>"
-                        + "</set>"
-                    + "</think>"
-                    + "<sr/>"
-                + "</template>"
-            + "</category>"        
-        + "</topic>"
-            
-        + "<topic name=\"" + PULLSTOP + "\">"
-            + "<category>"
-                + "<pattern>*</pattern>"
-                + "<that>*</that>"
-                + "<template>"
-                    + "<think>"
-                        + "<set name=\"TOPIC\">"
-                            + FAIL
-                        + "</set>"
-                    + "</think>"
-                    + "<sr/>"
-                + "</template>"
-            + "</category>"        
-        + "</topic>"
-            
-        + "<topic name=\"" + SUCCESS + "\">"
-            + "<category>"
-                + "<pattern>*</pattern>"
-                + "<that>*</that>"
-                + "<template/>"
-            + "</category>"        
-        + "</topic>", this.renderer.getResult());
+                + "<category>" + "<pattern>*</pattern>" + "<that>*</that>"
+                + "<template>" + "<think>" + "<set name=\"TOPIC\">" + PULL
+                + " " + PULLSTOP + " " + "<topicstar index=\"2\"/>" + "</set>"
+                + "</think>" + "<sr/>" + "</template>" + "</category>"
+                + "</topic>"
+
+                + "<topic name=\"" + PULL + " " + PULLSTOP + " " + RETURN
+                + " *\">" + "<category>" + "<pattern>*</pattern>"
+                + "<that>*</that>" + "<template>" + "<think>"
+                + "<set name=\"TOPIC\">" + SUCCESS + " " + "<topicstar/>"
+                + "</set>" + "</think>" + "<sr/>" + "</template>"
+                + "</category>" + "</topic>"
+
+                + "<topic name=\"" + PULL + " " + PULLSTOP + " *\">"
+                + "<category>" + "<pattern>*</pattern>" + "<that>*</that>"
+                + "<template>" + "<think>" + "<set name=\"TOPIC\">"
+                + "<topicstar/>" + "</set>" + "</think>" + "<sr/>"
+                + "</template>" + "</category>" + "</topic>"
+
+                + "<topic name=\"" + PULL + " " + PULLSTOP + "\">"
+                + "<category>" + "<pattern>*</pattern>" + "<that>*</that>"
+                + "<template>" + "<think>" + "<set name=\"TOPIC\">" + SUCCESS
+                + "</set>" + "</think>" + "<sr/>" + "</template>"
+                + "</category>" + "</topic>"
+
+                + "<topic name=\"" + PULLSTOP + " " + RETURN + " * *\">"
+                + "<category>" + "<pattern>*</pattern>" + "<that>*</that>"
+                + "<template>" + "<think>" + "<set name=\"TOPIC\">"
+                + "<topicstar index=\"2\"/>" + "</set>" + "</think>" + "<sr/>"
+                + "</template>" + "</category>" + "</topic>"
+
+                + "<topic name=\"" + PULLSTOP + " *\">" + "<category>"
+                + "<pattern>*</pattern>" + "<that>*</that>" + "<template>"
+                + "<think>" + "<set name=\"TOPIC\">" + "<topicstar/>"
+                + "</set>" + "</think>" + "<sr/>" + "</template>"
+                + "</category>" + "</topic>"
+
+                + "<topic name=\"" + PULLSTOP + "\">" + "<category>"
+                + "<pattern>*</pattern>" + "<that>*</that>" + "<template>"
+                + "<think>" + "<set name=\"TOPIC\">" + FAIL + "</set>"
+                + "</think>" + "<sr/>" + "</template>" + "</category>"
+                + "</topic>"
+
+                + "<topic name=\"" + SUCCESS + "\">" + "<category>"
+                + "<pattern>*</pattern>" + "<that>*</that>" + "<template/>"
+                + "</category>" + "</topic>", this.renderer.getResult());
     }
 }

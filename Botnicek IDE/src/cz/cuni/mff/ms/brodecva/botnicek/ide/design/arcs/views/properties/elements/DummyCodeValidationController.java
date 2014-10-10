@@ -30,7 +30,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView;
  */
 class DummyCodeValidationController implements CodeValidationController {
 
-    
     /**
      * Vytvoří atrapu.
      * 
@@ -39,42 +38,63 @@ class DummyCodeValidationController implements CodeValidationController {
     public static CodeValidationController create() {
         return new DummyCodeValidationController();
     }
-    
+
     private DummyCodeValidationController() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController#check(java.lang.Object, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java
+     * .lang.Object)
      */
     @Override
-    public void check(Source client, Object subject, String value) {
+    public void addView(final CheckView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController
+     * #clear(java.lang.Object)
      */
     @Override
-    public void addView(CheckView view) {
+    public void clear(final Object subject) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang
+     * .Object)
      */
     @Override
-    public void removeView(CheckView view) {
+    public void fill(final CheckView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController
+     * #check(java.lang.Object, java.lang.String)
      */
     @Override
-    public void fill(CheckView view) {
+    public void check(final Source client, final Object subject,
+            final String value) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController#clear(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(
+     * java.lang.Object)
      */
     @Override
-    public void clear(Object subject) {
+    public void removeView(final CheckView view) {
     }
 }

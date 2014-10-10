@@ -32,74 +32,69 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 
 /**
- * Hrana, jež pro vyhodnocení testu provede zanoření do jiné (i vlastní) sítě přes její vstupní uzel. V případě, že výpočet projde úspěšně podsítí, test projde.
+ * Hrana, jež pro vyhodnocení testu provede zanoření do jiné (i vlastní) sítě
+ * přes její vstupní uzel. V případě, že výpočet projde úspěšně podsítí, test
+ * projde.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class RecurentArc extends AbstractCodeArc {
-    
+
     private static final long serialVersionUID = 1L;
-    
-    private final EnterNode target;
-    
+
     /**
      * Vytvoří hranu.
      * 
-     * @param parent rodičovská síť
-     * @param name název hrany
-     * @param priority priorita
-     * @param code kód k provedení
-     * @param target cíl zanoření
+     * @param parent
+     *            rodičovská síť
+     * @param name
+     *            název hrany
+     * @param priority
+     *            priorita
+     * @param code
+     *            kód k provedení
+     * @param target
+     *            cíl zanoření
      * @return hrana
      */
-    public static RecurentArc create(final Network parent, final NormalWord name, final Priority priority,
-            final Code code, final EnterNode target) {
+    public static RecurentArc create(final Network parent,
+            final NormalWord name, final Priority priority, final Code code,
+            final EnterNode target) {
         return new RecurentArc(parent, name, priority, code, target);
     }
-    
-    private RecurentArc(final Network parent, final NormalWord name, final Priority priority,
-            final Code code, final EnterNode target) {
+
+    private final EnterNode target;
+
+    private RecurentArc(final Network parent, final NormalWord name,
+            final Priority priority, final Code code, final EnterNode target) {
         super(parent, name, priority, code);
-        
+
         Preconditions.checkNotNull(target);
-        
+
         this.target = target;
     }
 
-    /**
-     * Vstupní uzel sítě, který je cílem zanoření.
+    /*
+     * (non-Javadoc)
      * 
-     * @return cíl zanoření
-     */
-    public EnterNode getTarget() {
-        return target;
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor)
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processible
+     * #accept
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor)
      */
     @Override
     public <T> T accept(final Processor<T> processor) {
         return processor.process(this);
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + target.hashCode();
-        return result;
-    }
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -110,28 +105,54 @@ public final class RecurentArc extends AbstractCodeArc {
             return false;
         }
         final RecurentArc other = (RecurentArc) obj;
-        if (!target.equals(other.target)) {
+        if (!this.target.equals(other.target)) {
             return false;
         }
         return true;
     }
 
-    /* (non-Javadoc)
+    /**
+     * Vstupní uzel sítě, který je cílem zanoření.
+     * 
+     * @return cíl zanoření
+     */
+    public EnterNode getTarget() {
+        return this.target;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + this.target.hashCode();
+        return result;
+    }
+
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+
+        Preconditions.checkNotNull(this.target);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
         return "RecurentArc [getName()=" + getName() + ", getNetwork()="
-                + getNetwork().getName() + ", getFrom()=" + getFrom().getName() + ", getTo()="
-                + getTo().getName() + ", getPriority()=" + getPriority().getValue() + ", target="
-                + target.getName() + "(" + target.getNetwork().getName() + ") ]";
-    }
-    
-    private void readObject(final ObjectInputStream objectInputStream)
-            throws ClassNotFoundException, IOException {
-        objectInputStream.defaultReadObject();
-        
-        Preconditions.checkNotNull(this.target);
+                + getNetwork().getName().getText() + ", getFrom()=" + getFrom().getName()
+                + ", getTo()=" + getTo().getName() + ", getPriority()="
+                + getPriority().getValue() + ", target="
+                + this.target.getName() + "("
+                + this.target.getNetwork().getName().getText() + ") ]";
     }
 
     private void writeObject(final ObjectOutputStream objectOutputStream)

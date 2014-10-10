@@ -31,7 +31,8 @@ public interface ConversationSettingsOpenedListener {
     /**
      * Vyzve k otevření nastavení konverzace.
      * 
-     * @param project projekt
+     * @param project
+     *            projekt
      */
     void settingsOpenedTo(Project project);
 

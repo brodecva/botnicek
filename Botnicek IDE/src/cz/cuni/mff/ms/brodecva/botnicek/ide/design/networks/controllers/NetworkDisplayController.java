@@ -23,8 +23,12 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.views.NetworkDisplay
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller;
 
 /**
- * <p>Řadič zobrazovače sítí.</p>
- * <p>Slouží k zobrazení sítě tak, aby bylo možné editovat její komponenty.</p>
+ * <p>
+ * Řadič zobrazovače sítí.
+ * </p>
+ * <p>
+ * Slouží k zobrazení sítě tak, aby bylo možné editovat její komponenty.
+ * </p>
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -34,7 +38,8 @@ public interface NetworkDisplayController extends
     /**
      * Zobrazí danou síť.
      * 
-     * @param network síť
+     * @param network
+     *            síť
      */
     void displayNetwork(Network network);
 }

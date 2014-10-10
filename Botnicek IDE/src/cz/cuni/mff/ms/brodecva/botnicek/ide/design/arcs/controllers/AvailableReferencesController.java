@@ -22,8 +22,14 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Availab
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller;
 
 /**
- * <p>Řadič dovolující měnit dostupné reference (místa do kterých lze zanořit výpočet) na sítě.</p>
- * <p>Neposkytuje v této verzi žádné metody, neboť dostupné reference odpovídají přímo vstupním uzlům do kterékoli sítě a tedy jsou určeny implicitně.<p>
+ * <p>
+ * Řadič dovolující měnit dostupné reference (místa do kterých lze zanořit
+ * výpočet) na sítě.
+ * </p>
+ * <p>
+ * Neposkytuje v této verzi žádné metody, neboť dostupné reference odpovídají
+ * přímo vstupním uzlům do kterékoli sítě a tedy jsou určeny implicitně.
+ * <p>
  * 
  * @author Václav Brodec
  * @version 1.0

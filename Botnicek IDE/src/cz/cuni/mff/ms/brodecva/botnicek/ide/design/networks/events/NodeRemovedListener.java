@@ -31,7 +31,8 @@ public interface NodeRemovedListener {
     /**
      * Reaguje na odebrání uzlu.
      * 
-     * @param node odebraný uzel
+     * @param node
+     *            odebraný uzel
      */
     void nodeRemoved(Node node);
 

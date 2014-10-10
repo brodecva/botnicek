@@ -31,8 +31,10 @@ public interface ToRenamedListener {
     /**
      * Reaguje na změnu názvu cílového uzlu hrany.
      * 
-     * @param oldVersion původní verze cílového uzlu
-     * @param newVersion nová verze cílového uzlu
+     * @param oldVersion
+     *            původní verze cílového uzlu
+     * @param newVersion
+     *            nová verze cílového uzlu
      */
     void toRenamed(Node oldVersion, Node newVersion);
 

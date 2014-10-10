@@ -20,7 +20,6 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 
-
 /**
  * Modifikátor uzlů. Vytvoří novou verzi na základě původní.
  * 
@@ -31,40 +30,53 @@ public interface NodeModifier {
     /**
      * Změní typ uzlu.
      * 
-     * @param node uzel
-     * @param type nový typ
+     * @param node
+     *            uzel
+     * @param type
+     *            nový typ
      * @return nová verze uzlu
      */
     Node change(Node node, Class<? extends Node> type);
-    
-    /**
-     * Změní název uzlu.
-     * 
-     * @param node uzel
-     * @param name nový název
-     * @return nová verze uzlu
-     */
-    Node change(Node node, NormalWord name);
-    
+
     /**
      * Změní umístění uzlu.
      * 
-     * @param node uzel
-     * @param x nová poloha uzlu v souřadnici x
-     * @param y nová poloha uzlu v souřadnici y
+     * @param node
+     *            uzel
+     * @param x
+     *            nová poloha uzlu v souřadnici x
+     * @param y
+     *            nová poloha uzlu v souřadnici y
      * @return nová verze uzlu
      */
     Node change(Node node, int x, int y);
-    
+
+    /**
+     * Změní název uzlu.
+     * 
+     * @param node
+     *            uzel
+     * @param name
+     *            nový název
+     * @return nová verze uzlu
+     */
+    Node change(Node node, NormalWord name);
+
     /**
      * Změní všechny vlastnosti uzlu.
      * 
-     * @param node původní uzel
-     * @param name nový název
-     * @param x nová poloha v souřadnici x
-     * @param y nová poloha v souřadnici y
-     * @param type typ uzlu
+     * @param node
+     *            původní uzel
+     * @param name
+     *            nový název
+     * @param x
+     *            nová poloha v souřadnici x
+     * @param y
+     *            nová poloha v souřadnici y
+     * @param type
+     *            typ uzlu
      * @return nová verze uzlu
      */
-    Node change(Node node, NormalWord name, int x, int y, Class<? extends Node> type);
+    Node change(Node node, NormalWord name, int x, int y,
+            Class<? extends Node> type);
 }

@@ -28,18 +28,23 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.events.CheckEvent;
  */
 public interface Validator {
     /**
-     * Zkontroluje textový řetězec, zda-li odpovídá požadavkům, a vytvoří po provedení kontroly příslušnou událost {@link CheckEvent}.
-     * 
-     * @param source zdroj řetězce
-     * @param subject identifikátor opakovaných pokusů o kontrolu
-     * @param content vstupní řetězec
-     */
-    void validate(Source source, Object subject, String content);
-    
-    /**
      * Odstraní výsledky pro daný předmět.
      * 
-     * @param subject předmět. 
+     * @param subject
+     *            předmět.
      */
     void clear(Object subject);
+
+    /**
+     * Zkontroluje textový řetězec, zda-li odpovídá požadavkům, a vytvoří po
+     * provedení kontroly příslušnou událost {@link CheckEvent}.
+     * 
+     * @param source
+     *            zdroj řetězce
+     * @param subject
+     *            identifikátor opakovaných pokusů o kontrolu
+     * @param content
+     *            vstupní řetězec
+     */
+    void validate(Source source, Object subject, String content);
 }

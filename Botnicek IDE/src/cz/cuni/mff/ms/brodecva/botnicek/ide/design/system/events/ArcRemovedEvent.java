@@ -31,35 +31,41 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public class ArcRemovedEvent extends AbstractMappedEvent<System, ArcRemovedListener> {
-    
-    private final Arc arc;
-    
+public class ArcRemovedEvent extends
+        AbstractMappedEvent<System, ArcRemovedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param system rodičovský systém
-     * @param arc odebraná hrana
+     * @param system
+     *            rodičovský systém
+     * @param arc
+     *            odebraná hrana
      * @return událost
      */
     public static ArcRemovedEvent create(final System system, final Arc arc) {
         return new ArcRemovedEvent(system, arc);
     }
-    
+
+    private final Arc arc;
+
     private ArcRemovedEvent(final System network, final Arc arc) {
         super(network);
-        
+
         Preconditions.checkNotNull(arc);
-        
+
         this.arc = arc;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final ArcRemovedListener listener) {
         listener.arcRemoved(this.arc);
     }
 }
- 

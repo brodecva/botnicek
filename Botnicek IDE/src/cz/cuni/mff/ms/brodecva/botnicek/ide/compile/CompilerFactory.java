@@ -30,14 +30,23 @@ public interface CompilerFactory {
     /**
      * Vytvoří kompilátor.
      * 
-     * @param pullState název stavu začínajícího vyhození nezpracovaných stavů ze zásobníku
-     * @param pullStopState název stavu ukončujícího vyhození nezpracovaných stavů ze zásobníku
-     * @param successState název stavu pro úspěšný průchod podsítí
-     * @param returnState název stavu návratu z podsítě
-     * @param randomizeState název stavu pro zamíchání stavy
-     * @param testingPredicate název testovacího predikátu
+     * @param pullState
+     *            název stavu začínajícího vyhození nezpracovaných stavů ze
+     *            zásobníku
+     * @param pullStopState
+     *            název stavu ukončujícího vyhození nezpracovaných stavů ze
+     *            zásobníku
+     * @param successState
+     *            název stavu pro úspěšný průchod podsítí
+     * @param returnState
+     *            název stavu návratu z podsítě
+     * @param randomizeState
+     *            název stavu pro zamíchání stavy
+     * @param testingPredicate
+     *            název testovacího predikátu
      * @return kompilátor
      */
-    Compiler produce(NormalWord pullState, NormalWord pullStopState, NormalWord randomizeState,
-            NormalWord successState, NormalWord returnState, NormalWord testingPredicate);
+    Compiler produce(NormalWord pullState, NormalWord pullStopState,
+            NormalWord randomizeState, NormalWord successState,
+            NormalWord returnState, NormalWord testingPredicate);
 }

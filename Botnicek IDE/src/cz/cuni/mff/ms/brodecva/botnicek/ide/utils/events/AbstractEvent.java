@@ -25,7 +25,8 @@ import com.google.common.base.Preconditions;
  * 
  * @author Václav Brodec
  * @version 1.0
- * @param <L> typ posluchače
+ * @param <L>
+ *            typ posluchače
  */
 public abstract class AbstractEvent<L> implements Event<L> {
 
@@ -34,14 +35,18 @@ public abstract class AbstractEvent<L> implements Event<L> {
      */
     protected AbstractEvent() {
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Visitable#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Visitor)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Visitable#accept(cz
+     * .cuni.mff.ms.brodecva.botnicek.ide.utils.events.Visitor)
      */
     @Override
     public final void accept(final Visitor visitor) {
         Preconditions.checkNotNull(visitor);
-        
+
         visitor.visit(this);
     }
 }

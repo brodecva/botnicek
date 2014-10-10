@@ -29,41 +29,48 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateEleme
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-think">http://www.alicebot.org/TR/2011/#section-think</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-think">http://www.alicebot.org/TR/2011/#section-think</a>
  */
-public final class Think extends AbstractCompoundElement implements CovertElement {
+public final class Think extends AbstractCompoundElement implements
+        CovertElement {
     private static final String NAME = "think";
-    
+
     /**
      * Vytvoří prvek.
      * 
-     * @param content potomci
-     * @return prvek
-     */
-    public static Think create(final TemplateElement... content) {
-        return new Think(content);
-    }
-    
-    /**
-     * Vytvoří prvek.
-     * 
-     * @param content potomci
+     * @param content
+     *            potomci
      * @return prvek
      */
     public static Think create(final List<TemplateElement> content) {
         return new Think(content);
     }
-    
-    private Think(final TemplateElement... content) {
-        super(content);
+
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content
+     *            potomci
+     * @return prvek
+     */
+    public static Think create(final TemplateElement... content) {
+        return new Think(content);
     }
-    
+
     private Think(final List<TemplateElement> content) {
         super(content);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    private Think(final TemplateElement... content) {
+        super(content);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {

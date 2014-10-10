@@ -27,6 +27,7 @@ import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Ordering;
@@ -42,38 +43,54 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.hinters.Hinti
  * @author Václav Brodec
  * @version 1.0
  */
-public final class ReferenceHintingComboBox extends HintingComboBox<EnterNode> implements AvailableReferencesView {
+public final class ReferenceHintingComboBox extends HintingComboBox<EnterNode>
+        implements AvailableReferencesView {
 
     private static final long serialVersionUID = 1L;
-    
+
     private static final boolean CASE_SENSITIVE = false;
     private static final boolean STRICT = false;
-    private static final Ordering<EnterNode> REFERENCE_ORDERING = Ordering.from(new Comparator<EnterNode>() {
+    private static final Ordering<EnterNode> REFERENCE_ORDERING = Ordering
+            .from(new Comparator<EnterNode>() {
 
-        @Override
-        public int compare(final EnterNode first, final EnterNode second) {
-            Preconditions.checkNotNull(first);
-            Preconditions.checkNotNull(second);
-            
-            return first.getName().compareTo(second.getName());
-        }
-        
-    });
+                @Override
+                public int
+                        compare(final EnterNode first, final EnterNode second) {
+                    Preconditions.checkNotNull(first);
+                    Preconditions.checkNotNull(second);
+
+                    return first.getName().compareTo(second.getName());
+                }
+
+            });
+
+    /**
+     * Vytvoří ComboBox.
+     * 
+     * @return ComboBox
+     */
+    public static ReferenceHintingComboBox create() {
+        return new ReferenceHintingComboBox(ImmutableList.<EnterNode> of(),
+                CASE_SENSITIVE, STRICT);
+    }
 
     /**
      * Spustí testovací verzi.
      * 
-     * @param args argumenty
+     * @param args
+     *            argumenty
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
-                    final ReferenceHintingComboBox box = ReferenceHintingComboBox.create();
-                    
+                    final ReferenceHintingComboBox box =
+                            ReferenceHintingComboBox.create();
+
                     final JPanel contentPane = new JPanel(new BorderLayout());
                     contentPane.add(box, BorderLayout.CENTER);
-                    
+
                     final JFrame frame = new JFrame();
                     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     frame.setContentPane(contentPane);
@@ -85,83 +102,84 @@ public final class ReferenceHintingComboBox extends HintingComboBox<EnterNode> i
             }
         });
     }
-    
-    /**
-     * Vytvoří ComboBox.
-     * 
-     * @return ComboBox
-     */
-    public static ReferenceHintingComboBox create() {
-        return new ReferenceHintingComboBox(ImmutableList.<EnterNode>of(), CASE_SENSITIVE, STRICT);        
-    }
 
     private ReferenceHintingComboBox(final List<EnterNode> list,
             final boolean caseSensitive, final boolean strict) {
         super(list, caseSensitive, strict);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.views.arcs.ArcView#updatedAvailableReferences(java.util.Set)
-     */
-    @Override
-    public void updateAvailableReferences(final Set<EnterNode> references) {
-        Preconditions.checkNotNull(references);
-        
-        final Object selected = getSelectedItem();
-        
-        final List<EnterNode> update = REFERENCE_ORDERING.immutableSortedCopy(references);
-        setDataList(update);
-        
-        if (isSomeItemSelected(selected)) {
-            if (references.contains(selected)) {
-                setSelectedItem(selected);
-            } else {                
-                setSelectedIndex(-1);
-            }
-        }
-    }
-    
-    private boolean isSomeItemSelected(final Object selectedItemResult) {
-        return selectedItemResult != Intended.nullReference();
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.AvailableReferencesView#extendedAvailableReferences(java.util.Set)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.
+     * AvailableReferencesView#extendedAvailableReferences(java.util.Set)
      */
     @Override
     public void extendAvailableReferences(final Set<EnterNode> extension) {
         Preconditions.checkNotNull(extension);
-        
+
         final Set<EnterNode> updated = new HashSet<>(getDataList());
         updated.addAll(extension);
-        
+
         final Object selected = getSelectedItem();
         setDataList(REFERENCE_ORDERING.immutableSortedCopy(updated));
-        
+
         if (isSomeItemSelected(selected)) {
             assert updated.contains(selected);
-            
+
             setSelectedItem(selected);
         }
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.AvailableReferencesView#removedAvailableReferences(java.util.Set)
+    private boolean isSomeItemSelected(final Object selectedItemResult) {
+        return selectedItemResult != Intended.nullReference();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.
+     * AvailableReferencesView#removedAvailableReferences(java.util.Set)
      */
     @Override
     public void removeAvailableReferences(final Set<EnterNode> removed) {
         Preconditions.checkNotNull(removed);
-        
+
         final Set<EnterNode> updated = new HashSet<>(getDataList());
         updated.removeAll(removed);
-        
+
         final Object selected = getSelectedItem();
         setDataList(REFERENCE_ORDERING.immutableSortedCopy(updated));
-        
+
         if (isSomeItemSelected(selected)) {
             if (updated.contains(selected)) {
                 setSelectedItem(selected);
-            } else {                
+            } else {
+                setSelectedIndex(-1);
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.views.arcs.ArcView#
+     * updatedAvailableReferences(java.util.Set)
+     */
+    @Override
+    public void updateAvailableReferences(final Set<EnterNode> references) {
+        Preconditions.checkNotNull(references);
+
+        final Object selected = getSelectedItem();
+
+        final List<EnterNode> update =
+                REFERENCE_ORDERING.immutableSortedCopy(references);
+        setDataList(update);
+
+        if (isSomeItemSelected(selected)) {
+            if (references.contains(selected)) {
+                setSelectedItem(selected);
+            } else {
                 setSelectedIndex(-1);
             }
         }

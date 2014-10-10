@@ -21,52 +21,62 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementati
 import java.util.List;
 
 import com.google.common.base.Preconditions;
+
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractCompoundElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.ExternalProcessorElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 
 /**
- * Prvek systém dle podpory interpreta předzpracuje výstup potomků (kvůli dosazení proměnných), a poté jej pošle externímu interpretu JavaScriptu na daném stroji.
+ * Prvek systém dle podpory interpreta předzpracuje výstup potomků (kvůli
+ * dosazení proměnných), a poté jej pošle externímu interpretu JavaScriptu na
+ * daném stroji.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-javascript">http://www.alicebot.org/TR/2011/#section-javascript</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-javascript">http://www.alicebot.org/TR/2011/#section-javascript</a>
  */
-public final class Javascript extends AbstractCompoundElement implements ExternalProcessorElement {
+public final class Javascript extends AbstractCompoundElement implements
+        ExternalProcessorElement {
     private static final String NAME = "javascript";
-    
+
     /**
      * Vytvoří prvek.
      * 
-     * @param content potomci
-     * @return prvek
-     */
-    public static Javascript create(final TemplateElement... content) {
-        Preconditions.checkNotNull(content);
-        
-        return new Javascript(content);
-    }
-    
-    /**
-     * Vytvoří prvek.
-     * 
-     * @param content potomci
+     * @param content
+     *            potomci
      * @return prvek
      */
     public static Javascript create(final List<TemplateElement> content) {
         return new Javascript(content);
     }
-    
-    private Javascript(final TemplateElement... content) {
-        super(content);
+
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content
+     *            potomci
+     * @return prvek
+     */
+    public static Javascript create(final TemplateElement... content) {
+        Preconditions.checkNotNull(content);
+
+        return new Javascript(content);
     }
-    
+
     private Javascript(final List<TemplateElement> content) {
         super(content);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    private Javascript(final TemplateElement... content) {
+        super(content);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {

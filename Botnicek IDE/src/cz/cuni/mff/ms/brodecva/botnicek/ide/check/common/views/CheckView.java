@@ -28,14 +28,15 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
  */
 public interface CheckView {
     /**
-     * Aktualizuje zobrazení výsledku stejného předmětu.
-     * 
-     * @param result nový výsledek
-     */
-    void updateResult(CheckResult result);
-    
-    /**
      * Zpraví o ukončení systému pro validaci.
      */
     void closed();
+
+    /**
+     * Aktualizuje zobrazení výsledku stejného předmětu.
+     * 
+     * @param result
+     *            nový výsledek
+     */
+    void updateResult(CheckResult result);
 }

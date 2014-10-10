@@ -31,8 +31,10 @@ public interface NodeRenamedListener {
     /**
      * Reaguje na přejmenování uzlu.
      * 
-     * @param oldVersion původní verze uzlu
-     * @param newVersion nová verze uzlu
+     * @param oldVersion
+     *            původní verze uzlu
+     * @param newVersion
+     *            nová verze uzlu
      */
     void nodeRenamed(Node oldVersion, Node newVersion);
 

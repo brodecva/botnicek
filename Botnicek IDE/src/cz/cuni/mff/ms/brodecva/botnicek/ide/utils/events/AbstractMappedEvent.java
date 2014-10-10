@@ -25,36 +25,46 @@ import com.google.common.base.Preconditions;
  * 
  * @author Václav Brodec
  * @version 1.0
- * @param <K> typ klíče
- * @param <L> typ posluchače
+ * @param <K>
+ *            typ klíče
+ * @param <L>
+ *            typ posluchače
  */
 public abstract class AbstractMappedEvent<K, L> implements MappedEvent<K, L> {
 
     private final K key;
-    
+
     /**
      * Vytvoří mapovanou událost.
      * 
-     * @param key klíč události
+     * @param key
+     *            klíč události
      */
     protected AbstractMappedEvent(final K key) {
         Preconditions.checkNotNull(key);
-        
+
         this.key = key;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Visitable#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Visitor)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Visitable#accept(cz
+     * .cuni.mff.ms.brodecva.botnicek.ide.utils.events.Visitor)
      */
     @Override
     public final void accept(final Visitor visitor) {
         Preconditions.checkNotNull(visitor);
-        
+
         visitor.visit(this);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.MappedEvent#getKey()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.MappedEvent#getKey()
      */
     @Override
     public final K getKey() {

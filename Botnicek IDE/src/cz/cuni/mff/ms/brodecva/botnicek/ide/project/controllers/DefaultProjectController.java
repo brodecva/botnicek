@@ -92,14 +92,146 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration;
 public class DefaultProjectController extends AbstractController<ProjectView>
         implements ProjectController {
 
+    private final class DefaultBotSettingsOpenedListener implements
+            BotSettingsOpenedListener {
+
+        /**
+         * {@inheritDoc}
+         * 
+         * <p>
+         * Vytvoří řadič pro nastavení a předá pohledům.
+         * </p>
+         */
+        @Override
+        public void settingsOpenedTo(final Project project) {
+            Preconditions.checkNotNull(project);
+
+            final BotSettingsController botSettingsController =
+                    DefaultBotSettingsController.create(project,
+                            getEventManager());
+
+            callViews(new Callback<ProjectView>() {
+
+                @Override
+                public void call(final ProjectView view) {
+                    Preconditions.checkNotNull(view);
+
+                    view.botSettingsOpened(botSettingsController);
+                }
+
+            });
+        }
+
+    }
+
+    private final class DefaultConversationSettingsOpenedListener implements
+            ConversationSettingsOpenedListener {
+
+        /**
+         * {@inheritDoc}
+         * 
+         * <p>
+         * Vytvoří řadič pro nastavení a předá pohledům.
+         * </p>
+         */
+        @Override
+        public void settingsOpenedTo(final Project project) {
+            Preconditions.checkNotNull(project);
+
+            final ConversationSettingsController conversationSettingsController =
+                    DefaultConversationSettingsController.create(project,
+                            getEventManager());
+
+            callViews(new Callback<ProjectView>() {
+
+                @Override
+                public void call(final ProjectView view) {
+                    Preconditions.checkNotNull(view);
+
+                    view.conversationSettingsOpened(conversationSettingsController);
+                }
+
+            });
+        }
+
+    }
+
+    private final class DefaultLanguageSettingsOpenedListener implements
+            LanguageSettingsOpenedListener {
+
+        /**
+         * {@inheritDoc}
+         * 
+         * <p>
+         * Vytvoří řadič pro nastavení a předá pohledům.
+         * </p>
+         */
+        @Override
+        public void settingsOpenedTo(final Project project) {
+            Preconditions.checkNotNull(project);
+
+            callViews(new Callback<ProjectView>() {
+
+                @Override
+                public void call(final ProjectView view) {
+                    Preconditions.checkNotNull(view);
+
+                    final LanguageSettingsController languageSettingsController =
+                            DefaultLanguageSettingsController.create(project,
+                                    getEventManager());
+
+                    view.languageSettingsOpened(languageSettingsController);
+                }
+
+            });
+        }
+
+    }
+
+    private final class DefaultProjectClosedListener implements
+            ProjectClosedListener {
+
+        /**
+         * {@inheritDoc}
+         * 
+         * <p>
+         * Odstraní posluchače a dá vědět pohledům, že byl projekt uzavřen.
+         * </p>
+         */
+        @Override
+        public void closed(final Project closed) {
+            removeAllListeners(ProjectClosedEvent.class, closed);
+            removeAllListeners(RuntimeRunEvent.class, closed);
+            removeAllListeners(SettingsOpenedEvent.class, closed);
+            removeAllListeners(BotSettingsOpenedEvent.class, closed);
+            removeAllListeners(LanguageSettingsOpenedEvent.class, closed);
+            removeAllListeners(ConversationSettingsOpenedEvent.class, closed);
+
+            callViews(new Callback<ProjectView>() {
+
+                @Override
+                public void call(final ProjectView view) {
+                    Preconditions.checkNotNull(view);
+
+                    view.close();
+                }
+            });
+        }
+    }
+
     private final class DefaultProjectOpenedListener implements
             ProjectOpenedListener {
 
         /**
          * {@inheritDoc}
          * 
-         * <p>Nastaví příslušné posluchače pro projektové události a vytvoří řadiče pro jeho funkce.</p>
-         * <p>Zpraví pohledy o otevření projektu.</p>
+         * <p>
+         * Nastaví příslušné posluchače pro projektové události a vytvoří řadiče
+         * pro jeho funkce.
+         * </p>
+         * <p>
+         * Zpraví pohledy o otevření projektu.
+         * </p>
          */
         @Override
         public void opened(final Project opened) {
@@ -127,8 +259,10 @@ public class DefaultProjectController extends AbstractController<ProjectView>
             final Map<URI, String> namespacesToPrefixes =
                     opened.getSettings().getNamespacesToPrefixes();
 
-            final CodeChecker codeChecker = DefaultCodeChecker.create(botSettings, languageSettings, namespacesToPrefixes);
-            
+            final CodeChecker codeChecker =
+                    DefaultCodeChecker.create(botSettings, languageSettings,
+                            namespacesToPrefixes);
+
             final AvailableReferencesController availableReferencesController =
                     DefaultAvailableReferencesController.create(system,
                             eventManager);
@@ -142,16 +276,16 @@ public class DefaultProjectController extends AbstractController<ProjectView>
                     DefaultSimplePatternValidationController
                             .create(eventManager);
             final MixedPatternValidationController mixedPatternValidationController =
-                    DefaultMixedPatternValidationController
-                            .create(codeChecker, eventManager);
+                    DefaultMixedPatternValidationController.create(codeChecker,
+                            eventManager);
             final NormalWordValidationController predicateValidationController =
                     DefaultNormalWordValidationController
                             .create(system.getPredicatesNamingAuthority(),
                                     eventManager);
 
             final ArcPropertiesDisplayController arcPropertiesController =
-                    DefaultArcPropertiesDisplayController.create(system, eventManager,
-                            botSettings, languageSettings,
+                    DefaultArcPropertiesDisplayController.create(system,
+                            eventManager, botSettings, languageSettings,
                             namespacesToPrefixes,
                             availableReferencesController,
                             nameValidationController, codeValidationController,
@@ -163,8 +297,13 @@ public class DefaultProjectController extends AbstractController<ProjectView>
             final NetworkDisplayController networkPropertiesController =
                     DefaultNetworkDisplayController.create(system,
                             arcPropertiesController, getEventManager());
-            final Set<CheckController> checkControllers = ImmutableSet.of(codeValidationController, simplePatternValidationController, mixedPatternValidationController, predicateValidationController, nameValidationController);
-            
+            final Set<CheckController> checkControllers =
+                    ImmutableSet.of(codeValidationController,
+                            simplePatternValidationController,
+                            mixedPatternValidationController,
+                            predicateValidationController,
+                            nameValidationController);
+
             callViews(new Callback<ProjectView>() {
 
                 @Override
@@ -180,41 +319,14 @@ public class DefaultProjectController extends AbstractController<ProjectView>
 
     }
 
-    private final class DefaultProjectClosedListener implements
-            ProjectClosedListener {
-
-        /**
-         * {@inheritDoc}
-         * 
-         * <p>Odstraní posluchače a dá vědět pohledům, že byl projekt uzavřen.</p>
-         */
-        @Override
-        public void closed(final Project closed) {
-            removeAllListeners(ProjectClosedEvent.class, closed);
-            removeAllListeners(RuntimeRunEvent.class, closed);
-            removeAllListeners(SettingsOpenedEvent.class, closed);
-            removeAllListeners(BotSettingsOpenedEvent.class, closed);
-            removeAllListeners(LanguageSettingsOpenedEvent.class, closed);
-            removeAllListeners(ConversationSettingsOpenedEvent.class, closed);
-
-            callViews(new Callback<ProjectView>() {
-
-                @Override
-                public void call(final ProjectView view) {
-                    Preconditions.checkNotNull(view);
-
-                    view.close();
-                }
-            });
-        }
-    }
-
     private final class DefaultRuntimeRunListener implements RuntimeRunListener {
 
         /**
          * {@inheritDoc}
          * 
-         * <p>Vytvoří řadič pro ovládání a předá pohledům.</p>
+         * <p>
+         * Vytvoří řadič pro ovládání a předá pohledům.
+         * </p>
          */
         @Override
         public void run(final Run run) {
@@ -241,7 +353,9 @@ public class DefaultProjectController extends AbstractController<ProjectView>
         /**
          * {@inheritDoc}
          * 
-         * <p>Vytvoří řadič pro nastavení a předá pohledům.</p>
+         * <p>
+         * Vytvoří řadič pro nastavení a předá pohledům.
+         * </p>
          */
         @Override
         public void settingsOpenedTo(final Project project) {
@@ -265,102 +379,11 @@ public class DefaultProjectController extends AbstractController<ProjectView>
 
     }
 
-    private final class DefaultBotSettingsOpenedListener implements
-            BotSettingsOpenedListener {
-
-        /**
-         * {@inheritDoc}
-         * 
-         * <p>Vytvoří řadič pro nastavení a předá pohledům.</p>
-         */
-        @Override
-        public void settingsOpenedTo(final Project project) {
-            Preconditions.checkNotNull(project);
-
-            final BotSettingsController botSettingsController =
-                    DefaultBotSettingsController.create(project,
-                            getEventManager());
-
-            callViews(new Callback<ProjectView>() {
-
-                @Override
-                public void call(final ProjectView view) {
-                    Preconditions.checkNotNull(view);
-
-                    view.botSettingsOpened(botSettingsController);
-                }
-
-            });
-        }
-
-    }
-
-    private final class DefaultLanguageSettingsOpenedListener implements
-            LanguageSettingsOpenedListener {
-
-        /**
-         * {@inheritDoc}
-         * 
-         * <p>Vytvoří řadič pro nastavení a předá pohledům.</p>
-         */
-        @Override
-        public void settingsOpenedTo(final Project project) {
-            Preconditions.checkNotNull(project);
-
-            callViews(new Callback<ProjectView>() {
-
-                @Override
-                public void call(final ProjectView view) {
-                    Preconditions.checkNotNull(view);
-
-                    final LanguageSettingsController languageSettingsController =
-                            DefaultLanguageSettingsController.create(project,
-                                    getEventManager());
-
-                    view.languageSettingsOpened(languageSettingsController);
-                }
-
-            });
-        }
-
-    }
-
-    private final class DefaultConversationSettingsOpenedListener implements
-            ConversationSettingsOpenedListener {
-
-        /**
-         * {@inheritDoc}
-         * 
-         * <p>Vytvoří řadič pro nastavení a předá pohledům.</p>
-         */
-        @Override
-        public void settingsOpenedTo(final Project project) {
-            Preconditions.checkNotNull(project);
-
-            final ConversationSettingsController conversationSettingsController =
-                    DefaultConversationSettingsController.create(project,
-                            getEventManager());
-
-            callViews(new Callback<ProjectView>() {
-
-                @Override
-                public void call(final ProjectView view) {
-                    Preconditions.checkNotNull(view);
-
-                    view.conversationSettingsOpened(conversationSettingsController);
-                }
-
-            });
-        }
-
-    }
-
-    private Optional<Project> currentProject;
-
     /**
      * Vytvoří řadič bez otevřeného projektu.
      * 
-     * @param eventManager správce událostí
+     * @param eventManager
+     *            správce událostí
      * @return řadič
      */
     public static DefaultProjectController create(
@@ -368,21 +391,6 @@ public class DefaultProjectController extends AbstractController<ProjectView>
         Preconditions.checkNotNull(eventManager);
 
         return create(Optional.<Project> absent(), eventManager);
-    }
-
-    /**
-     * Vytvoří řadič spravující daný projekt.
-     * 
-     * @param project otevřený projekt
-     * @param eventManager správce událostí
-     * @return řadič
-     */
-    public static DefaultProjectController create(final Project project,
-            final EventManager eventManager) {
-        Preconditions.checkNotNull(project);
-        Preconditions.checkNotNull(eventManager);
-
-        return create(Optional.of(project), eventManager);
     }
 
     private static DefaultProjectController create(
@@ -396,6 +404,25 @@ public class DefaultProjectController extends AbstractController<ProjectView>
         return newInstance;
     }
 
+    /**
+     * Vytvoří řadič spravující daný projekt.
+     * 
+     * @param project
+     *            otevřený projekt
+     * @param eventManager
+     *            správce událostí
+     * @return řadič
+     */
+    public static DefaultProjectController create(final Project project,
+            final EventManager eventManager) {
+        Preconditions.checkNotNull(project);
+        Preconditions.checkNotNull(eventManager);
+
+        return create(Optional.of(project), eventManager);
+    }
+
+    private Optional<Project> currentProject;
+
     private DefaultProjectController(final Optional<Project> project,
             final EventManager eventManager) {
         super(eventManager);
@@ -403,40 +430,6 @@ public class DefaultProjectController extends AbstractController<ProjectView>
         Preconditions.checkNotNull(project);
 
         this.currentProject = project;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
-     * #save(java.io.File)
-     */
-    @Override
-    public void save(final Path projectPath) throws IOException {
-        Preconditions.checkNotNull(projectPath);
-        Preconditions.checkState(this.currentProject.isPresent());
-
-        this.currentProject.get().save(projectPath);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
-     * #open(java.io.File)
-     */
-    @Override
-    public void open(final Path projectPath) throws FileNotFoundException,
-            ClassNotFoundException, IOException {
-        Preconditions.checkNotNull(projectPath);
-        
-        if (isOpen()) {
-            close();
-        }
-
-        this.currentProject = Optional.of(Project.open(projectPath, getEventManager()));
     }
 
     /*
@@ -462,6 +455,27 @@ public class DefaultProjectController extends AbstractController<ProjectView>
      * 
      * @see
      * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
+     * #create(java.lang.String)
+     */
+    @Override
+    public void createNew(final String name) {
+        Preconditions.checkNotNull(name);
+        Preconditions.checkNotNull(name.isEmpty());
+
+        if (isOpen()) {
+            close();
+        }
+
+        final Project newProject =
+                Project.createAndOpen(SystemName.of(name), getEventManager());
+        this.currentProject = Optional.of(newProject);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
      * #export(java.io.File)
      */
     @Override
@@ -470,26 +484,6 @@ public class DefaultProjectController extends AbstractController<ProjectView>
         Preconditions.checkState(this.currentProject.isPresent());
 
         this.currentProject.get().export(location);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
-     * #create(java.lang.String)
-     */
-    @Override
-    public void createNew(final String name) {
-        Preconditions.checkNotNull(name);
-        Preconditions.checkNotNull(name.isEmpty());
-        
-        if (isOpen()) {
-            close();
-        }
-
-        final Project newProject = Project.createAndOpen(SystemName.of(name), getEventManager());
-        this.currentProject = Optional.of(newProject);
     }
 
     /*
@@ -509,13 +503,19 @@ public class DefaultProjectController extends AbstractController<ProjectView>
      * 
      * @see
      * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
-     * #openSettings()
+     * #open(java.io.File)
      */
     @Override
-    public void openSettings() {
-        Preconditions.checkState(this.currentProject.isPresent());
+    public void open(final Path projectPath) throws FileNotFoundException,
+            ClassNotFoundException, IOException {
+        Preconditions.checkNotNull(projectPath);
 
-        fire(SettingsOpenedEvent.create(this.currentProject.get()));
+        if (isOpen()) {
+            close();
+        }
+
+        this.currentProject =
+                Optional.of(Project.open(projectPath, getEventManager()));
     }
 
     /*
@@ -537,6 +537,20 @@ public class DefaultProjectController extends AbstractController<ProjectView>
      * 
      * @see
      * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
+     * #openConversationSettings()
+     */
+    @Override
+    public void openConversationSettings() {
+        Preconditions.checkState(this.currentProject.isPresent());
+
+        fire(ConversationSettingsOpenedEvent.create(this.currentProject.get()));
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
      * #openLanguageSettings()
      */
     @Override
@@ -551,13 +565,28 @@ public class DefaultProjectController extends AbstractController<ProjectView>
      * 
      * @see
      * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
-     * #openConversationSettings()
+     * #openSettings()
      */
     @Override
-    public void openConversationSettings() {
+    public void openSettings() {
         Preconditions.checkState(this.currentProject.isPresent());
 
-        fire(ConversationSettingsOpenedEvent.create(this.currentProject.get()));
+        fire(SettingsOpenedEvent.create(this.currentProject.get()));
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.projects.controllers.ProjectController
+     * #save(java.io.File)
+     */
+    @Override
+    public void save(final Path projectPath) throws IOException {
+        Preconditions.checkNotNull(projectPath);
+        Preconditions.checkState(this.currentProject.isPresent());
+
+        this.currentProject.get().save(projectPath);
     }
 
     /*

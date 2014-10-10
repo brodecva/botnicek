@@ -31,17 +31,18 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.processor.set.DisplayStrategy;
 public interface DisplayStrategyFactory {
 
     /**
-     * Vytvoří strategii.
-     * 
-     * @param description rozpoznávaný popis strategie
-     * @return strategie
-     */
-    DisplayStrategy provide(String description);
-
-    /**
      * Vrátí bijekci popisků a podporované strategií.
      * 
      * @return the supported podporované strategie
      */
     Map<String, DisplayStrategy> getSupported();
+
+    /**
+     * Vytvoří strategii.
+     * 
+     * @param description
+     *            rozpoznávaný popis strategie
+     * @return strategie
+     */
+    DisplayStrategy provide(String description);
 }

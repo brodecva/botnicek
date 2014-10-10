@@ -30,28 +30,44 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-final class HintEvent extends AbstractEvent<HintListener> implements Serializable {
-    
+final class HintEvent extends AbstractEvent<HintListener> implements
+        Serializable {
+
     private static final long serialVersionUID = 1L;
-    
-    private final Object hintedItem;
-    
+
     /**
      * Vytvoří událost.
      * 
-     * @param hintedItem nabízený prvek
+     * @param hintedItem
+     *            nabízený prvek
      * @return událost
      */
     public static HintEvent create(final Object hintedItem) {
         return new HintEvent(hintedItem);
     }
-    
+
+    private final Object hintedItem;
+
     private HintEvent(final Object hintedItem) {
         Preconditions.checkNotNull(hintedItem);
-        
+
         this.hintedItem = hintedItem;
     }
-    
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event#dispatchTo(java
+     * .lang.Object)
+     */
+    @Override
+    public void dispatchTo(final HintListener listener) {
+        Preconditions.checkNotNull(listener);
+
+        listener.hint(this.hintedItem);
+    }
+
     /**
      * Vrátí nabídnutý prvek
      * 
@@ -59,15 +75,5 @@ final class HintEvent extends AbstractEvent<HintListener> implements Serializabl
      */
     public Object getHintedItem() {
         return this.hintedItem;
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event#dispatchTo(java.lang.Object)
-     */
-    @Override
-    public void dispatchTo(final HintListener listener) {
-        Preconditions.checkNotNull(listener);
-        
-        listener.hint(this.hintedItem);
     }
 }

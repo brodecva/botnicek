@@ -41,24 +41,44 @@ public class TransitionArcPanel extends AbstractTypePanel {
 
     private static final long serialVersionUID = 1L;
 
-    private final ArcController arcController;
-    
-    private final JLabel noticeLabel = new JLabel(UiLocalizer.print("TransitionNotice"));
+    private static TransitionArcPanel create() {
+        return create(DummyArcController.create());
+    }
+
+    /**
+     * Vytvoří panel.
+     * 
+     * @param arcController
+     *            řadič vlastností hrany
+     * @return panel
+     */
+    public static TransitionArcPanel create(final ArcController arcController) {
+        Preconditions.checkNotNull(arcController);
+
+        final TransitionArcPanel newInstance =
+                new TransitionArcPanel(arcController);
+        newInstance.subscribe(arcController);
+
+        return newInstance;
+    }
 
     /**
      * Spustí testovací verzi.
      * 
-     * @param args argumenty
+     * @param args
+     *            argumenty
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
-                    final TransitionArcPanel panel = TransitionArcPanel.create();
-                    
+                    final TransitionArcPanel panel =
+                            TransitionArcPanel.create();
+
                     final JPanel contentPane = new JPanel(new BorderLayout());
                     contentPane.add(panel, BorderLayout.CENTER);
-                    
+
                     final JFrame frame = new JFrame();
                     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     frame.add(contentPane);
@@ -70,83 +90,79 @@ public class TransitionArcPanel extends AbstractTypePanel {
             }
         });
     }
-    
-    private static TransitionArcPanel create() {
-        return create(DummyArcController.create());
-    }
-    
-    /**
-     * Vytvoří panel.
-     * 
-     * @param arcController řadič vlastností hrany
-     * @return panel
-     */
-    public static TransitionArcPanel create(final ArcController arcController) {
-        Preconditions.checkNotNull(arcController);
-        
-        final TransitionArcPanel newInstance = new TransitionArcPanel(arcController);
-        newInstance.subscribe(arcController);
-        
-        return newInstance;
-    }
+
+    private final ArcController arcController;
+
+    private final JLabel noticeLabel = new JLabel(
+            UiLocalizer.print("TransitionNotice"));
 
     private TransitionArcPanel(final ArcController arcController) {
         Preconditions.checkNotNull(arcController);
-        
+
         this.arcController = arcController;
-        
+
         setLayout(new BorderLayout());
         this.noticeLabel.setHorizontalAlignment(JLabel.CENTER);
         add(this.noticeLabel, BorderLayout.CENTER);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.TypeElement#save(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, int, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearable
+     * #clear()
      */
     @Override
-    public void save(final String newName, int priority, String code) {
-        Preconditions.checkNotNull(newName);
-        Preconditions.checkNotNull(code);
-        
-        this.arcController.updateTransition(newName, priority, code);
+    public void clear() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.TypeElement#close()
-     */
-    @Override
-    public void close() {
-        unsubscribe();
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.ArcViewAdapter#removed()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.ArcViewAdapter
+     * #removed()
      */
     @Override
     public void removed() {
         unsubscribe();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearable
+     * #reset(cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source)
+     */
+    @Override
+    public void reset(final Source client) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.types.TypeElement
+     * #save(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, int,
+     * java.lang.String)
+     */
+    @Override
+    public void
+            save(final String newName, final int priority, final String code) {
+        Preconditions.checkNotNull(newName);
+        Preconditions.checkNotNull(code);
+
+        this.arcController.updateTransition(newName, priority, code);
+    }
+
     private void subscribe(final ArcController arcController) {
         this.arcController.addView(this);
         this.arcController.fill(this);
     }
-    
+
     private void unsubscribe() {
         this.arcController.removeView(this);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearable#clear()
-     */
-    @Override
-    public void clear() {
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearable#reset(cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source)
-     */
-    @Override
-    public void reset(final Source client) {
     }
 }

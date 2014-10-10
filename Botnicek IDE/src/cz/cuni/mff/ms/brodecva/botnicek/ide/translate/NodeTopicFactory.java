@@ -34,8 +34,10 @@ interface NodeTopicFactory {
     /**
      * Vytvoří téma reprezentující uzel.
      * 
-     * @param node reprezentovaný uzel
-     * @param code kód šablony, simulující chování uzlu
+     * @param node
+     *            reprezentovaný uzel
+     * @param code
+     *            kód šablony, simulující chování uzlu
      * @return téma
      */
     Topic produce(final Node node, final List<TemplateElement> code);

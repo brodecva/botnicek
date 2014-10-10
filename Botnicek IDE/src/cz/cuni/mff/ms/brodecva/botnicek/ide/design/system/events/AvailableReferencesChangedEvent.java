@@ -28,40 +28,49 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
 
 /**
- * Událost změny dostupné množiny vstupních uzlů sítí (do kterých je možné se zanořit).
+ * Událost změny dostupné množiny vstupních uzlů sítí (do kterých je možné se
+ * zanořit).
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class AvailableReferencesChangedEvent extends AbstractMappedEvent<System, AvailableReferencesChangedListener> {
-    
-    private final Set<EnterNode> references;
-    
+public class AvailableReferencesChangedEvent extends
+        AbstractMappedEvent<System, AvailableReferencesChangedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param system rodičovský systém
-     * @param references aktuální množina dostupných uzlů
+     * @param system
+     *            rodičovský systém
+     * @param references
+     *            aktuální množina dostupných uzlů
      * @return událost
      */
-    public static AvailableReferencesChangedEvent create(final System system, final Set<EnterNode> references) {
+    public static AvailableReferencesChangedEvent create(final System system,
+            final Set<EnterNode> references) {
         return new AvailableReferencesChangedEvent(system, references);
     }
-    
-    private AvailableReferencesChangedEvent(final System system, final Set<EnterNode> references) {
+
+    private final Set<EnterNode> references;
+
+    private AvailableReferencesChangedEvent(final System system,
+            final Set<EnterNode> references) {
         super(system);
-        
+
         Preconditions.checkNotNull(references);
-        
+
         this.references = ImmutableSet.copyOf(references);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final AvailableReferencesChangedListener listener) {
         listener.referencesChanged(this.references);
     }
 }
- 

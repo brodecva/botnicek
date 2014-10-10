@@ -31,32 +31,37 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.CodeChecker
 public final class DefaultCodeContentBuilderFactory implements
         CodeContentBuilderFactory {
 
-    private final CodeChecker checker;
-    
     /**
      * Vytvoří továrnu.
      * 
-     * @param checker validátor
+     * @param checker
+     *            validátor
      * @return továrna
      */
-    public static DefaultCodeContentBuilderFactory create(final CodeChecker checker) {
+    public static DefaultCodeContentBuilderFactory create(
+            final CodeChecker checker) {
         Preconditions.checkNotNull(checker);
-        
+
         return new DefaultCodeContentBuilderFactory(checker);
     }
-    
+
+    private final CodeChecker checker;
+
     private DefaultCodeContentBuilderFactory(final CodeChecker checker) {
         this.checker = checker;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder.CodeContentBuilderFactory#produce(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder.
+     * CodeContentBuilderFactory#produce(java.lang.String)
      */
     @Override
     public CodeContentBuilder produce(final String startContent) {
         Preconditions.checkNotNull(startContent);
-        
-        return DefaultCodeContentBuilder.create(checker, startContent);
+
+        return DefaultCodeContentBuilder.create(this.checker, startContent);
     }
 
 }

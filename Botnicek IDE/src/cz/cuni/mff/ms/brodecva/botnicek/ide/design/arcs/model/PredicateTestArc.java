@@ -32,66 +32,102 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 
 /**
- * <p>Implementace hrany, jejíž test projde tehdy, když hodnota testovaného predikátu odpovídá očekávané.</p>
- * <p>Před samotným testem se provádí volitelný inicializační kód.</p>
+ * <p>
+ * Implementace hrany, jejíž test projde tehdy, když hodnota testovaného
+ * predikátu odpovídá očekávané.
+ * </p>
+ * <p>
+ * Před samotným testem se provádí volitelný inicializační kód.
+ * </p>
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class PredicateTestArc extends AbstractTestArc {
-    
+
     private static final long serialVersionUID = 1L;
-    
-    private final Code prepareCode;
-    private final NormalWord predicateName;
-    
+
     /**
      * Vytvoří hranu.
      * 
-     * @param parent rodičovská síť
-     * @param name název hrany
-     * @param priority priorita
-     * @param code kód k provedení v případě splnění testu
-     * @param value očekávaná hodnota testu
-     * @param prepareCode přípravný kód
-     * @param predicateName název testovaného predikátu
+     * @param parent
+     *            rodičovská síť
+     * @param name
+     *            název hrany
+     * @param priority
+     *            priorita
+     * @param code
+     *            kód k provedení v případě splnění testu
+     * @param value
+     *            očekávaná hodnota testu
+     * @param prepareCode
+     *            přípravný kód
+     * @param predicateName
+     *            název testovaného predikátu
      * @return hrana
      */
-    public static PredicateTestArc create(
-            final Network parent,
-            final NormalWord name,
-            final Priority priority,
-            final Code code,
-            final SimplePattern value,
-            final Code prepareCode,
+    public static PredicateTestArc create(final Network parent,
+            final NormalWord name, final Priority priority, final Code code,
+            final SimplePattern value, final Code prepareCode,
             final NormalWord predicateName) {
-        return new PredicateTestArc(parent, name, priority, code, value, prepareCode, predicateName);
+        return new PredicateTestArc(parent, name, priority, code, value,
+                prepareCode, predicateName);
     }
-    
-    private PredicateTestArc(
-               final Network parent,
-               final NormalWord name,
-               final Priority priority,
-               final Code code,
-               final SimplePattern value,
-               final Code prepareCode,
-               final NormalWord predicateName) {
+
+    private final Code prepareCode;
+
+    private final NormalWord predicateName;
+
+    private PredicateTestArc(final Network parent, final NormalWord name,
+            final Priority priority, final Code code,
+            final SimplePattern value, final Code prepareCode,
+            final NormalWord predicateName) {
         super(parent, name, priority, code, value);
-        
+
         Preconditions.checkNotNull(prepareCode);
-        Preconditions.checkNotNull(predicateName);        
-        
+        Preconditions.checkNotNull(predicateName);
+
         this.prepareCode = prepareCode;
         this.predicateName = predicateName;
     }
-    
-    /**
-     * Vrátí přípravný kód.
+
+    /*
+     * (non-Javadoc)
      * 
-     * @return přípravný kód
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processible
+     * #accept
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor)
      */
-    public Code getPrepareCode() {
-        return this.prepareCode;
+    @Override
+    public <T> T accept(final Processor<T> processor) {
+        return processor.process(this);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final PredicateTestArc other = (PredicateTestArc) obj;
+        if (!this.predicateName.equals(other.predicateName)) {
+            return false;
+        }
+        if (!this.prepareCode.equals(other.prepareCode)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -103,57 +139,40 @@ public final class PredicateTestArc extends AbstractTestArc {
         return this.predicateName;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor)
+    /**
+     * Vrátí přípravný kód.
+     * 
+     * @return přípravný kód
      */
-    @Override
-    public <T> T accept(final Processor<T> processor) {
-        return processor.process(this);
+    public Code getPrepareCode() {
+        return this.prepareCode;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        result =
-                prime
-                        * result
-                        + predicateName
-                                .hashCode();
-        result =
-                prime * result
-                        + prepareCode.hashCode();
+        result = prime * result + this.predicateName.hashCode();
+        result = prime * result + this.prepareCode.hashCode();
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        PredicateTestArc other = (PredicateTestArc) obj;
-        if (!predicateName.equals(other.predicateName)) {
-            return false;
-        }
-        if (!prepareCode.equals(other.prepareCode)) {
-            return false;
-        }
-        return true;
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+
+        Preconditions.checkNotNull(this.prepareCode);
+        Preconditions.checkNotNull(this.predicateName);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -162,15 +181,7 @@ public final class PredicateTestArc extends AbstractTestArc {
                 + getNetwork() + ", getFrom()=" + getFrom() + ", getTo()="
                 + getTo() + ", getPriority()=" + getPriority()
                 + ", getValue()=" + getValue() + ", predicateName="
-                + predicateName + "]";
-    }
-    
-    private void readObject(final ObjectInputStream objectInputStream)
-            throws ClassNotFoundException, IOException {
-        objectInputStream.defaultReadObject();
-        
-        Preconditions.checkNotNull(this.prepareCode);
-        Preconditions.checkNotNull(this.predicateName);
+                + this.predicateName + "]";
     }
 
     private void writeObject(final ObjectOutputStream objectOutputStream)

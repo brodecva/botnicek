@@ -32,41 +32,48 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
  */
 public interface UpdateBuilder {
     /**
-     * Přidá hranu, která je odstraňována, a tak je možné uvolnit příslušnou referenci jejího cílového uzlu.
-     * 
-     * @param referring odstraněná odkazující hrana
-     */
-    void addRemovedReference(RecurentArc referring);
-
-    /**
      * Přidá nový vstupní uzel.
      * 
-     * @param newInitial nový vstupní uzel
+     * @param newInitial
+     *            nový vstupní uzel
      */
     void addNewInitial(EnterNode newInitial);
 
     /**
+     * Přidá hranu k odstranění.
+     * 
+     * @param removedEdge
+     *            hrana k odstranění
+     */
+    void addRemovedEdge(Arc removedEdge);
+
+    /**
      * Přidá odstraněný vstupní uzel.
      * 
-     * @param removedInitial odstraněný vstupní uzel
+     * @param removedInitial
+     *            odstraněný vstupní uzel
      */
     void addRemovedInitial(EnterNode removedInitial);
 
     /**
+     * Přidá hranu, která je odstraňována, a tak je možné uvolnit příslušnou
+     * referenci jejího cílového uzlu.
+     * 
+     * @param referring
+     *            odstraněná odkazující hrana
+     */
+    void addRemovedReference(RecurentArc referring);
+
+    /**
      * Přidá uzel, který bude nahrazen a jeho náhradu.
      * 
-     * @param from nahrazený
-     * @param to náhrada
+     * @param from
+     *            nahrazený
+     * @param to
+     *            náhrada
      */
     void addSwitched(Node from, Node to);
 
-    /**
-     * Přidá hranu k odstranění.
-     * 
-     * @param removedEdge hrana k odstranění
-     */
-    void addRemovedEdge(Arc removedEdge);
-    
     /**
      * Sestaví aktualizaci.
      * 

@@ -28,40 +28,50 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
 
 /**
- * Událost rozšíření dostupné množiny vstupních uzlů sítí (do kterých je možné se zanořit).
+ * Událost rozšíření dostupné množiny vstupních uzlů sítí (do kterých je možné
+ * se zanořit).
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class AvailableReferencesExtendedEvent extends AbstractMappedEvent<System, AvailableReferencesExtendedListener> {
-    
-    private final Set<EnterNode> additionalReferences;
-    
+public final class AvailableReferencesExtendedEvent extends
+        AbstractMappedEvent<System, AvailableReferencesExtendedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param system rodičovský systém
-     * @param additionalReferences nové uzly 
+     * @param system
+     *            rodičovský systém
+     * @param additionalReferences
+     *            nové uzly
      * @return událost
      */
-    public static AvailableReferencesExtendedEvent create(final System system, final Set<EnterNode> additionalReferences) {
-        return new AvailableReferencesExtendedEvent(system, additionalReferences);
+    public static AvailableReferencesExtendedEvent create(final System system,
+            final Set<EnterNode> additionalReferences) {
+        return new AvailableReferencesExtendedEvent(system,
+                additionalReferences);
     }
-    
-    private AvailableReferencesExtendedEvent(final System system, final Set<EnterNode> additionalReferences) {
+
+    private final Set<EnterNode> additionalReferences;
+
+    private AvailableReferencesExtendedEvent(final System system,
+            final Set<EnterNode> additionalReferences) {
         super(system);
-        
+
         Preconditions.checkNotNull(additionalReferences);
-        
+
         this.additionalReferences = ImmutableSet.copyOf(additionalReferences);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final AvailableReferencesExtendedListener listener) {
         listener.referencesExtended(this.additionalReferences);
     }
 }
- 

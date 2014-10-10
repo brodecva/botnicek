@@ -32,13 +32,14 @@ public final class Comparisons {
     /**
      * Zjistí, zda-li jsou prvky navzájem různé.
      * 
-     * @param elements prvky
+     * @param elements
+     *            prvky
      * @return zda-li jsou všechny prvky navzájem různé
      */
     @SafeVarargs
     public static <E> boolean allDifferent(final E... elements) {
         Preconditions.checkNotNull(elements);
-        
+
         return ImmutableSet.copyOf(elements).size() == elements.length;
     }
 

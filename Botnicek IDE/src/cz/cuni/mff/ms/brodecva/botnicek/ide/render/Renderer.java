@@ -30,7 +30,8 @@ public interface Renderer {
     /**
      * Vygeneruje kód podstromu prvku.
      * 
-     * @param element prvek stromu
+     * @param element
+     *            prvek stromu
      * @return vygenerovaný kód
      */
     String render(final Element element);

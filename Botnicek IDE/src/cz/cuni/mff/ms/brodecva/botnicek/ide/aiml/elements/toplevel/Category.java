@@ -33,75 +33,106 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Patterns;
 
 /**
- * <p>Kategorie je prvek, který se může nacházet v rámci tématu, nebo přímo pod kořenovým prvkem dokumentu, pak je jako vzor jejího tématu považován žolík hvězdička.</p>
- * <p>Kategorie je složena ze tří částí:</p>
+ * <p>
+ * Kategorie je prvek, který se může nacházet v rámci tématu, nebo přímo pod
+ * kořenovým prvkem dokumentu, pak je jako vzor jejího tématu považován žolík
+ * hvězdička.
+ * </p>
+ * <p>
+ * Kategorie je složena ze tří částí:
+ * </p>
  * <ul>
- *     <li>vzor, který popisuje, pro jaký vstup bude proveden kód šablony (vzor je složený, může obsahovat normální slova, žolíky či značku bot oddělaná mezerami),</li>
- *     <li>vzor, který popisuje, pro jaký předchozí výstup robota bude proveden kód šablony (vzor je opět složený, může obsahovat normální slova, žolíky či značku bot oddělaná mezerami),</li>
- *     <li>šablona, která popisuje, jak bude vypadat výstup robota a může podstatně ovlivnit další postup zpracování vstupu.
+ * <li>vzor, který popisuje, pro jaký vstup bude proveden kód šablony (vzor je
+ * složený, může obsahovat normální slova, žolíky či značku bot oddělaná
+ * mezerami),</li>
+ * <li>vzor, který popisuje, pro jaký předchozí výstup robota bude proveden kód
+ * šablony (vzor je opět složený, může obsahovat normální slova, žolíky či
+ * značku bot oddělaná mezerami),</li>
+ * <li>šablona, která popisuje, jak bude vypadat výstup robota a může podstatně
+ * ovlivnit další postup zpracování vstupu.
  * </ul>
  * 
  * @author Václav Brodec
  * @version 1.0
  * @see <a
- *      href="http://www.alicebot.org/TR/2011/#section-category">http://www.alicebot.org/TR/2011/#section-category</a> 
+ *      href="http://www.alicebot.org/TR/2011/#section-category">http://www.alicebot.org/TR/2011/#section-category</a>
  */
 public class Category extends AbstractProperElement implements Toplevel {
     private static final String NAME = "category";
-    
-    private final MixedPattern pattern;
-    private final MixedPattern that;
-    private final Template template;
-    
+
     /**
-     * Vytvoří kategorii, jejíž oba vzory tvoří žolíky. 
+     * Vytvoří kategorii.
      * 
-     * @param template šablona
-     * @return kategorie, která jestliže na ni přijde řada, bude aktivována pro jakýkoli vstup 
+     * @param pattern
+     *            vzor pro uživatelský vstup
+     * @param that
+     *            vzor pro předchozí výstup robota
+     * @param template
+     *            šablona
+     * @return kategorie, která jestliže na ni přijde řada, bude aktivována pro
+     *         jakýkoli vstup
      */
-    public static Category createUniversal(final Template template) {
-        return new Category(Patterns.createUniversal(), Patterns.createUniversal(), template);
-    }
-    
-    /**
-     * Vytvoří kategorii. 
-     * 
-     * @param pattern vzor pro uživatelský vstup
-     * @param that vzor pro předchozí výstup robota
-     * @param template šablona
-     * @return kategorie, která jestliže na ni přijde řada, bude aktivována pro jakýkoli vstup 
-     */
-    public static Category create(final MixedPattern pattern, MixedPattern that, Template template) {
+    public static Category create(final MixedPattern pattern,
+            final MixedPattern that, final Template template) {
         return new Category(pattern, that, template);
     }
-    
-    private Category(final MixedPattern pattern, final MixedPattern that, final Template template) {
+
+    /**
+     * Vytvoří kategorii, jejíž oba vzory tvoří žolíky.
+     * 
+     * @param template
+     *            šablona
+     * @return kategorie, která jestliže na ni přijde řada, bude aktivována pro
+     *         jakýkoli vstup
+     */
+    public static Category createUniversal(final Template template) {
+        return new Category(Patterns.createUniversal(),
+                Patterns.createUniversal(), template);
+    }
+
+    private final MixedPattern pattern;
+
+    private final MixedPattern that;
+
+    private final Template template;
+
+    private Category(final MixedPattern pattern, final MixedPattern that,
+            final Template template) {
         Preconditions.checkNotNull(pattern);
         Preconditions.checkNotNull(that);
         Preconditions.checkNotNull(template);
-        
+
         this.pattern = pattern;
         this.that = that;
         this.template = template;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.AbstractElement#getName()
+    @Override
+    public List<Element> getChildren() {
+        return ImmutableList.<Element> of(Pattern.create(this.pattern),
+                That.create(this.that), this.template);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.AbstractElement
+     * #getName()
      */
     @Override
     public String getLocalName() {
         return NAME;
     }
-    
-    public List<Element> getChildren() {
-        return ImmutableList.<Element>of(Pattern.create(this.pattern), That.create(this.that), this.template);
-    }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "Category [pattern=" + pattern + ", that=" + that + "]";
+        return "Category [pattern=" + this.pattern + ", that=" + this.that
+                + "]";
     }
 }

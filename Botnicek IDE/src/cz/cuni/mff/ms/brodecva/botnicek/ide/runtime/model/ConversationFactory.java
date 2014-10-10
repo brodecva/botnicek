@@ -19,6 +19,7 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model;
 
 import java.util.Map;
+
 import cz.cuni.mff.ms.brodecva.botnicek.library.language.Language;
 import cz.cuni.mff.ms.brodecva.botnicek.library.loader.Loader;
 import cz.cuni.mff.ms.brodecva.botnicek.library.parser.TemplateParserFactory;
@@ -33,8 +34,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.responder.Conversation;
  */
 public interface ConversationFactory {
     /**
-     * Vytvoří konverzaci. Pro určeného bota načte jeho zdrojové
-     * soubory, do kterých dosadí jeho predikáty.
+     * Vytvoří konverzaci. Pro určeného bota načte jeho zdrojové soubory, do
+     * kterých dosadí jeho predikáty.
      * 
      * @param loader
      *            načítač zdrojových souborů

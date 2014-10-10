@@ -21,7 +21,6 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.api;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractRawElement;
 
-
 /**
  * Rozhraní návštěvníka (návrhový vzor) prvků stromu jazyka AIML.
  * 
@@ -32,28 +31,32 @@ public interface Visitor {
     /**
      * Vstup do uzlu.
      * 
-     * @param element prvek
+     * @param element
+     *            prvek
      */
     void visitEnter(AbstractProperElement element);
-    
+
     /**
      * Vstup do uzlu.
      * 
-     * @param element prvek
+     * @param element
+     *            prvek
      */
     void visitEnter(AbstractRawElement element);
-    
+
     /**
      * Vystoupení z uzlu.
      * 
-     * @param element prvek
+     * @param element
+     *            prvek
      */
     void visitExit(AbstractProperElement element);
-    
+
     /**
      * Vystoupení z uzlu.
      * 
-     * @param element prvek
+     * @param element
+     *            prvek
      */
     void visitExit(AbstractRawElement element);
 }

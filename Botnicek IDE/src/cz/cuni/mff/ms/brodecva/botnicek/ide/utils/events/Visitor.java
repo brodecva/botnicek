@@ -28,14 +28,16 @@ interface Visitor {
     /**
      * Navštíví běžnou událost.
      * 
-     * @param event navštívená běžná událost
+     * @param event
+     *            navštívená běžná událost
      */
     <L> void visit(Event<L> event);
-    
+
     /**
      * Navštíví mapovanou událost.
      * 
-     * @param event událost
+     * @param event
+     *            událost
      */
     <K, L> void visit(MappedEvent<K, L> event);
 }

@@ -30,7 +30,8 @@ public interface BotSettingsView {
     /**
      * Aktualizuje zobrazené nastavení.
      * 
-     * @param botConfiguration nastavení bota
+     * @param botConfiguration
+     *            nastavení bota
      */
     void updateBotConfiguration(BotConfiguration botConfiguration);
 }

@@ -21,10 +21,16 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views;
 import java.awt.Dialog.ModalityType;
 import java.awt.EventQueue;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.regex.Pattern;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.Icon;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -37,7 +43,6 @@ import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
 
 import com.google.common.base.Preconditions;
 
@@ -49,12 +54,6 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.AIMLLanguageConfiguration;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.regex.Pattern;
 
 /**
  * Správce dialogu nastavení jazyka robota a běhového prostředí.
@@ -70,85 +69,192 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
 
     private static final int SET_BUTTON_PREFERRED_WIDTH = 158;
 
-
     private static final int FIELD_PREFERRED_WIDTH = 186;
 
     private static final int FIELD_PREFERRED_HEIGHT = 20;
 
     private static final int LABEL_FIELD_GAP_SIZE = 5;
 
-    private final JDialog dialog;
-    private final JPanel contentPane = new JPanel();
-    private final GroupLayout contentPaneLayout = new GroupLayout(this.contentPane);
-    
-    private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
+    private static LanguageSettingsDialog create(final Window owner) {
+        return create(owner, DummyLanguageSettingsController.create());
+    }
 
-    private final JPanel settingsPane = new JPanel();
-    private final GroupLayout settingsLayout = new GroupLayout(this.settingsPane);
-    private final JLabel nameLabel = new JLabel(UiLocalizer.print("LANGUAGE_NAME_LABEL_TEXT"));
-    private final JTextField nameTextField = new JTextField();
-    private final JLabel sentencesDelimLabel = new JLabel(UiLocalizer.print("SENTENCES_DELIMI_LABEL_TEXT"));
-    private final JTextField sentencesDelimTextField = new JTextField();
-    
-    private final JPanel genderPane = new JPanel();
-    private final GroupLayout genderLayout = new GroupLayout(this.genderPane);
-    private final SubstitutionsTableModel genderSubsTableModel;
-    private final JTable genderSubsTable;
-    private final JButton addGenderSubButton = new JButton(UiLocalizer.print("Add"));
-    
-    private final JPanel personPane = new JPanel();
-    private final GroupLayout personLayout = new GroupLayout(this.personPane);
-    private final SubstitutionsTableModel personSubsTableModel;
-    private final JTable personSubsTable;
-    private final JButton addPersonSubButton = new JButton(UiLocalizer.print("Add"));
-    
-    private final JPanel person2Pane = new JPanel();
-    private final GroupLayout person2Layout = new GroupLayout(this.person2Pane);
-    private final SubstitutionsTableModel person2SubsTableModel;
-    private final JTable person2SubsTable;
-    private final JButton addPerson2SubButton = new JButton(UiLocalizer.print("Add"));
-    
-    private final JPanel abbsPane = new JPanel();
-    private final GroupLayout abbsLayout = new GroupLayout(this.abbsPane);
-    private final SubstitutionsTableModel abbreviationsSubsTableModel;
-    private final JTable abbreviationsSubsTable;
-    private final JButton addAbbsSubButton = new JButton(UiLocalizer.print("Add"));
-    
-    private final JPanel spellingPane = new JPanel();
-    private final GroupLayout spellingLayout = new GroupLayout(this.spellingPane);
-    private final SubstitutionsTableModel spellingSubsTableModel;
-    private final JTable spellingSubsTable;
-    private final JButton addSpellingSubButton = new JButton(UiLocalizer.print("Add"));
-    
-    private final JPanel emoPane = new JPanel();
-    private final GroupLayout emoLayout = new GroupLayout(this.emoPane);
-    private final SubstitutionsTableModel emoticonsSubsTableModel;
-    private final JTable emoticonsSubsTable;
-    private final JButton addEmoSubButton = new JButton(UiLocalizer.print("Add"));
-    
-    private final JPanel punctuationPane = new JPanel();
-    private final GroupLayout punctuationLayout = new GroupLayout(this.punctuationPane);
-    private final SubstitutionsTableModel innerPunctuationSubsTableModel;
-    private final JTable innerPunctuationSubsTable;
-    private final JButton addPunctuationSubButton = new JButton(UiLocalizer.print("Add"));
-    
-    private final JButton setButton = new JButton(UiLocalizer.print("Save"));
-    
+    /**
+     * Vytvoří správce dialogu, navěsí události na obslužné prvky.
+     * 
+     * @param owner
+     *            vlastník dialogu
+     * @param languageSettingsController
+     *            řadič nastavení jazyka
+     * @return správce dialogu
+     */
+    public static LanguageSettingsDialog create(final Window owner,
+            final LanguageSettingsController languageSettingsController) {
+        return create(owner, languageSettingsController,
+                DefaultSubstitutionsTableModelFactory.create());
+    }
+
+    /**
+     * Vytvoří správce dialogu, navěsí události na obslužné prvky.
+     * 
+     * @param owner
+     *            vlastník dialogu
+     * @param languageSettingsController
+     *            řadič nastavení jazyka
+     * @param substitutionsTableModelFactory
+     *            továrna na modely tabulek substitucí
+     * @return správce dialogu
+     */
+    public static
+            LanguageSettingsDialog
+            create(final Window owner,
+                    final LanguageSettingsController languageSettingsController,
+                    final SubstitutionsTableModelFactory substitutionsTableModelFactory) {
+        final LanguageSettingsDialog newInstance =
+                new LanguageSettingsDialog(owner,
+                        substitutionsTableModelFactory);
+
+        languageSettingsController.addView(newInstance);
+        languageSettingsController.fill(newInstance);
+
+        newInstance.addAbbsSubButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                newInstance.abbreviationsSubsTableModel.addRow();
+
+                newInstance.updateSize();
+            }
+        });
+
+        newInstance.addEmoSubButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                newInstance.emoticonsSubsTableModel.addRow();
+
+                newInstance.updateSize();
+            }
+        });
+
+        newInstance.addGenderSubButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                newInstance.genderSubsTableModel.addRow();
+
+                newInstance.updateSize();
+            }
+        });
+
+        newInstance.addPerson2SubButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                newInstance.person2SubsTableModel.addRow();
+
+                newInstance.updateSize();
+            }
+        });
+
+        newInstance.addPersonSubButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                newInstance.personSubsTableModel.addRow();
+
+                newInstance.updateSize();
+            }
+        });
+
+        newInstance.addPunctuationSubButton
+                .addActionListener(new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        newInstance.innerPunctuationSubsTableModel.addRow();
+
+                        newInstance.updateSize();
+                    }
+                });
+
+        newInstance.addSpellingSubButton
+                .addActionListener(new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        newInstance.spellingSubsTableModel.addRow();
+
+                        newInstance.updateSize();
+                    }
+                });
+
+        newInstance.setButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                try {
+                    languageSettingsController.set(AIMLLanguageConfiguration.of(
+                            newInstance.nameTextField.getText(),
+                            Pattern.compile(newInstance.sentencesDelimTextField
+                                    .getText()),
+                            newInstance.genderSubsTableModel.getNamesToValues(),
+                            newInstance.personSubsTableModel.getNamesToValues(),
+                            newInstance.person2SubsTableModel
+                                    .getNamesToValues(),
+                            newInstance.abbreviationsSubsTableModel
+                                    .getNamesToValues(),
+                            newInstance.spellingSubsTableModel
+                                    .getNamesToValues(),
+                            newInstance.emoticonsSubsTableModel
+                                    .getNamesToValues(),
+                            newInstance.innerPunctuationSubsTableModel
+                                    .getNamesToValues()));
+                } catch (final IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(newInstance.dialog,
+                            UiLocalizer.print("SETTINGS_ERROR_MESSAGE"),
+                            UiLocalizer.print("SETTINGS_ERROR_TITLE"),
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+        });
+
+        newInstance.dialog.addWindowListener(new WindowAdapter() {
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * java.awt.event.WindowAdapter#windowClosing(java.awt.event.WindowEvent
+             * )
+             */
+            @Override
+            public void windowClosing(final WindowEvent e) {
+                languageSettingsController.removeView(newInstance);
+            }
+        });
+
+        return newInstance;
+    }
 
     /**
      * Spustí testovací dialog.
      * 
-     * @param args argumenty 
+     * @param args
+     *            argumenty
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                    
+                    UIManager.setLookAndFeel(UIManager
+                            .getSystemLookAndFeelClassName());
+
                     final JFrame frame = new JFrame();
                     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    final LanguageSettingsDialog dialog = LanguageSettingsDialog.create(frame);
+                    final LanguageSettingsDialog dialog =
+                            LanguageSettingsDialog.create(frame);
                     frame.setVisible(true);
                     dialog.dialog.setVisible(true);
                 } catch (final Exception e) {
@@ -158,409 +264,476 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         });
     }
 
-    /**
-     * Vytvoří správce dialogu, navěsí události na obslužné prvky.
-     * 
-     * @param owner vlastník dialogu
-     * @param languageSettingsController řadič nastavení jazyka
-     * @param substitutionsTableModelFactory továrna na modely tabulek substitucí
-     * @return správce dialogu
-     */
-    public static LanguageSettingsDialog create(final Window owner, final LanguageSettingsController languageSettingsController, final SubstitutionsTableModelFactory substitutionsTableModelFactory) {
-        final LanguageSettingsDialog newInstance = new LanguageSettingsDialog(owner, substitutionsTableModelFactory);
-        
-        languageSettingsController.addView(newInstance);
-        languageSettingsController.fill(newInstance);
-        
-        newInstance.addAbbsSubButton.addActionListener(new ActionListener() {
-            
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                newInstance.abbreviationsSubsTableModel.addRow();
-                
-                newInstance.updateSize();
-            }
-        });
-        
-        newInstance.addEmoSubButton.addActionListener(new ActionListener() {
-            
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                newInstance.emoticonsSubsTableModel.addRow();
-                
-                newInstance.updateSize();
-            }
-        });
-        
-        newInstance.addGenderSubButton.addActionListener(new ActionListener() {
-            
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                newInstance.genderSubsTableModel.addRow();
-                
-                newInstance.updateSize();
-            }
-        });
-        
-        newInstance.addPerson2SubButton.addActionListener(new ActionListener() {
-            
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                newInstance.person2SubsTableModel.addRow();
-                
-                newInstance.updateSize();
-            }
-        });
-        
-        newInstance.addPersonSubButton.addActionListener(new ActionListener() {
-            
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                newInstance.personSubsTableModel.addRow();
-                
-                newInstance.updateSize();
-            }
-        });
-        
-        newInstance.addPunctuationSubButton.addActionListener(new ActionListener() {
-            
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                newInstance.innerPunctuationSubsTableModel.addRow();
-                
-                newInstance.updateSize();
-            }
-        });
-        
-        newInstance.addSpellingSubButton.addActionListener(new ActionListener() {
-            
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                newInstance.spellingSubsTableModel.addRow();
-                
-                newInstance.updateSize();
-            }
-        });
-        
-        newInstance.setButton.addActionListener(new ActionListener() {
-            
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                try {
-                languageSettingsController.set(AIMLLanguageConfiguration.of(
-                        newInstance.nameTextField.getText(),
-                        Pattern.compile(newInstance.sentencesDelimTextField.getText()),
-                        newInstance.genderSubsTableModel.getNamesToValues(),
-                        newInstance.personSubsTableModel.getNamesToValues(),
-                        newInstance.person2SubsTableModel.getNamesToValues(),
-                        newInstance.abbreviationsSubsTableModel.getNamesToValues(),
-                        newInstance.spellingSubsTableModel.getNamesToValues(),
-                        newInstance.emoticonsSubsTableModel.getNamesToValues(),
-                        newInstance.innerPunctuationSubsTableModel.getNamesToValues()));
-                } catch (final IllegalArgumentException ex) {
-                    JOptionPane.showMessageDialog(newInstance.dialog, UiLocalizer.print("SETTINGS_ERROR_MESSAGE"), UiLocalizer.print("SETTINGS_ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
-        });
-        
-        newInstance.dialog.addWindowListener(new WindowAdapter() {
-            /* (non-Javadoc)
-             * @see java.awt.event.WindowAdapter#windowClosing(java.awt.event.WindowEvent)
-             */
-            @Override
-            public void windowClosing(final WindowEvent e) {
-                languageSettingsController.removeView(newInstance);
-            }
-        });
-        
-        return newInstance;
-    }
-    
-    private static LanguageSettingsDialog create(final Window owner) {
-        return create(owner, DummyLanguageSettingsController.create());
-    }
-    
-    /**
-     * Vytvoří správce dialogu, navěsí události na obslužné prvky.
-     * 
-     * @param owner vlastník dialogu
-     * @param languageSettingsController řadič nastavení jazyka
-     * @return správce dialogu
-     */
-    public static LanguageSettingsDialog create(final Window owner, final LanguageSettingsController languageSettingsController) {
-        return create(owner, languageSettingsController, DefaultSubstitutionsTableModelFactory.create());
-    }
-    
-    private LanguageSettingsDialog(final Window owner, final SubstitutionsTableModelFactory substitutionsTableModelFactory) {      
+    private final JDialog dialog;
+    private final JPanel contentPane = new JPanel();
+    private final GroupLayout contentPaneLayout = new GroupLayout(
+            this.contentPane);
+    private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP,
+            JTabbedPane.WRAP_TAB_LAYOUT);
+    private final JPanel settingsPane = new JPanel();
+    private final GroupLayout settingsLayout = new GroupLayout(
+            this.settingsPane);
+
+    private final JLabel nameLabel = new JLabel(
+            UiLocalizer.print("LANGUAGE_NAME_LABEL_TEXT"));
+    private final JTextField nameTextField = new JTextField();
+    private final JLabel sentencesDelimLabel = new JLabel(
+            UiLocalizer.print("SENTENCES_DELIMI_LABEL_TEXT"));
+    private final JTextField sentencesDelimTextField = new JTextField();
+    private final JPanel genderPane = new JPanel();
+
+    private final GroupLayout genderLayout = new GroupLayout(this.genderPane);
+    private final SubstitutionsTableModel genderSubsTableModel;
+    private final JTable genderSubsTable;
+    private final JButton addGenderSubButton = new JButton(
+            UiLocalizer.print("Add"));
+    private final JPanel personPane = new JPanel();
+
+    private final GroupLayout personLayout = new GroupLayout(this.personPane);
+    private final SubstitutionsTableModel personSubsTableModel;
+    private final JTable personSubsTable;
+    private final JButton addPersonSubButton = new JButton(
+            UiLocalizer.print("Add"));
+    private final JPanel person2Pane = new JPanel();
+
+    private final GroupLayout person2Layout = new GroupLayout(this.person2Pane);
+    private final SubstitutionsTableModel person2SubsTableModel;
+    private final JTable person2SubsTable;
+    private final JButton addPerson2SubButton = new JButton(
+            UiLocalizer.print("Add"));
+    private final JPanel abbsPane = new JPanel();
+
+    private final GroupLayout abbsLayout = new GroupLayout(this.abbsPane);
+    private final SubstitutionsTableModel abbreviationsSubsTableModel;
+    private final JTable abbreviationsSubsTable;
+    private final JButton addAbbsSubButton = new JButton(
+            UiLocalizer.print("Add"));
+    private final JPanel spellingPane = new JPanel();
+
+    private final GroupLayout spellingLayout = new GroupLayout(
+            this.spellingPane);
+    private final SubstitutionsTableModel spellingSubsTableModel;
+    private final JTable spellingSubsTable;
+    private final JButton addSpellingSubButton = new JButton(
+            UiLocalizer.print("Add"));
+    private final JPanel emoPane = new JPanel();
+
+    private final GroupLayout emoLayout = new GroupLayout(this.emoPane);
+    private final SubstitutionsTableModel emoticonsSubsTableModel;
+    private final JTable emoticonsSubsTable;
+    private final JButton addEmoSubButton = new JButton(
+            UiLocalizer.print("Add"));
+    private final JPanel punctuationPane = new JPanel();
+
+    private final GroupLayout punctuationLayout = new GroupLayout(
+            this.punctuationPane);
+
+    private final SubstitutionsTableModel innerPunctuationSubsTableModel;
+
+    private final JTable innerPunctuationSubsTable;
+
+    private final JButton addPunctuationSubButton = new JButton(
+            UiLocalizer.print("Add"));
+
+    private final JButton setButton = new JButton(UiLocalizer.print("Save"));
+
+    private LanguageSettingsDialog(final Window owner,
+            final SubstitutionsTableModelFactory substitutionsTableModelFactory) {
         Preconditions.checkNotNull(owner);
         Preconditions.checkNotNull(substitutionsTableModelFactory);
-        
-        this.abbreviationsSubsTableModel = substitutionsTableModelFactory.produce();
-        this.abbreviationsSubsTable = new JTable(this.abbreviationsSubsTableModel);
-        
+
+        this.abbreviationsSubsTableModel =
+                substitutionsTableModelFactory.produce();
+        this.abbreviationsSubsTable =
+                new JTable(this.abbreviationsSubsTableModel);
+
         this.genderSubsTableModel = substitutionsTableModelFactory.produce();
         this.genderSubsTable = new JTable(this.genderSubsTableModel);
-        
+
         this.spellingSubsTableModel = substitutionsTableModelFactory.produce();
         this.spellingSubsTable = new JTable(this.spellingSubsTableModel);
-        
+
         this.emoticonsSubsTableModel = substitutionsTableModelFactory.produce();
         this.emoticonsSubsTable = new JTable(this.emoticonsSubsTableModel);
-        
-        this.innerPunctuationSubsTableModel = substitutionsTableModelFactory.produce();
-        this.innerPunctuationSubsTable = new JTable(this.innerPunctuationSubsTableModel);
-        
+
+        this.innerPunctuationSubsTableModel =
+                substitutionsTableModelFactory.produce();
+        this.innerPunctuationSubsTable =
+                new JTable(this.innerPunctuationSubsTableModel);
+
         this.personSubsTableModel = substitutionsTableModelFactory.produce();
         this.personSubsTable = new JTable(this.personSubsTableModel);
-        
+
         this.person2SubsTableModel = substitutionsTableModelFactory.produce();
         this.person2SubsTable = new JTable(this.person2SubsTableModel);
-        
+
         int tabIndex = 0;
-        
+
         this.nameLabel.setLabelFor(this.nameTextField);
-        this.nameLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("LanguageNameMnemonics")).getKeyCode());
+        this.nameLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
+                UiLocalizer.print("LanguageNameMnemonics")).getKeyCode());
         this.sentencesDelimLabel.setLabelFor(this.sentencesDelimTextField);
-        this.sentencesDelimLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("DelimiterMnemonics")).getKeyCode());
-        
-        final int subMnemonicKeyCode = KeyStroke.getKeyStroke(UiLocalizer.print("AddSubMnemonics")).getKeyCode();
-        addGenderSubButton.setMnemonic(subMnemonicKeyCode);
-        addPersonSubButton.setMnemonic(subMnemonicKeyCode);
-        addPerson2SubButton.setMnemonic(subMnemonicKeyCode);
-        addAbbsSubButton.setMnemonic(subMnemonicKeyCode);
-        addSpellingSubButton.setMnemonic(subMnemonicKeyCode);
-        addEmoSubButton.setMnemonic(subMnemonicKeyCode);
-        addPunctuationSubButton.setMnemonic(subMnemonicKeyCode);
-        
-        setButton.setMnemonic(KeyStroke.getKeyStroke(UiLocalizer.print("SetMnemonics")).getKeyCode());
-                
-        this.settingsLayout.setHorizontalGroup(
-                settingsLayout.createParallelGroup(Alignment.LEADING)
-                .addGroup(settingsLayout.createSequentialGroup()
-                    .addGroup(settingsLayout.createParallelGroup(Alignment.TRAILING)
-                        .addComponent(this.nameLabel)
-                        .addComponent(this.sentencesDelimLabel))
-                    .addGroup(settingsLayout.createParallelGroup(Alignment.LEADING)
-                        .addGap(LABEL_FIELD_GAP_SIZE)
-                        .addGap(LABEL_FIELD_GAP_SIZE))
-                    .addGroup(settingsLayout.createParallelGroup(Alignment.LEADING)
-                            .addComponent(this.nameTextField, GroupLayout.DEFAULT_SIZE, FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
-                            .addComponent(this.sentencesDelimTextField, GroupLayout.DEFAULT_SIZE, FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)))
-        );
-        this.settingsLayout.setVerticalGroup(
-                settingsLayout.createParallelGroup(Alignment.LEADING)
-                .addGroup(settingsLayout.createSequentialGroup()
-                    .addGroup(settingsLayout.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(this.nameLabel)
-                        .addComponent(this.nameTextField, GroupLayout.PREFERRED_SIZE, FIELD_PREFERRED_HEIGHT, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addGroup(settingsLayout.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(this.sentencesDelimLabel)
-                        .addComponent(this.sentencesDelimTextField, GroupLayout.PREFERRED_SIZE, FIELD_PREFERRED_HEIGHT, GroupLayout.PREFERRED_SIZE)))
-        );
+        this.sentencesDelimLabel.setDisplayedMnemonic(KeyStroke.getKeyStroke(
+                UiLocalizer.print("DelimiterMnemonics")).getKeyCode());
+
+        final int subMnemonicKeyCode =
+                KeyStroke.getKeyStroke(UiLocalizer.print("AddSubMnemonics"))
+                        .getKeyCode();
+        this.addGenderSubButton.setMnemonic(subMnemonicKeyCode);
+        this.addPersonSubButton.setMnemonic(subMnemonicKeyCode);
+        this.addPerson2SubButton.setMnemonic(subMnemonicKeyCode);
+        this.addAbbsSubButton.setMnemonic(subMnemonicKeyCode);
+        this.addSpellingSubButton.setMnemonic(subMnemonicKeyCode);
+        this.addEmoSubButton.setMnemonic(subMnemonicKeyCode);
+        this.addPunctuationSubButton.setMnemonic(subMnemonicKeyCode);
+
+        this.setButton.setMnemonic(KeyStroke.getKeyStroke(
+                UiLocalizer.print("SetMnemonics")).getKeyCode());
+
+        this.settingsLayout
+                .setHorizontalGroup(this.settingsLayout
+                        .createParallelGroup(Alignment.LEADING)
+                        .addGroup(
+                                this.settingsLayout
+                                        .createSequentialGroup()
+                                        .addGroup(
+                                                this.settingsLayout
+                                                        .createParallelGroup(
+                                                                Alignment.TRAILING)
+                                                        .addComponent(
+                                                                this.nameLabel)
+                                                        .addComponent(
+                                                                this.sentencesDelimLabel))
+                                        .addGroup(
+                                                this.settingsLayout
+                                                        .createParallelGroup(
+                                                                Alignment.LEADING)
+                                                        .addGap(LABEL_FIELD_GAP_SIZE)
+                                                        .addGap(LABEL_FIELD_GAP_SIZE))
+                                        .addGroup(
+                                                this.settingsLayout
+                                                        .createParallelGroup(
+                                                                Alignment.LEADING)
+                                                        .addComponent(
+                                                                this.nameTextField,
+                                                                GroupLayout.DEFAULT_SIZE,
+                                                                FIELD_PREFERRED_WIDTH,
+                                                                Short.MAX_VALUE)
+                                                        .addComponent(
+                                                                this.sentencesDelimTextField,
+                                                                GroupLayout.DEFAULT_SIZE,
+                                                                FIELD_PREFERRED_WIDTH,
+                                                                Short.MAX_VALUE))));
+        this.settingsLayout
+                .setVerticalGroup(this.settingsLayout
+                        .createParallelGroup(Alignment.LEADING)
+                        .addGroup(
+                                this.settingsLayout
+                                        .createSequentialGroup()
+                                        .addGroup(
+                                                this.settingsLayout
+                                                        .createParallelGroup(
+                                                                Alignment.BASELINE)
+                                                        .addComponent(
+                                                                this.nameLabel)
+                                                        .addComponent(
+                                                                this.nameTextField,
+                                                                GroupLayout.PREFERRED_SIZE,
+                                                                FIELD_PREFERRED_HEIGHT,
+                                                                GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(
+                                                ComponentPlacement.UNRELATED)
+                                        .addGroup(
+                                                this.settingsLayout
+                                                        .createParallelGroup(
+                                                                Alignment.BASELINE)
+                                                        .addComponent(
+                                                                this.sentencesDelimLabel)
+                                                        .addComponent(
+                                                                this.sentencesDelimTextField,
+                                                                GroupLayout.PREFERRED_SIZE,
+                                                                FIELD_PREFERRED_HEIGHT,
+                                                                GroupLayout.PREFERRED_SIZE))));
         this.settingsPane.setLayout(this.settingsLayout);
-        this.settingsPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("SETTINGS_TAB_TITLE"), Intended.<Icon>nullReference(), this.settingsPane, UiLocalizer.print("LanguageSettingsTabTip"), tabIndex);
-        this.tabbedPane.setMnemonicAt(tabIndex, KeyStroke.getKeyStroke(UiLocalizer.print("LanguagePropertiesMnemonics")).getKeyCode());
+        this.settingsPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE,
+                CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE,
+                CONTENT_PANE_BORDER_SIZE));
+        this.tabbedPane.insertTab(UiLocalizer.print("SETTINGS_TAB_TITLE"),
+                Intended.<Icon> nullReference(), this.settingsPane,
+                UiLocalizer.print("LanguageSettingsTabTip"), tabIndex);
+        this.tabbedPane.setMnemonicAt(
+                tabIndex,
+                KeyStroke.getKeyStroke(
+                        UiLocalizer.print("LanguagePropertiesMnemonics"))
+                        .getKeyCode());
         tabIndex++;
-                
+
         this.genderLayout.setHorizontalGroup(this.genderLayout
                 .createParallelGroup(Alignment.LEADING)
-                    .addComponent(this.genderSubsTable.getTableHeader(), GroupLayout.DEFAULT_SIZE,
-                            FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
-                    .addComponent(this.genderSubsTable, GroupLayout.DEFAULT_SIZE,
-                            FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
-                    .addComponent(this.addGenderSubButton,
+                .addComponent(this.genderSubsTable.getTableHeader(),
                         GroupLayout.DEFAULT_SIZE, FIELD_PREFERRED_WIDTH,
                         Short.MAX_VALUE)
-        );
+                .addComponent(this.genderSubsTable, GroupLayout.DEFAULT_SIZE,
+                        FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
+                .addComponent(this.addGenderSubButton,
+                        GroupLayout.DEFAULT_SIZE, FIELD_PREFERRED_WIDTH,
+                        Short.MAX_VALUE));
         this.genderLayout.setVerticalGroup(this.genderLayout
                 .createSequentialGroup()
-                    .addComponent(this.genderSubsTable.getTableHeader())
-                    .addComponent(this.genderSubsTable)
-                    .addComponent(this.addGenderSubButton)
-        );
+                .addComponent(this.genderSubsTable.getTableHeader())
+                .addComponent(this.genderSubsTable)
+                .addComponent(this.addGenderSubButton));
         this.genderPane.setLayout(this.genderLayout);
-        this.genderPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("GENDER_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.genderPane, UiLocalizer.print("GenderSubsTabTip"), tabIndex);
-        this.tabbedPane.setMnemonicAt(tabIndex, KeyStroke.getKeyStroke(UiLocalizer.print("GenderMnemonics")).getKeyCode());
+        this.genderPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE,
+                CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE,
+                CONTENT_PANE_BORDER_SIZE));
+        this.tabbedPane.insertTab(UiLocalizer.print("GENDER_SUBS_TAB_TITLE"),
+                Intended.<Icon> nullReference(), this.genderPane,
+                UiLocalizer.print("GenderSubsTabTip"), tabIndex);
+        this.tabbedPane.setMnemonicAt(tabIndex,
+                KeyStroke.getKeyStroke(UiLocalizer.print("GenderMnemonics"))
+                        .getKeyCode());
         tabIndex++;
-        
+
         this.personLayout.setHorizontalGroup(this.personLayout
                 .createParallelGroup(Alignment.LEADING)
-                    .addComponent(this.personSubsTable.getTableHeader(), GroupLayout.DEFAULT_SIZE,
-                            FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
-                    .addComponent(this.personSubsTable, GroupLayout.DEFAULT_SIZE,
-                            FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
-                    .addComponent(this.addPersonSubButton,
+                .addComponent(this.personSubsTable.getTableHeader(),
                         GroupLayout.DEFAULT_SIZE, FIELD_PREFERRED_WIDTH,
                         Short.MAX_VALUE)
-        );
+                .addComponent(this.personSubsTable, GroupLayout.DEFAULT_SIZE,
+                        FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
+                .addComponent(this.addPersonSubButton,
+                        GroupLayout.DEFAULT_SIZE, FIELD_PREFERRED_WIDTH,
+                        Short.MAX_VALUE));
         this.personLayout.setVerticalGroup(this.personLayout
                 .createSequentialGroup()
-                    .addComponent(this.personSubsTable.getTableHeader())
-                    .addComponent(this.personSubsTable)
-                    .addComponent(this.addPersonSubButton)
-        );
+                .addComponent(this.personSubsTable.getTableHeader())
+                .addComponent(this.personSubsTable)
+                .addComponent(this.addPersonSubButton));
         this.personPane.setLayout(this.personLayout);
-        this.personPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("PERSON_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.personPane, UiLocalizer.print("PersonSubsTabTip"), tabIndex);
-        this.tabbedPane.setMnemonicAt(tabIndex, KeyStroke.getKeyStroke(UiLocalizer.print("PersonMnemonics")).getKeyCode());
+        this.personPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE,
+                CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE,
+                CONTENT_PANE_BORDER_SIZE));
+        this.tabbedPane.insertTab(UiLocalizer.print("PERSON_SUBS_TAB_TITLE"),
+                Intended.<Icon> nullReference(), this.personPane,
+                UiLocalizer.print("PersonSubsTabTip"), tabIndex);
+        this.tabbedPane.setMnemonicAt(tabIndex,
+                KeyStroke.getKeyStroke(UiLocalizer.print("PersonMnemonics"))
+                        .getKeyCode());
         tabIndex++;
-        
+
         this.person2Layout.setHorizontalGroup(this.person2Layout
                 .createParallelGroup(Alignment.LEADING)
-                    .addComponent(this.person2SubsTable.getTableHeader(), GroupLayout.DEFAULT_SIZE,
-                            FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
-                    .addComponent(this.person2SubsTable, GroupLayout.DEFAULT_SIZE,
-                            FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
-                    .addComponent(this.addPerson2SubButton,
+                .addComponent(this.person2SubsTable.getTableHeader(),
                         GroupLayout.DEFAULT_SIZE, FIELD_PREFERRED_WIDTH,
                         Short.MAX_VALUE)
-        );
+                .addComponent(this.person2SubsTable, GroupLayout.DEFAULT_SIZE,
+                        FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
+                .addComponent(this.addPerson2SubButton,
+                        GroupLayout.DEFAULT_SIZE, FIELD_PREFERRED_WIDTH,
+                        Short.MAX_VALUE));
         this.person2Layout.setVerticalGroup(this.person2Layout
                 .createSequentialGroup()
-                    .addComponent(this.person2SubsTable.getTableHeader())
-                    .addComponent(this.person2SubsTable)
-                    .addComponent(this.addPerson2SubButton)
-        );
+                .addComponent(this.person2SubsTable.getTableHeader())
+                .addComponent(this.person2SubsTable)
+                .addComponent(this.addPerson2SubButton));
         this.person2Pane.setLayout(this.person2Layout);
-        this.person2Pane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("PERSON2_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.person2Pane, UiLocalizer.print("Person2SubsTabTip"), tabIndex);
-        this.tabbedPane.setMnemonicAt(tabIndex, KeyStroke.getKeyStroke(UiLocalizer.print("Person2Mnemonics")).getKeyCode());
+        this.person2Pane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE,
+                CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE,
+                CONTENT_PANE_BORDER_SIZE));
+        this.tabbedPane.insertTab(UiLocalizer.print("PERSON2_SUBS_TAB_TITLE"),
+                Intended.<Icon> nullReference(), this.person2Pane,
+                UiLocalizer.print("Person2SubsTabTip"), tabIndex);
+        this.tabbedPane.setMnemonicAt(tabIndex,
+                KeyStroke.getKeyStroke(UiLocalizer.print("Person2Mnemonics"))
+                        .getKeyCode());
         tabIndex++;
-        
+
         this.abbsLayout.setHorizontalGroup(this.abbsLayout
                 .createParallelGroup(Alignment.LEADING)
-                    .addComponent(this.abbreviationsSubsTable.getTableHeader(), GroupLayout.DEFAULT_SIZE,
-                            FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
-                    .addComponent(this.abbreviationsSubsTable, GroupLayout.DEFAULT_SIZE,
-                            FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
-                    .addComponent(this.addAbbsSubButton,
+                .addComponent(this.abbreviationsSubsTable.getTableHeader(),
                         GroupLayout.DEFAULT_SIZE, FIELD_PREFERRED_WIDTH,
                         Short.MAX_VALUE)
-        );
+                .addComponent(this.abbreviationsSubsTable,
+                        GroupLayout.DEFAULT_SIZE, FIELD_PREFERRED_WIDTH,
+                        Short.MAX_VALUE)
+                .addComponent(this.addAbbsSubButton, GroupLayout.DEFAULT_SIZE,
+                        FIELD_PREFERRED_WIDTH, Short.MAX_VALUE));
         this.abbsLayout.setVerticalGroup(this.abbsLayout
                 .createSequentialGroup()
-                    .addComponent(this.abbreviationsSubsTable.getTableHeader())
-                    .addComponent(this.abbreviationsSubsTable)
-                    .addComponent(this.addAbbsSubButton)
-        );
+                .addComponent(this.abbreviationsSubsTable.getTableHeader())
+                .addComponent(this.abbreviationsSubsTable)
+                .addComponent(this.addAbbsSubButton));
         this.abbsPane.setLayout(this.abbsLayout);
-        this.abbsPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("ABBS_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.abbsPane, UiLocalizer.print("AbbsSubsTabTip"), tabIndex);
-        this.tabbedPane.setMnemonicAt(tabIndex, KeyStroke.getKeyStroke(UiLocalizer.print("AbbsMnemonics")).getKeyCode());
+        this.abbsPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE,
+                CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE,
+                CONTENT_PANE_BORDER_SIZE));
+        this.tabbedPane.insertTab(UiLocalizer.print("ABBS_SUBS_TAB_TITLE"),
+                Intended.<Icon> nullReference(), this.abbsPane,
+                UiLocalizer.print("AbbsSubsTabTip"), tabIndex);
+        this.tabbedPane.setMnemonicAt(tabIndex,
+                KeyStroke.getKeyStroke(UiLocalizer.print("AbbsMnemonics"))
+                        .getKeyCode());
         tabIndex++;
-        
+
         this.spellingLayout.setHorizontalGroup(this.spellingLayout
                 .createParallelGroup(Alignment.LEADING)
-                    .addComponent(this.spellingSubsTable.getTableHeader(), GroupLayout.DEFAULT_SIZE,
-                            FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
-                    .addComponent(this.spellingSubsTable, GroupLayout.DEFAULT_SIZE,
-                            FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
-                    .addComponent(this.addSpellingSubButton,
+                .addComponent(this.spellingSubsTable.getTableHeader(),
                         GroupLayout.DEFAULT_SIZE, FIELD_PREFERRED_WIDTH,
                         Short.MAX_VALUE)
-        );
+                .addComponent(this.spellingSubsTable, GroupLayout.DEFAULT_SIZE,
+                        FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
+                .addComponent(this.addSpellingSubButton,
+                        GroupLayout.DEFAULT_SIZE, FIELD_PREFERRED_WIDTH,
+                        Short.MAX_VALUE));
         this.spellingLayout.setVerticalGroup(this.spellingLayout
                 .createSequentialGroup()
-                    .addComponent(this.spellingSubsTable.getTableHeader())
-                    .addComponent(this.spellingSubsTable)
-                    .addComponent(this.addSpellingSubButton)
-        );
+                .addComponent(this.spellingSubsTable.getTableHeader())
+                .addComponent(this.spellingSubsTable)
+                .addComponent(this.addSpellingSubButton));
         this.spellingPane.setLayout(this.spellingLayout);
-        this.spellingPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("SPELLING_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.spellingPane, UiLocalizer.print("SpellingSubsTabTip"), tabIndex);
-        this.tabbedPane.setMnemonicAt(tabIndex, KeyStroke.getKeyStroke(UiLocalizer.print("SpellingMnemonics")).getKeyCode());
+        this.spellingPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE,
+                CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE,
+                CONTENT_PANE_BORDER_SIZE));
+        this.tabbedPane.insertTab(UiLocalizer.print("SPELLING_SUBS_TAB_TITLE"),
+                Intended.<Icon> nullReference(), this.spellingPane,
+                UiLocalizer.print("SpellingSubsTabTip"), tabIndex);
+        this.tabbedPane.setMnemonicAt(tabIndex,
+                KeyStroke.getKeyStroke(UiLocalizer.print("SpellingMnemonics"))
+                        .getKeyCode());
         tabIndex++;
-        
+
         this.emoLayout.setHorizontalGroup(this.emoLayout
                 .createParallelGroup(Alignment.LEADING)
-                    .addComponent(this.emoticonsSubsTable.getTableHeader(), GroupLayout.DEFAULT_SIZE,
-                            FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
-                    .addComponent(this.emoticonsSubsTable, GroupLayout.DEFAULT_SIZE,
-                            FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
-                    .addComponent(this.addEmoSubButton,
+                .addComponent(this.emoticonsSubsTable.getTableHeader(),
                         GroupLayout.DEFAULT_SIZE, FIELD_PREFERRED_WIDTH,
                         Short.MAX_VALUE)
-        );
-        this.emoLayout.setVerticalGroup(this.emoLayout
-                .createSequentialGroup()
-                    .addComponent(this.emoticonsSubsTable.getTableHeader())
-                    .addComponent(this.emoticonsSubsTable)
-                    .addComponent(this.addEmoSubButton)
-        );
+                .addComponent(this.emoticonsSubsTable,
+                        GroupLayout.DEFAULT_SIZE, FIELD_PREFERRED_WIDTH,
+                        Short.MAX_VALUE)
+                .addComponent(this.addEmoSubButton, GroupLayout.DEFAULT_SIZE,
+                        FIELD_PREFERRED_WIDTH, Short.MAX_VALUE));
+        this.emoLayout.setVerticalGroup(this.emoLayout.createSequentialGroup()
+                .addComponent(this.emoticonsSubsTable.getTableHeader())
+                .addComponent(this.emoticonsSubsTable)
+                .addComponent(this.addEmoSubButton));
         this.emoPane.setLayout(this.emoLayout);
-        this.emoPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("EMOTICONS_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.emoPane, UiLocalizer.print("EmoSubsTabTip"), tabIndex);
-        this.tabbedPane.setMnemonicAt(tabIndex, KeyStroke.getKeyStroke(UiLocalizer.print("EmoticonsMnemonics")).getKeyCode());
+        this.emoPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE,
+                CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE,
+                CONTENT_PANE_BORDER_SIZE));
+        this.tabbedPane.insertTab(
+                UiLocalizer.print("EMOTICONS_SUBS_TAB_TITLE"),
+                Intended.<Icon> nullReference(), this.emoPane,
+                UiLocalizer.print("EmoSubsTabTip"), tabIndex);
+        this.tabbedPane.setMnemonicAt(tabIndex,
+                KeyStroke.getKeyStroke(UiLocalizer.print("EmoticonsMnemonics"))
+                        .getKeyCode());
         tabIndex++;
-        
+
         this.punctuationLayout.setHorizontalGroup(this.punctuationLayout
                 .createParallelGroup(Alignment.LEADING)
-                    .addComponent(this.innerPunctuationSubsTable.getTableHeader(), GroupLayout.DEFAULT_SIZE,
-                            FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
-                    .addComponent(this.innerPunctuationSubsTable, GroupLayout.DEFAULT_SIZE,
-                            FIELD_PREFERRED_WIDTH, Short.MAX_VALUE)
-                    .addComponent(this.addPunctuationSubButton,
+                .addComponent(this.innerPunctuationSubsTable.getTableHeader(),
                         GroupLayout.DEFAULT_SIZE, FIELD_PREFERRED_WIDTH,
                         Short.MAX_VALUE)
-        );
+                .addComponent(this.innerPunctuationSubsTable,
+                        GroupLayout.DEFAULT_SIZE, FIELD_PREFERRED_WIDTH,
+                        Short.MAX_VALUE)
+                .addComponent(this.addPunctuationSubButton,
+                        GroupLayout.DEFAULT_SIZE, FIELD_PREFERRED_WIDTH,
+                        Short.MAX_VALUE));
         this.punctuationLayout.setVerticalGroup(this.punctuationLayout
                 .createSequentialGroup()
-                    .addComponent(this.innerPunctuationSubsTable.getTableHeader())
-                    .addComponent(this.innerPunctuationSubsTable)
-                    .addComponent(this.addPunctuationSubButton)
-        );
+                .addComponent(this.innerPunctuationSubsTable.getTableHeader())
+                .addComponent(this.innerPunctuationSubsTable)
+                .addComponent(this.addPunctuationSubButton));
         this.punctuationPane.setLayout(this.punctuationLayout);
-        this.punctuationPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        this.tabbedPane.insertTab(UiLocalizer.print("PUNCTUATION_SUBS_TAB_TITLE"), Intended.<Icon>nullReference(), this.punctuationPane, UiLocalizer.print("PunctuationSubsTabTip"), tabIndex);
-        this.tabbedPane.setMnemonicAt(tabIndex, KeyStroke.getKeyStroke(UiLocalizer.print("PunctuationMnemonics")).getKeyCode());
-        
-        this.contentPaneLayout.setHorizontalGroup(
-                contentPaneLayout.createParallelGroup(Alignment.LEADING)
-                    .addComponent(this.tabbedPane)
-                    .addGroup(contentPaneLayout.createSequentialGroup()
-                        .addContainerGap(0, Short.MAX_VALUE)
-                        .addComponent(this.setButton, GroupLayout.PREFERRED_SIZE, SET_BUTTON_PREFERRED_WIDTH, GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(0, Short.MAX_VALUE))
-        );
-        this.contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createParallelGroup(Alignment.LEADING)
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addComponent(this.tabbedPane)
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addComponent(this.setButton, GroupLayout.PREFERRED_SIZE, SET_BUTTON_PREFERRED_HEIGHT, GroupLayout.PREFERRED_SIZE))
-        );
+        this.punctuationPane.setBorder(new EmptyBorder(
+                CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE,
+                CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
+        this.tabbedPane.insertTab(
+                UiLocalizer.print("PUNCTUATION_SUBS_TAB_TITLE"),
+                Intended.<Icon> nullReference(), this.punctuationPane,
+                UiLocalizer.print("PunctuationSubsTabTip"), tabIndex);
+        this.tabbedPane
+                .setMnemonicAt(
+                        tabIndex,
+                        KeyStroke.getKeyStroke(
+                                UiLocalizer.print("PunctuationMnemonics"))
+                                .getKeyCode());
+
+        this.contentPaneLayout.setHorizontalGroup(this.contentPaneLayout
+                .createParallelGroup(Alignment.LEADING)
+                .addComponent(this.tabbedPane)
+                .addGroup(
+                        this.contentPaneLayout
+                                .createSequentialGroup()
+                                .addContainerGap(0, Short.MAX_VALUE)
+                                .addComponent(this.setButton,
+                                        GroupLayout.PREFERRED_SIZE,
+                                        SET_BUTTON_PREFERRED_WIDTH,
+                                        GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(0, Short.MAX_VALUE)));
+        this.contentPaneLayout.setVerticalGroup(this.contentPaneLayout
+                .createParallelGroup(Alignment.LEADING).addGroup(
+                        this.contentPaneLayout
+                                .createSequentialGroup()
+                                .addComponent(this.tabbedPane)
+                                .addPreferredGap(ComponentPlacement.UNRELATED)
+                                .addComponent(this.setButton,
+                                        GroupLayout.PREFERRED_SIZE,
+                                        SET_BUTTON_PREFERRED_HEIGHT,
+                                        GroupLayout.PREFERRED_SIZE)));
         this.contentPane.setLayout(this.contentPaneLayout);
-        this.contentPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE));
-        
-        this.dialog = new JDialog(owner, UiLocalizer.print("LANGUAGE_SETTINGS_TITLE"), ModalityType.APPLICATION_MODAL);
+        this.contentPane.setBorder(new EmptyBorder(CONTENT_PANE_BORDER_SIZE,
+                CONTENT_PANE_BORDER_SIZE, CONTENT_PANE_BORDER_SIZE,
+                CONTENT_PANE_BORDER_SIZE));
+
+        this.dialog =
+                new JDialog(owner,
+                        UiLocalizer.print("LANGUAGE_SETTINGS_TITLE"),
+                        ModalityType.APPLICATION_MODAL);
         this.dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         this.dialog.setContentPane(this.contentPane);
         this.dialog.pack();
     }
 
+    /**
+     * 
+     */
+    public void show() {
+        this.dialog.setLocationRelativeTo(this.dialog.getParent());
+        this.dialog.setVisible(true);
+    }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.LanguageSettingsView#updatedLanguageConfiguration(cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.LanguageSettingsView
+     * #updatedLanguageConfiguration
+     * (cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration)
      */
     @Override
     public void updateLanguageConfiguration(
-            LanguageConfiguration languageConfiguration) {
+            final LanguageConfiguration languageConfiguration) {
         Preconditions.checkNotNull(languageConfiguration);
-        
+
         this.nameTextField.setText(languageConfiguration.getName());
-        this.sentencesDelimTextField.setText(languageConfiguration.getSentenceDelim().toString());
+        this.sentencesDelimTextField.setText(languageConfiguration
+                .getSentenceDelim().toString());
         this.genderSubsTableModel.update(languageConfiguration.getGenderSubs());
         this.personSubsTableModel.update(languageConfiguration.getPersonSubs());
-        this.person2SubsTableModel.update(languageConfiguration.getPerson2Subs());
-        this.abbreviationsSubsTableModel.update(languageConfiguration.getAbbreviationsSubs());
-        this.spellingSubsTableModel.update(languageConfiguration.getSpellingSubs());
-        this.emoticonsSubsTableModel.update(languageConfiguration.getEmoticonsSubs());
-        this.innerPunctuationSubsTableModel.update(languageConfiguration.getInnerPunctuationSubs());
-        
+        this.person2SubsTableModel.update(languageConfiguration
+                .getPerson2Subs());
+        this.abbreviationsSubsTableModel.update(languageConfiguration
+                .getAbbreviationsSubs());
+        this.spellingSubsTableModel.update(languageConfiguration
+                .getSpellingSubs());
+        this.emoticonsSubsTableModel.update(languageConfiguration
+                .getEmoticonsSubs());
+        this.innerPunctuationSubsTableModel.update(languageConfiguration
+                .getInnerPunctuationSubs());
+
         updateSize();
     }
 
@@ -568,12 +741,4 @@ public final class LanguageSettingsDialog implements LanguageSettingsView {
         this.contentPane.revalidate();
         this.dialog.pack();
     }
-    
-    /**
-     * 
-     */
-    public void show() {
-        this.dialog.setLocationRelativeTo(this.dialog.getParent());
-        this.dialog.setVisible(true);
-    }    
 }

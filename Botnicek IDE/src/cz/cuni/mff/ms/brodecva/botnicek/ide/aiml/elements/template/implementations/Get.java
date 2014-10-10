@@ -22,6 +22,7 @@ import java.util.Set;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
+
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.AtomicElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Attribute;
@@ -29,48 +30,58 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.AttributeImplementation;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 
 /**
- * Vrátí hodnotu uloženou v predikátu, v případě, že není predikát toho jména definován, vrací prázdný řetězec.
+ * Vrátí hodnotu uloženou v predikátu, v případě, že není predikát toho jména
+ * definován, vrací prázdný řetězec.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-get">http://www.alicebot.org/TR/2011/#section-get</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-get">http://www.alicebot.org/TR/2011/#section-get</a>
  */
 public final class Get extends AbstractProperElement implements AtomicElement {
     private static final String NAME = "get";
 
     private static final String ATT_NAME = "name";
-    
-    private final NormalWord name;
-    
+
     /**
      * Vytvoří prvek.
      * 
-     * @param name název predikátu, z něhož bude odečtena uložená hodnota
+     * @param name
+     *            název predikátu, z něhož bude odečtena uložená hodnota
      * @return prvek
      */
     public static Get create(final NormalWord name) {
         return new Get(name);
     }
-    
+
+    private final NormalWord name;
+
     private Get(final NormalWord name) {
         Preconditions.checkNotNull(name);
-        
+
         this.name = name;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getAttributes()
+     */
+    @Override
+    public Set<Attribute> getAttributes() {
+        return ImmutableSet.<Attribute> of(AttributeImplementation.create(
+                ATT_NAME, this.name.getText()));
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {
         return NAME;
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getAttributes()
-     */
-    @Override
-    public Set<Attribute> getAttributes() {
-        return ImmutableSet.<Attribute>of(AttributeImplementation.create(ATT_NAME, name.getText()));
     }
 }

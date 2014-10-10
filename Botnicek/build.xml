@@ -6,6 +6,7 @@
               as the first entry and export the buildfile again. -->
 <project basedir="." default="build" name="Botnicek">
     <property environment="env"/>
+    <property name="Botnicek IDE.location" value="../Botnicek IDE"/>
     <property name="workspace_loc:Botnicek" value="."/>
     <property name="junit.output.dir" value="junit"/>
     <property name="debuglevel" value="source,lines,vars"/>
@@ -29,25 +30,29 @@
         <mkdir dir="bin"/>
         <copy includeemptydirs="false" todir="bin">
             <fileset dir="locale">
-                <exclude name="**/*.launch"/>
+                <exclude name="**/*.ucls"/>
+                <exclude name="**/*.useq"/>
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
         <copy includeemptydirs="false" todir="bin">
             <fileset dir="src">
-                <exclude name="**/*.launch"/>
+                <exclude name="**/*.ucls"/>
+                <exclude name="**/*.useq"/>
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
         <copy includeemptydirs="false" todir="bin">
             <fileset dir="tests">
-                <exclude name="**/*.launch"/>
+                <exclude name="**/*.ucls"/>
+                <exclude name="**/*.useq"/>
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
         <copy includeemptydirs="false" todir="bin">
             <fileset dir="config">
-                <exclude name="**/*.launch"/>
+                <exclude name="**/*.ucls"/>
+                <exclude name="**/*.useq"/>
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
@@ -77,7 +82,26 @@
             <classpath refid="Botnicek.classpath"/>
         </javac>
     </target>
-    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects">
+        <ant antfile="build.xml" dir="${Botnicek IDE.location}" inheritAll="false" target="clean"/>
+        <ant antfile="build.xml" dir="${Botnicek IDE.location}" inheritAll="false" target="build"/>
+    </target>
+    <target name="AIMLStructuralMatcherTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.library.utils.AIMLStructuralMatcherTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek.classpath"/>
+        </junit>
+    </target>
+    <target name="AIMLTemplateParserForwardProcessingTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.library.parser.AIMLTemplateParserForwardProcessingTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek.classpath"/>
+        </junit>
+    </target>
     <target name="all-tests">
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
@@ -111,14 +135,14 @@
             <classpath refid="Botnicek.classpath"/>
         </java>
     </target>
-    <target name="gui-xhtml">
-        <java classname="cz.cuni.mff.ms.brodecva.botnicek.library.demo.alice.MainXhtml" failonerror="true" fork="yes">
-            <classpath refid="Botnicek.classpath"/>
-        </java>
-    </target>
     <target name="gui-xhtml-debug">
         <java classname="cz.cuni.mff.ms.brodecva.botnicek.library.demo.alice.MainXhtml" failonerror="true" fork="yes">
             <jvmarg line="-Djava.util.logging.config.file=&quot;${workspace_loc:Botnicek}/config/cz/cuni/mff/ms/brodecva/botnicek/library/logging/debug.properties&quot;"/>
+            <classpath refid="Botnicek.classpath"/>
+        </java>
+    </target>
+    <target name="gui-xhtml">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.library.demo.alice.MainXhtml" failonerror="true" fork="yes">
             <classpath refid="Botnicek.classpath"/>
         </java>
     </target>

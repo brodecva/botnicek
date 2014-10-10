@@ -28,11 +28,13 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.api.ConversationConfiguration;
  * @author Václav Brodec
  * @version 1.0
  */
-public interface ConversationSettingsController extends Controller<ConversationSettingsView> {
+public interface ConversationSettingsController extends
+        Controller<ConversationSettingsView> {
     /**
      * Nastaví spravované běhové prostředí.
      * 
-     * @param configuration nastavení
+     * @param configuration
+     *            nastavení
      */
     void set(ConversationConfiguration configuration);
 }

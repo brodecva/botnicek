@@ -34,74 +34,85 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller;
  */
 public interface ProjectController extends Controller<ProjectView> {
     /**
-     * Vytvoří nový projekt.
-     * 
-     * @param name název projektu
-     */
-    void createNew(String name);
-    
-    /**
-     * Uloží projekt.
-     * 
-     * @param projectPath cesta k úložnému souboru
-     * @throws IOException pokud dojde k chybě při zápisu
-     */
-    void save(Path projectPath) throws IOException;
-    
-    /**
-     * Otevře projekt.
-     * 
-     * @param projectPath cesta k projektovému souboru
-     * @throws FileNotFoundException pokud zadaný soubor nelze nalézt
-     * @throws ClassNotFoundException pokud je zadaný soubor nekompatibilní
-     * @throws IOException pokud dojde k chybě při načítání
-     */
-    void open(Path projectPath) throws FileNotFoundException, ClassNotFoundException, IOException;
-    
-    /**
      * Zavře projekt.
      */
     void close();
-    
+
+    /**
+     * Vytvoří nový projekt.
+     * 
+     * @param name
+     *            název projektu
+     */
+    void createNew(String name);
+
     /**
      * Vyexportuje interpretovatelné zdrojové kódy bota.
      * 
-     * @param location adresář pro export
-     * @throws IOException pokud dojde k chybě při zápisu exportovaných souborů
+     * @param location
+     *            adresář pro export
+     * @throws IOException
+     *             pokud dojde k chybě při zápisu exportovaných souborů
      */
     void export(Path location) throws IOException;
-    
-    /**
-     * Otevře nastavení.
-     */
-    void openSettings();
-    
-    /**
-     * Otevře nastavení bota.
-     */
-    void openBotSettings();
-    
-    /**
-     * Otevře nastavení jazyka.
-     */
-    void openLanguageSettings();
-    
-    /**
-     * Otevře nastavení konverzace.
-     */
-    void openConversationSettings();
-    
-    /**
-     * Spustí testovací konverzaci.
-     * 
-     * @throws RunException pokud dojde k chybě při inicializaci konverzace
-     */
-    void test() throws RunException;
-    
+
     /**
      * Indikuje, zda-li řadič právě obstarává otevřený projekt.
      * 
      * @return zda-li je otevřen projekt
      */
     boolean isOpen();
+
+    /**
+     * Otevře projekt.
+     * 
+     * @param projectPath
+     *            cesta k projektovému souboru
+     * @throws FileNotFoundException
+     *             pokud zadaný soubor nelze nalézt
+     * @throws ClassNotFoundException
+     *             pokud je zadaný soubor nekompatibilní
+     * @throws IOException
+     *             pokud dojde k chybě při načítání
+     */
+    void open(Path projectPath) throws FileNotFoundException,
+            ClassNotFoundException, IOException;
+
+    /**
+     * Otevře nastavení bota.
+     */
+    void openBotSettings();
+
+    /**
+     * Otevře nastavení konverzace.
+     */
+    void openConversationSettings();
+
+    /**
+     * Otevře nastavení jazyka.
+     */
+    void openLanguageSettings();
+
+    /**
+     * Otevře nastavení.
+     */
+    void openSettings();
+
+    /**
+     * Uloží projekt.
+     * 
+     * @param projectPath
+     *            cesta k úložnému souboru
+     * @throws IOException
+     *             pokud dojde k chybě při zápisu
+     */
+    void save(Path projectPath) throws IOException;
+
+    /**
+     * Spustí testovací konverzaci.
+     * 
+     * @throws RunException
+     *             pokud dojde k chybě při inicializaci konverzace
+     */
+    void test() throws RunException;
 }

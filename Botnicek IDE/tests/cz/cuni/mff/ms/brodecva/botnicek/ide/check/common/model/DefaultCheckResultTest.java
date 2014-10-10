@@ -18,8 +18,9 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 
@@ -43,11 +44,12 @@ public class DefaultCheckResultTest {
 
     private Object sourceDummy = Intended.nullReference();
     private Object subjectDummy = Intended.nullReference();
-    
+
     /**
      * Sestaví testovaný objekt.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @Before
     public void setUp() throws Exception {
@@ -58,7 +60,8 @@ public class DefaultCheckResultTest {
     /**
      * Uklidí testovaný objekt.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @After
     public void tearDown() throws Exception {
@@ -67,157 +70,236 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#hashCode()}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#hashCode()}
+     * .
      */
     @Test
     public void testEqualsAndHashCode() {
-        EqualsVerifier.forClass(DefaultCheckResult.class).suppress(Warning.NULL_FIELDS);
+        EqualsVerifier.forClass(DefaultCheckResult.class).suppress(
+                Warning.NULL_FIELDS);
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#succeed(java.lang.Object, java.lang.Object)}.
-     */
-    @Test
-    public void testSucceedExpectValid() {
-        assertTrue(DefaultCheckResult.succeed(sourceDummy, subjectDummy).isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#succeed(java.lang.Object, java.lang.Object)}.
-     */
-    @Test
-    public void testSucceedExpectErrorLineNumberEqualsToOkNumber() {
-        assertEquals(CheckResult.OK_NUMBER, DefaultCheckResult.succeed(sourceDummy, subjectDummy).getErrorLineNumber());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#succeed(java.lang.Object, java.lang.Object)}.
-     */
-    @Test
-    public void testSucceedExpectErrorColumnsNumberEqualsToOkNumber() {
-        assertEquals(CheckResult.OK_NUMBER, DefaultCheckResult.succeed(sourceDummy, subjectDummy).getErrorColumnNumber());
-    }
-
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}.
-     */
-    @Test
-    public void testFailMultilineExpectInvalid() {
-        assertFalse(DefaultCheckResult.fail(0, 0, "FailMessage", sourceDummy, subjectDummy).isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}.
-     */
-    @Test
-    public void testFailMultilineExpectErrorLineNumberEqualsToGiven() {
-        final int errorLineNumber = 19;
-        
-        assertEquals(errorLineNumber, DefaultCheckResult.fail(errorLineNumber, 77, "FailMessage", sourceDummy, subjectDummy).getErrorLineNumber());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}.
-     */
-    @Test
-    public void testFailMultilineExpectErrorColumnNumberEqualsToGiven() {
-        final int errorColumnNumber = 77;
-        
-        assertEquals(errorColumnNumber, DefaultCheckResult.fail(19, errorColumnNumber, "FailMessage", sourceDummy, subjectDummy).getErrorColumnNumber());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}.
-     */
-    @Test
-    public void testFailMultilineExpectMessageEqualsToGiven() {
-        final String message = "FailMessage";
-        
-        assertEquals(message, DefaultCheckResult.fail(19, 77, message, sourceDummy, subjectDummy).getMessage());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}.
-     */
-    @Test
-    public void testSucceedExpectSourceEqualsToGiven() {
-        assertEquals(sourceDummy, DefaultCheckResult.succeed(sourceDummy, subjectDummy).getSource());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}.
-     */
-    @Test
-    public void testSucceedExpectSubjectEqualsToGiven() {
-        assertEquals(subjectDummy, DefaultCheckResult.succeed(sourceDummy, subjectDummy).getSubject());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}.
-     */
-    @Test
-    public void testFailMultilineExpectSourceEqualsToGiven() {
-        assertEquals(sourceDummy, DefaultCheckResult.fail(19, 77, "FailMessage", sourceDummy, subjectDummy).getSource());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}.
-     */
-    @Test
-    public void testFailMultilineExpectSubjectEqualsToGiven() {
-        assertEquals(subjectDummy, DefaultCheckResult.fail(19, 77, "FailMessage", sourceDummy, subjectDummy).getSubject());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}.
-     */
-    @Test
-    public void testFailExpectSourceEqualsToGiven() {
-        assertEquals(sourceDummy, DefaultCheckResult.fail(19, "FailMessage", sourceDummy, subjectDummy).getSource());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}.
-     */
-    @Test
-    public void testFailExpectSubjectEqualsToGiven() {
-        assertEquals(subjectDummy, DefaultCheckResult.fail(19, "FailMessage", sourceDummy, subjectDummy).getSubject());
-    }
-
-
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}.
-     */
-    @Test
-    public void testFailExpectInvalid() {
-        assertFalse(DefaultCheckResult.fail(0, "FailMessage", sourceDummy, subjectDummy).isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * .
      */
     @Test
     public void testFailExpectErrorColumnNumberEqualsToGiven() {
         final int errorColumnNumber = 77;
-        
-        assertEquals(errorColumnNumber, DefaultCheckResult.fail(errorColumnNumber, "FailMessage", sourceDummy, subjectDummy).getErrorColumnNumber());
+
+        assertEquals(
+                errorColumnNumber,
+                DefaultCheckResult.fail(errorColumnNumber, "FailMessage",
+                        this.sourceDummy, this.subjectDummy)
+                        .getErrorColumnNumber());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * .
+     */
+    @Test
+    public void testFailExpectErrorLineNumberEqualsToNoRowDefaultNumber() {
+        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER, DefaultCheckResult
+                .fail(19, "FailMessage", this.sourceDummy, this.subjectDummy)
+                .getErrorLineNumber());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * .
+     */
+    @Test
+    public void testFailExpectInvalid() {
+        assertFalse(DefaultCheckResult.fail(0, "FailMessage", this.sourceDummy,
+                this.subjectDummy).isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * .
      */
     @Test
     public void testFailExpectMessageEqualsToGiven() {
         final String message = "FailMessage";
-        
-        assertEquals(message, DefaultCheckResult.fail(19, message, sourceDummy, subjectDummy).getMessage());
+
+        assertEquals(
+                message,
+                DefaultCheckResult.fail(19, message, this.sourceDummy,
+                        this.subjectDummy).getMessage());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * .
      */
     @Test
-    public void testFailExpectErrorLineNumberEqualsToNoRowDefaultNumber() {
-        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER, DefaultCheckResult.fail(19, "FailMessage", sourceDummy, subjectDummy).getErrorLineNumber());
+    public void testFailExpectSourceEqualsToGiven() {
+        assertEquals(
+                this.sourceDummy,
+                DefaultCheckResult.fail(19, "FailMessage", this.sourceDummy,
+                        this.subjectDummy).getSource());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * .
+     */
+    @Test
+    public void testFailExpectSubjectEqualsToGiven() {
+        assertEquals(
+                this.subjectDummy,
+                DefaultCheckResult.fail(19, "FailMessage", this.sourceDummy,
+                        this.subjectDummy).getSubject());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * .
+     */
+    @Test
+    public void testFailMultilineExpectErrorColumnNumberEqualsToGiven() {
+        final int errorColumnNumber = 77;
+
+        assertEquals(
+                errorColumnNumber,
+                DefaultCheckResult.fail(19, errorColumnNumber, "FailMessage",
+                        this.sourceDummy, this.subjectDummy)
+                        .getErrorColumnNumber());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * .
+     */
+    @Test
+    public void testFailMultilineExpectErrorLineNumberEqualsToGiven() {
+        final int errorLineNumber = 19;
+
+        assertEquals(
+                errorLineNumber,
+                DefaultCheckResult.fail(errorLineNumber, 77, "FailMessage",
+                        this.sourceDummy, this.subjectDummy)
+                        .getErrorLineNumber());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * .
+     */
+    @Test
+    public void testFailMultilineExpectInvalid() {
+        assertFalse(DefaultCheckResult.fail(0, 0, "FailMessage",
+                this.sourceDummy, this.subjectDummy).isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * .
+     */
+    @Test
+    public void testFailMultilineExpectMessageEqualsToGiven() {
+        final String message = "FailMessage";
+
+        assertEquals(
+                message,
+                DefaultCheckResult.fail(19, 77, message, this.sourceDummy,
+                        this.subjectDummy).getMessage());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * .
+     */
+    @Test
+    public void testFailMultilineExpectSourceEqualsToGiven() {
+        assertEquals(
+                this.sourceDummy,
+                DefaultCheckResult.fail(19, 77, "FailMessage",
+                        this.sourceDummy, this.subjectDummy).getSource());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * .
+     */
+    @Test
+    public void testFailMultilineExpectSubjectEqualsToGiven() {
+        assertEquals(
+                this.subjectDummy,
+                DefaultCheckResult.fail(19, 77, "FailMessage",
+                        this.sourceDummy, this.subjectDummy).getSubject());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#succeed(java.lang.Object, java.lang.Object)}
+     * .
+     */
+    @Test
+    public void testSucceedExpectErrorColumnsNumberEqualsToOkNumber() {
+        assertEquals(CheckResult.OK_NUMBER,
+                DefaultCheckResult.succeed(this.sourceDummy, this.subjectDummy)
+                        .getErrorColumnNumber());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#succeed(java.lang.Object, java.lang.Object)}
+     * .
+     */
+    @Test
+    public void testSucceedExpectErrorLineNumberEqualsToOkNumber() {
+        assertEquals(CheckResult.OK_NUMBER,
+                DefaultCheckResult.succeed(this.sourceDummy, this.subjectDummy)
+                        .getErrorLineNumber());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * .
+     */
+    @Test
+    public void testSucceedExpectSourceEqualsToGiven() {
+        assertEquals(this.sourceDummy,
+                DefaultCheckResult.succeed(this.sourceDummy, this.subjectDummy)
+                        .getSource());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * .
+     */
+    @Test
+    public void testSucceedExpectSubjectEqualsToGiven() {
+        assertEquals(this.subjectDummy,
+                DefaultCheckResult.succeed(this.sourceDummy, this.subjectDummy)
+                        .getSubject());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#succeed(java.lang.Object, java.lang.Object)}
+     * .
+     */
+    @Test
+    public void testSucceedExpectValid() {
+        assertTrue(DefaultCheckResult.succeed(this.sourceDummy,
+                this.subjectDummy).isValid());
     }
 }

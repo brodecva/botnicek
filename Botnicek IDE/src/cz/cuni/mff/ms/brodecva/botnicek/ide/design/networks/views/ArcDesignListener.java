@@ -28,16 +28,22 @@ import javax.swing.event.MouseInputListener;
  * @author Václav Brodec
  * @version 1.0
  */
-public interface ArcDesignListener extends MouseInputListener {
+public interface ArcDesignListener extends MouseInputListener, Editable {
 
     /**
-     * <p>Poklepáním na uzel zahájí plánování hrany. Dalším poklepem na jiný uzel pak vyvolá podnět k vytvoření hrany. Poklep mimo uzly konstrukci přeruší.</p>
+     * <p>
+     * Poklepáním na uzel zahájí plánování hrany. Dalším poklepem na jiný uzel
+     * pak vyvolá podnět k vytvoření hrany. Poklep mimo uzly konstrukci přeruší.
+     * </p>
      */
     @Override
     void mouseClicked(final MouseEvent e);
 
     /**
-     * <p>Pohybem je aktualizována nakreslená spojnice výchozího uzlu a bodu prostoru s grafem pod ukazatelem.</p>
+     * <p>
+     * Pohybem je aktualizována nakreslená spojnice výchozího uzlu a bodu
+     * prostoru s grafem pod ukazatelem.
+     * </p>
      */
     @Override
     void mouseMoved(MouseEvent e);

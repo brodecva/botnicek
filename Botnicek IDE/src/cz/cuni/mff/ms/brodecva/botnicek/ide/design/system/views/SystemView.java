@@ -28,51 +28,57 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
  * @version 1.0
  */
 public interface SystemView {
-    
-    /**
-     * Nastaví užitý systém.
-     * 
-     * @param system systém
-     */
-    void systemSet(System system);
-    
-    /**
-     * Aktualizuje zobrazený název systému.
-     * 
-     * @param system systém
-     */
-    void systemNameChanged(System system);
-    
-    /**
-     * Zobrazí přidanou síť.
-     * 
-     * @param added nová síť
-     */
-    void networkAdded(Network added);
-    
-    /**
-     * Aktualizuje zobrazení tak, aby neobsahovalo odstraněnou síť.
-     * 
-     * @param network síť
-     */
-    void networkRemoved(Network network);
-    
-    /**
-     * Aktualizuje zobrazený název sítě.
-     * 
-     * @param network síť
-     */
-    void networkRenamed(Network network);
-    
-    /**
-     * Vybere pro uživatele danou síť.
-     * 
-     * @param network síť
-     */
-    void networkSelected(Network network);
-    
+
     /**
      * Signalizuje uzavření systému.s
      */
     void closed();
+
+    /**
+     * Zobrazí přidanou síť.
+     * 
+     * @param added
+     *            nová síť
+     */
+    void networkAdded(Network added);
+
+    /**
+     * Aktualizuje zobrazení tak, aby neobsahovalo odstraněnou síť.
+     * 
+     * @param network
+     *            síť
+     */
+    void networkRemoved(Network network);
+
+    /**
+     * Aktualizuje zobrazený název sítě.
+     * 
+     * @param network
+     *            síť
+     */
+    void networkRenamed(Network network);
+
+    /**
+     * Vybere pro uživatele danou síť.
+     * 
+     * @param network
+     *            síť
+     */
+    void networkSelected(Network network);
+
+    /**
+     * Aktualizuje zobrazený název systému.
+     * 
+     * @param system
+     *            systém
+     */
+    void systemNameChanged(System system);
+
+    /**
+     * Nastaví užitý systém.
+     * 
+     * @param system
+     *            systém
+     */
+    void systemSet(System system);
 }

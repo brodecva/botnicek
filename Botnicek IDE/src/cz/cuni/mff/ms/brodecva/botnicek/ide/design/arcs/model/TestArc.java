@@ -21,7 +21,8 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
 
 /**
- * Hrana, která obsahuje hodnotu ve formě prostého vzoru jazyka AIML, které musí specifikovaný test dosáhnout.
+ * Hrana, která obsahuje hodnotu ve formě prostého vzoru jazyka AIML, které musí
+ * specifikovaný test dosáhnout.
  * 
  * @author Václav Brodec
  * @version 1.0

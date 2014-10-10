@@ -24,44 +24,50 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 
 /**
- * Model stromu systému obsahuje jen dvě úrovně - samotný kořen jakožto systém a jeho přímé potomky, sítě. 
+ * Model stromu systému obsahuje jen dvě úrovně - samotný kořen jakožto systém a
+ * jeho přímé potomky, sítě.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface SystemTreeModel extends TreeModel {
     /**
-     * Nastaví užitý systém.
-     * 
-     * @param system systém
-     */
-    void systemSet(System system);
-    
-    /**
-     * Aktualizuje zobrazený název systému.
-     * 
-     * @param system systém
-     */
-    void systemNameChanged(System system);
-    
-    /**
      * Zobrazí přidanou síť.
      * 
-     * @param added nová síť
+     * @param added
+     *            nová síť
      */
     void networkAdded(Network added);
-    
+
     /**
      * Aktualizuje zobrazení tak, aby neobsahovalo odstraněnou síť.
      * 
-     * @param network síť
+     * @param network
+     *            síť
      */
     void networkRemoved(Network network);
-    
+
     /**
      * Aktualizuje zobrazený název sítě.
      * 
-     * @param network síť
+     * @param network
+     *            síť
      */
     void networkRenamed(Network network);
+
+    /**
+     * Aktualizuje zobrazený název systému.
+     * 
+     * @param system
+     *            systém
+     */
+    void systemNameChanged(System system);
+
+    /**
+     * Nastaví užitý systém.
+     * 
+     * @param system
+     *            systém
+     */
+    void systemSet(System system);
 }

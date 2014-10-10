@@ -38,45 +38,28 @@ public class Codes {
      * Interní implementace kódu.
      */
     private static final class CodeImplementation implements Code, Serializable {
-        
+
         private static final long serialVersionUID = 1L;
-        
-        private final String text;
-        
+
         public static CodeImplementation create(final String text) {
             return new CodeImplementation(text);
         }
-        
+
+        private final String text;
+
         private CodeImplementation(final String text) {
             Preconditions.checkNotNull(text);
-            
+
             this.text = text;
         }
 
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.Code#getText()
-         */
-        @Override
-        public String getText() {
-            return this.text;
-        }
-
-        /* (non-Javadoc)
-         * @see java.lang.Object#hashCode()
-         */
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + this.text.hashCode();
-            return result;
-        }
-
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.lang.Object#equals(java.lang.Object)
          */
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             if (this == obj) {
                 return true;
             }
@@ -92,11 +75,36 @@ public class Codes {
             }
             return true;
         }
-        
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.Code#getText
+         * ()
+         */
+        @Override
+        public String getText() {
+            return this.text;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.lang.Object#hashCode()
+         */
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + this.text.hashCode();
+            return result;
+        }
+
         private void readObject(final ObjectInputStream objectInputStream)
                 throws ClassNotFoundException, IOException {
             objectInputStream.defaultReadObject();
-            
+
             Preconditions.checkNotNull(this.text);
         }
 
@@ -105,13 +113,13 @@ public class Codes {
             objectOutputStream.defaultWriteObject();
         }
     }
-    
+
     /**
      * Vytvoří prázdný kód.
      * 
      * @return žádný kód
      */
     public static Code createEmpty() {
-        return CodeImplementation.create(""); 
+        return CodeImplementation.create("");
     }
 }

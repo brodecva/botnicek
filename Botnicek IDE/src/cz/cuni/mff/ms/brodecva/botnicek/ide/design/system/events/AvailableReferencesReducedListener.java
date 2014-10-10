@@ -33,7 +33,8 @@ public interface AvailableReferencesReducedListener {
     /**
      * Reaguje na zmenšení.
      * 
-     * @param removedReferences odstraněné uzly
+     * @param removedReferences
+     *            odstraněné uzly
      */
     void referencesReduced(Set<EnterNode> removedReferences);
 

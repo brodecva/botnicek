@@ -29,49 +29,62 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
  * @version 1.0
  */
 public final class DefaultNodeSwitch implements NodeSwitch {
-    private final Node from;
-    private final Node to;
-    
     /**
      * Vytvoří záznam o náhradě.
      * 
-     * @param from původní uzel
-     * @param to nová uzel
+     * @param from
+     *            původní uzel
+     * @param to
+     *            nová uzel
      * @return záznam o náhradě
      */
     public static DefaultNodeSwitch of(final Node from, final Node to) {
         return new DefaultNodeSwitch(from, to);
     }
-        
+
+    private final Node from;
+
+    private final Node to;
+
     private DefaultNodeSwitch(final Node from, final Node to) {
         Preconditions.checkNotNull(from);
         Preconditions.checkNotNull(to);
-        
+
         this.from = from;
         this.to = to;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NodeSwitch#getFrom()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NodeSwitch#getFrom
+     * ()
      */
     @Override
     public Node getFrom() {
-        return from;
+        return this.from;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NodeSwitch#getTo()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NodeSwitch#getTo
+     * ()
      */
     @Override
     public Node getTo() {
-        return to;
+        return this.to;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "NodeSwitch [from=" + from + ", to=" + to + "]";
+        return "NodeSwitch [from=" + this.from + ", to=" + this.to + "]";
     }
 }

@@ -27,24 +27,27 @@ import com.google.common.io.Files;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
 
 /**
- * Filtr projektových souborů. Při aplikaci dovolí v souborovém dialogu zobrazit pouze soubory s odpovídající koncovkou.
+ * Filtr projektových souborů. Při aplikaci dovolí v souborovém dialogu zobrazit
+ * pouze soubory s odpovídající koncovkou.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 final class ProjectFileFilter extends FileFilter {
-    
+
     /**
      * Koncovka projektových souborů botníčku.
      */
     public final static String PROJECT_FILE_EXTENSION = "btk";
-    
+
     /**
      * Oddělovač koncovky souboru.
      */
     public static final String EXTENSION_SEPARATOR = ".";
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
      */
     @Override
@@ -57,11 +60,13 @@ final class ProjectFileFilter extends FileFilter {
         if (extension.isEmpty()) {
             return false;
         }
-        
+
         return extension.equals(PROJECT_FILE_EXTENSION);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.swing.filechooser.FileFilter#getDescription()
      */
     @Override

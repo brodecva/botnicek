@@ -18,7 +18,9 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
 import java.util.Map;
@@ -42,7 +44,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.platform.XML;
 import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.IntegrationTest;
 
 /**
- * Testuje výchozí implementaci validátoru složeného vzoru jazyka AIML v případě, že využívá výchozí validátor kódu.
+ * Testuje výchozí implementaci validátoru složeného vzoru jazyka AIML v
+ * případě, že využívá výchozí validátor kódu.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -54,48 +57,258 @@ public class DefaultMixedPatternCheckerTest {
 
     private static final String AIML_PREFIX = "aiml";
     private static final String SCHEMA_PREFIX = "customschemans";
-    
-    private DefaultMixedPatternChecker defaultPrefixedTested = Intended.nullReference();
-    private DefaultMixedPatternChecker customPrefixedTested = Intended.nullReference();
+
+    private DefaultMixedPatternChecker defaultPrefixedTested = Intended
+            .nullReference();
+    private DefaultMixedPatternChecker customPrefixedTested = Intended
+            .nullReference();
 
     /**
      * Vytvoří testované varianty.
      * 
-     * @throws java.lang.Exception pokud dojde  vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde vyhození výjimky
      */
     @Before
     public void setUp() throws Exception {
         final RuntimeSettings runtimeSettings = RuntimeSettings.getDefault();
-        final CodeChecker unprefixedAimlCodeChecker = DefaultCodeChecker.create(runtimeSettings.getBotConfiguration(), runtimeSettings.getLanguageConfiguration(), Settings.getDefault().getNamespacesToPrefixes());
-        
-        this.defaultPrefixedTested = DefaultMixedPatternChecker.create(unprefixedAimlCodeChecker);
+        final CodeChecker unprefixedAimlCodeChecker =
+                DefaultCodeChecker.create(
+                        runtimeSettings.getBotConfiguration(), runtimeSettings
+                                .getLanguageConfiguration(), Settings
+                                .getDefault().getNamespacesToPrefixes());
 
-        final Map<URI, String> customNamespacePrefixes = ImmutableMap.of(URI.create(AIML.NAMESPACE_URI.getValue()), AIML_PREFIX, URI.create(XML.SCHEMA_NAMESPACE_URI.getValue()), SCHEMA_PREFIX);
-        final CodeChecker prefixedAimlCodeChecker = DefaultCodeChecker.create(runtimeSettings.getBotConfiguration(), runtimeSettings.getLanguageConfiguration(), customNamespacePrefixes);
-        this.customPrefixedTested = DefaultMixedPatternChecker.create(prefixedAimlCodeChecker);
+        this.defaultPrefixedTested =
+                DefaultMixedPatternChecker.create(unprefixedAimlCodeChecker);
+
+        final Map<URI, String> customNamespacePrefixes =
+                ImmutableMap.of(URI.create(AIML.NAMESPACE_URI.getValue()),
+                        AIML_PREFIX,
+                        URI.create(XML.SCHEMA_NAMESPACE_URI.getValue()),
+                        SCHEMA_PREFIX);
+        final CodeChecker prefixedAimlCodeChecker =
+                DefaultCodeChecker.create(
+                        runtimeSettings.getBotConfiguration(),
+                        runtimeSettings.getLanguageConfiguration(),
+                        customNamespacePrefixes);
+        this.customPrefixedTested =
+                DefaultMixedPatternChecker.create(prefixedAimlCodeChecker);
     }
 
     /**
      * Uklidí testované varianty.
      * 
-     * @throws java.lang.Exception pokud dojde  vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde vyhození výjimky
      */
     @After
     public void tearDown() throws Exception {
-        defaultPrefixedTested = Intended.nullReference();
-        customPrefixedTested = Intended.nullReference();
+        this.defaultPrefixedTested = Intended.nullReference();
+        this.customPrefixedTested = Intended.nullReference();
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenAdditionalOtherThanNameAttributesExpectInvalid() {
+        assertFalse(this.customPrefixedTested.check(
+                "ONE <aiml:bot name=\"DFD\" other=\"blabla\"/> THREE *")
+                .isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void
+            testCheckWhenAttributeNameInAnotherNamespaceThanBotExpectInvalid() {
+        assertFalse(this.customPrefixedTested.check(
+                "ONE <aiml:bot somenamespace:name=\"DFD\"/> THREE").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void
+            testCheckWhenBadTagSyntaxExpectColumnPositionInvalidSequenceStart() {
+        final String input = "ONE <bot \"DFD\"> THREE";
+
+        final CheckResult result = this.defaultPrefixedTested.check(input);
+
+        final int tagStartIndex = CharMatcher.is('<').indexIn(input);
+
+        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER,
+                result.getErrorLineNumber());
+        assertEquals(tagStartIndex + 1, result.getErrorColumnNumber());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenBadTagSyntaxExpectInvalid() {
+        assertFalse(this.defaultPrefixedTested.check("ONE <bot \"DFD\"> THREE")
+                .isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenEmptyPatternExpectColumnPositionZero() {
+        final CheckResult result = this.defaultPrefixedTested.check("");
+
+        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER,
+                result.getErrorLineNumber());
+        assertEquals(0, result.getErrorColumnNumber());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenEmptyPatternExpectInvalid() {
+        assertFalse(this.defaultPrefixedTested.check("").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenLiteralMixedPatternOneBotTagExpectValid() {
+        assertTrue(this.defaultPrefixedTested.check(
+                "ONE <bot name=\"KAREL\"/> TWO").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public
+            void
+            testCheckWhenLiteralMixedPatternOneBotTagWithAdditionalSpacingExpectValid() {
+        assertTrue(this.defaultPrefixedTested.check(
+                "ONE <bot   name =  \"KAREL\" /> TWO").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenLiteralMixedPatternWithPrefixedBotTagExpectValid() {
+        assertTrue(this.customPrefixedTested.check(
+                "ONE <aiml:bot name=\"KAREL\"/> TWO").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
      */
     @Test
     public void testCheckWhenLiteralSimplePatternExpectValid() {
         assertTrue(this.defaultPrefixedTested.check("ONE TWO THREE").isValid());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenLongTagFormatExpectValid() {
+        assertTrue(this.defaultPrefixedTested.check(
+                "ONE <bot name=\"DFD\"></bot> THREE").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenMissingNameAttributeExpectInvalid() {
+        assertFalse(this.defaultPrefixedTested.check(
+                "ONE <bot notname=\"DFD\"/> THREE").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public
+            void
+            testCheckWhenMixedPatternWithPrefixedBotTagAndWildcardsExpectValid() {
+        assertTrue(this.customPrefixedTested.check(
+                "_ ONE <aiml:bot name=\"KAREL\"/> TWO * _").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public
+            void
+            testCheckWhenNonnormalWordsExpectColumnsPositionFirstNonnormalOccurence() {
+        final String input = "One Two";
+        final int firstNonnormalIndex =
+                CharMatcher.JAVA_LOWER_CASE.indexIn(input);
+
+        final CheckResult result = this.defaultPrefixedTested.check(input);
+
+        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER,
+                result.getErrorLineNumber());
+        assertEquals(firstNonnormalIndex + 1, result.getErrorColumnNumber());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenNonnormalWordsExpectInvalid() {
+        assertFalse(this.defaultPrefixedTested.check("One Two").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testCheckWhenSimplePatternWithOnlyWildcardsExpectValid() {
+        assertTrue(this.defaultPrefixedTested.check("_ * _ * *").isValid());
+    }
+
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
      */
     @Test
     public void testCheckWhenSimplePatternWithStarWildcardExpectValid() {
@@ -103,186 +316,71 @@ public class DefaultMixedPatternCheckerTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
      */
     @Test
     public void testCheckWhenSimplePatternWithUnderscoreWildcardExpectValid() {
         assertTrue(this.defaultPrefixedTested.check("ONE _ THREE").isValid());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
      */
     @Test
-    public void testCheckWhenSimplePatternWithOnlyWildcardsExpectValid() {
-        assertTrue(this.defaultPrefixedTested.check("_ * _ * *").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenLiteralMixedPatternOneBotTagExpectValid() {
-        assertTrue(this.defaultPrefixedTested.check("ONE <bot name=\"KAREL\"/> TWO").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenLiteralMixedPatternOneBotTagWithAdditionalSpacingExpectValid() {
-        assertTrue(this.defaultPrefixedTested.check("ONE <bot   name =  \"KAREL\" /> TWO").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenLiteralMixedPatternWithPrefixedBotTagExpectValid() {
-        assertTrue(this.customPrefixedTested.check("ONE <aiml:bot name=\"KAREL\"/> TWO").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenMixedPatternWithPrefixedBotTagAndWildcardsExpectValid() {
-        assertTrue(this.customPrefixedTested.check("_ ONE <aiml:bot name=\"KAREL\"/> TWO * _").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenEmptyPatternExpectInvalid() {
-        assertFalse(this.defaultPrefixedTested.check("").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenEmptyPatternExpectColumnPositionZero() {
-        final CheckResult result = this.defaultPrefixedTested.check("");
-        
-        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER, result.getErrorLineNumber());
-        assertEquals(0, result.getErrorColumnNumber());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenNonnormalWordsExpectInvalid() {
-        assertFalse(this.defaultPrefixedTested.check("One Two").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenNonnormalWordsExpectColumnsPositionFirstNonnormalOccurence() {
-        final String input = "One Two";
-        final int firstNonnormalIndex = CharMatcher.JAVA_LOWER_CASE.indexIn(input);
-        
+    public
+            void
+            testCheckWhenSuperfluousSpacesExpectColumnsPositionFirstSuperfluousSpaceOccurence() {
+        final String input = "ONE   TWO  THREE";
+
+        final int firstSpaceIndex = CharMatcher.is(' ').indexIn(input);
+        final int firstSuperfluousSpaceIndex =
+                CharMatcher.is(' ').indexIn(input, firstSpaceIndex + 1);
+
         final CheckResult result = this.defaultPrefixedTested.check(input);
-        
-        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER, result.getErrorLineNumber());
-        assertEquals(firstNonnormalIndex + 1, result.getErrorColumnNumber());
+
+        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER,
+                result.getErrorLineNumber());
+        assertEquals(firstSuperfluousSpaceIndex + 1,
+                result.getErrorColumnNumber());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
      */
     @Test
     public void testCheckWhenSuperfluousSpacesExpectInvalid() {
-        assertFalse(this.defaultPrefixedTested.check("ONE   TWO  THREE").isValid());
+        assertFalse(this.defaultPrefixedTested.check("ONE   TWO  THREE")
+                .isValid());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenSuperfluousSpacesExpectColumnsPositionFirstSuperfluousSpaceOccurence() {
-        final String input = "ONE   TWO  THREE";
-        
-        final int firstSpaceIndex = CharMatcher.is(' ').indexIn(input);
-        final int firstSuperfluousSpaceIndex = CharMatcher.is(' ').indexIn(input, firstSpaceIndex + 1);
-        
-        final CheckResult result = this.defaultPrefixedTested.check(input);
-        
-        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER, result.getErrorLineNumber());
-        assertEquals(firstSuperfluousSpaceIndex + 1, result.getErrorColumnNumber());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenBadTagSyntaxExpectInvalid() {
-        assertFalse(this.defaultPrefixedTested.check("ONE <bot \"DFD\"> THREE").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenBadTagSyntaxExpectColumnPositionInvalidSequenceStart() {
-        final String input = "ONE <bot \"DFD\"> THREE";
-        
-        final CheckResult result = this.defaultPrefixedTested.check(input);
-        
-        final int tagStartIndex = CharMatcher.is('<').indexIn(input);
-        
-        assertEquals(CheckResult.NO_ROWS_DEFAULT_ROW_NUMBER, result.getErrorLineNumber());
-        assertEquals(tagStartIndex + 1, result.getErrorColumnNumber());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenLongTagFormatExpectValid() {
-        assertTrue(this.defaultPrefixedTested.check("ONE <bot name=\"DFD\"></bot> THREE").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenMissingNameAttributeExpectInvalid() {
-        assertFalse(this.defaultPrefixedTested.check("ONE <bot notname=\"DFD\"/> THREE").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenAttributeNameInAnotherNamespaceThanBotExpectInvalid() {
-        assertFalse(this.customPrefixedTested.check("ONE <aiml:bot somenamespace:name=\"DFD\"/> THREE").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
      */
     @Test
     public void testCheckWhenTwoBotAttributesExpectValid() {
-        assertTrue(this.defaultPrefixedTested.check("ONE <bot name=\"DFD\"/> THREE <bot name=\"DFD\"/> *").isValid());
+        assertTrue(this.defaultPrefixedTested.check(
+                "ONE <bot name=\"DFD\"/> THREE <bot name=\"DFD\"/> *")
+                .isValid());
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}
+     * .
      */
     @Test
-    public void testCheckWhenTwoBotAttributesOneWithDisallowedPrefixExpectInvalid() {
-        assertFalse(this.customPrefixedTested.check("ONE <aiml:bot name=\"DFD\"/> THREE <alsoaiml:bot name=\"DFD\"/> *").isValid());
-    }
-    
-    /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker#check(java.lang.String)}.
-     */
-    @Test
-    public void testCheckWhenAdditionalOtherThanNameAttributesExpectInvalid() {
-        assertFalse(this.customPrefixedTested.check("ONE <aiml:bot name=\"DFD\" other=\"blabla\"/> THREE *").isValid());
+    public void
+            testCheckWhenTwoBotAttributesOneWithDisallowedPrefixExpectInvalid() {
+        assertFalse(this.customPrefixedTested
+                .check("ONE <aiml:bot name=\"DFD\"/> THREE <alsoaiml:bot name=\"DFD\"/> *")
+                .isValid());
     }
 }

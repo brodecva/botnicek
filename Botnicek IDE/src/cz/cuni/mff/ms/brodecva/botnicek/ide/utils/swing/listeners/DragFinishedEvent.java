@@ -26,8 +26,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DragFinishedEvent extends AbstractEvent<DragFinishedListener> {
-    
+public final class DragFinishedEvent extends
+        AbstractEvent<DragFinishedListener> {
+
     /**
      * Vytvoří událost.
      * 
@@ -36,12 +37,16 @@ public final class DragFinishedEvent extends AbstractEvent<DragFinishedListener>
     public static DragFinishedEvent create() {
         return new DragFinishedEvent();
     }
-    
+
     private DragFinishedEvent() {
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final DragFinishedListener listener) {
@@ -49,4 +54,3 @@ public final class DragFinishedEvent extends AbstractEvent<DragFinishedListener>
     }
 
 }
- 

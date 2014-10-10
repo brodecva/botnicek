@@ -28,33 +28,40 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
  */
 public interface NodesView {
     /**
-     * Aktualizuje zobrazení názvu uzlu.
-     * 
-     * @param original původní verze uzlu
-     * @param changed nová verze uzlu
-     */
-    void nodeRenamed(Node original, Node changed);
-    
-    /**
      * Aktualizuje zobrazení polohy uzlu.
      * 
-     * @param original původní verze uzlu
-     * @param changed nová verze uzlu
+     * @param original
+     *            původní verze uzlu
+     * @param changed
+     *            nová verze uzlu
      */
     void nodeMoved(Node original, Node changed);
-    
-    /**
-     * Aktualizuje zobrazení typu uzlu.
-     * 
-     * @param original původní verze uzlu
-     * @param changed nová verze uzlu
-     */
-    void nodeRetyped(Node original, Node changed);
-    
+
     /**
      * Aktualizuje zobrazení vrcholů tak, aby nezahrnovalo odebraný uzel.
      * 
-     * @param node odebraný uzel
+     * @param node
+     *            odebraný uzel
      */
     void nodeRemoved(Node node);
+
+    /**
+     * Aktualizuje zobrazení názvu uzlu.
+     * 
+     * @param original
+     *            původní verze uzlu
+     * @param changed
+     *            nová verze uzlu
+     */
+    void nodeRenamed(Node original, Node changed);
+
+    /**
+     * Aktualizuje zobrazení typu uzlu.
+     * 
+     * @param original
+     *            původní verze uzlu
+     * @param changed
+     *            nová verze uzlu
+     */
+    void nodeRetyped(Node original, Node changed);
 }

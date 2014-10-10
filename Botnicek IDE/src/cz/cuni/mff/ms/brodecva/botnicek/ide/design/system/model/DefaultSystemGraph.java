@@ -24,6 +24,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
+
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -58,9 +59,41 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
 public final class DefaultSystemGraph implements SystemGraph, Serializable {
 
     private static final long serialVersionUID = 1L;
-    
-    private final LabeledDirectedGraph<Node, NormalWord, Arc, NormalWord> baseGraph;
-    private final UpdateBuilderFactory updateBuilderFactory;
+
+    private static void addArcRemovalUpdates(final UpdateBuilder updateBuilder,
+            final Arc parameter) {
+        if (parameter instanceof RecurentArc) {
+            final RecurentArc reference = (RecurentArc) parameter;
+
+            updateBuilder.addRemovedReference(reference);
+        }
+
+        updateBuilder.addRemovedEdge(parameter);
+    }
+
+    private static void addRealignmentUpdates(
+            final UpdateBuilder updateBuilder,
+            final RealignmentProcessor processor, final Node input,
+            final Node removed,
+            final Map<EnterNode, Set<RecurentArc>> references,
+            final Set<EnterNode> initials) {
+        final Node realigned = processor.realign(input);
+        if (realigned.equals(input)) {
+            return;
+        }
+
+        checkForDependingArcs(removed, references, input);
+
+        if (initials.contains(input)) {
+            updateBuilder.addRemovedInitial((EnterNode) input);
+        }
+
+        if (realigned instanceof EnterNode) {
+            updateBuilder.addNewInitial((EnterNode) realigned);
+        }
+
+        updateBuilder.addSwitched(input, realigned);
+    }
 
     /**
      * Vytvoří graf.
@@ -72,6 +105,80 @@ public final class DefaultSystemGraph implements SystemGraph, Serializable {
                 DefaultLabeledDirectedGraph
                         .<Node, NormalWord, Arc, NormalWord> create(),
                 DefaultUpdateBuilderFactory.create());
+    }
+
+    private static Set<EnterNode> getInitialsCopy(
+            final Set<? extends EnterNode> initialNodes) {
+        return ImmutableSet.copyOf(initialNodes);
+    }
+
+    private static
+            Map<EnterNode, Set<RecurentArc>>
+            getReferencesCopy(
+                    final Map<? extends EnterNode, ? extends Set<? extends RecurentArc>> references) {
+        final ImmutableMap.Builder<EnterNode, Set<RecurentArc>> copyBuilder =
+                ImmutableMap.builder();
+
+        for (final Map.Entry<? extends EnterNode, ? extends Set<? extends RecurentArc>> entry : references
+                .entrySet()) {
+            final EnterNode key = entry.getKey();
+            Preconditions.checkNotNull(key);
+
+            final Set<? extends RecurentArc> value = entry.getValue();
+            Preconditions.checkNotNull(value);
+
+            copyBuilder.put(key, ImmutableSet.copyOf(value));
+        }
+
+        return copyBuilder.build();
+    }
+
+    private static void checkForDependingArcs(final Arc removed,
+            final Map<EnterNode, Set<RecurentArc>> references, final Node from,
+            final Node newFrom) throws IllegalArgumentException {
+        final Set<RecurentArc> referring = references.get(from);
+
+        if (Presence.isAbsent(referring) || newFrom.equals(from)) {
+            return;
+        }
+
+        final Set<RecurentArc> referringWithoutRemoved =
+                Sets.difference(referring, ImmutableSet.of(removed));
+
+        final boolean refersOnlyToItself = referringWithoutRemoved.isEmpty();
+        if (refersOnlyToItself) {
+            return;
+        }
+
+        final Network fromNetwork = from.getNetwork();
+        final RecurentArc firstReferring =
+                referringWithoutRemoved.iterator().next();
+        final Network firstReferringNetwork = firstReferring.getNetwork();
+
+        throw new IllegalArgumentException(ExceptionLocalizer.print(
+                "ArcRemovalForbidden", from.getName(), removed.getName(),
+                fromNetwork.getName().getText(), firstReferring.getName(),
+                firstReferringNetwork.getName().getText()));
+    }
+
+    private static void
+            checkForDependingArcs(final Node removed,
+                    final Map<EnterNode, Set<RecurentArc>> references,
+                    final Node input) {
+        final Set<RecurentArc> referring = references.get(input);
+        if (Presence.isAbsent(referring)) {
+            return;
+        }
+
+        final Network networkOfRemoved = removed.getNetwork();
+
+        final RecurentArc firstReferring = referring.iterator().next();
+        final Network networkOfFirst = firstReferring.getNetwork();
+
+        throw new IllegalArgumentException(ExceptionLocalizer.print(
+                "NodeRemovalForbidden", input.getName(), removed.getName(),
+                networkOfRemoved.getName().getText(), firstReferring.getName(),
+                networkOfFirst.getName().getText()));
     }
 
     /**
@@ -94,244 +201,15 @@ public final class DefaultSystemGraph implements SystemGraph, Serializable {
         return new DefaultSystemGraph(baseGraph, updateBuilderFactory);
     }
 
+    private final LabeledDirectedGraph<Node, NormalWord, Arc, NormalWord> baseGraph;
+
+    private final UpdateBuilderFactory updateBuilderFactory;
+
     private DefaultSystemGraph(
             final LabeledDirectedGraph<Node, NormalWord, Arc, NormalWord> baseGraph,
             final UpdateBuilderFactory updateBuilderFactory) {
         this.baseGraph = baseGraph;
         this.updateBuilderFactory = updateBuilderFactory;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.SystemGraph#
-     * getVertex(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
-     */
-    @Override
-    public Node getVertex(final NormalWord name) {
-        Preconditions.checkNotNull(name);
-
-        return this.baseGraph.getVertex(name);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.SystemGraph#
-     * getEdge(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
-     */
-    @Override
-    public Arc getEdge(final NormalWord name) {
-        Preconditions.checkNotNull(name);
-
-        return this.baseGraph.getEdge(name);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.SystemGraph#
-     * removeAndRealign
-     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node,
-     * cz.cuni.mff
-     * .ms.brodecva.botnicek.ide.design.nodes.model.RealignmentProcessor,
-     * java.util.Map, java.util.Set)
-     */
-    @Override
-    public
-            Update
-            removeAndRealign(
-                    final Node removed,
-                    final RealignmentProcessor processor,
-                    final Map<? extends EnterNode, ? extends Set<? extends RecurentArc>> references,
-                    final Set<? extends EnterNode> initialNodes)
-                    throws IllegalArgumentException {
-        Preconditions.checkNotNull(removed);
-        Preconditions.checkNotNull(references);
-        Preconditions.checkNotNull(initialNodes);
-
-        final Map<EnterNode, Set<RecurentArc>> referencesCopy =
-                getReferencesCopy(references);
-        final Set<EnterNode> initialsCopy = getInitialsCopy(initialNodes);
-
-        final UpdateBuilder updateBuilder = this.updateBuilderFactory.produce();
-
-        this.baseGraph.extractVertex(removed, new Function<Node, Node>() {
-            @Override
-            public Node apply(final Node input) {
-                return processor.realign(input);
-            }
-        }, new Callback<Node>() {
-            @Override
-            public void call(final Node input) {
-                addRealignmentUpdates(updateBuilder, processor, input, removed,
-                        referencesCopy, initialsCopy);
-            }
-        }, new Callback<Arc>() {
-            @Override
-            public void call(final Arc parameter) {
-                addArcRemovalUpdates(updateBuilder, parameter);
-            }
-        });
-
-        return updateBuilder.build();
-    }
-
-    private static void addRealignmentUpdates(
-            final UpdateBuilder updateBuilder,
-            final RealignmentProcessor processor, final Node input,
-            final Node removed,
-            final Map<EnterNode, Set<RecurentArc>> references,
-            final Set<EnterNode> initials) {
-        final Node realigned = processor.realign(input);
-        if (realigned.equals(input)) {
-            return;
-        }
-        
-        checkForDependingArcs(removed, references, input);
-
-        if (initials.contains(input)) {
-            updateBuilder.addRemovedInitial((EnterNode) input);
-        }
-
-        if (realigned instanceof EnterNode) {
-            updateBuilder.addNewInitial((EnterNode) realigned);
-        }
-
-        updateBuilder.addSwitched(input, realigned);
-    }
-
-    private static void
-            checkForDependingArcs(final Node removed,
-                    final Map<EnterNode, Set<RecurentArc>> references,
-                    final Node input) {
-        final Set<RecurentArc> referring = references.get(input);
-        if (Presence.isAbsent(referring)) {
-            return;
-        }
-
-        final Network networkOfRemoved = removed.getNetwork();
-
-        final RecurentArc firstReferring = referring.iterator().next();
-        final Network networkOfFirst = firstReferring.getNetwork();
-
-        throw new IllegalArgumentException(ExceptionLocalizer.print(
-                "NodeRemovalForbidden", input.getName(), removed.getName(),
-                networkOfRemoved.getName(), firstReferring.getName(),
-                networkOfFirst.getName()));
-    }
-
-    private static void addArcRemovalUpdates(final UpdateBuilder updateBuilder,
-            final Arc parameter) {
-        if (parameter instanceof RecurentArc) {
-            final RecurentArc reference = (RecurentArc) parameter;
-            
-            updateBuilder.addRemovedReference(reference);
-        }
-
-        updateBuilder.addRemovedEdge(parameter);
-    }
-
-    private static Set<EnterNode> getInitialsCopy(
-            final Set<? extends EnterNode> initialNodes) {
-        return ImmutableSet.copyOf(initialNodes);
-    }
-
-    private static
-            Map<EnterNode, Set<RecurentArc>>
-            getReferencesCopy(
-                    Map<? extends EnterNode, ? extends Set<? extends RecurentArc>> references) {
-        final ImmutableMap.Builder<EnterNode, Set<RecurentArc>> copyBuilder =
-                ImmutableMap.builder();
-
-        for (final Map.Entry<? extends EnterNode, ? extends Set<? extends RecurentArc>> entry : references
-                .entrySet()) {
-            final EnterNode key = entry.getKey();
-            Preconditions.checkNotNull(key);
-
-            final Set<? extends RecurentArc> value = entry.getValue();
-            Preconditions.checkNotNull(value);
-
-            copyBuilder.put(key, ImmutableSet.copyOf(value));
-        }
-
-        return copyBuilder.build();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.SystemGraph#
-     * removeAndRealign
-     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc,
-     * cz.cuni.mff.ms
-     * .brodecva.botnicek.ide.design.nodes.model.RealignmentProcessor,
-     * java.util.Map, java.util.Set)
-     */
-    @Override
-    public
-            Update
-            removeAndRealign(
-                    final Arc removed,
-                    final RealignmentProcessor processor,
-                    final Map<? extends EnterNode, ? extends Set<? extends RecurentArc>> references,
-                    Set<? extends EnterNode> initials)
-                    throws IllegalArgumentException {
-        Preconditions.checkNotNull(removed);
-        Preconditions.checkNotNull(processor);
-        Preconditions.checkNotNull(references);
-        Preconditions.checkNotNull(initials);
-
-        final Map<EnterNode, Set<RecurentArc>> referencesCopy =
-                getReferencesCopy(references);
-        final Set<EnterNode> initialsCopy = getInitialsCopy(initials);
-
-        final Node from = removed.getFrom();
-        final Node to = removed.getTo();
-        
-        this.baseGraph.removeEdge(removed);
-        
-        final Node newFrom = processor.realign(from);
-        final Node newTo = processor.realign(to);
-
-        abortOnDependingArcs(removed, referencesCopy, from, newFrom, to);
-
-        replaceVertex(from, newFrom);
-        replaceVertex(to, newTo);
-
-        return createArcRemovalUpdate(removed, initialsCopy, from, newFrom, to,
-                newTo);
-    }
-
-    private Update createArcRemovalUpdate(final Arc removed,
-            final Set<EnterNode> initials, final Node from, final Node newFrom,
-            final Node to, final Node newTo) {
-        final UpdateBuilder updateBuilder = this.updateBuilderFactory.produce();
-
-        updateBuilder.addSwitched(from, newFrom);
-        updateBuilder.addSwitched(to, newTo);
-
-        if (removed instanceof RecurentArc) {
-            final RecurentArc reference = (RecurentArc) removed;
-            
-            updateBuilder.addRemovedReference(reference);
-        }
-        if (!from.equals(newFrom)) {
-            if (initials.contains(from)) {
-                updateBuilder.addRemovedInitial((EnterNode) from);
-            }
-        }
-        if (!to.equals(newTo)) {
-            if (newTo instanceof EnterNode) {
-                updateBuilder.addNewInitial((EnterNode) newTo);
-            }
-        }
-
-        return updateBuilder.build();
     }
 
     private void abortOnDependingArcs(final Arc removed,
@@ -346,34 +224,18 @@ public final class DefaultSystemGraph implements SystemGraph, Serializable {
         }
     }
 
-    private static void checkForDependingArcs(final Arc removed,
-            final Map<EnterNode, Set<RecurentArc>> references, final Node from,
-            final Node newFrom) throws IllegalArgumentException {
-        final Set<RecurentArc> referring = references.get(from);
-        
-        if (Presence.isAbsent(referring) || newFrom.equals(from)) {
-            return;
-        }
-        
-        final Set<RecurentArc> referringWithoutRemoved =
-                Sets.difference(referring, ImmutableSet.of(removed));
-        
-        final boolean refersOnlyToItself =
-                referringWithoutRemoved.isEmpty();
-        if (refersOnlyToItself) {
-            return;
-        }
-        
-        final Network fromNetwork = from.getNetwork();
-        final RecurentArc firstReferring = referringWithoutRemoved.iterator().next();
-        final Network firstReferringNetwork =
-                firstReferring.getNetwork();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.SystemGraph#
+     * add(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode)
+     */
+    @Override
+    public void add(final IsolatedNode node) {
+        Preconditions.checkNotNull(node);
 
-        throw new IllegalArgumentException(ExceptionLocalizer.print(
-                "ArcRemovalForbidden", from.getName(),
-                removed.getName(), fromNetwork.getName(),
-                firstReferring.getName(),
-                firstReferringNetwork.getName()));
+        this.baseGraph.add(node, node.getName());
     }
 
     /*
@@ -428,95 +290,27 @@ public final class DefaultSystemGraph implements SystemGraph, Serializable {
      * (non-Javadoc)
      * 
      * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DirectedGraph#
-     * containsVertex(java.lang.Object)
-     */
-    @Override
-    public boolean containsVertex(final Node vertex) {
-        Preconditions.checkNotNull(vertex);
-
-        return this.baseGraph.containsVertex(vertex);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DirectedGraph#
-     * containsEdge(java.lang.Object)
-     */
-    @Override
-    public boolean containsEdge(final Arc edge) {
-        Preconditions.checkNotNull(edge);
-
-        return this.baseGraph.containsEdge(edge);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
      * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.SystemGraph#
-     * add(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode)
-     */
-    @Override
-    public void add(final IsolatedNode node) {
-        Preconditions.checkNotNull(node);
-
-        this.baseGraph.add(node, node.getName());
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DirectedGraph#
-     * replaceVertex(java.lang.Object, java.lang.Object)
-     */
-    @Override
-    public void replaceVertex(final Node old, final Node fresh) {
-        Preconditions.checkNotNull(fresh);
-        Preconditions.checkNotNull(old);
-
-        this.baseGraph.replaceVertex(old, fresh, fresh.getName());
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DirectedGraph#
-     * replaceEdge(java.lang.Object, java.lang.Object)
-     */
-    @Override
-    public void replaceEdge(final Arc old, final Arc fresh) {
-        Preconditions.checkNotNull(fresh);
-        Preconditions.checkNotNull(old);
-
-        this.baseGraph.replaceEdge(old, fresh, fresh.getName());
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.SystemGraph#
-     * connections(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node,
+     * adjoins(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node,
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node,
      * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
      */
     @Override
-    public Set<Arc> connections(final Node vertex, final Direction direction) {
-        Preconditions.checkNotNull(vertex);
+    public boolean adjoins(final Node first, final Node second,
+            final Direction direction) {
+        Preconditions.checkNotNull(first);
+        Preconditions.checkNotNull(second);
         Preconditions.checkNotNull(direction);
 
-        switch (direction) {
-        case IN:
-            return this.baseGraph.ins(vertex);
-        case OUT:
-            return this.baseGraph.outs(vertex);
-        default:
-            throw new AssertionError();
+        final Set<Arc> connections = connections(first, direction);
+
+        for (final Arc connection : connections) {
+            if (connection.isAttached(second, direction)) {
+                return true;
+            }
         }
+
+        return false;
     }
 
     /*
@@ -547,26 +341,105 @@ public final class DefaultSystemGraph implements SystemGraph, Serializable {
      * 
      * @see
      * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.SystemGraph#
-     * adjoins(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node,
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node,
+     * connections(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node,
      * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)
      */
     @Override
-    public boolean adjoins(final Node first, final Node second,
-            final Direction direction) {
-        Preconditions.checkNotNull(first);
-        Preconditions.checkNotNull(second);
+    public Set<Arc> connections(final Node vertex, final Direction direction) {
+        Preconditions.checkNotNull(vertex);
         Preconditions.checkNotNull(direction);
 
-        final Set<Arc> connections = connections(first, direction);
+        switch (direction) {
+        case IN:
+            return this.baseGraph.ins(vertex);
+        case OUT:
+            return this.baseGraph.outs(vertex);
+        default:
+            throw new AssertionError();
+        }
+    }
 
-        for (final Arc connection : connections) {
-            if (connection.isAttached(second, direction)) {
-                return true;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DirectedGraph#
+     * containsEdge(java.lang.Object)
+     */
+    @Override
+    public boolean containsEdge(final Arc edge) {
+        Preconditions.checkNotNull(edge);
+
+        return this.baseGraph.containsEdge(edge);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DirectedGraph#
+     * containsVertex(java.lang.Object)
+     */
+    @Override
+    public boolean containsVertex(final Node vertex) {
+        Preconditions.checkNotNull(vertex);
+
+        return this.baseGraph.containsVertex(vertex);
+    }
+
+    private Update createArcRemovalUpdate(final Arc removed,
+            final Set<EnterNode> initials, final Node from, final Node newFrom,
+            final Node to, final Node newTo) {
+        final UpdateBuilder updateBuilder = this.updateBuilderFactory.produce();
+
+        updateBuilder.addSwitched(from, newFrom);
+        updateBuilder.addSwitched(to, newTo);
+
+        if (removed instanceof RecurentArc) {
+            final RecurentArc reference = (RecurentArc) removed;
+
+            updateBuilder.addRemovedReference(reference);
+        }
+        if (!from.equals(newFrom)) {
+            if (initials.contains(from)) {
+                updateBuilder.addRemovedInitial((EnterNode) from);
+            }
+        }
+        if (!to.equals(newTo)) {
+            if (newTo instanceof EnterNode) {
+                updateBuilder.addNewInitial((EnterNode) newTo);
             }
         }
 
-        return false;
+        return updateBuilder.build();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.SystemGraph#
+     * getEdge(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+     */
+    @Override
+    public Arc getEdge(final NormalWord name) {
+        Preconditions.checkNotNull(name);
+
+        return this.baseGraph.getEdge(name);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.SystemGraph#
+     * getVertex(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)
+     */
+    @Override
+    public Node getVertex(final NormalWord name) {
+        Preconditions.checkNotNull(name);
+
+        return this.baseGraph.getVertex(name);
     }
 
     /*
@@ -585,13 +458,140 @@ public final class DefaultSystemGraph implements SystemGraph, Serializable {
             this.baseGraph.removeVertex(node);
         }
     }
-    
+
     private void readObject(final ObjectInputStream objectInputStream)
             throws ClassNotFoundException, IOException {
         objectInputStream.defaultReadObject();
-        
+
         Preconditions.checkNotNull(this.baseGraph);
         Preconditions.checkNotNull(this.updateBuilderFactory);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.SystemGraph#
+     * removeAndRealign
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc,
+     * cz.cuni.mff.ms
+     * .brodecva.botnicek.ide.design.nodes.model.RealignmentProcessor,
+     * java.util.Map, java.util.Set)
+     */
+    @Override
+    public
+            Update
+            removeAndRealign(
+                    final Arc removed,
+                    final RealignmentProcessor processor,
+                    final Map<? extends EnterNode, ? extends Set<? extends RecurentArc>> references,
+                    final Set<? extends EnterNode> initials)
+                    throws IllegalArgumentException {
+        Preconditions.checkNotNull(removed);
+        Preconditions.checkNotNull(processor);
+        Preconditions.checkNotNull(references);
+        Preconditions.checkNotNull(initials);
+
+        final Map<EnterNode, Set<RecurentArc>> referencesCopy =
+                getReferencesCopy(references);
+        final Set<EnterNode> initialsCopy = getInitialsCopy(initials);
+
+        final Node from = removed.getFrom();
+        final Node to = removed.getTo();
+
+        this.baseGraph.removeEdge(removed);
+
+        final Node newFrom = processor.realign(from);
+        final Node newTo = processor.realign(to);
+
+        abortOnDependingArcs(removed, referencesCopy, from, newFrom, to);
+
+        replaceVertex(from, newFrom);
+        replaceVertex(to, newTo);
+
+        return createArcRemovalUpdate(removed, initialsCopy, from, newFrom, to,
+                newTo);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.SystemGraph#
+     * removeAndRealign
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node,
+     * cz.cuni.mff
+     * .ms.brodecva.botnicek.ide.design.nodes.model.RealignmentProcessor,
+     * java.util.Map, java.util.Set)
+     */
+    @Override
+    public
+            Update
+            removeAndRealign(
+                    final Node removed,
+                    final RealignmentProcessor processor,
+                    final Map<? extends EnterNode, ? extends Set<? extends RecurentArc>> references,
+                    final Set<? extends EnterNode> initialNodes)
+                    throws IllegalArgumentException {
+        Preconditions.checkNotNull(removed);
+        Preconditions.checkNotNull(references);
+        Preconditions.checkNotNull(initialNodes);
+
+        final Map<EnterNode, Set<RecurentArc>> referencesCopy =
+                getReferencesCopy(references);
+        final Set<EnterNode> initialsCopy = getInitialsCopy(initialNodes);
+
+        final UpdateBuilder updateBuilder = this.updateBuilderFactory.produce();
+
+        this.baseGraph.extractVertex(removed, new Function<Node, Node>() {
+            @Override
+            public Node apply(final Node input) {
+                return processor.realign(input);
+            }
+        }, new Callback<Node>() {
+            @Override
+            public void call(final Node input) {
+                addRealignmentUpdates(updateBuilder, processor, input, removed,
+                        referencesCopy, initialsCopy);
+            }
+        }, new Callback<Arc>() {
+            @Override
+            public void call(final Arc parameter) {
+                addArcRemovalUpdates(updateBuilder, parameter);
+            }
+        });
+
+        return updateBuilder.build();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DirectedGraph#
+     * replaceEdge(java.lang.Object, java.lang.Object)
+     */
+    @Override
+    public void replaceEdge(final Arc old, final Arc fresh) {
+        Preconditions.checkNotNull(fresh);
+        Preconditions.checkNotNull(old);
+
+        this.baseGraph.replaceEdge(old, fresh, fresh.getName());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DirectedGraph#
+     * replaceVertex(java.lang.Object, java.lang.Object)
+     */
+    @Override
+    public void replaceVertex(final Node old, final Node fresh) {
+        Preconditions.checkNotNull(fresh);
+        Preconditions.checkNotNull(old);
+
+        this.baseGraph.replaceVertex(old, fresh, fresh.getName());
     }
 
     private void writeObject(final ObjectOutputStream objectOutputStream)

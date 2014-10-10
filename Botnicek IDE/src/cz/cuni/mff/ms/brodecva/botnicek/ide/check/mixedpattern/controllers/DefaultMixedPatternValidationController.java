@@ -32,105 +32,147 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.validator.M
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
 
 /**
- * Výchozí implementace řadiče pro validaci složeného vzoru dle specifikace jazyka AIML.
+ * Výchozí implementace řadiče pro validaci složeného vzoru dle specifikace
+ * jazyka AIML.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultMixedPatternValidationController implements MixedPatternValidationController {
+public class DefaultMixedPatternValidationController implements
+        MixedPatternValidationController {
 
     /**
      * Vytvoří řadič.
      * 
-     * @param codeChecker validátor kódu šablony, slouží pro validaci prvků bot ve vzoru, které se jinak vyskytují i v šablonách
-     * @param eventManager správce událostí
+     * @param codeChecker
+     *            validátor kódu šablony, slouží pro validaci prvků bot ve
+     *            vzoru, které se jinak vyskytují i v šablonách
+     * @param eventManager
+     *            správce událostí
      * 
      * @return řadič
      */
-    public static DefaultMixedPatternValidationController create(final CodeChecker codeChecker, final EventManager eventManager) {
-        return create(DefaultMixedPatternValidator.create(DefaultMixedPatternChecker.create(codeChecker), eventManager), eventManager);
+    public static DefaultMixedPatternValidationController create(
+            final CodeChecker codeChecker, final EventManager eventManager) {
+        return create(DefaultMixedPatternValidator.create(
+                DefaultMixedPatternChecker.create(codeChecker), eventManager),
+                eventManager);
     }
-    
+
     /**
      * Vytvoří řadič.
      * 
-     * @param checker přímý validátor
-     * @param eventManager správce událostí
+     * @param checkController
+     *            implementující řadič (validuje složený vzor)
      * @return řadič
      */
-    public static DefaultMixedPatternValidationController create(final MixedPatternChecker checker, final EventManager eventManager) {
-        return create(DefaultMixedPatternValidator.create(checker, eventManager), eventManager);
-    }
-    
-    /**
-     * Vytvoří řadič.
-     * 
-     * @param validator vysílací validátor
-     * @param eventManager správce událostí
-     * @return řadič
-     */
-    public static DefaultMixedPatternValidationController create(final MixedPatternValidator validator, final EventManager eventManager) {
-        return new DefaultMixedPatternValidationController(DefaultCheckController.create(validator, eventManager));
-    }
-    
-    /**
-     * Vytvoří řadič.
-     * 
-     * @param checkController implementující řadič (validuje složený vzor)
-     * @return řadič
-     */
-    static DefaultMixedPatternValidationController create(final CheckController checkController) {
+    static DefaultMixedPatternValidationController create(
+            final CheckController checkController) {
         return new DefaultMixedPatternValidationController(checkController);
     }
 
+    /**
+     * Vytvoří řadič.
+     * 
+     * @param checker
+     *            přímý validátor
+     * @param eventManager
+     *            správce událostí
+     * @return řadič
+     */
+    public static DefaultMixedPatternValidationController create(
+            final MixedPatternChecker checker, final EventManager eventManager) {
+        return create(
+                DefaultMixedPatternValidator.create(checker, eventManager),
+                eventManager);
+    }
+
+    /**
+     * Vytvoří řadič.
+     * 
+     * @param validator
+     *            vysílací validátor
+     * @param eventManager
+     *            správce událostí
+     * @return řadič
+     */
+    public static DefaultMixedPatternValidationController create(
+            final MixedPatternValidator validator,
+            final EventManager eventManager) {
+        return new DefaultMixedPatternValidationController(
+                DefaultCheckController.create(validator, eventManager));
+    }
+
     private final CheckController checkController;
-    
-    private DefaultMixedPatternValidationController(final CheckController checkController) {
+
+    private DefaultMixedPatternValidationController(
+            final CheckController checkController) {
         Preconditions.checkNotNull(checkController);
-        
+
         this.checkController = checkController;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.edit.check.controllers.CheckController#check(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java
+     * .lang.Object)
      */
     @Override
-    public void check(final Source client, Object subject, final String value) {
-        Preconditions.checkNotNull(client);
-        Preconditions.checkNotNull(value);
-        
-        this.checkController.check(client, subject, value);
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java.lang.Object)
-     */
-    @Override
-    public void addView(CheckView view) {
+    public void addView(final CheckView view) {
         this.checkController.addView(view);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(java.lang.Object)
-     */
-    @Override
-    public void removeView(CheckView view) {
-        this.checkController.removeView(view);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang.Object)
-     */
-    @Override
-    public void fill(CheckView view) {
-        this.checkController.fill(view);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController#clear(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController
+     * #clear(java.lang.Object)
      */
     @Override
     public void clear(final Object subject) {
         this.checkController.clear(subject);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang
+     * .Object)
+     */
+    @Override
+    public void fill(final CheckView view) {
+        this.checkController.fill(view);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.edit.check.controllers.CheckController
+     * #check(java.lang.String)
+     */
+    @Override
+    public void check(final Source client, final Object subject,
+            final String value) {
+        Preconditions.checkNotNull(client);
+        Preconditions.checkNotNull(value);
+
+        this.checkController.check(client, subject, value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(
+     * java.lang.Object)
+     */
+    @Override
+    public void removeView(final CheckView view) {
+        this.checkController.removeView(view);
     }
 }

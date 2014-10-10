@@ -21,7 +21,8 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.validator;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Validator;
 
 /**
- * Validátor řetězce s předpokládaným kódem šablony jazyka AIML, který vysílá po kontrole událost s výsledkem.
+ * Validátor řetězce s předpokládaným kódem šablony jazyka AIML, který vysílá po
+ * kontrole událost s výsledkem.
  * 
  * @author Václav Brodec
  * @version 1.0

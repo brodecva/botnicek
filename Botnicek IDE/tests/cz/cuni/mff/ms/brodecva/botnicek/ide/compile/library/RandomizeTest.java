@@ -18,7 +18,7 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.compile.library;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.easymock.EasyMock;
 import org.junit.After;
@@ -38,7 +38,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.IntegrationTest;
 
 /**
- * Testuje knihovnu s tématem pro náhodné uspořádání stavů ze vstupu na zásobník.
+ * Testuje knihovnu s tématem pro náhodné uspořádání stavů ze vstupu na
+ * zásobník.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -49,305 +50,320 @@ public class RandomizeTest {
 
     private static final int TESTABLE_MAX_PRIORITY = 2;
     private static final int TESTABLE_MAX_BRANCH_FACTOR = 2;
-    
+
     private RenderingVisitor renderer = Intended.nullReference();
     private NormalWord randomizeState;
 
     /**
      * Inicializuje vykreslovač.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @Before
     public void setUp() throws Exception {
         final Settings settings = Settings.getDefault();
-        
+
         this.randomizeState = settings.getRandomizeState();
-        
-        this.renderer = DefaultRenderingVisitor.create(settings.getNamespacesToPrefixes());
+
+        this.renderer =
+                DefaultRenderingVisitor.create(settings
+                        .getNamespacesToPrefixes());
     }
 
     /**
      * Uklidí vykreslovač.
      * 
-     * @throws java.lang.Exception pokud dojde k vyhození výjimky
+     * @throws java.lang.Exception
+     *             pokud dojde k vyhození výjimky
      */
     @After
     public void tearDown() throws Exception {
-        renderer = Intended.nullReference();
+        this.renderer = Intended.nullReference();
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.compile.library.Randomize#getLibrary(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, int, int, cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.compile.library.Randomize#getLibrary(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, int, int, cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority)}
+     * .
      */
     @Test
     public void testGetLibraryWhenCommonParameters() {
-        final NamingAuthority fullStatesNamesAuthorityStub = EasyMock.createStrictMock(NamingAuthority.class);
-        EasyMock.expect(fullStatesNamesAuthorityStub.getSnapshot()).andReturn(ImmutableSortedSet.of("FIRST", "SECOND"));
+        final NamingAuthority fullStatesNamesAuthorityStub =
+                EasyMock.createStrictMock(NamingAuthority.class);
+        EasyMock.expect(fullStatesNamesAuthorityStub.getSnapshot()).andReturn(
+                ImmutableSortedSet.of("FIRST", "SECOND"));
         EasyMock.replay(fullStatesNamesAuthorityStub);
-        
-        final String randomizeStateName = randomizeState.getText();
-        
-        AbstractElement.acceptForEach(Randomize.getLibrary(randomizeState, TESTABLE_MAX_PRIORITY, TESTABLE_MAX_BRANCH_FACTOR, fullStatesNamesAuthorityStub), this.renderer);
-        assertEquals(
-          "<topic name=\"" + randomizeStateName + " *\">"
-            + "<category>"
-                + "<pattern>" + randomizeStateName + " *</pattern>"
-                + "<that>*</that>"
-                + "<template><srai>RANDOMSTART <star/> RANDOMEND</srai></template>"
-            + "</category>"
-                
-            + "<category>"
-                + "<pattern>RANDOMSTART RANDOMEND</pattern>"
-                + "<that>*</that>"
-                + "<template/>"
-            + "</category>"
-                
-            + "<category>"
-                + "<pattern>RANDOMSTART * RANDOMEND</pattern>"
-                + "<that>*</that>"
-                + "<template><star/></template>"
-            + "</category>"
 
-            + "<category>"
-            + "<pattern>RANDOMSTART * * RANDOMEND</pattern>"
-            + "<that>*</that>"
-            + "<template>"
-                + "<random>"
-                    + "<li>"
+        final String randomizeStateName = this.randomizeState.getText();
+
+        AbstractElement.acceptForEach(Randomize.getLibrary(this.randomizeState,
+                TESTABLE_MAX_PRIORITY, TESTABLE_MAX_BRANCH_FACTOR,
+                fullStatesNamesAuthorityStub), this.renderer);
+        assertEquals(
+                "<topic name=\""
+                        + randomizeStateName
+                        + " *\">"
+                        + "<category>"
+                        + "<pattern>"
+                        + randomizeStateName
+                        + " *</pattern>"
+                        + "<that>*</that>"
+                        + "<template><srai>RANDOMSTART <star/> RANDOMEND</srai></template>"
+                        + "</category>"
+
+                        + "<category>"
+                        + "<pattern>RANDOMSTART RANDOMEND</pattern>"
+                        + "<that>*</that>"
+                        + "<template/>"
+                        + "</category>"
+
+                        + "<category>"
+                        + "<pattern>RANDOMSTART * RANDOMEND</pattern>"
+                        + "<that>*</that>"
+                        + "<template><star/></template>"
+                        + "</category>"
+
+                        + "<category>"
+                        + "<pattern>RANDOMSTART * * RANDOMEND</pattern>"
+                        + "<that>*</that>"
+                        + "<template>"
+                        + "<random>"
+                        + "<li>"
                         + "<star index=\"1\"/> "
                         + "<srai>"
-                            + "RANDOMSTART "
-                            + "<srai>"
-                                + "REMOVESTART "
-                                + "<star index=\"1\"/> "
-                                + "<star index=\"2\"/>"
-                                + " REMOVEEND"
-                            + "</srai>"
-                            + " RANDOMEND"
+                        + "RANDOMSTART "
+                        + "<srai>"
+                        + "REMOVESTART "
+                        + "<star index=\"1\"/> "
+                        + "<star index=\"2\"/>"
+                        + " REMOVEEND"
                         + "</srai>"
-                    + "</li>"
-                    + "<li>"
+                        + " RANDOMEND"
+                        + "</srai>"
+                        + "</li>"
+                        + "<li>"
                         + "<star index=\"2\"/> "
                         + "<srai>"
-                            + "RANDOMSTART "
-                            + "<srai>"
-                                + "REMOVESTART "
-                                + "<star index=\"2\"/> "
-                                + "<star index=\"1\"/>"
-                                + " REMOVEEND"
-                            + "</srai>"
-                            + " RANDOMEND"
+                        + "RANDOMSTART "
+                        + "<srai>"
+                        + "REMOVESTART "
+                        + "<star index=\"2\"/> "
+                        + "<star index=\"1\"/>"
+                        + " REMOVEEND"
                         + "</srai>"
-                    + "</li>"
-                + "</random>"
-            + "</template>"
-            + "</category>"            
-            
-            + "<category>"
-            + "<pattern>RANDOMSTART * * * RANDOMEND</pattern>"
-            + "<that>*</that>"
-            + "<template>"
-                + "<random>"
-                    + "<li>"
+                        + " RANDOMEND"
+                        + "</srai>"
+                        + "</li>"
+                        + "</random>"
+                        + "</template>"
+                        + "</category>"
+
+                        + "<category>"
+                        + "<pattern>RANDOMSTART * * * RANDOMEND</pattern>"
+                        + "<that>*</that>"
+                        + "<template>"
+                        + "<random>"
+                        + "<li>"
                         + "<star index=\"1\"/> "
                         + "<srai>"
-                            + "RANDOMSTART "
-                            + "<srai>"
-                                + "REMOVESTART "
-                                + "<star index=\"1\"/> "
-                                + "<star index=\"2\"/> <star index=\"3\"/>"
-                                + " REMOVEEND"
-                            + "</srai>"
-                            + " RANDOMEND"
+                        + "RANDOMSTART "
+                        + "<srai>"
+                        + "REMOVESTART "
+                        + "<star index=\"1\"/> "
+                        + "<star index=\"2\"/> <star index=\"3\"/>"
+                        + " REMOVEEND"
                         + "</srai>"
-                    + "</li>"
-                    + "<li>"
+                        + " RANDOMEND"
+                        + "</srai>"
+                        + "</li>"
+                        + "<li>"
                         + "<star index=\"2\"/> "
                         + "<srai>"
-                            + "RANDOMSTART "
-                            + "<srai>"
-                                + "REMOVESTART "
-                                + "<star index=\"2\"/> "
-                                + "<star index=\"1\"/> <star index=\"3\"/>"
-                                + " REMOVEEND"
-                            + "</srai>"
-                            + " RANDOMEND"
+                        + "RANDOMSTART "
+                        + "<srai>"
+                        + "REMOVESTART "
+                        + "<star index=\"2\"/> "
+                        + "<star index=\"1\"/> <star index=\"3\"/>"
+                        + " REMOVEEND"
                         + "</srai>"
-                    + "</li>"
-                    + "<li>"
+                        + " RANDOMEND"
+                        + "</srai>"
+                        + "</li>"
+                        + "<li>"
                         + "<star index=\"3\"/> "
                         + "<srai>"
-                            + "RANDOMSTART "
-                            + "<srai>"
-                                + "REMOVESTART "
-                                + "<star index=\"3\"/> "
-                                + "<star index=\"1\"/> <star index=\"2\"/>"
-                                + " REMOVEEND"
-                            + "</srai>"
-                            + " RANDOMEND"
+                        + "RANDOMSTART "
+                        + "<srai>"
+                        + "REMOVESTART "
+                        + "<star index=\"3\"/> "
+                        + "<star index=\"1\"/> <star index=\"2\"/>"
+                        + " REMOVEEND"
                         + "</srai>"
-                    + "</li>"
-                + "</random>"
-            + "</template>"
-            + "</category>"
-            
-            + "<category>"
-                + "<pattern>RANDOMSTART * * * * RANDOMEND</pattern>"
-                + "<that>*</that>"
-                + "<template>"
-                    + "<random>"
-                        + "<li>"
-                            + "<star index=\"1\"/> "
-                            + "<srai>"
-                                + "RANDOMSTART "
-                                + "<srai>"
-                                    + "REMOVESTART "
-                                    + "<star index=\"1\"/> "
-                                    + "<star index=\"2\"/> <star index=\"3\"/> <star index=\"4\"/>"
-                                    + " REMOVEEND"
-                                + "</srai>"
-                                + " RANDOMEND"
-                            + "</srai>"
+                        + " RANDOMEND"
+                        + "</srai>"
                         + "</li>"
-                        + "<li>"
-                            + "<star index=\"2\"/> "
-                            + "<srai>"
-                                + "RANDOMSTART "
-                                + "<srai>"
-                                    + "REMOVESTART "
-                                    + "<star index=\"2\"/> "
-                                    + "<star index=\"1\"/> <star index=\"3\"/> <star index=\"4\"/>"
-                                    + " REMOVEEND"
-                                + "</srai>"
-                                + " RANDOMEND"
-                            + "</srai>"
-                        + "</li>"
-                        + "<li>"
-                            + "<star index=\"3\"/> "
-                            + "<srai>"
-                                + "RANDOMSTART "
-                                + "<srai>"
-                                    + "REMOVESTART "
-                                    + "<star index=\"3\"/> "
-                                    + "<star index=\"1\"/> <star index=\"2\"/> <star index=\"4\"/>"
-                                    + " REMOVEEND"
-                                + "</srai>"
-                                + " RANDOMEND"
-                            + "</srai>"
-                        + "</li>"
-                        + "<li>"
-                            + "<star index=\"4\"/> "
-                            + "<srai>"
-                                + "RANDOMSTART "
-                                + "<srai>"
-                                    + "REMOVESTART "
-                                    + "<star index=\"4\"/> "
-                                    + "<star index=\"1\"/> <star index=\"2\"/> <star index=\"3\"/>"
-                                    + " REMOVEEND"
-                                + "</srai>"
-                                + " RANDOMEND"
-                            + "</srai>"
-                        + "</li>"
-                    + "</random>"
-                + "</template>"
-            + "</category>"
+                        + "</random>"
+                        + "</template>"
+                        + "</category>"
 
-            
-            + "<category>"
-                + "<pattern>REMOVESTART FIRST FIRST * REMOVEEND</pattern>"
-                + "<that>*</that>"
-                + "<template>"
-                    + "<srai>"
+                        + "<category>"
+                        + "<pattern>RANDOMSTART * * * * RANDOMEND</pattern>"
+                        + "<that>*</that>"
+                        + "<template>"
+                        + "<random>"
+                        + "<li>"
+                        + "<star index=\"1\"/> "
+                        + "<srai>"
+                        + "RANDOMSTART "
+                        + "<srai>"
+                        + "REMOVESTART "
+                        + "<star index=\"1\"/> "
+                        + "<star index=\"2\"/> <star index=\"3\"/> <star index=\"4\"/>"
+                        + " REMOVEEND"
+                        + "</srai>"
+                        + " RANDOMEND"
+                        + "</srai>"
+                        + "</li>"
+                        + "<li>"
+                        + "<star index=\"2\"/> "
+                        + "<srai>"
+                        + "RANDOMSTART "
+                        + "<srai>"
+                        + "REMOVESTART "
+                        + "<star index=\"2\"/> "
+                        + "<star index=\"1\"/> <star index=\"3\"/> <star index=\"4\"/>"
+                        + " REMOVEEND"
+                        + "</srai>"
+                        + " RANDOMEND"
+                        + "</srai>"
+                        + "</li>"
+                        + "<li>"
+                        + "<star index=\"3\"/> "
+                        + "<srai>"
+                        + "RANDOMSTART "
+                        + "<srai>"
+                        + "REMOVESTART "
+                        + "<star index=\"3\"/> "
+                        + "<star index=\"1\"/> <star index=\"2\"/> <star index=\"4\"/>"
+                        + " REMOVEEND"
+                        + "</srai>"
+                        + " RANDOMEND"
+                        + "</srai>"
+                        + "</li>"
+                        + "<li>"
+                        + "<star index=\"4\"/> "
+                        + "<srai>"
+                        + "RANDOMSTART "
+                        + "<srai>"
+                        + "REMOVESTART "
+                        + "<star index=\"4\"/> "
+                        + "<star index=\"1\"/> <star index=\"2\"/> <star index=\"3\"/>"
+                        + " REMOVEEND"
+                        + "</srai>"
+                        + " RANDOMEND"
+                        + "</srai>"
+                        + "</li>"
+                        + "</random>"
+                        + "</template>"
+                        + "</category>"
+
+                        + "<category>"
+                        + "<pattern>REMOVESTART FIRST FIRST * REMOVEEND</pattern>"
+                        + "<that>*</that>"
+                        + "<template>"
+                        + "<srai>"
                         + "REMOVESTART FIRST <star/> REMOVEEND"
-                    + "</srai>"
-                + "</template>"
-            + "</category>"
+                        + "</srai>"
+                        + "</template>"
+                        + "</category>"
 
-            + "<category>"
-                + "<pattern>REMOVESTART FIRST * * REMOVEEND</pattern>"
-                + "<that>*</that>"
-                + "<template><star index=\"1\"/> <srai>REMOVESTART FIRST <star index=\"2\"/> REMOVEEND</srai></template>"
-            + "</category>"
+                        + "<category>"
+                        + "<pattern>REMOVESTART FIRST * * REMOVEEND</pattern>"
+                        + "<that>*</that>"
+                        + "<template><star index=\"1\"/> <srai>REMOVESTART FIRST <star index=\"2\"/> REMOVEEND</srai></template>"
+                        + "</category>"
 
-            + "<category>"
-                + "<pattern>REMOVESTART FIRST FIRST REMOVEEND</pattern>"
-                + "<that>*</that>"
-                + "<template/>"
-            + "</category>"
+                        + "<category>"
+                        + "<pattern>REMOVESTART FIRST FIRST REMOVEEND</pattern>"
+                        + "<that>*</that>"
+                        + "<template/>"
+                        + "</category>"
 
-            + "<category>"
-                + "<pattern>REMOVESTART FIRST * REMOVEEND</pattern>"
-                + "<that>*</that>"
-                + "<template><star/></template>"
-            + "</category>"            
+                        + "<category>"
+                        + "<pattern>REMOVESTART FIRST * REMOVEEND</pattern>"
+                        + "<that>*</that>"
+                        + "<template><star/></template>"
+                        + "</category>"
 
-            + "<category>"
-                + "<pattern>REMOVESTART SECOND SECOND * REMOVEEND</pattern>"
-                + "<that>*</that>"
-                + "<template>"
-                    + "<srai>"
+                        + "<category>"
+                        + "<pattern>REMOVESTART SECOND SECOND * REMOVEEND</pattern>"
+                        + "<that>*</that>"
+                        + "<template>"
+                        + "<srai>"
                         + "REMOVESTART SECOND <star/> REMOVEEND"
-                    + "</srai>"
-                + "</template>"
-            + "</category>"
+                        + "</srai>"
+                        + "</template>"
+                        + "</category>"
 
-            + "<category>"
-                + "<pattern>REMOVESTART SECOND * * REMOVEEND</pattern>"
-                + "<that>*</that>"
-                + "<template><star index=\"1\"/> <srai>REMOVESTART SECOND <star index=\"2\"/> REMOVEEND</srai></template>"
-            + "</category>"
-    
-            + "<category>"
-                + "<pattern>REMOVESTART SECOND SECOND REMOVEEND</pattern>"
-                + "<that>*</that>"
-                + "<template/>"
-            + "</category>"
-    
-            + "<category>"
-                + "<pattern>REMOVESTART SECOND * REMOVEEND</pattern>"
-                + "<that>*</that>"
-                + "<template><star/></template>"
-            + "</category>"
-        
-        + "</topic>" , this.renderer.getResult());
-        
+                        + "<category>"
+                        + "<pattern>REMOVESTART SECOND * * REMOVEEND</pattern>"
+                        + "<that>*</that>"
+                        + "<template><star index=\"1\"/> <srai>REMOVESTART SECOND <star index=\"2\"/> REMOVEEND</srai></template>"
+                        + "</category>"
+
+                        + "<category>"
+                        + "<pattern>REMOVESTART SECOND SECOND REMOVEEND</pattern>"
+                        + "<that>*</that>" + "<template/>" + "</category>"
+
+                        + "<category>"
+                        + "<pattern>REMOVESTART SECOND * REMOVEEND</pattern>"
+                        + "<that>*</that>" + "<template><star/></template>"
+                        + "</category>"
+
+                        + "</topic>", this.renderer.getResult());
+
         EasyMock.verify(fullStatesNamesAuthorityStub);
     }
-    
+
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.ide.compile.library.Randomize#getLibrary(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, int, int, cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority)}.
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.compile.library.Randomize#getLibrary(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, int, int, cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority)}
+     * .
      */
     @Test
     public void testGetLibraryWhenZeroAndEmptyParameters() {
-        final NamingAuthority emptyStatesNamesAuthorityStub = EasyMock.createStrictMock(NamingAuthority.class);
-        EasyMock.expect(emptyStatesNamesAuthorityStub.getSnapshot()).andReturn(ImmutableSortedSet.<String>of());
+        final NamingAuthority emptyStatesNamesAuthorityStub =
+                EasyMock.createStrictMock(NamingAuthority.class);
+        EasyMock.expect(emptyStatesNamesAuthorityStub.getSnapshot()).andReturn(
+                ImmutableSortedSet.<String> of());
         EasyMock.replay(emptyStatesNamesAuthorityStub);
-        
-        final String randomizeStateName = randomizeState.getText();
-        
-        AbstractElement.acceptForEach(Randomize.getLibrary(randomizeState, 0, 0, emptyStatesNamesAuthorityStub), this.renderer);
+
+        final String randomizeStateName = this.randomizeState.getText();
+
+        AbstractElement.acceptForEach(Randomize.getLibrary(this.randomizeState,
+                0, 0, emptyStatesNamesAuthorityStub), this.renderer);
         assertEquals(
-          "<topic name=\"" + randomizeStateName + " *\">"
-            + "<category>"
-                + "<pattern>" + randomizeStateName + " *</pattern>"
-                + "<that>*</that>"
-                + "<template><srai>RANDOMSTART <star/> RANDOMEND</srai></template>"
-            + "</category>"
-                
-            + "<category>"
-                + "<pattern>RANDOMSTART RANDOMEND</pattern>"
-                + "<that>*</that>"
-                + "<template/>"
-            + "</category>"
-                
-            + "<category>"
-                + "<pattern>RANDOMSTART * RANDOMEND</pattern>"
-                + "<that>*</that>"
-                + "<template><star/></template>"
-            + "</category>"        
-        + "</topic>" , this.renderer.getResult());
-        
+                "<topic name=\""
+                        + randomizeStateName
+                        + " *\">"
+                        + "<category>"
+                        + "<pattern>"
+                        + randomizeStateName
+                        + " *</pattern>"
+                        + "<that>*</that>"
+                        + "<template><srai>RANDOMSTART <star/> RANDOMEND</srai></template>"
+                        + "</category>"
+
+                        + "<category>"
+                        + "<pattern>RANDOMSTART RANDOMEND</pattern>"
+                        + "<that>*</that>" + "<template/>" + "</category>"
+
+                        + "<category>"
+                        + "<pattern>RANDOMSTART * RANDOMEND</pattern>"
+                        + "<that>*</that>" + "<template><star/></template>"
+                        + "</category>" + "</topic>", this.renderer.getResult());
+
         EasyMock.verify(emptyStatesNamesAuthorityStub);
     }
 

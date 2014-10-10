@@ -26,42 +26,54 @@ import com.google.common.collect.ImmutableList;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
 
 /**
- * <p>Abstraktní třída prvku, jehož potomci jsou též prvky.<p>
- * <p>Tato částečná implementace dovoluje jako potomky pouze prvky šablony, neboť pouze jejich zpracování je požadováno.</p>
+ * <p>
+ * Abstraktní třída prvku, jehož potomci jsou též prvky.
+ * <p>
+ * <p>
+ * Tato částečná implementace dovoluje jako potomky pouze prvky šablony, neboť
+ * pouze jejich zpracování je požadováno.
+ * </p>
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public abstract class AbstractCompoundElement extends AbstractProperElement implements TemplateElement {
-    
+public abstract class AbstractCompoundElement extends AbstractProperElement
+        implements TemplateElement {
+
     private final List<TemplateElement> content;
-    
+
     /**
      * Vytvoří složený prvek ze seznamu potomků.
      * 
-     * @param children potomci
-     */
-    protected AbstractCompoundElement(final TemplateElement... children) {
-        Preconditions.checkNotNull(children);
-        
-        this.content = ImmutableList.copyOf(children);
-    }
-    
-    /**
-     * Vytvoří složený prvek ze seznamu potomků.
-     * 
-     * @param children potomci
+     * @param children
+     *            potomci
      */
     protected AbstractCompoundElement(final List<TemplateElement> children) {
         Preconditions.checkNotNull(children);
-        
+
         this.content = ImmutableList.copyOf(children);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement#getChildren()
+
+    /**
+     * Vytvoří složený prvek ze seznamu potomků.
+     * 
+     * @param children
+     *            potomci
      */
+    protected AbstractCompoundElement(final TemplateElement... children) {
+        Preconditions.checkNotNull(children);
+
+        this.content = ImmutableList.copyOf(children);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement#
+     * getChildren()
+     */
+    @Override
     public List<Element> getChildren() {
-        return ImmutableList.<Element>copyOf(this.content);
+        return ImmutableList.<Element> copyOf(this.content);
     }
 }

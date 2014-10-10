@@ -27,7 +27,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 
 /**
- * Reprezentace nutné aktualizace prvků systému po strukturální změně (přidání, odebrání uzlu či hrany), jež byla vyvolána jinou strukturální změnou.
+ * Reprezentace nutné aktualizace prvků systému po strukturální změně (přidání,
+ * odebrání uzlu či hrany), jež byla vyvolána jinou strukturální změnou.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -35,11 +36,11 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 public interface Update {
 
     /**
-     * Vrátí odstraněné odkazující hrany.
+     * Vrátí odebrané hrany.
      * 
-     * @return odstraněné odkazující hrany
+     * @return odebrané hrany
      */
-    Set<RecurentArc> getReferencesRemoved();
+    Set<Arc> getEdgesRemoved();
 
     /**
      * Vrátí nově přidané vstupní uzly.
@@ -56,17 +57,17 @@ public interface Update {
     Set<EnterNode> getInitialsRemoved();
 
     /**
+     * Vrátí odstraněné odkazující hrany.
+     * 
+     * @return odstraněné odkazující hrany
+     */
+    Set<RecurentArc> getReferencesRemoved();
+
+    /**
      * Vrátí náhrady uzlu za uzel.
      * 
      * @return náhrady uzlu za uzel
      */
     Map<Node, Node> getSwitched();
-
-    /**
-     * Vrátí odebrané hrany.
-     * 
-     * @return odebrané hrany
-     */
-    Set<Arc> getEdgesRemoved();
 
 }

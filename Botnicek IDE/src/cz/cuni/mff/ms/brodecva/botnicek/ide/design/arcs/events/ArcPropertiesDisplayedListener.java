@@ -31,7 +31,8 @@ public interface ArcPropertiesDisplayedListener {
     /**
      * Vyzve k zobrazení podrobností hrany.
      * 
-     * @param arc hrana
+     * @param arc
+     *            hrana
      */
     void propertiesDisplayedOf(Arc arc);
 

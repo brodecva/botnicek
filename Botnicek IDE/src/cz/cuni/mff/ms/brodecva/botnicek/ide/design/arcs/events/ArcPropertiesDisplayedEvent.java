@@ -30,37 +30,44 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class ArcPropertiesDisplayedEvent extends AbstractMappedEvent<System, ArcPropertiesDisplayedListener> {
-    
-    private final Arc arc;
-    
+public final class ArcPropertiesDisplayedEvent extends
+        AbstractMappedEvent<System, ArcPropertiesDisplayedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param system systém s hranou
-     * @param arc hrana
+     * @param system
+     *            systém s hranou
+     * @param arc
+     *            hrana
      * @return událost
      */
-    public static ArcPropertiesDisplayedEvent create(final System system, final Arc arc) {
+    public static ArcPropertiesDisplayedEvent create(final System system,
+            final Arc arc) {
         return new ArcPropertiesDisplayedEvent(system, arc);
     }
-    
+
+    private final Arc arc;
+
     private ArcPropertiesDisplayedEvent(final System system, final Arc arc) {
         super(system);
-        
+
         Preconditions.checkNotNull(arc);
-        
+
         this.arc = arc;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final ArcPropertiesDisplayedListener listener) {
         Preconditions.checkNotNull(listener);
-        
+
         listener.propertiesDisplayedOf(this.arc);
     }
 }
- 

@@ -32,7 +32,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 
 /**
- * Výchozí implementace {@link NodeTopicFactory}. Vytvoří dle definice téma z kanonických součástí.
+ * Výchozí implementace {@link NodeTopicFactory}. Vytvoří dle definice téma z
+ * kanonických součástí.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -47,22 +48,28 @@ final class DefaultNodeTopicFactory implements NodeTopicFactory {
     public static DefaultNodeTopicFactory create() {
         return new DefaultNodeTopicFactory();
     }
-    
+
     private DefaultNodeTopicFactory() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.translate.NodeTopicFactory#produce(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, java.util.List)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.translate.NodeTopicFactory#produce
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node,
+     * java.util.List)
      */
     @Override
     public Topic produce(final Node node, final List<TemplateElement> code) {
         Preconditions.checkNotNull(node);
         Preconditions.checkNotNull(code);
-        
+
         final List<TemplateElement> codeCopy = ImmutableList.copyOf(code);
-        
+
         return Topic.create(
-                Patterns.create(node.getName().getText() + AIML.WORD_DELIMITER + AIML.STAR_WILDCARD),
+                Patterns.create(node.getName().getText() + AIML.WORD_DELIMITER
+                        + AIML.STAR_WILDCARD),
                 Category.createUniversal(Template.create(codeCopy)));
     }
 

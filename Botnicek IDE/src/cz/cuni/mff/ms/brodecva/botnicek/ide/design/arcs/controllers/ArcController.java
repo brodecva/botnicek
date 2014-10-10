@@ -30,59 +30,82 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller;
  */
 public interface ArcController extends Controller<ArcView> {
     /**
-     * Aktualizuje hranu testující vzor.
-     * 
-     * @param newName nové jméno hrany
-     * @param priority nová priorita hrany
-     * @param pattern nový vzor
-     * @param that nový vzor zmínky
-     * @param code nový kód
-     */
-    void updatePattern(String newName, int priority, String pattern, String that,
-            String code);
-    
-    /**
      * Aktualizuje hranu testující kód.
      * 
-     * @param newName nové jméno hrany
-     * @param priority nová priorita hrany
-     * @param code nový kód
-     * @param testedCode kód generující testovanou hodnotu
-     * @param value očekávaná hodnota
+     * @param newName
+     *            nové jméno hrany
+     * @param priority
+     *            nová priorita hrany
+     * @param code
+     *            nový kód
+     * @param testedCode
+     *            kód generující testovanou hodnotu
+     * @param value
+     *            očekávaná hodnota
      */
     void updateCodeTest(String newName, int priority, String code,
             String testedCode, String value);
-    
-    /**
-     * Aktualizuje hranu testující predikát.
-     * 
-     * @param newName nové jméno hrany
-     * @param priority nová priorita hrany
-     * @param code nový kód
-     * @param prepareCode přípravný kód
-     * @param predicateName název testovaného predikátu
-     * @param value očekávaná hodnota
-     */
-    void updatePredicateTest(String newName, int priority, String code,
-            String prepareCode, String predicateName, String value);
-    
+
     /**
      * Aktualizuje hranu testující vzor.
      * 
-     * @param newName nové jméno hrany
-     * @param priority nová priorita hrany
-     * @param code nový kód
-     * @param target uzel zanoření 
+     * @param newName
+     *            nové jméno hrany
+     * @param priority
+     *            nová priorita hrany
+     * @param pattern
+     *            nový vzor
+     * @param that
+     *            nový vzor zmínky
+     * @param code
+     *            nový kód
+     */
+    void updatePattern(String newName, int priority, String pattern,
+            String that, String code);
+
+    /**
+     * Aktualizuje hranu testující predikát.
+     * 
+     * @param newName
+     *            nové jméno hrany
+     * @param priority
+     *            nová priorita hrany
+     * @param code
+     *            nový kód
+     * @param prepareCode
+     *            přípravný kód
+     * @param predicateName
+     *            název testovaného predikátu
+     * @param value
+     *            očekávaná hodnota
+     */
+    void updatePredicateTest(String newName, int priority, String code,
+            String prepareCode, String predicateName, String value);
+
+    /**
+     * Aktualizuje hranu testující vzor.
+     * 
+     * @param newName
+     *            nové jméno hrany
+     * @param priority
+     *            nová priorita hrany
+     * @param code
+     *            nový kód
+     * @param target
+     *            uzel zanoření
      */
     void updateRecurent(String newName, int priority, String code,
             EnterNode target);
-    
+
     /**
      * Aktualizuje vždy průchozí hranu.
      * 
-     * @param newName nové jméno hrany
-     * @param priority nová priorita hrany
-     * @param code nový kód
+     * @param newName
+     *            nové jméno hrany
+     * @param priority
+     *            nová priorita hrany
+     * @param code
+     *            nový kód
      */
     void updateTransition(String newName, int priority, String code);
 }

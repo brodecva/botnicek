@@ -23,13 +23,15 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events;
  * 
  * @author Václav Brodec
  * @version 1.0
- * @param <L> typ posluchače
+ * @param <L>
+ *            typ posluchače
  */
 public interface Event<L> extends Visitable {
     /**
      * Vypraví událost k posluchači.
      * 
-     * @param listener posluchač
+     * @param listener
+     *            posluchač
      */
     void dispatchTo(L listener);
 }

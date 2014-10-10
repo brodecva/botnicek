@@ -28,7 +28,12 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.layouts;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Insets;
+
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
@@ -60,7 +65,7 @@ public final class WrapLayout extends FlowLayout {
      * @param align
      *            the alignment value
      */
-    public WrapLayout(int align) {
+    public WrapLayout(final int align) {
         super(align);
     }
 
@@ -79,38 +84,29 @@ public final class WrapLayout extends FlowLayout {
      * @param vgap
      *            the vertical gap between components
      */
-    public WrapLayout(int align, int hgap, int vgap) {
+    public WrapLayout(final int align, final int hgap, final int vgap) {
         super(align, hgap, vgap);
     }
 
-    /**
-     * Returns the preferred dimensions for this layout given the <i>visible</i>
-     * components in the specified target container.
+    /*
+     * A new row has been completed. Use the dimensions of this row to update
+     * the preferred size for the container.
      * 
-     * @param target
-     *            the component which needs to be laid out
-     * @return the preferred dimensions to lay out the subcomponents of the
-     *         specified container
+     * @param dim update the width and height when appropriate
+     * 
+     * @param rowWidth the width of the row to add
+     * 
+     * @param rowHeight the height of the row to add
      */
-    @Override
-    public Dimension preferredLayoutSize(Container target) {
-        return layoutSize(target, true);
-    }
+    private void addRow(final Dimension dim, final int rowWidth,
+            final int rowHeight) {
+        dim.width = Math.max(dim.width, rowWidth);
 
-    /**
-     * Returns the minimum dimensions needed to layout the <i>visible</i>
-     * components contained in the specified target container.
-     * 
-     * @param target
-     *            the component which needs to be laid out
-     * @return the minimum dimensions to lay out the subcomponents of the
-     *         specified container
-     */
-    @Override
-    public Dimension minimumLayoutSize(Container target) {
-        Dimension minimum = layoutSize(target, false);
-        minimum.width -= (getHgap() + 1);
-        return minimum;
+        if (dim.height > 0) {
+            dim.height += getVgap();
+        }
+
+        dim.height += rowHeight;
     }
 
     /**
@@ -123,7 +119,8 @@ public final class WrapLayout extends FlowLayout {
      *            should preferred size be calculated
      * @return the dimension to layout the target container
      */
-    private Dimension layoutSize(Container target, boolean preferred) {
+    private Dimension
+            layoutSize(final Container target, final boolean preferred) {
         synchronized (target.getTreeLock()) {
             // Each row must fit with the width allocated to the containter.
             // When the container width = 0, the preferred width of the
@@ -132,29 +129,30 @@ public final class WrapLayout extends FlowLayout {
 
             int targetWidth = target.getSize().width;
 
-            if (targetWidth == 0)
+            if (targetWidth == 0) {
                 targetWidth = Integer.MAX_VALUE;
+            }
 
-            int hgap = getHgap();
-            int vgap = getVgap();
-            Insets insets = target.getInsets();
-            int horizontalInsetsAndGap =
+            final int hgap = getHgap();
+            final int vgap = getVgap();
+            final Insets insets = target.getInsets();
+            final int horizontalInsetsAndGap =
                     insets.left + insets.right + (hgap * 2);
-            int maxWidth = targetWidth - horizontalInsetsAndGap;
+            final int maxWidth = targetWidth - horizontalInsetsAndGap;
 
             // Fit components into the allowed width
 
-            Dimension dim = new Dimension(0, 0);
+            final Dimension dim = new Dimension(0, 0);
             int rowWidth = 0;
             int rowHeight = 0;
 
-            int nmembers = target.getComponentCount();
+            final int nmembers = target.getComponentCount();
 
             for (int i = 0; i < nmembers; i++) {
-                Component m = target.getComponent(i);
+                final Component m = target.getComponent(i);
 
                 if (m.isVisible()) {
-                    Dimension d =
+                    final Dimension d =
                             preferred ? m.getPreferredSize() : m
                                     .getMinimumSize();
 
@@ -187,7 +185,7 @@ public final class WrapLayout extends FlowLayout {
             // target containter so shrinking the container size works
             // correctly. Removing the horizontal gap is an easy way to do this.
 
-            Container scrollPane =
+            final Container scrollPane =
                     SwingUtilities
                             .getAncestorOfClass(JScrollPane.class, target);
 
@@ -199,23 +197,33 @@ public final class WrapLayout extends FlowLayout {
         }
     }
 
-    /*
-     * A new row has been completed. Use the dimensions of this row to update
-     * the preferred size for the container.
+    /**
+     * Returns the minimum dimensions needed to layout the <i>visible</i>
+     * components contained in the specified target container.
      * 
-     * @param dim update the width and height when appropriate
-     * 
-     * @param rowWidth the width of the row to add
-     * 
-     * @param rowHeight the height of the row to add
+     * @param target
+     *            the component which needs to be laid out
+     * @return the minimum dimensions to lay out the subcomponents of the
+     *         specified container
      */
-    private void addRow(Dimension dim, int rowWidth, int rowHeight) {
-        dim.width = Math.max(dim.width, rowWidth);
+    @Override
+    public Dimension minimumLayoutSize(final Container target) {
+        final Dimension minimum = layoutSize(target, false);
+        minimum.width -= (getHgap() + 1);
+        return minimum;
+    }
 
-        if (dim.height > 0) {
-            dim.height += getVgap();
-        }
-
-        dim.height += rowHeight;
+    /**
+     * Returns the preferred dimensions for this layout given the <i>visible</i>
+     * components in the specified target container.
+     * 
+     * @param target
+     *            the component which needs to be laid out
+     * @return the preferred dimensions to lay out the subcomponents of the
+     *         specified container
+     */
+    @Override
+    public Dimension preferredLayoutSize(final Container target) {
+        return layoutSize(target, true);
     }
 }

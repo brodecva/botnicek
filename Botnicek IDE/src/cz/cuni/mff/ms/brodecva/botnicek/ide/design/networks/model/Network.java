@@ -30,7 +30,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 
 /**
- * Rozhraní sítě dovoluje přidávat nové prvky a dotazovat se na jejich okolí. Též poskytuje odkaz na rodičovský systém.
+ * Rozhraní sítě dovoluje přidávat nové prvky a dotazovat se na jejich okolí.
+ * Též poskytuje odkaz na rodičovský systém.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -38,27 +39,85 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction;
 public interface Network extends AutonomousComponent, Visitable {
 
     /**
-     * Vrátí hrany napojené na uzel v síti.
+     * Přidá výchozí typ hrany mezi uzly sítě.
      * 
-     * @param node uzel
-     * @param direction místo připojení uzlu k hranám
-     * @return hrany napojené na uzel v síti
+     * @param name
+     *            název nové hrany
+     * @param fromName
+     *            výchozí uzel hrany
+     * @param toName
+     *            cílový uzel hrany
      */
-    Set<Arc> getConnections(final Node node, final Direction direction);
+    void addArc(final NormalWord name, final NormalWord fromName,
+            NormalWord toName);
+
+    /**
+     * Přidá izolovaný uzel do sítě.
+     * 
+     * @param x
+     *            souřadnice nového uzlu na ose x
+     * @param y
+     *            souřadnice nového uzlu na ose y
+     */
+    void addNode(final int x, final int y);
+
+    /**
+     * Indikuje, zda-li první uzel v daném směru sousedí s druhým.
+     * 
+     * @param first
+     *            první uzel sítě
+     * @param second
+     *            druhý uzel sítě
+     * @param direction
+     *            směr
+     * @return zda-li první uzel v daném směru sousedí s druhým
+     */
+    boolean adjoins(Node first, Node second, Direction direction);
+
+    /**
+     * Porovná objekt s sítí.
+     * 
+     * @param obj
+     *            objekt
+     * @return zda-li jde o stejnou síť (má stejný identifikátor a rodiče)
+     */
+    @Override
+    boolean equals(final Object obj);
 
     /**
      * Vrátí uzel na daném konci hrany.
      * 
-     * @param arc hrana v síti
-     * @param direction místo napojení
+     * @param arc
+     *            hrana v síti
+     * @param direction
+     *            místo napojení
      * @return uzel na daném konci hrany
      */
     Node getAttached(final Arc arc, final Direction direction);
 
     /**
+     * Vrátí hrany napojené na uzel v síti.
+     * 
+     * @param node
+     *            uzel
+     * @param direction
+     *            místo připojení uzlu k hranám
+     * @return hrany napojené na uzel v síti
+     */
+    Set<Arc> getConnections(final Node node, final Direction direction);
+
+    /**
+     * Vrátí jednoznačný identifikátor sítě.
+     * 
+     * @return identifikátor sítě
+     */
+    UUID getId();
+
+    /**
      * Vrátí vstupní hrany uzlu.
      * 
-     * @param node uzel v síti
+     * @param node
+     *            uzel v síti
      * @return vstupní hrany
      */
     Set<Arc> getIns(final Node node);
@@ -66,7 +125,8 @@ public interface Network extends AutonomousComponent, Visitable {
     /**
      * Vrátí výstupní hrany uzlu.
      * 
-     * @param node uzel v síti
+     * @param node
+     *            uzel v síti
      * @return výstupní hrany
      */
     Set<Arc> getOuts(final Node node);
@@ -78,50 +138,9 @@ public interface Network extends AutonomousComponent, Visitable {
      */
     System getSystem();
 
-    /**
-     * Vrátí jednoznačný identifikátor sítě.
+    /*
+     * (non-Javadoc)
      * 
-     * @return identifikátor sítě
-     */
-    UUID getId();
-
-    /**
-     * Přidá výchozí typ hrany mezi uzly sítě.
-     * 
-     * @param name název nové hrany
-     * @param fromName výchozí uzel hrany
-     * @param toName cílový uzel hrany
-     */
-    void addArc(final NormalWord name, final NormalWord fromName, NormalWord toName);
-
-    /**
-     * Přidá izolovaný uzel do sítě.
-     * 
-     * @param x souřadnice nového uzlu na ose x
-     * @param y souřadnice nového uzlu na ose y
-     */
-    void addNode(final int x, final int y);
-
-    /**
-     * Indikuje, zda-li první uzel v daném směru sousedí s druhým.
-     * 
-     * @param first první uzel sítě
-     * @param second druhý uzel sítě
-     * @param direction směr
-     * @return zda-li první uzel v daném směru sousedí s druhým
-     */
-    boolean adjoins(Node first, Node second,
-            Direction direction);
-    
-    /**
-     * Porovná objekt s sítí.
-     * 
-     * @param obj objekt
-     * @return zda-li jde o stejnou síť (má stejný identifikátor a rodiče)
-     */
-    boolean equals(final Object obj);
-
-    /* (non-Javadoc)
      * @see java.lang.Object#hashCode()
      */
     @Override

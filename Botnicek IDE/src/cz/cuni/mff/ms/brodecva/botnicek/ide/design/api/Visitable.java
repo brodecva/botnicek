@@ -28,7 +28,8 @@ public interface Visitable {
     /**
      * Přijme návštěvníka.
      * 
-     * @param visitor návštěvník systému sítí
+     * @param visitor
+     *            návštěvník systému sítí
      */
     void accept(Visitor visitor);
 }

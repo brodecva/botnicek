@@ -19,37 +19,43 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types;
 
 /**
- * Normální slovo (tj. slovo pouze z normálních znaků) dle definice jazyka AIML. Při porovnání s jiným slovem se zohledňuje samotný text.
+ * Normální slovo (tj. slovo pouze z normálních znaků) dle definice jazyka AIML.
+ * Při porovnání s jiným slovem se zohledňuje samotný text.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-normal-words">http://www.alicebot.org/TR/2011/#section-normal-words</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-normal-words">http://www.alicebot.org/TR/2011/#section-normal-words</a>
  */
 public interface NormalWord extends Comparable<NormalWord> {
-    
+
+    /**
+     * Porovná textové hodnoty normálních slov.
+     * 
+     * @see Comparable
+     */
+    @Override
+    public int compareTo(NormalWord other);
+
+    /**
+     * Porovná objekt s normálním slovem. Shoduje se pouze s jiným normálním
+     * slovem stejného textu.
+     */
+    @Override
+    public boolean equals(Object object);
+
     /**
      * Vrátí vlastní text slova.
      * 
      * @return text slova
      */
     public String getText();
-    
-    /** 
-     * Porovná textové hodnoty normálních slov.
-     * @see Comparable
-     */
-    @Override
-    public int compareTo(NormalWord other);
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
     public int hashCode();
-    
-    /**
-     * Porovná objekt s normálním slovem. Shoduje se pouze s jiným normálním slovem stejného textu.
-     */
-    @Override
-    public boolean equals(Object object);
 }

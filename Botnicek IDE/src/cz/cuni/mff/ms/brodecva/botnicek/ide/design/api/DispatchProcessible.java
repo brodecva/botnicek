@@ -19,7 +19,8 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.api;
 
 /**
- * Rozhraní prvků systému sítí, které jsou zpracovatelné procesorem pro určení míry determinismu přechodu do dalšího stavu.
+ * Rozhraní prvků systému sítí, které jsou zpracovatelné procesorem pro určení
+ * míry determinismu přechodu do dalšího stavu.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -29,7 +30,9 @@ public interface DispatchProcessible {
     /**
      * Přijme procesor.
      * 
-     * @param processor procesor pro určení míry determinismu přechodu do dalšího stavu
+     * @param processor
+     *            procesor pro určení míry determinismu přechodu do dalšího
+     *            stavu
      * @return výsledek zpracování
      */
     <T> T accept(DispatchProcessor<T> processor);

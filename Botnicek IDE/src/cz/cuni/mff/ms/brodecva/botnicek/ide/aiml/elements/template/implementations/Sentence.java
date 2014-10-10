@@ -25,45 +25,53 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateEleme
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TextFormattingElement;
 
 /**
- * Naformátuje textový výstup z potomků do podoby vět, tj. pro všechny úseky končící tečkou zvětší jejich první písmena dle lokálního nastavení. 
+ * Naformátuje textový výstup z potomků do podoby vět, tj. pro všechny úseky
+ * končící tečkou zvětší jejich první písmena dle lokálního nastavení.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-sentence">http://www.alicebot.org/TR/2011/#section-sentence</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-sentence">http://www.alicebot.org/TR/2011/#section-sentence</a>
  */
-public final class Sentence extends AbstractCompoundElement implements TextFormattingElement {
+public final class Sentence extends AbstractCompoundElement implements
+        TextFormattingElement {
     private static final String NAME = "sentence";
 
     /**
      * Vytvoří prvek.
      * 
-     * @param content potomci
-     * @return prvek
-     */
-    public static Sentence create(final TemplateElement... content) {
-        return new Sentence(content);
-    }
-    
-    /**
-     * Vytvoří prvek.
-     * 
-     * @param content potomci
+     * @param content
+     *            potomci
      * @return prvek
      */
     public static Sentence create(final List<TemplateElement> content) {
         return new Sentence(content);
     }
-    
-    private Sentence(final TemplateElement... content) {
-        super(content);
+
+    /**
+     * Vytvoří prvek.
+     * 
+     * @param content
+     *            potomci
+     * @return prvek
+     */
+    public static Sentence create(final TemplateElement... content) {
+        return new Sentence(content);
     }
-    
+
     private Sentence(final List<TemplateElement> content) {
         super(content);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    private Sentence(final TemplateElement... content) {
+        super(content);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {

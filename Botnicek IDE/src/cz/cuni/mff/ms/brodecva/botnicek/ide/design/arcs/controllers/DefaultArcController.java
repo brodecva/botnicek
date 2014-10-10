@@ -20,6 +20,7 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers;
 
 import java.net.URI;
 import java.util.Map;
+
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
@@ -63,6 +64,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.RecurentArc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.TransitionArc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.ArcView;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.NetworkRemovedEvent;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.events.NetworkRemovedListener;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
@@ -74,37 +78,18 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration;
 
 /**
- * Výchozí řadič vlastností hrany provádí přes samotnou aktualizací modelu celou řadu validací zadaných údajů, které nemusí nutně odpovídat požadované formě. Případné nálezy jsou nepřímo ohlášeny příslušným posluchačům a je pak znemožněno aktualizovat model, dokud se chyby neodstraní.
+ * Výchozí řadič vlastností hrany provádí přes samotnou aktualizací modelu celou
+ * řadu validací zadaných údajů, které nemusí nutně odpovídat požadované formě.
+ * Případné nálezy jsou nepřímo ohlášeny příslušným posluchačům a je pak
+ * znemožněno aktualizovat model, dokud se chyby neodstraní.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultArcController extends AbstractController<ArcView> implements ArcController {
-    
-    private class DefaultArcRemovedListener implements ArcRemovedListener {
-        
-        /**
-         * {@inheritDoc}
-         * 
-         * Odstraní pohledy na podrobnosti hrany.
-         */
-        @Override
-        public void arcRemoved(final Arc arc) {
-            Preconditions.checkNotNull(arc);
-            
-            callViews(new Callback<ArcView>() {
+public final class DefaultArcController extends AbstractController<ArcView>
+        implements ArcController {
 
-                @Override
-                public void call(final ArcView view) {
-                    view.removed();
-                }                
-            });
-        }
-        
-    }
-    
-    private final class DefaultArcChangedListener implements
-            ArcChangedListener {
+    private final class DefaultArcChangedListener implements ArcChangedListener {
         /**
          * {@inheritDoc}
          * 
@@ -113,15 +98,58 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
         @Override
         public void arcChanged(final Arc arc) {
             Preconditions.checkNotNull(arc);
-            
+
             setCurrent(arc);
-            
+
             callViews(getCallbackOnCurrent());
         }
     }
+
+    private class DefaultArcRemovedListener implements ArcRemovedListener {
+
+        /**
+         * {@inheritDoc}
+         * 
+         * Odstraní pohledy na podrobnosti hrany.
+         */
+        @Override
+        public void arcRemoved(final Arc arc) {
+            Preconditions.checkNotNull(arc);
+
+            callViews(new Callback<ArcView>() {
+
+                @Override
+                public void call(final ArcView view) {
+                    view.removed();
+                }
+            });
+        }
+
+    }
     
+    private class DefaultNetworkRemovedListener implements NetworkRemovedListener {
+
+        /**
+         * {@inheritDoc}
+         * 
+         * Užívá se k odstraní pohledů na podrobnosti hrany sítě, jež byla odstraněna.
+         */
+        @Override
+        public void removed(final Network network) {
+            Preconditions.checkNotNull(network);
+
+            callViews(new Callback<ArcView>() {
+
+                @Override
+                public void call(final ArcView view) {
+                    view.removed();
+                }
+            });
+        }
+    }
+
     private class DefaultFromRenamedListener implements FromRenamedListener {
-        
+
         /**
          * {@inheritDoc}
          * 
@@ -131,22 +159,22 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
         public void fromRenamed(final Node oldVersion, final Node newVersion) {
             Preconditions.checkNotNull(oldVersion);
             Preconditions.checkNotNull(newVersion);
-            
+
             callViews(new Callback<ArcView>() {
 
                 @Override
                 public void call(final ArcView view) {
                     Preconditions.checkNotNull(view);
-                    
+
                     view.updateFrom(newVersion.getName());
-                }                
+                }
             });
         }
-        
+
     }
-    
+
     private class DefaultToRenamedListener implements ToRenamedListener {
-        
+
         /**
          * {@inheritDoc}
          * 
@@ -156,69 +184,30 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
         public void toRenamed(final Node oldVersion, final Node newVersion) {
             Preconditions.checkNotNull(oldVersion);
             Preconditions.checkNotNull(newVersion);
-            
+
             callViews(new Callback<ArcView>() {
 
                 @Override
                 public void call(final ArcView view) {
                     Preconditions.checkNotNull(view);
-                    
+
                     view.updateTo(newVersion.getName());
-                }                
+                }
             });
         }
-        
+
     }
 
     /**
      * Aktualizuje pohledy s ohledem na typ hrany, jejíž podrobnosti zobrazují.
      */
-    private final static class ViewProcessor implements Processor<Callback<ArcView>> {
-        
-        @Override
-        public final Callback<ArcView> process(final TransitionArc arc) {
-            return new Callback<ArcView>() {
-    
-                @Override
-                public void call(final ArcView parameter) {
-                    parameter.updateName(arc.getName());
-                    parameter.updatePriority(arc.getPriority());
-                    parameter.updateType(TransitionArc.class);
-                    parameter.updateFrom(arc.getFrom().getName());
-                    parameter.updateTo(arc.getTo().getName());
-                    
-                    parameter.updatedCode(arc.getCode());
-                }
-                
-            };
-        }
-    
-        @Override
-        public final Callback<ArcView> process(final PredicateTestArc arc) {
-            return new Callback<ArcView>() {
-    
-                @Override
-                public void call(final ArcView parameter) {
-                    parameter.updateName(arc.getName());
-                    parameter.updatePriority(arc.getPriority());
-                    parameter.updateType(PredicateTestArc.class);
-                    parameter.updateFrom(arc.getFrom().getName());
-                    parameter.updateTo(arc.getTo().getName());
-                    
-                    parameter.updatedCode(arc.getCode());
-                    
-                    parameter.updatedPrepare(arc.getPrepareCode());
-                    parameter.updatedPredicate(arc.getPredicateName());
-                    parameter.updatedValue(arc.getValue());
-                }
-                
-            };
-        }
-    
+    private final static class ViewProcessor implements
+            Processor<Callback<ArcView>> {
+
         @Override
         public final Callback<ArcView> process(final CodeTestArc arc) {
             return new Callback<ArcView>() {
-    
+
                 @Override
                 public void call(final ArcView parameter) {
                     parameter.updateName(arc.getName());
@@ -226,40 +215,20 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
                     parameter.updateType(CodeTestArc.class);
                     parameter.updateFrom(arc.getFrom().getName());
                     parameter.updateTo(arc.getTo().getName());
-                    
+
                     parameter.updatedCode(arc.getCode());
-                    
+
                     parameter.updatedTested(arc.getTested());
                     parameter.updatedValue(arc.getValue());
                 }
-                
+
             };
         }
-    
-        @Override
-        public final Callback<ArcView> process(final RecurentArc arc) {
-            return new Callback<ArcView>() {
-    
-                @Override
-                public void call(final ArcView parameter) {
-                    parameter.updateName(arc.getName());
-                    parameter.updatePriority(arc.getPriority());
-                    parameter.updateType(RecurentArc.class);
-                    parameter.updateFrom(arc.getFrom().getName());
-                    parameter.updateTo(arc.getTo().getName());
-                    
-                    parameter.updatedCode(arc.getCode());
-                    
-                    parameter.updatedTarget(arc.getTarget());
-                }
-                
-            };
-        }
-    
+
         @Override
         public final Callback<ArcView> process(final PatternArc arc) {
             return new Callback<ArcView>() {
-    
+
                 @Override
                 public void call(final ArcView parameter) {
                     parameter.updateName(arc.getName());
@@ -267,64 +236,191 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
                     parameter.updateType(PatternArc.class);
                     parameter.updateFrom(arc.getFrom().getName());
                     parameter.updateTo(arc.getTo().getName());
-                    
+
                     parameter.updatedCode(arc.getCode());
-                    
+
                     parameter.updatedPattern(arc.getPattern());
                     parameter.updatedThat(arc.getThat());
                 }
-                
+
+            };
+        }
+
+        @Override
+        public final Callback<ArcView> process(final PredicateTestArc arc) {
+            return new Callback<ArcView>() {
+
+                @Override
+                public void call(final ArcView parameter) {
+                    parameter.updateName(arc.getName());
+                    parameter.updatePriority(arc.getPriority());
+                    parameter.updateType(PredicateTestArc.class);
+                    parameter.updateFrom(arc.getFrom().getName());
+                    parameter.updateTo(arc.getTo().getName());
+
+                    parameter.updatedCode(arc.getCode());
+
+                    parameter.updatedPrepare(arc.getPrepareCode());
+                    parameter.updatedPredicate(arc.getPredicateName());
+                    parameter.updatedValue(arc.getValue());
+                }
+
+            };
+        }
+
+        @Override
+        public final Callback<ArcView> process(final RecurentArc arc) {
+            return new Callback<ArcView>() {
+
+                @Override
+                public void call(final ArcView parameter) {
+                    parameter.updateName(arc.getName());
+                    parameter.updatePriority(arc.getPriority());
+                    parameter.updateType(RecurentArc.class);
+                    parameter.updateFrom(arc.getFrom().getName());
+                    parameter.updateTo(arc.getTo().getName());
+
+                    parameter.updatedCode(arc.getCode());
+
+                    parameter.updatedTarget(arc.getTarget());
+                }
+
+            };
+        }
+
+        @Override
+        public final Callback<ArcView> process(final TransitionArc arc) {
+            return new Callback<ArcView>() {
+
+                @Override
+                public void call(final ArcView parameter) {
+                    parameter.updateName(arc.getName());
+                    parameter.updatePriority(arc.getPriority());
+                    parameter.updateType(TransitionArc.class);
+                    parameter.updateFrom(arc.getFrom().getName());
+                    parameter.updateTo(arc.getTo().getName());
+
+                    parameter.updatedCode(arc.getCode());
+                }
+
             };
         }
     }
 
     private static final SimplePatternChecker DEFAULT_SIMPLE_PATTERN_CHECKER =
             DefaultSimplePatternChecker.create();
-    
-    private final System system;
-    private Arc current;
-    
-    private final NormalWordBuilderFactory nodeNameBuilderFactory;
-    private final NormalWordBuilderFactory predicateNameBuilderFactory;
-    private final SimplePatternBuilderFactory simplePatternBuilderFactory;
-    private final MixedPatternBuilderFactory mixedPatternBuilderFactory;
-    private final CodeContentBuilderFactory codeBuilderFactory;
-    
+
     /**
      * Vytvoří řadič a zaregistruje jej na modelu.
      * 
-     * @param system systém sítí, v kterém se hrana nachází
-     * @param eventManager správce událostí
-     * @param current aktuální podoba hrany
-     * @param botSettings nastavení bota
-     * @param languageSettings nastavení jazyka
-     * @param namespacesToPrefixes prefixy pro prostory jmen AIML
+     * @param system
+     *            systém sítí, v kterém se hrana nachází
+     * @param eventManager
+     *            správce událostí
+     * @param current
+     *            aktuální podoba hrany
+     * @param botSettings
+     *            nastavení bota
+     * @param languageSettings
+     *            nastavení jazyka
+     * @param namespacesToPrefixes
+     *            prefixy pro prostory jmen AIML
      * @return řadič
      */
-    public static DefaultArcController create(final System system, final EventManager eventManager, final Arc current, final BotConfiguration botSettings, final LanguageConfiguration languageSettings, final Map<URI, String> namespacesToPrefixes) {
-        final NormalWordChecker nameChecker = DefaultNormalWordChecker.create(system.getStatesNamingAuthority());
-        final NormalWordChecker predicatesChecker = DefaultNormalWordChecker.create(system.getPredicatesNamingAuthority());
-        final CodeChecker codeChecker = DefaultCodeChecker.create(botSettings, languageSettings, namespacesToPrefixes);
-        
-        return create(system, eventManager, current, nameChecker, codeChecker, DEFAULT_SIMPLE_PATTERN_CHECKER, DefaultMixedPatternChecker.create(codeChecker), predicatesChecker);
+    public static DefaultArcController create(final System system,
+            final EventManager eventManager, final Arc current,
+            final BotConfiguration botSettings,
+            final LanguageConfiguration languageSettings,
+            final Map<URI, String> namespacesToPrefixes) {
+        final NormalWordChecker nameChecker =
+                DefaultNormalWordChecker.create(system
+                        .getStatesNamingAuthority());
+        final NormalWordChecker predicatesChecker =
+                DefaultNormalWordChecker.create(system
+                        .getPredicatesNamingAuthority());
+        final CodeChecker codeChecker =
+                DefaultCodeChecker.create(botSettings, languageSettings,
+                        namespacesToPrefixes);
+
+        return create(system, eventManager, current, nameChecker, codeChecker,
+                DEFAULT_SIMPLE_PATTERN_CHECKER,
+                DefaultMixedPatternChecker.create(codeChecker),
+                predicatesChecker);
     }
-    
+
     /**
      * Vytvoří řadič a zaregistruje jej na modelu.
      * 
-     * @param system systém sítí, v kterém se hrana nachází
-     * @param eventManager správce událostí
-     * @param current aktuální podoba hrany
-     * @param nodeNameChecker validátor názvů stavu
-     * @param codeChecker validátor kódu
-     * @param simplePatternChecker validátor prostých vzorů
-     * @param mixedPatternChecker validátor složených vzorů
-     * @param predicateNameChecker validátor názvů predikátů
+     * @param system
+     *            systém sítí, v kterém se hrana nachází
+     * @param eventManager
+     *            správce událostí
+     * @param current
+     *            aktuální podoba hrany
+     * @param nodeNameBuilderFactory
+     *            továrna na konstruktor názvů stavu
+     * @param codeBuilderFactory
+     *            továrna na konstruktor kódu
+     * @param simplePatternBuilderFactory
+     *            továrna na konstruktor prostých vzorů
+     * @param mixedPatternBuilderFactory
+     *            továrna na konstruktor složených vzorů
+     * @param predicateNameBuilderFactory
+     *            továrna na konstruktor názvů predikátů
      * @return řadič
      */
-    public static DefaultArcController create(
-            final System system, final EventManager eventManager,
-            final Arc current,
+    public static DefaultArcController create(final System system,
+            final EventManager eventManager, final Arc current,
+            final NormalWordBuilderFactory nodeNameBuilderFactory,
+            final CodeContentBuilderFactory codeBuilderFactory,
+            final SimplePatternBuilderFactory simplePatternBuilderFactory,
+            final MixedPatternBuilderFactory mixedPatternBuilderFactory,
+            final NormalWordBuilderFactory predicateNameBuilderFactory) {
+        Preconditions.checkNotNull(system);
+        Preconditions.checkNotNull(current);
+        Preconditions.checkNotNull(eventManager);
+        Preconditions.checkNotNull(nodeNameBuilderFactory);
+        Preconditions.checkNotNull(codeBuilderFactory);
+        Preconditions.checkNotNull(simplePatternBuilderFactory);
+        Preconditions.checkNotNull(predicateNameBuilderFactory);
+
+        final DefaultArcController newInstance =
+                new DefaultArcController(system, eventManager, current,
+                        nodeNameBuilderFactory, codeBuilderFactory,
+                        simplePatternBuilderFactory,
+                        mixedPatternBuilderFactory, predicateNameBuilderFactory);
+
+        newInstance.addListeners();
+        
+        // Rodičovská síť nelze u hrany změnit, tento posluchač tedy není nutné odstraňovat po dobu životnosti. 
+        newInstance.addListener(NetworkRemovedEvent.class, current.getNetwork(), newInstance.new DefaultNetworkRemovedListener());
+
+        return newInstance;
+    }
+
+    /**
+     * Vytvoří řadič a zaregistruje jej na modelu.
+     * 
+     * @param system
+     *            systém sítí, v kterém se hrana nachází
+     * @param eventManager
+     *            správce událostí
+     * @param current
+     *            aktuální podoba hrany
+     * @param nodeNameChecker
+     *            validátor názvů stavu
+     * @param codeChecker
+     *            validátor kódu
+     * @param simplePatternChecker
+     *            validátor prostých vzorů
+     * @param mixedPatternChecker
+     *            validátor složených vzorů
+     * @param predicateNameChecker
+     *            validátor názvů predikátů
+     * @return řadič
+     */
+    public static DefaultArcController create(final System system,
+            final EventManager eventManager, final Arc current,
             final NormalWordChecker nodeNameChecker,
             final CodeChecker codeChecker,
             final SimplePatternChecker simplePatternChecker,
@@ -338,63 +434,38 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
         Preconditions.checkNotNull(simplePatternChecker);
         Preconditions.checkNotNull(mixedPatternChecker);
         Preconditions.checkNotNull(predicateNameChecker);
-        
-        return create(system, eventManager, current, DefaultNormalWordBuilderFactory.create(nodeNameChecker), DefaultCodeContentBuilderFactory.create(codeChecker), DefaultSimplePatternBuilderFactory.create(simplePatternChecker), DefaultMixedPatternBuilderFactory.create(mixedPatternChecker), DefaultNormalWordBuilderFactory.create(predicateNameChecker));
-    }
-    
-    /**
-     * Vytvoří řadič a zaregistruje jej na modelu.
-     * 
-     * @param system systém sítí, v kterém se hrana nachází
-     * @param eventManager správce událostí
-     * @param current aktuální podoba hrany
-     * @param nodeNameBuilderFactory továrna na konstruktor názvů stavu
-     * @param codeBuilderFactory továrna na konstruktor kódu
-     * @param simplePatternBuilderFactory továrna na konstruktor prostých vzorů
-     * @param mixedPatternBuilderFactory továrna na konstruktor složených vzorů
-     * @param predicateNameBuilderFactory továrna na konstruktor názvů predikátů
-     * @return řadič
-     */
-    public static DefaultArcController create(final System system,
-            final EventManager eventManager,
-            final Arc current,
-            final NormalWordBuilderFactory nodeNameBuilderFactory,
-            final CodeContentBuilderFactory codeBuilderFactory,
-            final SimplePatternBuilderFactory simplePatternBuilderFactory,
-            final MixedPatternBuilderFactory mixedPatternBuilderFactory,
-            final NormalWordBuilderFactory predicateNameBuilderFactory) {
-        Preconditions.checkNotNull(system);
-        Preconditions.checkNotNull(current);
-        Preconditions.checkNotNull(eventManager);
-        Preconditions.checkNotNull(nodeNameBuilderFactory);
-        Preconditions.checkNotNull(codeBuilderFactory);
-        Preconditions.checkNotNull(simplePatternBuilderFactory);
-        Preconditions.checkNotNull(predicateNameBuilderFactory);
-        
-        final DefaultArcController newInstance = new DefaultArcController(system, eventManager, current, nodeNameBuilderFactory, codeBuilderFactory, simplePatternBuilderFactory, mixedPatternBuilderFactory, predicateNameBuilderFactory);
-        
-        newInstance.addListeners();
-        
-        return newInstance;
+
+        return create(
+                system,
+                eventManager,
+                current,
+                DefaultNormalWordBuilderFactory.create(nodeNameChecker),
+                DefaultCodeContentBuilderFactory.create(codeChecker),
+                DefaultSimplePatternBuilderFactory.create(simplePatternChecker),
+                DefaultMixedPatternBuilderFactory.create(mixedPatternChecker),
+                DefaultNormalWordBuilderFactory.create(predicateNameChecker));
     }
 
-    private void addListeners() {
-        addListener(ArcChangedEvent.class, this.current, new DefaultArcChangedListener());
-        addListener(ArcRemovedEvent.class, this.current, new DefaultArcRemovedListener());
-        addListener(FromRenamedEvent.class, this.current, new DefaultFromRenamedListener());
-        addListener(ToRenamedEvent.class, this.current, new DefaultToRenamedListener());
-    }
-    
+    private final System system;
+    private Arc current;
+    private final NormalWordBuilderFactory nodeNameBuilderFactory;
+    private final NormalWordBuilderFactory predicateNameBuilderFactory;
+
+    private final SimplePatternBuilderFactory simplePatternBuilderFactory;
+
+    private final MixedPatternBuilderFactory mixedPatternBuilderFactory;
+
+    private final CodeContentBuilderFactory codeBuilderFactory;
+
     private DefaultArcController(final System system,
-            final EventManager eventManager,
-            final Arc current,
+            final EventManager eventManager, final Arc current,
             final NormalWordBuilderFactory nodeNameBuilderFactory,
             final CodeContentBuilderFactory codeBuilderFactory,
             final SimplePatternBuilderFactory simplePatternBuilderFactory,
             final MixedPatternBuilderFactory mixedPatternBuilderFactory,
             final NormalWordBuilderFactory predicateNameBuilderFactory) {
         super(eventManager);
-        
+
         this.system = system;
         this.current = current;
         this.nodeNameBuilderFactory = nodeNameBuilderFactory;
@@ -403,268 +474,34 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
         this.mixedPatternBuilderFactory = mixedPatternBuilderFactory;
         this.predicateNameBuilderFactory = predicateNameBuilderFactory;
     }
-    
-    private void updatePattern(NormalWord newName, Priority priority, Code code,
-            MixedPattern pattern, MixedPattern that) {
-        this.system.changeArc(this.current, newName, priority, PatternArc.class, code, pattern, that);
+
+    private void addListeners() {
+        addListener(ArcChangedEvent.class, this.current,
+                new DefaultArcChangedListener());
+        addListener(ArcRemovedEvent.class, this.current,
+                new DefaultArcRemovedListener());
+        addListener(FromRenamedEvent.class, this.current,
+                new DefaultFromRenamedListener());
+        addListener(ToRenamedEvent.class, this.current,
+                new DefaultToRenamedListener());
     }
 
-    private void updateCodeTest(NormalWord newName, Priority priority,
-            Code code, SimplePattern expectedValue,
-            Code tested) {
-        this.system.changeArc(this.current, newName, priority, CodeTestArc.class, code, expectedValue, tested);
-    }
-
-    private void updatePredicateTest(NormalWord newName, Priority priority,
-            Code code, SimplePattern expectedValue,
-            Code prepareCode, NormalWord predicateName) {
-        this.system.changeArc(this.current, newName, priority, PredicateTestArc.class, code, expectedValue, prepareCode, predicateName);
-    }
-
-    private void updateRecurent(NormalWord newName, Priority priority, Code code,
-            EnterNode target) {
-        this.system.changeArc(this.current, newName, priority, RecurentArc.class, code, target);
-    }
-
-    private void updateTransition(NormalWord newName, Priority priority, final Code code) {
-        this.system.changeArc(this.current, newName, priority, TransitionArc.class, code);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController#toPattern(java.lang.String, int, java.lang.String, java.lang.String, java.lang.String)
-     */
-    @Override
-    public void updatePattern(final String newName, final int priority, final String pattern,
-            final String that, final String code) {
-        Preconditions.checkNotNull(newName);
-        Preconditions.checkNotNull(code);
-        Preconditions.checkNotNull(pattern);
-        Preconditions.checkNotNull(that);
-        Preconditions.checkArgument(priority >= 0);
-        
-        final NormalWord name;
-        final NormalWord currentName = this.current.getName();
-        if (currentName.getText().equals(newName)) {
-            name = currentName;
-        } else {
-            final NormalWordBuilder nameBuilder = this.nodeNameBuilderFactory.produce(newName);
-            final CheckResult nodeNameCheckResult = nameBuilder.check();
-            
-            if (!nodeNameCheckResult.isValid()) {
-                return;
-            }
-            
-            name = nameBuilder.build();
-        }
-        
-        final CodeContentBuilder codeBuilder = this.codeBuilderFactory.produce(code);
-        final CheckResult codeCheckResult = codeBuilder.check();
-        if (!codeCheckResult.isValid()) {
-            return;
-        }
-        
-        final MixedPatternBuilder patternBuilder = this.mixedPatternBuilderFactory.produce(pattern);
-        final CheckResult patternCheckResult = patternBuilder.check();
-        if (!patternCheckResult.isValid()) {
-            return;
-        }
-        
-        final MixedPatternBuilder thatBuilder = this.mixedPatternBuilderFactory.produce(that);
-        final CheckResult thatCheckResult = thatBuilder.check();
-        if (!thatCheckResult.isValid()) {
-            return;
-        }
-        
-        updatePattern(name, Priority.of(priority), codeBuilder.build(), patternBuilder.build(), thatBuilder.build());
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController#toCodeTest(java.lang.String, int, java.lang.String, java.lang.String, java.lang.String)
-     */
-    @Override
-    public void updateCodeTest(String newName, int priority, String code,
-            String testedCode, String value) {
-        Preconditions.checkNotNull(newName);
-        Preconditions.checkNotNull(code);
-        Preconditions.checkNotNull(testedCode);
-        Preconditions.checkNotNull(value);
-        Preconditions.checkArgument(priority >= 0);
-        
-        final NormalWord name;
-        final NormalWord currentName = this.current.getName();
-        if (currentName.getText().equals(newName)) {
-            name = currentName;
-        } else {
-            final NormalWordBuilder nameBuilder = this.nodeNameBuilderFactory.produce(newName);
-            final CheckResult nodeNameCheckResult = nameBuilder.check();
-            
-            if (!nodeNameCheckResult.isValid()) {
-                return;
-            }
-            
-            name = nameBuilder.build();
-        }
-        
-        final CodeContentBuilder codeBuilder = this.codeBuilderFactory.produce(code);
-        final CheckResult codeCheckResult = codeBuilder.check();
-        if (!codeCheckResult.isValid()) {
-            return;
-        }
-        
-        final CodeContentBuilder testedCodeBuilder = this.codeBuilderFactory.produce(testedCode);
-        final CheckResult testedCodeCheckResult = testedCodeBuilder.check();
-        if (!testedCodeCheckResult.isValid()) {
-            return;
-        }
-        
-        final SimplePatternBuilder valueBuilder = this.simplePatternBuilderFactory.produce(value);
-        final CheckResult valueCheckResult = valueBuilder.check();
-        if (!valueCheckResult.isValid()) {
-            return;
-        }
-                
-        updateCodeTest(name, Priority.of(priority), codeBuilder.build(), valueBuilder.build(), testedCodeBuilder.build());
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController#toPredicateTest(java.lang.String, int, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-     */
-    @Override
-    public void updatePredicateTest(String newName, int priority, String code,
-            String prepareCode, String predicateName, String value) {
-        Preconditions.checkNotNull(newName);
-        Preconditions.checkNotNull(code);
-        Preconditions.checkNotNull(prepareCode);
-        Preconditions.checkNotNull(predicateName);
-        Preconditions.checkNotNull(value);
-        Preconditions.checkArgument(priority >= 0);
-        
-        final NormalWord name;
-        final NormalWord currentName = this.current.getName();
-        if (currentName.getText().equals(newName)) {
-            name = currentName;
-        } else {
-            final NormalWordBuilder nameBuilder = this.nodeNameBuilderFactory.produce(newName);
-            final CheckResult nodeNameCheckResult = nameBuilder.check();
-            
-            if (!nodeNameCheckResult.isValid()) {
-                return;
-            }
-            
-            name = nameBuilder.build();
-        }
-        
-        final CodeContentBuilder codeBuilder = this.codeBuilderFactory.produce(code);
-        final CheckResult codeCheckResult = codeBuilder.check();
-        if (!codeCheckResult.isValid()) {
-            return;
-        }
-        
-        final CodeContentBuilder preparedCodeBuilder = this.codeBuilderFactory.produce(prepareCode);
-        final CheckResult preparedCodeCheckResult = preparedCodeBuilder.check();
-        if (!preparedCodeCheckResult.isValid()) {
-            return;
-        }
-        
-        final NormalWordBuilder predicateNameBuilder = this.predicateNameBuilderFactory.produce(predicateName);
-        final CheckResult predicateNameCheckResult = predicateNameBuilder.check();
-        if (!predicateNameCheckResult.isValid()) {
-            return;
-        }
-        
-        final SimplePatternBuilder valueBuilder = this.simplePatternBuilderFactory.produce(value);
-        final CheckResult valueCheckResult = valueBuilder.check();
-        if (!valueCheckResult.isValid()) {
-            return;
-        }
-        
-        updatePredicateTest(name, Priority.of(priority), codeBuilder.build(), valueBuilder.build(), preparedCodeBuilder.build(), predicateNameBuilder.build());
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController#toRecurentTest(java.lang.String, int, java.lang.String, java.lang.String, java.lang.String)
-     */
-    @Override
-    public void updateRecurent(final String newName, final int priority, final String code,
-            final EnterNode target) {
-        Preconditions.checkNotNull(newName);
-        Preconditions.checkNotNull(code);
-        Preconditions.checkNotNull(target);
-        Preconditions.checkArgument(priority >= 0);
-        
-        final NormalWord name;
-        final NormalWord currentName = this.current.getName();
-        if (currentName.getText().equals(newName)) {
-            name = currentName;
-        } else {
-            final NormalWordBuilder nameBuilder = this.nodeNameBuilderFactory.produce(newName);
-            final CheckResult nodeNameCheckResult = nameBuilder.check();
-            
-            if (!nodeNameCheckResult.isValid()) {
-                return;
-            }
-            
-            name = nameBuilder.build();
-        }
-        
-        final CodeContentBuilder codeBuilder = this.codeBuilderFactory.produce(code);
-        final CheckResult codeCheckResult = codeBuilder.check();
-        if (!codeCheckResult.isValid()) {
-            return;
-        }
-        
-        updateRecurent(name, Priority.of(priority), codeBuilder.build(), target);
-    }
-
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController#toTransition(java.lang.String, int, java.lang.String)
-     */
-    @Override
-    public void updateTransition(final String newName, final int priority, final String code) {
-        Preconditions.checkNotNull(newName);
-        Preconditions.checkNotNull(code);
-        Preconditions.checkArgument(priority >= 0);
-        
-        final NormalWord name;
-        final NormalWord currentName = this.current.getName();
-        if (currentName.getText().equals(newName)) {
-            name = currentName;
-        } else {
-            final NormalWordBuilder nameBuilder = this.nodeNameBuilderFactory.produce(newName);
-            final CheckResult nodeNameCheckResult = nameBuilder.check();
-            
-            if (!nodeNameCheckResult.isValid()) {
-                return;
-            }
-            
-            name = nameBuilder.build();
-        }
-        
-        final CodeContentBuilder codeBuilder = this.codeBuilderFactory.produce(code);
-        final CheckResult codeCheckResult = codeBuilder.check();
-        if (!codeCheckResult.isValid()) {
-            return;
-        }
-        
-        updateTransition(name, Priority.of(priority), codeBuilder.build());
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.AbstractController#fill(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.AbstractController#fill
+     * (java.lang.Object)
      */
     @Override
     public void fill(final ArcView view) {
         Preconditions.checkNotNull(view);
-        
+
         getCallbackOnCurrent().call(view);
     }
 
-    private void setCurrent(final Arc arc) {
-        Preconditions.checkNotNull(arc);
-        
-        removeListeners();
-        this.current = arc;
-        addListeners();
+    private Callback<ArcView> getCallbackOnCurrent() {
+        return this.current.accept(new ViewProcessor());
     }
 
     private void removeListeners() {
@@ -673,8 +510,314 @@ public final class DefaultArcController extends AbstractController<ArcView> impl
         removeAllListeners(FromRenamedEvent.class, this.current);
         removeAllListeners(ToRenamedEvent.class, this.current);
     }
-    
-    private Callback<ArcView> getCallbackOnCurrent() {
-        return this.current.accept(new ViewProcessor());
+
+    private void setCurrent(final Arc arc) {
+        Preconditions.checkNotNull(arc);
+
+        removeListeners();
+        this.current = arc;
+        addListeners();
+    }
+
+    private void updateCodeTest(final NormalWord newName,
+            final Priority priority, final Code code,
+            final SimplePattern expectedValue, final Code tested) {
+        this.system.changeArc(this.current, newName, priority,
+                CodeTestArc.class, code, expectedValue, tested);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController
+     * #toCodeTest(java.lang.String, int, java.lang.String, java.lang.String,
+     * java.lang.String)
+     */
+    @Override
+    public void updateCodeTest(final String newName, final int priority,
+            final String code, final String testedCode, final String value) {
+        Preconditions.checkNotNull(newName);
+        Preconditions.checkNotNull(code);
+        Preconditions.checkNotNull(testedCode);
+        Preconditions.checkNotNull(value);
+        Preconditions.checkArgument(priority >= 0);
+
+        final NormalWord name;
+        final NormalWord currentName = this.current.getName();
+        if (currentName.getText().equals(newName)) {
+            name = currentName;
+        } else {
+            final NormalWordBuilder nameBuilder =
+                    this.nodeNameBuilderFactory.produce(newName);
+            final CheckResult nodeNameCheckResult = nameBuilder.check();
+
+            if (!nodeNameCheckResult.isValid()) {
+                return;
+            }
+
+            name = nameBuilder.build();
+        }
+
+        final CodeContentBuilder codeBuilder =
+                this.codeBuilderFactory.produce(code);
+        final CheckResult codeCheckResult = codeBuilder.check();
+        if (!codeCheckResult.isValid()) {
+            return;
+        }
+
+        final CodeContentBuilder testedCodeBuilder =
+                this.codeBuilderFactory.produce(testedCode);
+        final CheckResult testedCodeCheckResult = testedCodeBuilder.check();
+        if (!testedCodeCheckResult.isValid()) {
+            return;
+        }
+
+        final SimplePatternBuilder valueBuilder =
+                this.simplePatternBuilderFactory.produce(value);
+        final CheckResult valueCheckResult = valueBuilder.check();
+        if (!valueCheckResult.isValid()) {
+            return;
+        }
+
+        updateCodeTest(name, Priority.of(priority), codeBuilder.build(),
+                valueBuilder.build(), testedCodeBuilder.build());
+    }
+
+    private void updatePattern(final NormalWord newName,
+            final Priority priority, final Code code,
+            final MixedPattern pattern, final MixedPattern that) {
+        this.system.changeArc(this.current, newName, priority,
+                PatternArc.class, code, pattern, that);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController
+     * #toPattern(java.lang.String, int, java.lang.String, java.lang.String,
+     * java.lang.String)
+     */
+    @Override
+    public void updatePattern(final String newName, final int priority,
+            final String pattern, final String that, final String code) {
+        Preconditions.checkNotNull(newName);
+        Preconditions.checkNotNull(code);
+        Preconditions.checkNotNull(pattern);
+        Preconditions.checkNotNull(that);
+        Preconditions.checkArgument(priority >= 0);
+
+        final NormalWord name;
+        final NormalWord currentName = this.current.getName();
+        if (currentName.getText().equals(newName)) {
+            name = currentName;
+        } else {
+            final NormalWordBuilder nameBuilder =
+                    this.nodeNameBuilderFactory.produce(newName);
+            final CheckResult nodeNameCheckResult = nameBuilder.check();
+
+            if (!nodeNameCheckResult.isValid()) {
+                return;
+            }
+
+            name = nameBuilder.build();
+        }
+
+        final CodeContentBuilder codeBuilder =
+                this.codeBuilderFactory.produce(code);
+        final CheckResult codeCheckResult = codeBuilder.check();
+        if (!codeCheckResult.isValid()) {
+            return;
+        }
+
+        final MixedPatternBuilder patternBuilder =
+                this.mixedPatternBuilderFactory.produce(pattern);
+        final CheckResult patternCheckResult = patternBuilder.check();
+        if (!patternCheckResult.isValid()) {
+            return;
+        }
+
+        final MixedPatternBuilder thatBuilder =
+                this.mixedPatternBuilderFactory.produce(that);
+        final CheckResult thatCheckResult = thatBuilder.check();
+        if (!thatCheckResult.isValid()) {
+            return;
+        }
+
+        updatePattern(name, Priority.of(priority), codeBuilder.build(),
+                patternBuilder.build(), thatBuilder.build());
+    }
+
+    private void updatePredicateTest(final NormalWord newName,
+            final Priority priority, final Code code,
+            final SimplePattern expectedValue, final Code prepareCode,
+            final NormalWord predicateName) {
+        this.system.changeArc(this.current, newName, priority,
+                PredicateTestArc.class, code, expectedValue, prepareCode,
+                predicateName);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController
+     * #toPredicateTest(java.lang.String, int, java.lang.String,
+     * java.lang.String, java.lang.String, java.lang.String)
+     */
+    @Override
+    public void updatePredicateTest(final String newName, final int priority,
+            final String code, final String prepareCode,
+            final String predicateName, final String value) {
+        Preconditions.checkNotNull(newName);
+        Preconditions.checkNotNull(code);
+        Preconditions.checkNotNull(prepareCode);
+        Preconditions.checkNotNull(predicateName);
+        Preconditions.checkNotNull(value);
+        Preconditions.checkArgument(priority >= 0);
+
+        final NormalWord name;
+        final NormalWord currentName = this.current.getName();
+        if (currentName.getText().equals(newName)) {
+            name = currentName;
+        } else {
+            final NormalWordBuilder nameBuilder =
+                    this.nodeNameBuilderFactory.produce(newName);
+            final CheckResult nodeNameCheckResult = nameBuilder.check();
+
+            if (!nodeNameCheckResult.isValid()) {
+                return;
+            }
+
+            name = nameBuilder.build();
+        }
+
+        final CodeContentBuilder codeBuilder =
+                this.codeBuilderFactory.produce(code);
+        final CheckResult codeCheckResult = codeBuilder.check();
+        if (!codeCheckResult.isValid()) {
+            return;
+        }
+
+        final CodeContentBuilder preparedCodeBuilder =
+                this.codeBuilderFactory.produce(prepareCode);
+        final CheckResult preparedCodeCheckResult = preparedCodeBuilder.check();
+        if (!preparedCodeCheckResult.isValid()) {
+            return;
+        }
+
+        final NormalWordBuilder predicateNameBuilder =
+                this.predicateNameBuilderFactory.produce(predicateName);
+        final CheckResult predicateNameCheckResult =
+                predicateNameBuilder.check();
+        if (!predicateNameCheckResult.isValid()) {
+            return;
+        }
+
+        final SimplePatternBuilder valueBuilder =
+                this.simplePatternBuilderFactory.produce(value);
+        final CheckResult valueCheckResult = valueBuilder.check();
+        if (!valueCheckResult.isValid()) {
+            return;
+        }
+
+        updatePredicateTest(name, Priority.of(priority), codeBuilder.build(),
+                valueBuilder.build(), preparedCodeBuilder.build(),
+                predicateNameBuilder.build());
+    }
+
+    private void updateRecurent(final NormalWord newName,
+            final Priority priority, final Code code, final EnterNode target) {
+        this.system.changeArc(this.current, newName, priority,
+                RecurentArc.class, code, target);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController
+     * #toRecurentTest(java.lang.String, int, java.lang.String,
+     * java.lang.String, java.lang.String)
+     */
+    @Override
+    public void updateRecurent(final String newName, final int priority,
+            final String code, final EnterNode target) {
+        Preconditions.checkNotNull(newName);
+        Preconditions.checkNotNull(code);
+        Preconditions.checkNotNull(target);
+        Preconditions.checkArgument(priority >= 0);
+
+        final NormalWord name;
+        final NormalWord currentName = this.current.getName();
+        if (currentName.getText().equals(newName)) {
+            name = currentName;
+        } else {
+            final NormalWordBuilder nameBuilder =
+                    this.nodeNameBuilderFactory.produce(newName);
+            final CheckResult nodeNameCheckResult = nameBuilder.check();
+
+            if (!nodeNameCheckResult.isValid()) {
+                return;
+            }
+
+            name = nameBuilder.build();
+        }
+
+        final CodeContentBuilder codeBuilder =
+                this.codeBuilderFactory.produce(code);
+        final CheckResult codeCheckResult = codeBuilder.check();
+        if (!codeCheckResult.isValid()) {
+            return;
+        }
+
+        updateRecurent(name, Priority.of(priority), codeBuilder.build(), target);
+    }
+
+    private void updateTransition(final NormalWord newName,
+            final Priority priority, final Code code) {
+        this.system.changeArc(this.current, newName, priority,
+                TransitionArc.class, code);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.designer.controllers.NetworkController
+     * #toTransition(java.lang.String, int, java.lang.String)
+     */
+    @Override
+    public void updateTransition(final String newName, final int priority,
+            final String code) {
+        Preconditions.checkNotNull(newName);
+        Preconditions.checkNotNull(code);
+        Preconditions.checkArgument(priority >= 0);
+
+        final NormalWord name;
+        final NormalWord currentName = this.current.getName();
+        if (currentName.getText().equals(newName)) {
+            name = currentName;
+        } else {
+            final NormalWordBuilder nameBuilder =
+                    this.nodeNameBuilderFactory.produce(newName);
+            final CheckResult nodeNameCheckResult = nameBuilder.check();
+
+            if (!nodeNameCheckResult.isValid()) {
+                return;
+            }
+
+            name = nameBuilder.build();
+        }
+
+        final CodeContentBuilder codeBuilder =
+                this.codeBuilderFactory.produce(code);
+        final CheckResult codeCheckResult = codeBuilder.check();
+        if (!codeCheckResult.isValid()) {
+            return;
+        }
+
+        updateTransition(name, Priority.of(priority), codeBuilder.build());
     }
 }

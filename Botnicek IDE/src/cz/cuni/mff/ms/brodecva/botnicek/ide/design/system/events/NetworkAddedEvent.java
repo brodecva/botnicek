@@ -19,6 +19,7 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.events;
 
 import com.google.common.base.Preconditions;
+
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
@@ -29,35 +30,42 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public class NetworkAddedEvent extends AbstractMappedEvent<System, NetworkAddedListener> {
-    
-    private final Network network;
-    
+public class NetworkAddedEvent extends
+        AbstractMappedEvent<System, NetworkAddedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param system systém sítí
-     * @param network nová síť
+     * @param system
+     *            systém sítí
+     * @param network
+     *            nová síť
      * @return událost
      */
-    public static NetworkAddedEvent create(final System system, final Network network) {
+    public static NetworkAddedEvent create(final System system,
+            final Network network) {
         return new NetworkAddedEvent(system, network);
     }
-    
+
+    private final Network network;
+
     private NetworkAddedEvent(final System system, final Network network) {
         super(system);
-        
+
         Preconditions.checkNotNull(network);
-        
+
         this.network = network;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final NetworkAddedListener listener) {
         listener.networkAdded(this.network);
     }
 }
- 

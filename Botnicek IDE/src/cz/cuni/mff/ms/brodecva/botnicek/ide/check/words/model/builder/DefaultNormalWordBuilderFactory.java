@@ -22,8 +22,6 @@ import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.NormalWordChecker;
 
-
-
 /**
  * Výchozí implementace {@link NormalWordBuilderFactory}.
  * 
@@ -33,32 +31,37 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.NormalWord
 public final class DefaultNormalWordBuilderFactory implements
         NormalWordBuilderFactory {
 
-    private final NormalWordChecker checker;
-    
     /**
      * Vytvoří továrnu.
      * 
-     * @param checker validátor
+     * @param checker
+     *            validátor
      * @return továrna
      */
-    public static DefaultNormalWordBuilderFactory create(final NormalWordChecker checker) {
+    public static DefaultNormalWordBuilderFactory create(
+            final NormalWordChecker checker) {
         Preconditions.checkNotNull(checker);
-        
+
         return new DefaultNormalWordBuilderFactory(checker);
     }
-    
+
+    private final NormalWordChecker checker;
+
     private DefaultNormalWordBuilderFactory(final NormalWordChecker checker) {
         this.checker = checker;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder.NormalWordBuilderFactory#produce(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder.
+     * NormalWordBuilderFactory#produce(java.lang.String)
      */
     @Override
     public NormalWordBuilder produce(final String start) {
         Preconditions.checkNotNull(start);
-        
-        return DefaultNormalWordBuilder.create(checker, start);
+
+        return DefaultNormalWordBuilder.create(this.checker, start);
     }
 
 }

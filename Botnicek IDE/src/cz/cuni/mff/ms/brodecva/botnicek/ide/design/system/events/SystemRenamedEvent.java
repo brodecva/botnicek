@@ -27,24 +27,30 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
  * @author Václav Brodec
  * @version 1.0
  */
-public class SystemRenamedEvent extends AbstractMappedEvent<System, SystemRenamedListener> {
-    
+public class SystemRenamedEvent extends
+        AbstractMappedEvent<System, SystemRenamedListener> {
+
     /**
      * Vytvoří událost.
      * 
-     * @param system změněný systém
+     * @param system
+     *            změněný systém
      * @return událost
      */
     public static SystemRenamedEvent create(final System system) {
         return new SystemRenamedEvent(system);
     }
-    
+
     private SystemRenamedEvent(final System system) {
         super(system);
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final SystemRenamedListener listener) {
@@ -52,4 +58,3 @@ public class SystemRenamedEvent extends AbstractMappedEvent<System, SystemRename
     }
 
 }
- 

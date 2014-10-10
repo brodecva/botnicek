@@ -32,4 +32,3 @@ import org.junit.runner.RunWith;
 @ClassnameFilters("cz.cuni.mff.ms.brodecva.botnicek.ide.*")
 public final class AllTests {
 }
-

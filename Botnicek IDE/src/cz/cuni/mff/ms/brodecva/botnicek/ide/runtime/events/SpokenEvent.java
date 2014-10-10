@@ -19,48 +19,58 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.events;
 
 import com.google.common.base.Preconditions;
+
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.Run;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
 
 /**
- * Událost promluvy objektu vzniká v situacích, kdy dochází ke komunikaci v rámci konverzace s robotem, a to oběma směry.
+ * Událost promluvy objektu vzniká v situacích, kdy dochází ke komunikaci v
+ * rámci konverzace s robotem, a to oběma směry.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public class SpokenEvent extends AbstractMappedEvent<Run, SpokenListener> {
-    
-    private final String author;
-    private final String content;
-    
+
     /**
      * Vytvoří událost.
      * 
-     * @param run běžící konverzace
-     * @param author odesílatel promluvy
-     * @param content promluva
+     * @param run
+     *            běžící konverzace
+     * @param author
+     *            odesílatel promluvy
+     * @param content
+     *            promluva
      * @return událost
      */
-    public static SpokenEvent create(final Run run, final String author, String content) {
+    public static SpokenEvent create(final Run run, final String author,
+            final String content) {
         return new SpokenEvent(run, author, content);
     }
-    
+
+    private final String author;
+
+    private final String content;
+
     private SpokenEvent(final Run run, final String author, final String content) {
         super(run);
-        
+
         Preconditions.checkNotNull(author);
         Preconditions.checkNotNull(content);
-        
+
         this.author = author;
         this.content = content;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.Event#dispatchTo(java.lang
+     * .Object)
      */
     @Override
     public void dispatchTo(final SpokenListener listener) {
         listener.spoken(this.author, this.content);
     }
 }
- 

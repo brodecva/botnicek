@@ -31,7 +31,8 @@ public interface SettingsChangedListener {
     /**
      * Reaguje na změnu nastavení.
      * 
-     * @param settings nová nastavení
+     * @param settings
+     *            nová nastavení
      */
     void changed(Settings settings);
 

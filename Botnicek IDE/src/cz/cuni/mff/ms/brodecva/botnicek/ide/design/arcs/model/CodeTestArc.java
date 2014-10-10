@@ -32,85 +32,71 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 
 /**
- * Implementace hrany, jejíž test projde pouze tehdy, pokud zadaný testovací kód má výstup odpovídající požadované hodnotě vzoru.
+ * Implementace hrany, jejíž test projde pouze tehdy, pokud zadaný testovací kód
+ * má výstup odpovídající požadované hodnotě vzoru.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class CodeTestArc extends AbstractTestArc {
-    
+
     private static final long serialVersionUID = 1L;
-    
-    private final Code tested;
-    
+
     /**
      * Vytvoří hranu.
      * 
-     * @param parent rodičovská síť
-     * @param name název hrany
-     * @param priority priorita
-     * @param code kód k provedení v případě splnění testu
-     * @param value očekávaná hodnota testu
-     * @param tested kód generující testovanou hodnotu
+     * @param parent
+     *            rodičovská síť
+     * @param name
+     *            název hrany
+     * @param priority
+     *            priorita
+     * @param code
+     *            kód k provedení v případě splnění testu
+     * @param value
+     *            očekávaná hodnota testu
+     * @param tested
+     *            kód generující testovanou hodnotu
      * @return hrana
      */
-    public static CodeTestArc create(
-            final Network parent,
-            final NormalWord name,
-            final Priority priority,
-            final Code code,
-            final SimplePattern value,
-            final Code tested) {
+    public static CodeTestArc create(final Network parent,
+            final NormalWord name, final Priority priority, final Code code,
+            final SimplePattern value, final Code tested) {
         return new CodeTestArc(parent, name, priority, code, value, tested);
     }
-    
-    private CodeTestArc(
-               final Network parent,
-               final NormalWord name,
-               final Priority priority,
-               final Code code,
-               final SimplePattern value,
-               final Code tested) {
+
+    private final Code tested;
+
+    private CodeTestArc(final Network parent, final NormalWord name,
+            final Priority priority, final Code code,
+            final SimplePattern value, final Code tested) {
         super(parent, name, priority, code, value);
-        
+
         Preconditions.checkNotNull(tested);
-        
+
         this.tested = tested;
     }
-    
-    /**
-     * Vrátí testovací kód.
+
+    /*
+     * (non-Javadoc)
      * 
-     * @return kód jehož výstup je porovnáván s očekávanou hodnotou
-     */
-    public Code getTested() {
-        return this.tested;
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor)
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processible
+     * #accept
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor)
      */
     @Override
     public <T> T accept(final Processor<T> processor) {
         return processor.process(this);
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + tested.hashCode();
-        return result;
-    }
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -121,13 +107,44 @@ public final class CodeTestArc extends AbstractTestArc {
             return false;
         }
         final CodeTestArc other = (CodeTestArc) obj;
-        if (!tested.equals(other.tested)) {
+        if (!this.tested.equals(other.tested)) {
             return false;
         }
         return true;
     }
 
-    /* (non-Javadoc)
+    /**
+     * Vrátí testovací kód.
+     * 
+     * @return kód jehož výstup je porovnáván s očekávanou hodnotou
+     */
+    public Code getTested() {
+        return this.tested;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + this.tested.hashCode();
+        return result;
+    }
+
+    private void readObject(final ObjectInputStream objectInputStream)
+            throws ClassNotFoundException, IOException {
+        objectInputStream.defaultReadObject();
+
+        Preconditions.checkNotNull(this.tested);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -135,14 +152,8 @@ public final class CodeTestArc extends AbstractTestArc {
         return "CodeTestArc [getName()=" + getName() + ", getNetwork()="
                 + getNetwork() + ", getFrom()=" + getFrom() + ", getTo()="
                 + getTo() + ", getPriority()=" + getPriority()
-                + ", getValue()=" + getValue() + ", tested=" + tested + "]";
-    }
-    
-    private void readObject(final ObjectInputStream objectInputStream)
-            throws ClassNotFoundException, IOException {
-        objectInputStream.defaultReadObject();
-        
-        Preconditions.checkNotNull(this.tested);
+                + ", getValue()=" + getValue() + ", tested=" + this.tested
+                + "]";
     }
 
     private void writeObject(final ObjectOutputStream objectOutputStream)

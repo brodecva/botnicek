@@ -53,166 +53,232 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultArcDesignListener extends MouseAdapter implements ArcDesignListener {
-    
+public final class DefaultArcDesignListener extends MouseAdapter implements
+        ArcDesignListener {
+
     private static final String ARC_NAME_INITIAL_VALUE = "";
     
-    /**
-     * Komponenta zobrazené spojnice výchozího uzlu a bodu pod ukazatelem. Aktualizuje se s pohybem ukazatele myši.
-     */
-    private final JComponent lineComponent = new JComponent() {
-        
-        private static final long serialVersionUID = 1L;
+    private EditMode mode = EditMode.DESIGN;
 
-        public void paint(Graphics graphics) {
-            super.paint(graphics);
-            
-            final Graphics2D graphics2d = (Graphics2D) graphics;
-            Rendering.preset(graphics2d);
-            
-            graphics2d.setStroke(new BasicStroke());
-            
-            final int offsetX = getX();
-            final int offsetY = getY();
-            
-            assert segment.isPresent();
-            final Segment rawSegment = segment.get();
-            final Line2D line = new Line2D.Float(rawSegment.getFromX() - offsetX, rawSegment.getFromY() - offsetY, rawSegment.getToX() - offsetX, rawSegment.getToY() - offsetY);
-            graphics2d.draw(line);
-        };
-        
-    };
-    
-    private final NetworkController controller;
-    
-    private final JPanel designPanel;
-    private final Set<NodeUI> nodes;
-    private final Set<ArcUI> arcs;
-    
-    private volatile boolean connecting = false;
-    private Optional<Segment> segment = Optional.<Segment>absent();
-    private Optional<NodeUI> from = Optional.<NodeUI>absent();
-    
     /**
      * Vytvoří posluchače.
      * 
-     * @param designPanel panel s grafem
-     * @param nodes přítomné uzly
-     * @param arcs přítomné hrany
-     * @param controller řadič sítě (pro přidávání hran)
+     * @param designPanel
+     *            panel s grafem
+     * @param nodes
+     *            přítomné uzly
+     * @param arcs
+     *            přítomné hrany
+     * @param controller
+     *            řadič sítě (pro přidávání hran)
      * @return posluchač
      */
-    public static DefaultArcDesignListener create(final JPanel designPanel, final Set<NodeUI> nodes, final Set<ArcUI> arcs, final NetworkController controller) {
-        return new DefaultArcDesignListener(designPanel, nodes, arcs, controller);
+    public static DefaultArcDesignListener create(final JPanel designPanel,
+            final Set<NodeUI> nodes, final Set<ArcUI> arcs,
+            final NetworkController controller) {
+        return new DefaultArcDesignListener(designPanel, nodes, arcs,
+                controller);
     }
-    
-    private DefaultArcDesignListener(final JPanel designPanel, final Set<NodeUI> nodes, final Set<ArcUI> arcs, final NetworkController controller) {
+
+    /**
+     * Komponenta zobrazené spojnice výchozího uzlu a bodu pod ukazatelem.
+     * Aktualizuje se s pohybem ukazatele myši.
+     */
+    private final JComponent lineComponent = new JComponent() {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public void paint(final Graphics graphics) {
+            super.paint(graphics);
+
+            final Graphics2D graphics2d = (Graphics2D) graphics;
+            Rendering.preset(graphics2d);
+
+            graphics2d.setStroke(new BasicStroke());
+
+            final int offsetX = getX();
+            final int offsetY = getY();
+
+            assert DefaultArcDesignListener.this.segment.isPresent();
+            final Segment rawSegment =
+                    DefaultArcDesignListener.this.segment.get();
+            final Line2D line =
+                    new Line2D.Float(rawSegment.getFromX() - offsetX,
+                            rawSegment.getFromY() - offsetY,
+                            rawSegment.getToX() - offsetX, rawSegment.getToY()
+                                    - offsetY);
+            graphics2d.draw(line);
+        };
+
+    };
+
+    private final NetworkController controller;
+    private final JPanel designPanel;
+    private final Set<NodeUI> nodes;
+
+    private final Set<ArcUI> arcs;
+    private volatile boolean connecting = false;
+    private Optional<Segment> segment = Optional.<Segment> absent();
+
+    private Optional<NodeUI> from = Optional.<NodeUI> absent();
+
+    private DefaultArcDesignListener(final JPanel designPanel,
+            final Set<NodeUI> nodes, final Set<ArcUI> arcs,
+            final NetworkController controller) {
         Preconditions.checkNotNull(designPanel);
         Preconditions.checkNotNull(nodes);
         Preconditions.checkNotNull(arcs);
         Preconditions.checkNotNull(controller);
-        
+
         this.designPanel = designPanel;
         this.nodes = nodes;
         this.arcs = arcs;
         this.controller = controller;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.views.ArcDesignListener#mouseClicked(java.awt.event.MouseEvent)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.views.ArcDesignListener
+     * #mouseClicked(java.awt.event.MouseEvent)
      */
     @Override
     public void mouseClicked(final MouseEvent e) {
-        final Object source = e.getSource();
+        if (this.mode != EditMode.DESIGN) {
+            return;
+        }
         
+        final Object source = e.getSource();
+
         if (!this.connecting) {
             assert !this.from.isPresent();
-            
+
             if (this.nodes.contains(source)) {
                 if (e.getClickCount() != 2) {
                     return;
                 }
-                
+
                 if (e.isControlDown() || e.isAltDown() || e.isShiftDown()) {
                     return;
                 }
-                
+
                 final NodeUI newRawFrom = (NodeUI) source;
                 this.from = Optional.of(newRawFrom);
-                
+
                 final Rectangle fromBounds = newRawFrom.getBounds();
-                
-                final Segment newRawSegment = Segment.create((int) fromBounds.getCenterX(), (int) fromBounds.getCenterY(), (int) fromBounds.getX() + e.getX(), (int) fromBounds.getY() + e.getY()); 
+
+                final Segment newRawSegment =
+                        Segment.create((int) fromBounds.getCenterX(),
+                                (int) fromBounds.getCenterY(),
+                                (int) fromBounds.getX() + e.getX(),
+                                (int) fromBounds.getY() + e.getY());
                 this.segment = Optional.of(newRawSegment);
                 this.lineComponent.setBounds(newRawSegment.toBounds());
-                
+
                 this.designPanel.add(this.lineComponent);
                 placeOnBottom(this.lineComponent);
-                
-                this.connecting = true; 
+
+                this.connecting = true;
             }
         } else {
             assert this.from.isPresent();
-            
+
             this.segment = Optional.absent();
             this.connecting = false;
             this.designPanel.remove(this.lineComponent);
             this.designPanel.repaint();
-            
+
             if (!this.nodes.contains(source) || this.from.get().equals(source)) {
                 return;
             }
-            
+
             final NodeUI to = (NodeUI) source;
-            final Object newNameInput = JOptionPane.showInputDialog(to, UiLocalizer.print("ARC_NAME_MESSAGE"), UiLocalizer.print("ARC_NAME_TITLE_CONTENT"), JOptionPane.PLAIN_MESSAGE, Intended.<Icon>nullReference(), Intended.arrayNull(), ARC_NAME_INITIAL_VALUE);
+            final Object newNameInput =
+                    JOptionPane.showInputDialog(to,
+                            UiLocalizer.print("ARC_NAME_MESSAGE"),
+                            UiLocalizer.print("ARC_NAME_TITLE_CONTENT"),
+                            JOptionPane.PLAIN_MESSAGE,
+                            Intended.<Icon> nullReference(),
+                            Intended.arrayNull(), ARC_NAME_INITIAL_VALUE);
             if (Components.hasUserCanceledInput(newNameInput)) {
                 return;
             }
-            
+
             try {
-                this.controller.addArc(newNameInput.toString(), this.from.get().getNodeName(), to.getNodeName());
+                this.controller.addArc(newNameInput.toString(), this.from.get()
+                        .getNodeName(), to.getNodeName());
             } catch (final IllegalArgumentException ex) {
-                JOptionPane.showMessageDialog(to, ExceptionLocalizer.print("ArcCreationError") + " " + ex.getMessage(), UiLocalizer.print("ARC_NAME_ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(
+                        to,
+                        ExceptionLocalizer.print("ArcCreationError") + " "
+                                + ex.getMessage(),
+                        UiLocalizer.print("ARC_NAME_ERROR_TITLE"),
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.views.ArcDesignListener#mouseMoved(java.awt.event.MouseEvent)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.views.ArcDesignListener
+     * #mouseMoved(java.awt.event.MouseEvent)
      */
     @Override
-    public void mouseMoved(MouseEvent e) {
+    public void mouseMoved(final MouseEvent e) {
+        if (this.mode != EditMode.DESIGN) {
+            return;
+        }
+        
         if (this.connecting) {
             assert this.segment.isPresent();
             final Segment rawSegment = this.segment.get();
-            
+
             final Object source = e.getSource();
-            
+
             if (this.nodes.contains(source) || this.arcs.contains(source)) {
                 final Component component = (Component) source;
-                
-                final Segment newRawSegment = rawSegment.moveTo(component.getX() + e.getX(), component.getY() + e.getY());
+
+                final Segment newRawSegment =
+                        rawSegment.moveTo(component.getX() + e.getX(),
+                                component.getY() + e.getY());
                 this.segment = Optional.of(newRawSegment);
                 this.lineComponent.setBounds(newRawSegment.toBounds());
             } else if (source == this.designPanel) {
-                final Segment newRawSegment = rawSegment.moveTo(e.getX(), e.getY());
+                final Segment newRawSegment =
+                        rawSegment.moveTo(e.getX(), e.getY());
                 this.segment = Optional.of(newRawSegment);
                 this.lineComponent.setBounds(newRawSegment.toBounds());
             }
-            
+
             this.lineComponent.repaint();
         }
     }
-    
+
     /**
-     * Zobraz komponentu nad ostatními, aby s ní bylo možné přehledně manipulovat.
+     * Zobraz komponentu nad ostatními, aby s ní bylo možné přehledně
+     * manipulovat.
      * 
-     * @param component komponenta
+     * @param component
+     *            komponenta
      */
     private void placeOnBottom(final Component component) {
         final Container parent = component.getParent();
         Preconditions.checkState(Components.hasParent(parent));
-                
+
         parent.setComponentZOrder(component, parent.getComponentCount() - 1);
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.views.Editable#setEditMode(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.views.EditMode)
+     */
+    @Override
+    public void setEditMode(final EditMode mode) {
+        Preconditions.checkNotNull(mode);
+        
+        this.mode = mode;
     }
 }

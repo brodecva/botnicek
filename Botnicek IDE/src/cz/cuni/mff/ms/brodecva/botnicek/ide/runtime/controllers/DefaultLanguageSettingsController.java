@@ -30,77 +30,103 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.AbstractController;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration;
 
 /**
- * Výchozí implementace řadiče nastavení jazyka robota konfiguruje přímo projekt.
+ * Výchozí implementace řadiče nastavení jazyka robota konfiguruje přímo
+ * projekt.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultLanguageSettingsController extends AbstractController<LanguageSettingsView> implements LanguageSettingsController {
+public final class DefaultLanguageSettingsController extends
+        AbstractController<LanguageSettingsView> implements
+        LanguageSettingsController {
 
-    private final class DefaultLanguageSettingsChangedListener implements LanguageSettingsChangedListener {
+    private final class DefaultLanguageSettingsChangedListener implements
+            LanguageSettingsChangedListener {
 
-        /* (non-Javadoc)
-         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.events.SettingsChangedListener#changed(cz.cuni.mff.ms.brodecva.botnicek.ide.projects.model.Settings)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.projects.events.
+         * SettingsChangedListener
+         * #changed(cz.cuni.mff.ms.brodecva.botnicek.ide.projects
+         * .model.Settings)
          */
         @Override
         public void changed(final LanguageConfiguration settings) {
             Preconditions.checkNotNull(settings);
-            
+
             callViews(new Callback<LanguageSettingsView>() {
 
                 @Override
                 public void call(final LanguageSettingsView view) {
                     view.updateLanguageConfiguration(settings);
                 }
-                
+
             });
         }
-        
+
     }
-    
-    private final Project project;
-    
+
     /**
      * Vytvoří řadič pro nastavování a bude naslouchat změnám na projektu.
      * 
-     * @param project projekt
-     * @param eventManager správce událost
+     * @param project
+     *            projekt
+     * @param eventManager
+     *            správce událost
      * @return řadič
      */
-    public static DefaultLanguageSettingsController create(final Project project, final EventManager eventManager) {
+    public static DefaultLanguageSettingsController create(
+            final Project project, final EventManager eventManager) {
         Preconditions.checkNotNull(project);
         Preconditions.checkNotNull(eventManager);
-        
-        final DefaultLanguageSettingsController newInstance = new DefaultLanguageSettingsController(project, eventManager);
-        
-        newInstance.addListener(LanguageSettingsChangedEvent.class, newInstance.new DefaultLanguageSettingsChangedListener());
-        
+
+        final DefaultLanguageSettingsController newInstance =
+                new DefaultLanguageSettingsController(project, eventManager);
+
+        newInstance.addListener(LanguageSettingsChangedEvent.class,
+                newInstance.new DefaultLanguageSettingsChangedListener());
+
         return newInstance;
     }
-    
-    private DefaultLanguageSettingsController(final Project project, final EventManager eventManager) {
+
+    private final Project project;
+
+    private DefaultLanguageSettingsController(final Project project,
+            final EventManager eventManager) {
         super(eventManager);
-        
+
         this.project = project;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.LanguageSettingsController#setLanguageConfiguration(cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration)
-     */
-    @Override
-    public void set(final LanguageConfiguration configuration) {
-        Preconditions.checkNotNull(configuration);
-        
-        this.project.setLanguageConfiguration(configuration);
-    }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.LanguageSettingsController#fill(cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.LanguageSettingsView)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.
+     * LanguageSettingsController
+     * #fill(cz.cuni.mff.ms.brodecva.botnicek.ide.runtime
+     * .views.LanguageSettingsView)
      */
     @Override
     public void fill(final LanguageSettingsView view) {
         Preconditions.checkNotNull(view);
-        
-        view.updateLanguageConfiguration(project.getLanguageConfiguration());
+
+        view.updateLanguageConfiguration(this.project
+                .getLanguageConfiguration());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.
+     * LanguageSettingsController
+     * #setLanguageConfiguration(cz.cuni.mff.ms.brodecva
+     * .botnicek.library.api.LanguageConfiguration)
+     */
+    @Override
+    public void set(final LanguageConfiguration configuration) {
+        Preconditions.checkNotNull(configuration);
+
+        this.project.setLanguageConfiguration(configuration);
     }
 }

@@ -38,36 +38,53 @@ public class DummyNetworkDisplayController implements NetworkDisplayController {
     public static DummyNetworkDisplayController create() {
         return new DummyNetworkDisplayController();
     }
-    
+
     private DummyNetworkDisplayController() {
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java
+     * .lang.Object)
      */
     @Override
-    public void addView(NetworkDisplayView view) {
+    public void addView(final NetworkDisplayView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.controllers.
+     * NetworkDisplayController
+     * #displayNetwork(cz.cuni.mff.ms.brodecva.botnicek.ide
+     * .design.networks.model.Network)
      */
     @Override
-    public void removeView(NetworkDisplayView view) {
+    public void displayNetwork(final Network network) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang
+     * .Object)
      */
     @Override
-    public void fill(NetworkDisplayView view) {
+    public void fill(final NetworkDisplayView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.controllers.NetworkDisplayController#displayNetwork(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(
+     * java.lang.Object)
      */
     @Override
-    public void displayNetwork(Network network) {
+    public void removeView(final NetworkDisplayView view) {
     }
 
 }

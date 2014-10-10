@@ -36,7 +36,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.I
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultInitialNodeFactory implements InitialNodeFactory, Serializable {
+public class DefaultInitialNodeFactory implements InitialNodeFactory,
+        Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -48,20 +49,27 @@ public class DefaultInitialNodeFactory implements InitialNodeFactory, Serializab
     public static DefaultInitialNodeFactory create() {
         return new DefaultInitialNodeFactory();
     }
-    
+
     private DefaultInitialNodeFactory() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.InitialNodeFactory#produce(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network, int, int)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.InitialNodeFactory
+     * #produce(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord,
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network, int,
+     * int)
      */
     @Override
-    public IsolatedNode produce(final NormalWord name, final Network network, final int x, final int y) {
+    public IsolatedNode produce(final NormalWord name, final Network network,
+            final int x, final int y) {
         Preconditions.checkNotNull(network);
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(x);
         Preconditions.checkNotNull(y);
-        
+
         return IsolatedProcessingNode.create(name, network, x, y);
     }
 

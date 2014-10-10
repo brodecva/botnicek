@@ -27,7 +27,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.platform.Index;
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-thatstar">http://www.alicebot.org/TR/2011/#section-thatstar</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-thatstar">http://www.alicebot.org/TR/2011/#section-thatstar</a>
  */
 public class Thatstar extends AbstractIndexedElement implements AtomicElement {
     private static final String NAME = "thatstar";
@@ -40,27 +41,31 @@ public class Thatstar extends AbstractIndexedElement implements AtomicElement {
     public static Thatstar create() {
         return new Thatstar();
     }
-    
+
     /**
      * Vytvoří prvek.
      * 
-     * @param index explicitní index
+     * @param index
+     *            explicitní index
      * @return prvek
      */
     public static Thatstar create(final Index index) {
         return new Thatstar(index);
     }
-    
+
     private Thatstar() {
         super();
     }
-    
+
     private Thatstar(final Index index) {
         super(index);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {

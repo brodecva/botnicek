@@ -19,10 +19,12 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components;
 
 import java.awt.Rectangle;
+
 import javax.swing.JComponent;
 
 /**
- * Komponenta, která si udržuje pro svoje potřeby vnitřní rámeček (odlišný od standardního rámečku běžných komponent).
+ * Komponenta, která si udržuje pro svoje potřeby vnitřní rámeček (odlišný od
+ * standardního rámečku běžných komponent).
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -30,11 +32,12 @@ import javax.swing.JComponent;
 public abstract class FramedComponent extends JComponent {
 
     private static final long serialVersionUID = 1L;
-    
+
     private static final int FRAME_SIZE = 100;
-    
+
     private static Rectangle frame(final Rectangle bounds) {
-        return new Rectangle(bounds.x - FRAME_SIZE, bounds.y - FRAME_SIZE, bounds.width + 2 * FRAME_SIZE, bounds.height + 2 * FRAME_SIZE);
+        return new Rectangle(bounds.x - FRAME_SIZE, bounds.y - FRAME_SIZE,
+                bounds.width + 2 * FRAME_SIZE, bounds.height + 2 * FRAME_SIZE);
     }
 
     /**
@@ -43,25 +46,7 @@ public abstract class FramedComponent extends JComponent {
     protected FramedComponent() {
         super();
     }
-    
-    /**
-     * Nastaví hranice komponenty včetně rámu.
-     * 
-     * @param bounds hranice komponenty bez rámu
-     */
-    public final void setFramedBounds(Rectangle bounds) {
-        setBounds(frame(bounds));
-    }
-    
-    /**
-     * Vrátí šířku komponenty bez rámu.
-     * 
-     * @return šířka bez rámu
-     */
-    public final int getContentWidth() {
-        return getWidth() - 2 * FRAME_SIZE;
-    }
-    
+
     /**
      * Vrátí výšku komponenty bez rámu.
      * 
@@ -70,16 +55,34 @@ public abstract class FramedComponent extends JComponent {
     public final int getContentHeight() {
         return getHeight() - 2 * FRAME_SIZE;
     }
-    
+
     /**
-     * Vrátí šířku rámu.
+     * Vrátí šířku komponenty bez rámu.
      * 
-     * @return šířka rámu
+     * @return šířka bez rámu
      */
-    public final int getFrameWidth() {
-        return FRAME_SIZE;
+    public final int getContentWidth() {
+        return getWidth() - 2 * FRAME_SIZE;
     }
-    
+
+    /**
+     * Vrátí umístění oblasti bez rámu podle osy x.
+     * 
+     * @return umístění oblasti bez rámu
+     */
+    public final int getContentX() {
+        return getX() + getFrameWidth();
+    }
+
+    /**
+     * Vrátí umístění oblasti bez rámu podle osy y.
+     * 
+     * @return umístění oblasti bez rámu podle y
+     */
+    public final int getContentY() {
+        return getY() + getFrameHeight();
+    }
+
     /**
      * Vrátí výšku rámu.
      * 
@@ -88,32 +91,35 @@ public abstract class FramedComponent extends JComponent {
     public final int getFrameHeight() {
         return FRAME_SIZE;
     }
-    
+
     /**
-     * Nastaví umístění oblasti komponenty uvnitř rámu. 
+     * Vrátí šířku rámu.
      * 
-     * @param x souřadnice umístění podle osy x
-     * @param y souřadnice umístění podle osy y
+     * @return šířka rámu
+     */
+    public final int getFrameWidth() {
+        return FRAME_SIZE;
+    }
+
+    /**
+     * Nastaví umístění oblasti komponenty uvnitř rámu.
+     * 
+     * @param x
+     *            souřadnice umístění podle osy x
+     * @param y
+     *            souřadnice umístění podle osy y
      */
     public final void setContentLocation(final int x, final int y) {
         super.setLocation(x - FRAME_SIZE, y - FRAME_SIZE);
     }
-    
+
     /**
-     * Vrátí umístění oblasti bez rámu podle osy x.
+     * Nastaví hranice komponenty včetně rámu.
      * 
-     * @return umístění oblasti bez rámu
+     * @param bounds
+     *            hranice komponenty bez rámu
      */
-    public final int getContentX() {
-        return this.getX() + getFrameWidth();
-    }
-    
-    /**
-     * Vrátí umístění oblasti bez rámu podle osy y.
-     * 
-     * @return umístění oblasti bez rámu podle y
-     */
-    public final int getContentY() {
-        return this.getY() + getFrameHeight();
+    public final void setFramedBounds(final Rectangle bounds) {
+        setBounds(frame(bounds));
     }
 }

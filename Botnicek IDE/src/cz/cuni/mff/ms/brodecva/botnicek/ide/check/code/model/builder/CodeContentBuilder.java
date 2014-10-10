@@ -21,7 +21,6 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.ContentAggregator;
 
-
 /**
  * Konstruktor validního kódu.
  * 

@@ -35,62 +35,82 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RandomNode;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class InnerRandomProcessingNode extends AbstractNode implements RandomNode, ProcessingNode, InnerNode {
+public final class InnerRandomProcessingNode extends AbstractNode implements
+        RandomNode, ProcessingNode, InnerNode {
 
     private static final long serialVersionUID = 1L;
-    
-    /**
-     * Vytvoří uzel dle parametrů.
-     * 
-     * @param name název uzlu
-     * @param parent rodičovská síť
-     * @param x umístění uzlu v souřadnici x
-     * @param y umístění uzlu v souřadnici y
-     * @return uzel
-     */
-    public static InnerRandomProcessingNode create(final NormalWord name, final Network parent, final int x, final int y) {
-        return new InnerRandomProcessingNode(name, parent, x, y);
-    }
-    
+
     /**
      * Zkopíruje uzel.
      * 
-     * @param original původní uzel
+     * @param original
+     *            původní uzel
      * @return kopie
      */
     public static InnerRandomProcessingNode create(final Node original) {
         return new InnerRandomProcessingNode(original);
     }
-    
-    private InnerRandomProcessingNode(final NormalWord name, final Network parent, final int x, final int y) {
-        super(name, parent, x, y);
+
+    /**
+     * Vytvoří uzel dle parametrů.
+     * 
+     * @param name
+     *            název uzlu
+     * @param parent
+     *            rodičovská síť
+     * @param x
+     *            umístění uzlu v souřadnici x
+     * @param y
+     *            umístění uzlu v souřadnici y
+     * @return uzel
+     */
+    public static InnerRandomProcessingNode create(final NormalWord name,
+            final Network parent, final int x, final int y) {
+        return new InnerRandomProcessingNode(name, parent, x, y);
     }
-    
+
     private InnerRandomProcessingNode(final Node original) {
         super(original);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessor)
+    private InnerRandomProcessingNode(final NormalWord name,
+            final Network parent, final int x, final int y) {
+        super(name, parent, x, y);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessible#accept
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessor)
      */
     @Override
     public <T> T accept(final DispatchProcessor<T> processor) {
         return processor.process(this);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessible#accept
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor)
      */
     @Override
-    public <T> T accept(ProceedProcessor<T> processor) {
+    public <T> T accept(final ProceedProcessor<T> processor) {
         return processor.process(this);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessible#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessor)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessible#accept
+     * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessor)
      */
     @Override
-    public <T> T accept(StackProcessor<T> processor) {
+    public <T> T accept(final StackProcessor<T> processor) {
         return processor.process(this);
     }
 }

@@ -26,34 +26,21 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.api.Visitor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Attribute;
 
 /**
- * Rozhraní odlehčené (oproti standardnímu DOM) reprezentace prvku stromu jazyka AIML.
- * Poskytuje metody pro přístup k potomkům, atributům a vnitřnímu textu.
+ * Rozhraní odlehčené (oproti standardnímu DOM) reprezentace prvku stromu jazyka
+ * AIML. Poskytuje metody pro přístup k potomkům, atributům a vnitřnímu textu.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public interface Element extends Visitable {
-    
-    /**
-     * Vrací název prvku.
-     * 
-     * @return název prvku
-     */
-    String getLocalName();
 
     /**
-     * Indikuje, zda-li má prvek potomky.
+     * {@inheritDoc}
      * 
-     * @return zda-li má prvek potomky
+     * Průchod stromem prvků je obvyklý, tj. prefixový.
      */
-    boolean hasChildren();
-    
-    /**
-     * Vrací uspořádané potomky prvku.
-     * 
-     * @return potomci prvku
-     */
-    List<Element> getChildren();
+    @Override
+    public void accept(Visitor visitor);
 
     /**
      * Vrací množinu atributů.
@@ -63,17 +50,30 @@ public interface Element extends Visitable {
     Set<Attribute> getAttributes();
 
     /**
+     * Vrací uspořádané potomky prvku.
+     * 
+     * @return potomci prvku
+     */
+    List<Element> getChildren();
+
+    /**
+     * Vrací název prvku.
+     * 
+     * @return název prvku
+     */
+    String getLocalName();
+
+    /**
      * Vrací vnitřní text prvku.
      * 
      * @return vnitřní text prvku
      */
     String getText();
-    
-    /** 
-     * {@inheritDoc}
+
+    /**
+     * Indikuje, zda-li má prvek potomky.
      * 
-     * Průchod stromem prvků je obvyklý, tj. prefixový.
+     * @return zda-li má prvek potomky
      */
-    @Override
-    public void accept(Visitor visitor);
+    boolean hasChildren();
 }

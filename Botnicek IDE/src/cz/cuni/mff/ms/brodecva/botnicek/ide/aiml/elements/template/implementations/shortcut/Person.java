@@ -23,14 +23,18 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.ShortcutEleme
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Star;
 
 /**
- * Zkratka za prvek {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Person} obsahující prvek {@link Star}.
+ * Zkratka za prvek
+ * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations.Person}
+ * obsahující prvek {@link Star}.
  * 
  * @author Václav Brodec
  * @version 1.0
- * @see <a href="http://www.alicebot.org/TR/2011/#section-short-cut-elements">http://www.alicebot.org/TR/2011/#section-short-cut-elements</a>
+ * @see <a
+ *      href="http://www.alicebot.org/TR/2011/#section-short-cut-elements">http://www.alicebot.org/TR/2011/#section-short-cut-elements</a>
  */
-public final class Person extends AbstractProperElement implements ShortcutElement {
-    
+public final class Person extends AbstractProperElement implements
+        ShortcutElement {
+
     private static final String NAME = "person";
 
     /**
@@ -41,13 +45,16 @@ public final class Person extends AbstractProperElement implements ShortcutEleme
     public static Person create() {
         return new Person();
     }
-    
+
     private Person() {
         super();
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {

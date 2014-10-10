@@ -26,19 +26,21 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types;
  */
 public interface Code {
     /**
+     * Porovná objekt s kódem. Shoduje se v případě shody textu.
+     */
+    @Override
+    public boolean equals(Object obj);
+
+    /**
      * Vrátí text kódu.
      * 
      * @return text kódu
      */
     String getText();
-    
-    /**
-     * Porovná objekt s kódem. Shoduje se v případě shody textu.
-     */
-    @Override
-    public boolean equals(Object obj);
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override

@@ -43,74 +43,90 @@ public class SimplePatternTextField extends JTextField implements Clearable {
     /**
      * Vytvoří textové pole.
      * 
-     * @param client klient textového pole
-     * @param validationController řadič validace prostého vzoru
+     * @param client
+     *            klient textového pole
+     * @param validationController
+     *            řadič validace prostého vzoru
      * @return textové pole
      */
-    public static SimplePatternTextField create(final Source client, final SimplePatternValidationController validationController) {
+    public static SimplePatternTextField create(final Source client,
+            final SimplePatternValidationController validationController) {
         Preconditions.checkNotNull(client);
         Preconditions.checkNotNull(validationController);
-        
-        final SimplePatternTextField newInstance = new SimplePatternTextField(validationController);
-        
+
+        final SimplePatternTextField newInstance =
+                new SimplePatternTextField(validationController);
+
         newInstance.getDocument().addDocumentListener(new DocumentListener() {
-            
-            @Override
-            public void removeUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance, document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
-            }
-            
-            @Override
-            public void insertUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance, document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
-            }
-            
+
             @Override
             public void changedUpdate(final DocumentEvent e) {
                 try {
                     final Document document = e.getDocument();
-                    validationController.check(client, newInstance, document.getText(0, document.getLength()));
+                    validationController.check(client, newInstance,
+                            document.getText(0, document.getLength()));
+                } catch (final BadLocationException ex) {
+                    throw new IllegalStateException(ex);
+                }
+            }
+
+            @Override
+            public void insertUpdate(final DocumentEvent e) {
+                try {
+                    final Document document = e.getDocument();
+                    validationController.check(client, newInstance,
+                            document.getText(0, document.getLength()));
+                } catch (final BadLocationException ex) {
+                    throw new IllegalStateException(ex);
+                }
+            }
+
+            @Override
+            public void removeUpdate(final DocumentEvent e) {
+                try {
+                    final Document document = e.getDocument();
+                    validationController.check(client, newInstance,
+                            document.getText(0, document.getLength()));
                 } catch (final BadLocationException ex) {
                     throw new IllegalStateException(ex);
                 }
             }
         });
-        
+
         return newInstance;
     }
 
     private final SimplePatternValidationController validationController;
-    
-    private SimplePatternTextField(final SimplePatternValidationController validationController) {
+
+    private SimplePatternTextField(
+            final SimplePatternValidationController validationController) {
         this.validationController = validationController;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements.Clearable#clear()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements
+     * .Clearable#clear()
      */
     @Override
     public void clear() {
         this.validationController.clear(this);
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements.Clearable#reset()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements
+     * .Clearable#reset()
      */
     @Override
     public void reset(final Source client) {
         Preconditions.checkNotNull(client);
-        
+
         setText("");
         this.validationController.check(client, this, getText());
-    }  
+    }
 }

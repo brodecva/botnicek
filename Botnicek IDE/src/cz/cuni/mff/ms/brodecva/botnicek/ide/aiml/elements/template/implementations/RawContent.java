@@ -31,9 +31,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateText;
  */
 public class RawContent extends AbstractRawElement implements TemplateText {
     private static final String NAME = "rawcontent";
-    
-    private final String content;
-    
+
     /**
      * Vytvoří prvek.
      * 
@@ -42,37 +40,46 @@ public class RawContent extends AbstractRawElement implements TemplateText {
     public static RawContent create() {
         return new RawContent();
     }
-    
+
     /**
      * Vytvoří prvek.
      * 
-     * @param content obsah
+     * @param content
+     *            obsah
      * @return prvek
      */
     public static RawContent create(final String content) {
         return new RawContent(content);
     }
-    
+
+    private final String content;
+
     private RawContent() {
         this("");
     }
-    
+
     private RawContent(final String content) {
         Preconditions.checkNotNull(content);
-        
+
         this.content = content;
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getName()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getName()
      */
     @Override
     public String getLocalName() {
         return NAME;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.AbstractElement#getText()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.designer.models.aiml.elements.
+     * AbstractElement#getText()
      */
     @Override
     public String getText() {

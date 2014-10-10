@@ -48,32 +48,36 @@ final class BufferedFileWriterFactory implements WriterFactory, Serializable {
     public static BufferedFileWriterFactory create() {
         return new BufferedFileWriterFactory();
     }
-    
+
     private BufferedFileWriterFactory() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.WriterFactory#produce(java.nio.file.Path, java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.WriterFactory#produce
+     * (java.nio.file.Path, java.lang.String, java.lang.String)
      */
     @Override
-    public Writer produce(Path directory, String fileName)
+    public Writer produce(final Path directory, final String fileName)
             throws IOException {
         final Path filePath = directory.resolve(fileName);
-        
+
         FileWriter fileOutput = Intended.nullReference();
         try {
             fileOutput = new FileWriter(filePath.toFile());
         } catch (final IOException e) {
             if (Presence.isPresent(fileOutput)) {
-                fileOutput.close();     
+                fileOutput.close();
             }
-            
+
             throw e;
         }
-        
+
         return new BufferedWriter(fileOutput);
     }
-    
+
     private void readObject(final ObjectInputStream objectInputStream)
             throws ClassNotFoundException, IOException {
         objectInputStream.defaultReadObject();

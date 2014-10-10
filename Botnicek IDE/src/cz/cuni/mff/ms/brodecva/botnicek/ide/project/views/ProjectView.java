@@ -38,52 +38,66 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.RunController;
  */
 public interface ProjectView {
     /**
-     * Zobrazí otevřený projekt, obsluhovaný danými řadiči.
+     * Zobrazí pohled na nastavení bota.
      * 
-     * @param systemController řadič systému
-     * @param networkDisplayController řadič zobrazovače sítí
-     * @param arcPropertiesDisplayController řadič zobrazovače vlastností
-     * @param checkControllers množina řadičů ladění
+     * @param botSettingsController
+     *            řadič nastavení bota
      */
-    void open(SystemController systemController, NetworkDisplayController networkDisplayController, ArcPropertiesDisplayController arcPropertiesDisplayController, Set<CheckController> checkControllers);
-    
+    void botSettingsOpened(BotSettingsController botSettingsController);
+
     /**
      * Změní zobrazení prostředí po uzavření projektu.
      */
     void close();
-    
-    /**
-     * Zobrazí pohled na nastavení projektu.
-     * 
-     * @param settingsController řadič nastavení projektu
-     */
-    void settingsOpened(SettingsController settingsController);
-    
-    /**
-     * Zobrazí pohled na nastavení bota.
-     * 
-     * @param botSettingsController řadič nastavení bota
-     */
-    void botSettingsOpened(BotSettingsController botSettingsController);
-    
-    /**
-     * Zobrazí pohled na nastavení jazyka běhového bota a běhového prostředí.
-     * 
-     * @param languageSettingsController řadič nastavení jazyka
-     */
-    void languageSettingsOpened(LanguageSettingsController languageSettingsController);
-    
+
     /**
      * Zobrazí pohled na nastavení konverzace s botem.
      * 
-     * @param conversationSettingsController řadič nastavení konverzace
+     * @param conversationSettingsController
+     *            řadič nastavení konverzace
      */
-    void conversationSettingsOpened(ConversationSettingsController conversationSettingsController);
-    
+    void conversationSettingsOpened(
+            ConversationSettingsController conversationSettingsController);
+
+    /**
+     * Zobrazí pohled na nastavení jazyka běhového bota a běhového prostředí.
+     * 
+     * @param languageSettingsController
+     *            řadič nastavení jazyka
+     */
+    void languageSettingsOpened(
+            LanguageSettingsController languageSettingsController);
+
+    /**
+     * Zobrazí otevřený projekt, obsluhovaný danými řadiči.
+     * 
+     * @param systemController
+     *            řadič systému
+     * @param networkDisplayController
+     *            řadič zobrazovače sítí
+     * @param arcPropertiesDisplayController
+     *            řadič zobrazovače vlastností
+     * @param checkControllers
+     *            množina řadičů ladění
+     */
+    void open(SystemController systemController,
+            NetworkDisplayController networkDisplayController,
+            ArcPropertiesDisplayController arcPropertiesDisplayController,
+            Set<CheckController> checkControllers);
+
     /**
      * Zobrazí spuštěnou konverzaci.
      * 
-     * @param runController řadič instance běžící konverzace
+     * @param runController
+     *            řadič instance běžící konverzace
      */
     void run(RunController runController);
+
+    /**
+     * Zobrazí pohled na nastavení projektu.
+     * 
+     * @param settingsController
+     *            řadič nastavení projektu
+     */
+    void settingsOpened(SettingsController settingsController);
 }

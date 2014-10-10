@@ -31,58 +31,49 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
 
 /**
- * Abstraktní hrana, která obsahuje hodnotu ve formě prostého vzoru jazyka AIML, které musí specifikovaný test dosáhnout.
+ * Abstraktní hrana, která obsahuje hodnotu ve formě prostého vzoru jazyka AIML,
+ * které musí specifikovaný test dosáhnout.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public abstract class AbstractTestArc extends AbstractCodeArc implements TestArc {
-    
+public abstract class AbstractTestArc extends AbstractCodeArc implements
+        TestArc {
+
     private static final long serialVersionUID = 1L;
-    
+
     private final SimplePattern value;
-    
+
     /**
      * Vytvoří hranu.
      * 
-     * @param parent rodičovská síť
-     * @param name název hrany
-     * @param priority priorita
-     * @param code kód k provedení při posunu po hraně
-     * @param value vzor, vůči kterému je porovnáván test hrany
+     * @param parent
+     *            rodičovská síť
+     * @param name
+     *            název hrany
+     * @param priority
+     *            priorita
+     * @param code
+     *            kód k provedení při posunu po hraně
+     * @param value
+     *            vzor, vůči kterému je porovnáván test hrany
      */
     protected AbstractTestArc(final Network parent, final NormalWord name,
             final Priority priority, final Code code, final SimplePattern value) {
         super(parent, name, priority, code);
-        
+
         Preconditions.checkNotNull(value);
-        
+
         this.value = value;
     }
-    
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.TestArc#getValue()
-     */
-    public SimplePattern getValue() {
-        return this.value;
-    }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + value.hashCode();
-        return result;
-    }
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -93,16 +84,40 @@ public abstract class AbstractTestArc extends AbstractCodeArc implements TestArc
             return false;
         }
         final AbstractTestArc other = (AbstractTestArc) obj;
-        if (!value.equals(other.value)) {
+        if (!this.value.equals(other.value)) {
             return false;
         }
         return true;
     }
-    
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.TestArc#getValue()
+     */
+    @Override
+    public SimplePattern getValue() {
+        return this.value;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + this.value.hashCode();
+        return result;
+    }
+
     private void readObject(final ObjectInputStream objectInputStream)
             throws ClassNotFoundException, IOException {
         objectInputStream.defaultReadObject();
-        
+
         Preconditions.checkNotNull(this.value);
     }
 

@@ -38,35 +38,52 @@ final class DummyConversationSettingsController implements
     public static DummyConversationSettingsController create() {
         return new DummyConversationSettingsController();
     }
-    
+
     private DummyConversationSettingsController() {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java
+     * .lang.Object)
      */
     @Override
-    public void addView(ConversationSettingsView view) { 
+    public void addView(final ConversationSettingsView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang
+     * .Object)
      */
     @Override
-    public void removeView(ConversationSettingsView view) {
+    public void fill(final ConversationSettingsView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(
+     * java.lang.Object)
      */
     @Override
-    public void fill(ConversationSettingsView view) {
+    public void removeView(final ConversationSettingsView view) {
     }
 
-    /* (non-Javadoc)
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.ConversationSettingsController#set(cz.cuni.mff.ms.brodecva.botnicek.library.api.ConversationConfiguration)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.controllers.
+     * ConversationSettingsController
+     * #set(cz.cuni.mff.ms.brodecva.botnicek.library
+     * .api.ConversationConfiguration)
      */
     @Override
-    public void set(ConversationConfiguration configuration) {
+    public void set(final ConversationConfiguration configuration) {
     }
 }

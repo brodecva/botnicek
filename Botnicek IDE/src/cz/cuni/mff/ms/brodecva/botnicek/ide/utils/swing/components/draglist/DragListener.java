@@ -31,89 +31,120 @@ import java.awt.dnd.DragSourceListener;
 import com.google.common.base.Preconditions;
 
 /**
- * <p>Posluchačů události tahu prvku seznamu.</p>
- * <p>Po rozpoznání tahu vezme index právě vybraného prvku a převede jej kvůli přenositelnosti na řetězec.</p>
+ * <p>
+ * Posluchačů události tahu prvku seznamu.
+ * </p>
+ * <p>
+ * Po rozpoznání tahu vezme index právě vybraného prvku a převede jej kvůli
+ * přenositelnosti na řetězec.
+ * </p>
  * 
  * @author Václav Brodec
  * @version 1.0
- * @param <E> typ taženého obsahu
+ * @param <E>
+ *            typ taženého obsahu
  */
-final class DragListener<E> implements DragSourceListener,
-        DragGestureListener {
-    
-    private final DragOrderableList<E> list;
-    private final DragSource dragSource;
-    
+final class DragListener<E> implements DragSourceListener, DragGestureListener {
+
     /**
      * Vytvoří posluchač tahu prvku seznamu.
      * 
-     * @param list naslouchaný seznamu
+     * @param list
+     *            naslouchaný seznamu
      * @return posluchač tahu prvku seznamu
      */
-    public static <E> DragListener<E> create(final DragOrderableList<E> list) {            
+    public static <E> DragListener<E> create(final DragOrderableList<E> list) {
         Preconditions.checkNotNull(list);
-        
-        final DragSource dragSource = new DragSource(); 
-        final DragListener<E> newInstance = new DragListener<E>(list, dragSource);
-        
+
+        final DragSource dragSource = new DragSource();
+        final DragListener<E> newInstance =
+                new DragListener<E>(list, dragSource);
+
         dragSource.createDefaultDragGestureRecognizer(list,
                 DnDConstants.ACTION_MOVE, newInstance);
-        
+
         return newInstance;
     }
-    
-    private DragListener(final DragOrderableList<E> list, final DragSource dragSource) {
+
+    private final DragOrderableList<E> list;
+
+    private final DragSource dragSource;
+
+    private DragListener(final DragOrderableList<E> list,
+            final DragSource dragSource) {
         this.list = list;
         this.dragSource = dragSource;
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.dnd.DragGestureListener#dragGestureRecognized(java.awt.dnd.DragGestureEvent)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * java.awt.dnd.DragSourceListener#dragDropEnd(java.awt.dnd.DragSourceDropEvent
+     * )
+     */
+    @Override
+    public void dragDropEnd(final DragSourceDropEvent dsde) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * java.awt.dnd.DragSourceListener#dragEnter(java.awt.dnd.DragSourceDragEvent
+     * )
+     */
+    @Override
+    public void dragEnter(final DragSourceDragEvent dsde) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * java.awt.dnd.DragSourceListener#dragExit(java.awt.dnd.DragSourceEvent)
+     */
+    @Override
+    public void dragExit(final DragSourceEvent dse) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.awt.dnd.DragGestureListener#dragGestureRecognized(java.awt.dnd.
+     * DragGestureEvent)
      */
     @Override
     public void dragGestureRecognized(final DragGestureEvent e) {
         final int selectionIndex = this.list.getSelectedIndex();
-        final String transferredSelectionIndex = Integer.toString(selectionIndex);
-        
+        final String transferredSelectionIndex =
+                Integer.toString(selectionIndex);
+
         final StringSelection transferable =
                 new StringSelection(transferredSelectionIndex);
-        
-        this.dragSource.startDrag(e, DragSource.DefaultCopyDrop,
-                transferable, this);
+
+        this.dragSource.startDrag(e, DragSource.DefaultCopyDrop, transferable,
+                this);
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.dnd.DragSourceListener#dragEnter(java.awt.dnd.DragSourceDragEvent)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * java.awt.dnd.DragSourceListener#dragOver(java.awt.dnd.DragSourceDragEvent
+     * )
      */
     @Override
-    public void dragEnter(DragSourceDragEvent dsde) {
+    public void dragOver(final DragSourceDragEvent dsde) {
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.dnd.DragSourceListener#dragExit(java.awt.dnd.DragSourceEvent)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.awt.dnd.DragSourceListener#dropActionChanged(java.awt.dnd.
+     * DragSourceDragEvent)
      */
     @Override
-    public void dragExit(DragSourceEvent dse) {
-    }
-
-    /* (non-Javadoc)
-     * @see java.awt.dnd.DragSourceListener#dragOver(java.awt.dnd.DragSourceDragEvent)
-     */
-    @Override
-    public void dragOver(DragSourceDragEvent dsde) {
-    }
-
-    /* (non-Javadoc)
-     * @see java.awt.dnd.DragSourceListener#dragDropEnd(java.awt.dnd.DragSourceDropEvent)
-     */
-    @Override
-    public void dragDropEnd(DragSourceDropEvent dsde) {
-    }
-
-    /* (non-Javadoc)
-     * @see java.awt.dnd.DragSourceListener#dropActionChanged(java.awt.dnd.DragSourceDragEvent)
-     */
-    @Override
-    public void dropActionChanged(DragSourceDragEvent dsde) {
+    public void dropActionChanged(final DragSourceDragEvent dsde) {
     }
 }

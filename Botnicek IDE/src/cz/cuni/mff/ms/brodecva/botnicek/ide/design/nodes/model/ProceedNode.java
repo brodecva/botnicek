@@ -19,7 +19,8 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model;
 
 /**
- * Uzel rozlišující způsob pokračování výpočtu ve smyslu přerušení kvůli uživatelskému vstupu.
+ * Uzel rozlišující způsob pokračování výpočtu ve smyslu přerušení kvůli
+ * uživatelskému vstupu.
  * 
  * @author Václav Brodec
  * @version 1.0

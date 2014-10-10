@@ -19,7 +19,8 @@
 package cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.events;
 
 /**
- * Posluchač zastavení běžících konverzací. Obvykle implementováno objekty, které potřebují provést úklid po ukončení.
+ * Posluchač zastavení běžících konverzací. Obvykle implementováno objekty,
+ * které potřebují provést úklid po ukončení.
  * 
  * @author Václav Brodec
  * @version 1.0
