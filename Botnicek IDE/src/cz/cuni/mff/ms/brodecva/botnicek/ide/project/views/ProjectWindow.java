@@ -21,6 +21,7 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.project.views;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -173,6 +174,9 @@ public final class ProjectWindow implements ProjectView {
 
             switch (choice) {
             case JFileChooser.APPROVE_OPTION:
+                final Cursor originalCursor = ProjectWindow.this.frame.getCursor();
+                ProjectWindow.this.frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                
                 try {
                     ProjectWindow.this.projectController
                             .export(exportDirectoryChooser.getSelectedFile()
@@ -182,6 +186,8 @@ public final class ProjectWindow implements ProjectView {
                             UiLocalizer.print("EXPORT_ERROR_MESSAGE"),
                             UiLocalizer.print("EXPORT_ERROR_TITLE"),
                             JOptionPane.ERROR_MESSAGE);
+                } finally {
+                    ProjectWindow.this.frame.setCursor(originalCursor);
                 }
                 break;
             case JFileChooser.CANCEL_OPTION:
@@ -316,13 +322,18 @@ public final class ProjectWindow implements ProjectView {
 
         @Override
         public void actionPerformed(final ActionEvent e) {
-            try {
+            final Cursor originalCursor = ProjectWindow.this.frame.getCursor();
+            ProjectWindow.this.frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            
+            try {                
                 ProjectWindow.this.projectController.test();
             } catch (final RunException ex) {
                 JOptionPane.showMessageDialog(ProjectWindow.this.frame,
                         UiLocalizer.print("RUNTIME_ERROR_MESSAGE"),
                         UiLocalizer.print("RUNTIME_ERROR_TITLE"),
                         JOptionPane.ERROR_MESSAGE);
+            } finally {                
+                ProjectWindow.this.frame.setCursor(originalCursor);
             }
         }
     }
@@ -588,8 +599,7 @@ public final class ProjectWindow implements ProjectView {
     private final JMenuItem aboutMenuItem = new JMenuItem(
             UiLocalizer.print("About"));
     
-    private JPanel networksPane = new JPanel(new BorderLayout());
-    private final JScrollPane networksScrollPane = new JScrollPane();
+    private JPanel networksPane = new JPanel();
     private final JPanel networksAndArcPropertiesPane = new JPanel(
             new CardLayout());
     private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -599,7 +609,7 @@ public final class ProjectWindow implements ProjectView {
 
     private final JButton testButton = new JButton(UiLocalizer.print("Test"));
     private final JSplitPane systemSplitPane = new JSplitPane(
-            JSplitPane.HORIZONTAL_SPLIT, this.networksScrollPane,
+            JSplitPane.HORIZONTAL_SPLIT, this.networksPane,
             this.networksAndArcPropertiesPane);
     private final JSplitPane mainSplitPane = new JSplitPane(
             JSplitPane.VERTICAL_SPLIT, this.systemSplitPane, this.tabbedPane);
@@ -799,12 +809,12 @@ public final class ProjectWindow implements ProjectView {
     }
 
     private void initializeFrame() {
-        this.networksScrollPane.setMinimumSize(new Dimension(100, 400));
+        this.networksPane.setMinimumSize(new Dimension(100, 400));
         this.networksAndArcPropertiesPane
                 .setMinimumSize(new Dimension(450, 400));
         this.resultsScrollPane.setMinimumSize(new Dimension(900, 100));
 
-        this.networksScrollPane.setPreferredSize(new Dimension(150, 400));
+        this.networksPane.setPreferredSize(new Dimension(150, 400));
         this.networksAndArcPropertiesPane.setPreferredSize(new Dimension(750,
                 400));
         this.resultsScrollPane.setPreferredSize(new Dimension(900, 120));
@@ -1097,10 +1107,22 @@ public final class ProjectWindow implements ProjectView {
         Preconditions.checkNotNull(arcPropertiesController);
         Preconditions.checkNotNull(checkControllers);
 
-        SystemOverview.create(this.networksScrollPane, systemController,
+        SystemOverview.create(this.networksPane, systemController,
                 networkPropertiesController);
+        
+        /*this.addNetworkButton = new JButton(UiLocalizer.print("AddNetwork"));
+        this.addNetworkButton.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                systemController.addNetwork(name)
+            }
+        });
+        this.networksPane.add(this.addNetworkButton, BorderLayout.SOUTH);*/
+        
         SystemPane.create(this.networksAndArcPropertiesPane, systemController,
                 networkPropertiesController, arcPropertiesController);
+        
         ResultsTable.create(this.resultsScrollPane, checkControllers);
 
         setProjectControlsEnabled(true);

@@ -29,7 +29,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.processor.set.DisplayStrategy;
  * @version 1.0
  * @see cz.cuni.mff.ms.brodecva.botnicek.library.responder.Conversation
  */
-public interface ConversationConfiguration {
+public interface ConversationConfiguration extends Storable {
     
     /**
      * Vrátí výchozí uživatelské predikáty.

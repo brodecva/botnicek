@@ -28,7 +28,7 @@ import java.util.Map;
  * @author Václav Brodec
  * @version 1.0
  */
-public interface BotConfiguration {
+public interface BotConfiguration extends Storable {
     /**
      * Vrátí jméno robota.
      * 

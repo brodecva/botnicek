@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="build" name="Botnicek IDE">
+    <property environment="env"/>
+    <property name="Botnicek.location" value="../Botnicek"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.7"/>
+    <property name="source" value="1.7"/>
+    <path id="Botnicek.classpath">
+        <pathelement location="${Botnicek.location}/lib/junit-4.11.jar"/>
+        <pathelement location="${Botnicek.location}/lib/hamcrest-all-1.3.jar"/>
+        <pathelement location="${Botnicek.location}/lib/cglib-nodep-2.2.2.jar"/>
+        <pathelement location="${Botnicek.location}/lib/objenesis-1.2.jar"/>
+        <pathelement location="${Botnicek.location}/lib/easymock-3.1.jar"/>
+        <pathelement location="${Botnicek.location}/lib/javassist-3.17.1-GA.jar"/>
+        <pathelement location="${Botnicek.location}/lib/cpsuite-1.2.6.jar"/>
+        <pathelement location="${Botnicek.location}/lib/equalsverifier-1.3.1.jar"/>
+        <pathelement location="${Botnicek.location}/lib/powermock-easymock-1.5-full.jar"/>
+        <pathelement location="${Botnicek.location}/lib/JUnitParams-1.0.2.jar"/>
+        <pathelement location="${Botnicek.location}/lib/core-renderer.jar"/>
+        <pathelement location="${Botnicek.location}/bin"/>
+    </path>
+    <path id="Botnicek IDE.classpath">
+        <pathelement location="bin"/>
+        <path refid="Botnicek.classpath"/>
+        <pathelement location="lib/guava-15.0.jar"/>
+        <pathelement location="lib/bounce-0.19.jar"/>
+        <pathelement location="${Botnicek.location}/lib/junit-4.11.jar"/>
+        <pathelement location="${Botnicek.location}/lib/equalsverifier-1.3.1.jar"/>
+        <pathelement location="${Botnicek.location}/lib/easymock-3.1.jar"/>
+        <pathelement location="${Botnicek.location}/lib/powermock-easymock-1.5-full.jar"/>
+        <pathelement location="${Botnicek.location}/lib/cpsuite-1.2.6.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.ucls"/>
+                <exclude name="**/*.useq"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="tests">
+                <exclude name="**/*.ucls"/>
+                <exclude name="**/*.useq"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="locale">
+                <exclude name="**/*.ucls"/>
+                <exclude name="**/*.useq"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall">
+        <ant antfile="build.xml" dir="${Botnicek.location}" inheritAll="false" target="clean"/>
+    </target>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects">
+        <ant antfile="build.xml" dir="${Botnicek.location}" inheritAll="false" target="build-project"/>
+    </target>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </javac>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+            <src path="tests"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </javac>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+            <src path="locale"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target name="AllIntegrationTests">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.test.AllIntegrationTests" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="AllTests">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.test.AllTests" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="AllUnitJunitTests">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.test.AllUnitJunitTests" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="AllUnitPowerMockTests">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.test.AllUnitPowerMockTests" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="AllUnitTests">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.test.AllUnitTests" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="ArcInternalWindow">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.ArcInternalWindow" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="BotSettingsDialog">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.BotSettingsDialog" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="CodeEditorPane">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements.CodeEditorPane" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="CodePanel">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types.CodePanel" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="CodesTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.CodesTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="CodeTestArcPanel">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types.CodeTestArcPanel" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="ComparisonsTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.ComparisonsTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="ComponentsTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.ComponentsTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="ConversationSettingsDialog">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.ConversationSettingsDialog" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="DefaultArcModifierTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.DefaultArcModifierTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultCheckResultTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResultTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultCodeCheckerTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeCheckerTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultCodeCheckerTest.testCheckWhenUnknownElementExpectColumnPositionTagCodeLengthPlusOne">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeCheckerTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultDfsVisitorTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitorTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultDirectedGraphObjectObjectTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraphObjectObjectTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultDispatchProcessorTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultDispatchProcessorTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultEventManagerTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManagerTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultLabeledDirectedGraphNodeArcTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultLabeledDirectedGraphNodeArcTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultMixedPatternCheckerTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternCheckerTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultMixedPatternCheckerTest.testCheckWhenMissingNameAttributeExpectColumnPositionInvalidSequenceStart">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternCheckerTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultMixedPatternCheckerTest.testCheckWhenTwoBotAttributesExpectValid">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternCheckerTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultNodeModifierTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.DefaultNodeModifierTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultNodeTopicFactoryTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultNodeTopicFactoryTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultNormalWordCheckerTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordCheckerTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultPrettyPrinterTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.print.DefaultPrettyPrinterTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultProceedProcessorTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultProceedProcessorTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultRealignmentProcessorTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.DefaultRealignmentProcessorTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultRenderingVisitorTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.render.DefaultRenderingVisitorTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultSimplePatternCheckerTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternCheckerTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultStackProcessorTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultStackProcessorTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultSystemGraphIntegrationTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraphIntegrationTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultSystemGraphTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraphTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultSystemTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultSystemTest.replayTested">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultSystemTest.testAccept">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultTestProcessorTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultTestProcessorTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultTranslatingObserverTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserverTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultTranslatorFactoryTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatorFactoryTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DirectionTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DirectionTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="DragOrderableList">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.draglist.DragOrderableList" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="HintingComboBox">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.hinters.HintingComboBox" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="IntendedTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.IntendedTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="LanguageSettingsDialog">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.LanguageSettingsDialog" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="MainPanel">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types.MainPanel" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="NetworkInternalWindow">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.views.NetworkInternalWindow" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="NormalizedNamingAuthorityTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthorityTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="NormalWordsTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWordsTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="NormalWordsTest.testJoinListOfNormalWordWhenNotEmpty">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWordsTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="ObjectsTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.ObjectsTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="OverwriteCheckingFileChooser">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.OverwriteCheckingFileChooser" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="PatternArcPanel">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types.PatternArcPanel" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="PatternsTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.PatternsTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="PredicateTestArcPanel">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types.PredicateTestArcPanel" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="PresenceTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.PresenceTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="ProjectTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.ProjectTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="ProjectWindow">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.project.views.ProjectWindow" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="RandomizeTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.compile.library.RandomizeTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="RecurentArcPanel">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types.RecurentArcPanel" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="RecursionTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.compile.library.RecursionTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="ReferenceHintingComboBox">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements.ReferenceHintingComboBox" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="SegmentTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.SegmentTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="SegmentTest.testToBoundsWhenPoint">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.SegmentTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="SettingsDialog">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.project.views.SettingsDialog" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="StackTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.translate.StackTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="StackTest.tearDown">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.translate.StackTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="SystemPane">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.views.SystemPane" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="TablesTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.TablesTest" todir="${junit.output.dir}"/>
+            <classpath refid="Botnicek IDE.classpath"/>
+        </junit>
+    </target>
+    <target name="TestPanel">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.views.TestPanel" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="TransitionArcPanel">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types.TransitionArcPanel" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="UnobscuredInternalFrame">
+        <java classname="cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.components.UnobscuredInternalFrame" failonerror="true" fork="yes">
+            <classpath refid="Botnicek IDE.classpath"/>
+        </java>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
+</project>

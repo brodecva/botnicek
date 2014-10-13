@@ -120,7 +120,7 @@ public final class Property {
 
         return result;
     }
-
+    
     /**
      * Kontroluje položky na přítomnost {@code null} v klíči či hodnotě.
      * 

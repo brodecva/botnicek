@@ -81,12 +81,21 @@ public final class AIMLConversationConfiguration implements
      */
     private static final ClassMap<String, DisplayStrategy> STRATEGIES_MAP =
             new SimpleClassMap<String, DisplayStrategy>();
+    
+    /**
+     * Zobrazení strategií na názvy.
+     */
+    private static final Map<Class<? extends DisplayStrategy>, String> STRATEGIES_NAMES_MAP =
+            new HashMap<>();
 
     static {
         STRATEGIES_MAP.put(NAME_DISPLAY_STRATEGY_NAME,
                 NameDisplayStretegy.class);
         STRATEGIES_MAP.put(VALUE_DISPLAY_STRATEGY_NAME,
                 ValueDisplayStrategy.class);
+        
+        STRATEGIES_NAMES_MAP.put(NameDisplayStretegy.class, NAME_DISPLAY_STRATEGY_NAME);
+        STRATEGIES_NAMES_MAP.put(ValueDisplayStrategy.class, VALUE_DISPLAY_STRATEGY_NAME);
     }
 
     /**
@@ -259,5 +268,28 @@ public final class AIMLConversationConfiguration implements
         builder.append(Text.toString(displayStrategies.entrySet(), maxLen));
         builder.append("]");
         return builder.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.library.api.Storable#toNamedProperties()
+     */
+    @Override
+    public Map<String, Properties> toNamedProperties() {
+        final Properties defaultPredicatesProps = new Properties();
+        final Set<Entry<String, String>> defaultPredicatesEntries = this.defaultPredicates.entrySet();
+        for (final Entry<String, String> entry : defaultPredicatesEntries) {
+            defaultPredicatesProps.put(entry.getKey(), entry.getValue());
+        }
+        
+        final Properties displayStrategiesProps = new Properties();
+        final Set<Entry<String, DisplayStrategy>> displayStrategiesEntries = this.displayStrategies.entrySet();
+        for (final Entry<String, DisplayStrategy> entry : displayStrategiesEntries) {
+            displayStrategiesProps.put(entry.getKey(), STRATEGIES_NAMES_MAP.get(entry.getValue()));
+        }
+        
+        final Map<String, Properties> result = new HashMap<>();
+        result.put("defaultpredicates", defaultPredicatesProps);
+        result.put("setbehavior", displayStrategiesProps);
+        return result;
     }
 }

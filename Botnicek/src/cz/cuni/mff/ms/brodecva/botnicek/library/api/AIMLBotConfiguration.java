@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -366,5 +367,29 @@ public final class AIMLBotConfiguration implements BotConfiguration,
         builder.append(Text.toString(afterLoadingOrder, maxLen));
         builder.append("]");
         return builder.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.library.api.Storable#toNamedProperties()
+     */
+    @Override
+    public Map<String, Properties> toNamedProperties() {
+        final Properties botSettingsProps = new Properties();
+        botSettingsProps.put(NAME_KEY, this.name);
+        botSettingsProps.put(FILES_KEY, this.filesLocation.toString());
+        botSettingsProps.put(GOSSIP_PATH_KEY, this.gossipPath.toString());
+        botSettingsProps.put(BEFORE_LOADING_ORDER_KEY, Configuration.writeLoadingOrder(this.beforeLoadingOrder));
+        botSettingsProps.put(AFTER_LOADING_ORDER_KEY, Configuration.writeLoadingOrder(this.afterLoadingOrder));
+        
+        final Properties botPredicatesProps = new Properties();
+        final Set<Entry<String, String>> botPredicatesEntries = this.predicates.entrySet();
+        for (final Entry<String, String> entry : botPredicatesEntries) {
+            botPredicatesProps.put(entry.getKey(), entry.getValue());
+        }
+        
+        final Map<String, Properties> result = new HashMap<>();
+        result.put("bot", botSettingsProps);
+        result.put("botpredicates", botPredicatesProps);
+        return result;
     }
 }

@@ -18,13 +18,17 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.views;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -50,7 +54,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
 
 /**
- * Přehled struktury systému v podobě plochého stromu.
+ * Přehled struktury systému v podobě plochého stromu. Navíc poskytuje tlačítko pro přidání sítě.
  * 
  * @author Václav Brodec
  * @version 1.0
@@ -120,30 +124,7 @@ public class SystemOverview implements SystemView {
                 final Object root = model.getRoot();
 
                 if (selected.equals(root)) {
-                    final Object addedNetworkNameInput =
-                            JOptionPane.showInputDialog(
-                                    Intended.<Component> nullReference(),
-                                    UiLocalizer.print("NewNetworkName"),
-                                    UiLocalizer.print("NewNetworkNameTitle"),
-                                    JOptionPane.QUESTION_MESSAGE);
-                    if (Components.hasUserCanceledInput(addedNetworkNameInput)) {
-                        return;
-                    }
-
-                    assert addedNetworkNameInput instanceof String;
-                    try {
-                        SystemOverview.this.systemController
-                                .addNetwork((String) addedNetworkNameInput);
-                    } catch (final IllegalArgumentException ex) {
-                        JOptionPane
-                                .showMessageDialog(
-                                        Intended.<Component> nullReference(),
-                                        UiLocalizer
-                                                .print("NetworkNameImpossibleMessage"),
-                                        UiLocalizer
-                                                .print("NetworkNameImpossibleTitle"),
-                                        JOptionPane.ERROR_MESSAGE);
-                    }
+                    addNetwork();
                 } else {
                     Preconditions.checkState(selected instanceof Network);
                     final Network node = (Network) selected;
@@ -220,14 +201,14 @@ public class SystemOverview implements SystemView {
      * Vytvoří správce přehledu.
      * 
      * @param parent
-     *            rodičovský panel s posuvníky
+     *            rodičovský kontejner
      * @param systemController
      *            řadič systému
      * @param networkPropertiesController
      *            řadič zobrazení grafů sítí
      * @return správce přehledu v podobě stromu
      */
-    public static SystemOverview create(final JScrollPane parent,
+    public static SystemOverview create(final Container parent,
             final SystemController systemController,
             final NetworkDisplayController networkPropertiesController) {
         return create(parent, DefaultSystemTreeModel.create(systemController),
@@ -238,7 +219,7 @@ public class SystemOverview implements SystemView {
      * Vytvoří správce přehledu.
      * 
      * @param parent
-     *            rodičovský panel s posuvníky
+     *            rodičovský kontejner
      * @param model
      *            model systémového stromu
      * @param systemController
@@ -247,7 +228,7 @@ public class SystemOverview implements SystemView {
      *            řadič zobrazení grafů sítí
      * @return správce přehledu v podobě stromu
      */
-    static SystemOverview create(final JScrollPane parent,
+    static SystemOverview create(final Container parent,
             final SystemTreeModel model,
             final SystemController systemController,
             final NetworkDisplayController networkPropertiesController) {
@@ -268,21 +249,35 @@ public class SystemOverview implements SystemView {
         
         tree.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), DELETE_NETWORK_ACTION_KEY);
         tree.getActionMap().put(DELETE_NETWORK_ACTION_KEY, newInstance.new DefaultDeleteAction());
-
+        newInstance.addNetworkButton.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                newInstance.addNetwork();
+            }
+        });
+        
+        
         tree.setBackground(UIManager.getColor("Tree.textBackground"));
 
         systemController.addView(newInstance);
         systemController.fill(newInstance);
-        parent.setViewportView(tree);
-
+        
+        newInstance.networksScrollPane.setViewportView(tree);
+        parent.setLayout(new BorderLayout());
+        parent.add(newInstance.networksScrollPane, BorderLayout.CENTER);
+        parent.add(newInstance.addNetworkButton, BorderLayout.SOUTH);
+        
         return newInstance;
     }
 
     private final SystemController systemController;
 
     private final NetworkDisplayController networkPropertiesController;
-
+    
+    private final JScrollPane networksScrollPane = new JScrollPane();
     private final SystemTree tree;
+    private final JButton addNetworkButton = new JButton(UiLocalizer.print("AddNetwork"));
 
     private SystemOverview(final SystemController systemController,
             final NetworkDisplayController networkPropertiesController,
@@ -393,5 +388,32 @@ public class SystemOverview implements SystemView {
 
     private void unsubscribe() {
         this.systemController.removeView(this);
+    }
+
+    private void addNetwork() {
+        final Object addedNetworkNameInput =
+                JOptionPane.showInputDialog(
+                        Intended.<Component> nullReference(),
+                        UiLocalizer.print("NewNetworkName"),
+                        UiLocalizer.print("NewNetworkNameTitle"),
+                        JOptionPane.QUESTION_MESSAGE);
+        if (Components.hasUserCanceledInput(addedNetworkNameInput)) {
+            return;
+        }
+
+        assert addedNetworkNameInput instanceof String;
+        try {
+            SystemOverview.this.systemController
+                    .addNetwork((String) addedNetworkNameInput);
+        } catch (final IllegalArgumentException ex) {
+            JOptionPane
+                    .showMessageDialog(
+                            Intended.<Component> nullReference(),
+                            UiLocalizer
+                                    .print("NetworkNameImpossibleMessage"),
+                            UiLocalizer
+                                    .print("NetworkNameImpossibleTitle"),
+                            JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

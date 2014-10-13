@@ -35,6 +35,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
@@ -82,6 +83,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.RunException;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.Runtime;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.RuntimeFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.RuntimeSettings;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.AIMLConversationConfiguration;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration;
@@ -189,6 +191,8 @@ public final class Project {
      */
     public static final SystemName RESERVED_LIBRARY_NAME = SystemName
             .of("botnicek");
+    
+    private static final Object PROPERTIES_EXTENSION = "properties";
 
     /**
      * Vytvoří projekt z daných závislostí.
@@ -484,6 +488,7 @@ public final class Project {
         }
 
         exportUnit(RESERVED_LIBRARY_NAME, getLibraries(), render, directory);
+        exportConfigs(directory);
     }
 
     private void exportUnit(final SystemName name, final List<Topic> content,
@@ -495,6 +500,25 @@ public final class Project {
                 String.format("%s.%s", name.getText(), AIML.FILE_SUFFIX);
 
         writeUnit(directory, unitName, formatted);
+    }
+    
+    private void exportConfigs(final Path directory) throws IOException {
+        final ImmutableMap.Builder<String, Properties> propertiesUnitsBuilder = ImmutableMap.builder();
+        propertiesUnitsBuilder.putAll(this.runtimeSettings.getBotConfiguration().toNamedProperties());
+        propertiesUnitsBuilder.putAll(this.runtimeSettings.getLanguageConfiguration().toNamedProperties());
+        propertiesUnitsBuilder.putAll(this.runtimeSettings.getConversationConfiguration().toNamedProperties());
+        final Map<String, Properties> propertiesUnits = propertiesUnitsBuilder.build();
+        
+        final Set<Entry<String, Properties>> propertiesUnitsEntries = propertiesUnits.entrySet();
+        for (final Entry<String, Properties> unit : propertiesUnitsEntries) {
+            final String name = unit.getKey();
+            final Properties content = unit.getValue();
+            
+            final String unitName =
+                    String.format("%s.%s", name, PROPERTIES_EXTENSION);
+            
+            writePropertiesUnit(directory, unitName, content);
+        }
     }
 
     private void fillNew() {
@@ -943,6 +967,20 @@ public final class Project {
         try (final Writer outputBuffer =
                 this.unitWriterFactory.produce(directory, unitName)) {
             outputBuffer.write(text);
+        }
+    }
+    
+    /**
+     * Zapíše do adresáře soubor {@link Properties}.
+     * 
+     * @param name název jednotky
+     * @param content klíče v {@link Properties}
+     * @throws IOException pokud dojde k chybě při zápisu
+     */
+    private void writePropertiesUnit(final Path directory, final String name, final Properties content) throws IOException {
+        try (final OutputStream outputBuffer =
+                new BufferedOutputStream(new FileOutputStream(directory.resolve(name).toFile()))) {
+            content.store(outputBuffer, Intended.<String>nullReference());
         }
     }
 }

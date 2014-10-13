@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * @author Václav Brodec
  * @version 1.0
  */
-public interface LanguageConfiguration {
+public interface LanguageConfiguration extends Storable {
     /**
      * Vrátí název jazyka.
      * 

@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -488,5 +489,42 @@ public final class AIMLLanguageConfiguration implements LanguageConfiguration,
         builder.append(Text.toString(innerPunctuationSubs.entrySet(), maxLen));
         builder.append("]");
         return builder.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.library.api.Storable#toNamedProperties()
+     */
+    @Override
+    public Map<String, Properties> toNamedProperties() {
+        final Properties languageSettingsProps = new Properties();
+        languageSettingsProps.put(NAME_KEY, this.name);
+        languageSettingsProps.put(DELIM_KEY, this.sentenceDelim.toString());
+        
+        final Map<String, Properties> result = new HashMap<>();
+        result.put("language", languageSettingsProps);
+        result.put("gender", toSubProperties(this.genderSubs));
+        result.put("person", toSubProperties(this.personSubs));
+        result.put("person2", toSubProperties(this.person2Subs));
+        result.put("abbreviations", toSubProperties(this.abbreviationsSubs));
+        result.put("spelling", toSubProperties(this.spellingSubs));
+        result.put("emoticons", toSubProperties(this.emoticonsSubs));
+        result.put("punctuation", toSubProperties(this.innerPunctuationSubs));
+        return result;
+    }
+    
+    /**
+     * P5evede substituce na {@link Properties}.
+     * 
+     * @param subs substituce
+     * @return substituce jako {@link Properties}
+     */
+    private static Properties toSubProperties(final Map<Pattern, String> subs) {
+        final Properties result = new Properties(); 
+        final Set<Entry<Pattern, String>> subsEntries = subs.entrySet();
+        for (final Entry<Pattern, String> entry : subsEntries) {
+            result.put(entry.getKey().toString(), entry.getValue());
+        }
+        
+        return result;
     }
 }

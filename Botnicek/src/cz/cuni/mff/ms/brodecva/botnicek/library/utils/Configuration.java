@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -46,6 +47,11 @@ public final class Configuration {
      */
     private static final ExceptionMessageLocalizer MESSAGE_LOCALIZER =
             ExceptionMessageLocalizer.getLocalizer();
+    
+    /**
+     * Oddělovač položek s názvy při určení pořadí načítání souborů.
+     */
+    public static final String FILE_NAMES_ORDER_DELIMITER = "/";
 
     /**
      * Načte textovou hodnotu.
@@ -98,7 +104,7 @@ public final class Configuration {
 
     /**
      * Načte pořadí načítaných souborů. Očekává pouze názvy souborů oddělené
-     * pomocí /, nikoli cesty.
+     * pomocí {@link #FILE_NAMES_ORDER_DELIMITER}, nikoli cesty.
      * 
      * @param properties
      *            nastavení
@@ -113,7 +119,7 @@ public final class Configuration {
             throws ConfigurationException {
         final String loadingOrderJoined = readValue(properties, key);
 
-        final String[] loadingOrderFileNames = loadingOrderJoined.split("/");
+        final String[] loadingOrderFileNames = loadingOrderJoined.split(FILE_NAMES_ORDER_DELIMITER);
         
         final List<String> loadingOrder = new ArrayList<String>();
         for (final String fileName : loadingOrderFileNames) {
@@ -126,6 +132,41 @@ public final class Configuration {
         
 
         return loadingOrder;
+    }
+    
+    /**
+     * Vypíše pořadí načítaných souborů oddělené
+     * pomocí {@link #FILE_NAMES_ORDER_DELIMITER}.
+     * 
+     * @param fileNamesOrder pořadí souborů
+     * @return pořadí jako řetězec
+     */
+    public static String writeLoadingOrder(final List<String> fileNamesOrder) {
+        if (fileNamesOrder == null) {
+            throw new NullPointerException();
+        }
+        
+        return join(fileNamesOrder, FILE_NAMES_ORDER_DELIMITER);
+    }
+    
+    /**
+     * Spojí pomocí oddělovače iterované objekty.
+     * 
+     * @param iterable iterovaný objekt
+     * @param delimiter oddělovač
+     * @return spojený řetězec
+     */
+    private static String join(final Iterable<?> iterable, final String delimiter) {
+        final StringBuilder resultBuilder = new StringBuilder();
+        final Iterator<?> iterator = iterable.iterator();
+        if (iterator.hasNext()) {
+            resultBuilder.append(iterator.next().toString());
+        }
+        while (iterator.hasNext()) {
+            resultBuilder.append(delimiter);
+            resultBuilder.append(iterator.next().toString());
+        }
+        return resultBuilder.toString();
     }
 
     /**
