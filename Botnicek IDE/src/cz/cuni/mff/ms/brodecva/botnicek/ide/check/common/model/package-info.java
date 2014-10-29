@@ -17,7 +17,7 @@
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * Řadiče kontroly.
+ * Model kontroly.
  *
  * @version 1.0
  */

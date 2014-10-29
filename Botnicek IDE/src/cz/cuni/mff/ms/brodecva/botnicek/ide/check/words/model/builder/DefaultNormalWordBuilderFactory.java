@@ -20,16 +20,19 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.builder;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.NormalWordChecker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.BuilderFactory;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Checker;
 
 /**
- * Výchozí implementace {@link NormalWordBuilderFactory}.
+ * Výchozí implementace {@link BuilderFactory}.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class DefaultNormalWordBuilderFactory implements
-        NormalWordBuilderFactory {
+        BuilderFactory<NormalWord> {
 
     /**
      * Vytvoří továrnu.
@@ -39,26 +42,23 @@ public final class DefaultNormalWordBuilderFactory implements
      * @return továrna
      */
     public static DefaultNormalWordBuilderFactory create(
-            final NormalWordChecker checker) {
+            final Checker checker) {
         Preconditions.checkNotNull(checker);
 
         return new DefaultNormalWordBuilderFactory(checker);
     }
 
-    private final NormalWordChecker checker;
+    private final Checker checker;
 
-    private DefaultNormalWordBuilderFactory(final NormalWordChecker checker) {
+    private DefaultNormalWordBuilderFactory(final Checker checker) {
         this.checker = checker;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder.
-     * NormalWordBuilderFactory#produce(java.lang.String)
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.BuilderFactory#produce(java.lang.String)
      */
     @Override
-    public NormalWordBuilder produce(final String start) {
+    public Builder<NormalWord> produce(final String start) {
         Preconditions.checkNotNull(start);
 
         return DefaultNormalWordBuilder.create(this.checker, start);

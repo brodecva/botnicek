@@ -26,8 +26,9 @@ import java.io.Serializable;
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.MixedPatternChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 
@@ -38,7 +39,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
  * @author Václav Brodec
  * @version 1.0
  */
-public class DefaultMixedPatternBuilder implements MixedPatternBuilder, Source {
+public class DefaultMixedPatternBuilder implements Builder<MixedPattern>, Source {
 
     private final static class MixedPatternImplementation implements
             MixedPattern, Serializable {
@@ -143,17 +144,6 @@ public class DefaultMixedPatternBuilder implements MixedPatternBuilder, Source {
 
         this.checker = checker;
         this.contentBuilder = new StringBuilder(startContent);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.
-     * ContentAggregator#add(java.lang.String)
-     */
-    @Override
-    public void add(final String content) {
-        this.contentBuilder.append(content);
     }
 
     /*

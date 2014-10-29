@@ -16,42 +16,43 @@
  * You should have received a copy of the GNU General Public License
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.cuni.mff.ms.brodecva.botnicek.ide.project.events;
+package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.Project;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.LanguageSettingsChangedListener;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
-import cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration;
+import cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration;
 
 /**
- * Událost změny nastavení bota.
+ * Událost změny nastavení jazyka robota užitého pro validaci v systému.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class BotSettingsChangedEvent extends
-        AbstractMappedEvent<Project, BotSettingsChangedListener> {
+public final class LanguageSettingsChangedEvent extends
+        AbstractMappedEvent<System, LanguageSettingsChangedListener> {
 
     /**
      * Vytvoří událost.
      * 
-     * @param project
-     *            projekt, kterému bot patří
+     * @param system
+     *            systém, který je změnou nastavení ovlivněn
      * @param settings
-     *            nová nastavení
+     *            nastavení jazyka
      * @return událost
      */
-    public static BotSettingsChangedEvent create(final Project project,
-            final BotConfiguration settings) {
-        return new BotSettingsChangedEvent(project, settings);
+    public static LanguageSettingsChangedEvent create(final System system,
+            final LanguageConfiguration settings) {
+        return new LanguageSettingsChangedEvent(system, settings);
     }
 
-    private final BotConfiguration settings;
+    private final LanguageConfiguration settings;
 
-    private BotSettingsChangedEvent(final Project project,
-            final BotConfiguration settings) {
-        super(project);
+    private LanguageSettingsChangedEvent(final System system,
+            final LanguageConfiguration settings) {
+        super(system);
 
         Preconditions.checkNotNull(settings);
 
@@ -66,7 +67,7 @@ public final class BotSettingsChangedEvent extends
      * .Object)
      */
     @Override
-    public void dispatchTo(final BotSettingsChangedListener listener) {
+    public void dispatchTo(final LanguageSettingsChangedListener listener) {
         listener.changed(this.settings);
     }
 }

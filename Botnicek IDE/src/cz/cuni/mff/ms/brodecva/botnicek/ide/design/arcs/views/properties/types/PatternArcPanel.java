@@ -32,8 +32,8 @@ import javax.swing.SwingUtilities;
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.controllers.MixedPatternValidationController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements.MixedPatternTextField;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.UiLocalizer;
@@ -85,7 +85,7 @@ public class PatternArcPanel extends AbstractTypePanel {
             PatternArcPanel
             create(final Source parent,
                     final ArcController arcController,
-                    final MixedPatternValidationController mixedPatternValidationController) {
+                    final CheckController<? extends MixedPattern> mixedPatternValidationController) {
         Preconditions.checkNotNull(parent);
         Preconditions.checkNotNull(arcController);
         Preconditions.checkNotNull(mixedPatternValidationController);

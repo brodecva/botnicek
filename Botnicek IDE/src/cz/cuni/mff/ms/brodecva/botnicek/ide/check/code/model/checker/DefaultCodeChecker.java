@@ -26,14 +26,13 @@ import java.util.Map.Entry;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
-import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Iterables;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration;
@@ -79,7 +78,7 @@ public final class DefaultCodeChecker implements CodeChecker, Source {
      *            prefix prostorů jmen
      * @return validátor
      */
-    public static DefaultCodeChecker create(final BotConfiguration botSettings,
+    public static CodeChecker create(final BotConfiguration botSettings,
             final LanguageConfiguration languageSettings,
             final Map<URI, String> namespacesToPrefixes) {
         return new DefaultCodeChecker(botSettings, languageSettings,
@@ -105,7 +104,7 @@ public final class DefaultCodeChecker implements CodeChecker, Source {
 
     private final LanguageConfiguration languageSettings;
 
-    private final BiMap<URI, String> namespacesToPrefixes;
+    private final Map<URI, String> namespacesToPrefixes;
 
     private DefaultCodeChecker(final BotConfiguration botSettings,
             final LanguageConfiguration languageSettings,
@@ -117,10 +116,11 @@ public final class DefaultCodeChecker implements CodeChecker, Source {
         Preconditions.checkNotNull(namespacesToPrefixes.containsKey(URI
                 .create(XML.SCHEMA_NAMESPACE_URI.getValue())));
         Preconditions.checkNotNull(namespacesToPrefixes);
-
+        HashBiMap.create(namespacesToPrefixes);
+        
         this.botSettings = botSettings;
         this.languageSettings = languageSettings;
-        this.namespacesToPrefixes = HashBiMap.create(namespacesToPrefixes);
+        this.namespacesToPrefixes = namespacesToPrefixes;
     }
 
     private int adjustColumnNumber(final int original,
@@ -244,4 +244,33 @@ public final class DefaultCodeChecker implements CodeChecker, Source {
         return check(this, new Object(), content);
     }
 
+    /**
+     * Nastavení robota užitá pro validaci.
+     * 
+     * @return nastavení robota
+     */
+    @Override
+    public BotConfiguration getBotSettings() {
+        return this.botSettings;
+    }
+
+    /**
+     * Nastavení jazyka užitá pro validaci.
+     * 
+     * @return nastavení jazyka
+     */
+    @Override
+    public LanguageConfiguration getLanguageSettings() {
+        return this.languageSettings;
+    }
+
+    /**
+     * Vrátí vzájemně jednoznačné zobrazení jmenných prostorů a jejich výchozích prefixů.
+     * 
+     * @return vzájemně jednoznačné zobrazení jmenných prostorů a jejich výchozích prefixů
+     */
+    @Override
+    public Map<URI, String> getNamespacesToPrefixes() {
+        return this.namespacesToPrefixes;
+    }
 }

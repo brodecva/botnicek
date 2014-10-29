@@ -26,9 +26,10 @@ import java.io.Serializable;
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.SimplePatternChecker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Checker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 
 /**
@@ -38,7 +39,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultSimplePatternBuilder implements SimplePatternBuilder,
+public final class DefaultSimplePatternBuilder implements Builder<SimplePattern>,
         Source {
 
     private final static class SimplePatternImplementation implements
@@ -129,26 +130,21 @@ public final class DefaultSimplePatternBuilder implements SimplePatternBuilder,
      * @return konstruktor
      */
     public static DefaultSimplePatternBuilder create(
-            final SimplePatternChecker checker, final String startContent) {
+            final Checker checker, final String startContent) {
         return new DefaultSimplePatternBuilder(checker, startContent);
     }
 
     private final StringBuilder contentBuilder;
 
-    private final SimplePatternChecker checker;
+    private final Checker checker;
 
-    private DefaultSimplePatternBuilder(final SimplePatternChecker checker,
+    private DefaultSimplePatternBuilder(final Checker checker,
             final String startContent) {
         Preconditions.checkNotNull(checker);
         Preconditions.checkNotNull(startContent);
 
         this.checker = checker;
         this.contentBuilder = new StringBuilder(startContent);
-    }
-
-    @Override
-    public void add(final String content) {
-        this.contentBuilder.append(content);
     }
 
     /*

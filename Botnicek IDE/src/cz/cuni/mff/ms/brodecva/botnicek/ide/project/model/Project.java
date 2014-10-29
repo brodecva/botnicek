@@ -48,7 +48,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.root.Toplevel;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Topic;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder.DefaultCodeContentBuilder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder.DefaultCodeBuilder;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.compile.Compiler;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.compile.CompilerFactory;
@@ -67,11 +67,8 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.SystemName;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.print.DefaultPrettyPrinter;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.print.PrintException;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.print.Printer;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.BotSettingsChangedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.ConversationSettingsChangedEvent;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.LanguageSettingsChangedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.ProjectOpenedEvent;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.SettingsChangedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.render.DefaultRendererFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.render.DefaultRenderingVisitorFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.render.Renderer;
@@ -548,7 +545,7 @@ public final class Project {
                         arcName,
                         Priority.of(1),
                         TransitionArc.class,
-                        DefaultCodeContentBuilder
+                        DefaultCodeBuilder
                                 .create(DefaultCodeChecker
                                         .create(this.runtimeSettings
                                                 .getBotConfiguration(),
@@ -856,7 +853,8 @@ public final class Project {
         }
 
         this.settings = settings;
-        this.dispatcher.fire(SettingsChangedEvent.create(this, this.settings));
+        this.dispatcher.fire(cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.SettingsChangedEvent.create(this, this.settings));
+        this.dispatcher.fire(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.SettingsChangedEvent.create(this.system, this.settings));
     }
 
     /**
@@ -872,7 +870,9 @@ public final class Project {
                 RuntimeSettings.create(botConfiguration,
                         this.runtimeSettings.getLanguageConfiguration(),
                         this.runtimeSettings.getConversationConfiguration());
-        this.dispatcher.fire(BotSettingsChangedEvent.create(this,
+        this.dispatcher.fire(cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.BotSettingsChangedEvent.create(this,
+                botConfiguration));
+        this.dispatcher.fire(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.BotSettingsChangedEvent.create(this.system,
                 botConfiguration));
     }
 
@@ -910,7 +910,9 @@ public final class Project {
                         this.runtimeSettings.getBotConfiguration(),
                         languageConfiguration,
                         this.runtimeSettings.getConversationConfiguration());
-        this.dispatcher.fire(LanguageSettingsChangedEvent.create(this,
+        this.dispatcher.fire(cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.LanguageSettingsChangedEvent.create(this,
+                languageConfiguration));
+        this.dispatcher.fire(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.LanguageSettingsChangedEvent.create(this.system,
                 languageConfiguration));
     }
 

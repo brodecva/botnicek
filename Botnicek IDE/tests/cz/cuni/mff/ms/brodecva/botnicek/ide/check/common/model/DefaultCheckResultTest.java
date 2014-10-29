@@ -29,6 +29,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
 
@@ -71,7 +73,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#hashCode()}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#hashCode()}
      * .
      */
     @Test
@@ -82,7 +84,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
     @Test
@@ -98,7 +100,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
     @Test
@@ -110,7 +112,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
     @Test
@@ -121,7 +123,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
     @Test
@@ -136,7 +138,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
     @Test
@@ -149,7 +151,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
     @Test
@@ -162,7 +164,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
     @Test
@@ -178,7 +180,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
     @Test
@@ -194,7 +196,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
     @Test
@@ -205,7 +207,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
     @Test
@@ -220,7 +222,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
     @Test
@@ -233,7 +235,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
     @Test
@@ -246,7 +248,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#succeed(java.lang.Object, java.lang.Object)}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#succeed(java.lang.Object, java.lang.Object)}
      * .
      */
     @Test
@@ -258,7 +260,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#succeed(java.lang.Object, java.lang.Object)}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#succeed(java.lang.Object, java.lang.Object)}
      * .
      */
     @Test
@@ -270,7 +272,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
     @Test
@@ -282,7 +284,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
     @Test
@@ -294,7 +296,7 @@ public class DefaultCheckResultTest {
 
     /**
      * Test method for
-     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult#succeed(java.lang.Object, java.lang.Object)}
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#succeed(java.lang.Object, java.lang.Object)}
      * .
      */
     @Test

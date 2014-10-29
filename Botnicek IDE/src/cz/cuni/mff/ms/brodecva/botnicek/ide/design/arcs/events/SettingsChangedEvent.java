@@ -16,42 +16,42 @@
  * You should have received a copy of the GNU General Public License
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.cuni.mff.ms.brodecva.botnicek.ide.project.events;
+package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.Project;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.SettingsChangedListener;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.Settings;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
-import cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration;
 
 /**
- * Událost změny nastavení bota.
+ * Událost změny nastavení projektu, který vlastní daný systém.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class BotSettingsChangedEvent extends
-        AbstractMappedEvent<Project, BotSettingsChangedListener> {
+public final class SettingsChangedEvent extends
+        AbstractMappedEvent<System, SettingsChangedListener> {
 
     /**
      * Vytvoří událost.
      * 
-     * @param project
-     *            projekt, kterému bot patří
+     * @param System
+     *            system
      * @param settings
-     *            nová nastavení
+     *            nastavení
      * @return událost
      */
-    public static BotSettingsChangedEvent create(final Project project,
-            final BotConfiguration settings) {
-        return new BotSettingsChangedEvent(project, settings);
+    public static SettingsChangedEvent create(final System System,
+            final Settings settings) {
+        return new SettingsChangedEvent(System, settings);
     }
 
-    private final BotConfiguration settings;
+    private final Settings settings;
 
-    private BotSettingsChangedEvent(final Project project,
-            final BotConfiguration settings) {
-        super(project);
+    private SettingsChangedEvent(final System system, final Settings settings) {
+        super(system);
 
         Preconditions.checkNotNull(settings);
 
@@ -66,7 +66,7 @@ public final class BotSettingsChangedEvent extends
      * .Object)
      */
     @Override
-    public void dispatchTo(final BotSettingsChangedListener listener) {
+    public void dispatchTo(final SettingsChangedListener listener) {
         listener.changed(this.settings);
     }
 }

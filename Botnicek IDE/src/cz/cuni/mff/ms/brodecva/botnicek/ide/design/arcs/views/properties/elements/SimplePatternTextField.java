@@ -26,8 +26,11 @@ import javax.swing.text.Document;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.controllers.SimplePatternValidationController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearable;
 
 /**
@@ -36,7 +39,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearab
  * @author Václav Brodec
  * @version 1.0
  */
-public class SimplePatternTextField extends JTextField implements Clearable {
+public class SimplePatternTextField extends JTextField implements Clearable, CheckView {
 
     private static final long serialVersionUID = 1L;
 
@@ -50,56 +53,43 @@ public class SimplePatternTextField extends JTextField implements Clearable {
      * @return textové pole
      */
     public static SimplePatternTextField create(final Source client,
-            final SimplePatternValidationController validationController) {
+            final CheckController<? extends SimplePattern> validationController) {
         Preconditions.checkNotNull(client);
         Preconditions.checkNotNull(validationController);
 
         final SimplePatternTextField newInstance =
-                new SimplePatternTextField(validationController);
+                new SimplePatternTextField(client, validationController);
 
         newInstance.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
             public void changedUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance,
-                            document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
+                newInstance.checkDocument(e.getDocument());
             }
 
             @Override
             public void insertUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance,
-                            document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
+                newInstance.checkDocument(e.getDocument());
             }
 
             @Override
             public void removeUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance,
-                            document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
+                newInstance.checkDocument(e.getDocument());
             }
         });
 
+        validationController.addView(newInstance);
+        
         return newInstance;
     }
 
-    private final SimplePatternValidationController validationController;
+    private final CheckController<? extends SimplePattern> validationController;
+    private final Source client;
 
     private SimplePatternTextField(
-            final SimplePatternValidationController validationController) {
+            final Source client,
+            final CheckController<? extends SimplePattern> validationController) {
+        this.client = client;
         this.validationController = validationController;
     }
 
@@ -128,5 +118,37 @@ public class SimplePatternTextField extends JTextField implements Clearable {
 
         setText("");
         this.validationController.check(client, this, getText());
+    }
+    
+    private void checkDocument(final Document document) {
+        try {
+            this.validationController.check(this.client, this,
+                    document.getText(0, document.getLength()));
+        } catch (final BadLocationException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView#closed()
+     */
+    @Override
+    public void closed() {
+        this.validationController.removeView(this);
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView#updateResult(cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult)
+     */
+    @Override
+    public void updateResult(final CheckResult result) {
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView#repeal()
+     */
+    @Override
+    public void repeal() {
+        checkDocument(getDocument());
     }
 }

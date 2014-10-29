@@ -29,7 +29,7 @@ import org.junit.experimental.categories.Category;
 
 import com.google.common.base.CharMatcher;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.IntegrationTest;
 

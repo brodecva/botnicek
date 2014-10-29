@@ -30,7 +30,7 @@ import org.junit.Test;
 import com.google.common.base.CharMatcher;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 

@@ -20,9 +20,10 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Checker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
 
@@ -32,7 +33,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultNormalWordChecker implements NormalWordChecker,
+public final class DefaultNormalWordChecker implements Checker,
         Source {
     /**
      * Vytvoří validátor, který neomezuje výskyt normálního slova.

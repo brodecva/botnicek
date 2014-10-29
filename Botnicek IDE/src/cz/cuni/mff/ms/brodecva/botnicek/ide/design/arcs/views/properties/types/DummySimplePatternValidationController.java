@@ -18,9 +18,11 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.controllers.SimplePatternValidationController;
 
 /**
  * Atrapa řadiče pro validaci prostých vzorů.
@@ -29,7 +31,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.controllers.Simp
  * @version 1.0
  */
 final class DummySimplePatternValidationController implements
-        SimplePatternValidationController {
+        CheckController<SimplePattern> {
 
     /**
      * Vytvoří atrapu.
@@ -97,6 +99,14 @@ final class DummySimplePatternValidationController implements
      */
     @Override
     public void removeView(final CheckView view) {
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController#provideBuilder(java.lang.String)
+     */
+    @Override
+    public Builder<SimplePattern> provideBuilder(String value) {
+        throw new UnsupportedOperationException();
     }
 
 }

@@ -18,9 +18,11 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.controllers.MixedPatternValidationController;
 
 /**
  * Atrapa řadiče pro validaci složených vzorů.
@@ -29,7 +31,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.controllers.Mixed
  * @version 1.0
  */
 final class DummyMixedPatternValidationController implements
-        MixedPatternValidationController {
+        CheckController<MixedPattern> {
 
     /**
      * Vytvoří atrapu.
@@ -100,5 +102,13 @@ final class DummyMixedPatternValidationController implements
      */
     @Override
     public void removeView(final CheckView view) {
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController#provideBuilder(java.lang.String)
+     */
+    @Override
+    public Builder<MixedPattern> provideBuilder(String value) {
+        throw new UnsupportedOperationException();
     }
 }

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model;
+package cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker;
 
 import com.google.common.base.Preconditions;
 

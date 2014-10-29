@@ -27,8 +27,9 @@ import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.CodeChecker;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 
 /**
@@ -37,7 +38,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultCodeContentBuilder implements CodeContentBuilder,
+public final class DefaultCodeBuilder implements Builder<Code>,
         Source, Serializable {
 
     private final static class CodeImplementation implements Code, Serializable {
@@ -120,33 +121,24 @@ public final class DefaultCodeContentBuilder implements CodeContentBuilder,
      *            úvodní řetězec k sestavení
      * @return konstruktor
      */
-    public static DefaultCodeContentBuilder create(final CodeChecker checker,
+    public static DefaultCodeBuilder create(final CodeChecker checker,
             final String startContent) {
-        return new DefaultCodeContentBuilder(checker, startContent);
+        return new DefaultCodeBuilder(checker, startContent);
     }
 
     private final StringBuilder contentBuilder;
 
     private final CodeChecker checker;
+    
+    private boolean valid = false;
 
-    private DefaultCodeContentBuilder(final CodeChecker checker,
+    private DefaultCodeBuilder(final CodeChecker checker,
             final String startContent) {
         Preconditions.checkNotNull(checker);
         Preconditions.checkNotNull(startContent);
 
         this.checker = checker;
         this.contentBuilder = new StringBuilder(startContent);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.
-     * ContentAggregator#add(java.lang.String)
-     */
-    @Override
-    public void add(final String content) {
-        this.contentBuilder.append(content);
     }
 
     /*
@@ -174,7 +166,15 @@ public final class DefaultCodeContentBuilder implements CodeContentBuilder,
      */
     @Override
     public CheckResult check() {
-        return this.checker.check(this, this, this.contentBuilder.toString());
+        final CheckResult result = this.checker.check(this, this, this.contentBuilder.toString());
+
+        if (result.isValid()) {
+            this.valid = true;
+        } else {
+            this.valid = false;
+        }
+        
+        return result;
     }
 
     /*
@@ -186,6 +186,6 @@ public final class DefaultCodeContentBuilder implements CodeContentBuilder,
      */
     @Override
     public boolean isValid() {
-        return check().isValid();
+        return this.valid ? true : check().isValid();
     }
 }

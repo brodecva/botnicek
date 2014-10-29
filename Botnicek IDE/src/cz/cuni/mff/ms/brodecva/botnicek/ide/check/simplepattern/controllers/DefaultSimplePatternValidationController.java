@@ -20,14 +20,16 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.controllers;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.DefaultCheckController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Checker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.validator.Validator;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.SimplePatternChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.validator.DefaultSimplePatternValidator;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.validator.SimplePatternValidator;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
 
 /**
@@ -38,7 +40,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
  * @version 1.0
  */
 public class DefaultSimplePatternValidationController implements
-        SimplePatternValidationController {
+        CheckController<SimplePattern> {
 
     /**
      * Vytvoří řadič.
@@ -62,7 +64,7 @@ public class DefaultSimplePatternValidationController implements
      * @return řadič
      */
     static DefaultSimplePatternValidationController create(
-            final CheckController checkController) {
+            final CheckController<SimplePattern> checkController) {
         return new DefaultSimplePatternValidationController(checkController);
     }
 
@@ -76,7 +78,7 @@ public class DefaultSimplePatternValidationController implements
      * @return řadič
      */
     public static DefaultSimplePatternValidationController
-            create(final SimplePatternChecker checker,
+            create(final Checker checker,
                     final EventManager eventManager) {
         return create(
                 DefaultSimplePatternValidator.create(checker, eventManager),
@@ -93,15 +95,15 @@ public class DefaultSimplePatternValidationController implements
      * @return řadič
      */
     public static DefaultSimplePatternValidationController create(
-            final SimplePatternValidator validator,
+            final Validator<SimplePattern> validator,
             final EventManager eventManager) {
         return create(DefaultCheckController.create(validator, eventManager));
     }
 
-    private final CheckController checkController;
+    private final CheckController<SimplePattern> checkController;
 
     private DefaultSimplePatternValidationController(
-            final CheckController checkController) {
+            final CheckController<SimplePattern> checkController) {
         Preconditions.checkNotNull(checkController);
 
         this.checkController = checkController;
@@ -168,5 +170,15 @@ public class DefaultSimplePatternValidationController implements
     @Override
     public void removeView(final CheckView view) {
         this.checkController.removeView(view);
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController#provideBuilder(java.lang.String)
+     */
+    @Override
+    public Builder<SimplePattern> provideBuilder(String value) {
+        Preconditions.checkNotNull(value);
+        
+        return this.checkController.provideBuilder(value);
     }
 }

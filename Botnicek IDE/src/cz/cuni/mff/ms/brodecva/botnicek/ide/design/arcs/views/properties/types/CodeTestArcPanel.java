@@ -38,9 +38,8 @@ import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.controllers.CodeValidationController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.controllers.SimplePatternValidationController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements.CodeEditorPane;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements.SimplePatternTextField;
@@ -105,8 +104,8 @@ public class CodeTestArcPanel extends AbstractTypePanel {
             CodeTestArcPanel
             create(final Source parent,
                     final ArcController arcController,
-                    final CodeValidationController codeValidationController,
-                    final SimplePatternValidationController simplePatternValidationController) {
+                    final CheckController<? extends Code> codeValidationController,
+                    final CheckController<? extends SimplePattern> simplePatternValidationController) {
         Preconditions.checkNotNull(parent);
         Preconditions.checkNotNull(arcController);
         Preconditions.checkNotNull(codeValidationController);

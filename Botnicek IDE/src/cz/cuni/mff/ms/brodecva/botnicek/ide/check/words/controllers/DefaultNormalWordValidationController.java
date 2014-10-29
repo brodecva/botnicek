@@ -20,14 +20,16 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.controllers;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.DefaultCheckController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Checker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.validator.Validator;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.NormalWordChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.validator.DefaultNormalWordValidator;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.validator.NormalWordValidator;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
 
@@ -39,7 +41,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
  * @version 1.0
  */
 public final class DefaultNormalWordValidationController implements
-        NormalWordValidationController {
+        CheckController<NormalWord> {
 
     /**
      * Vytvoří řadič.
@@ -49,7 +51,7 @@ public final class DefaultNormalWordValidationController implements
      * @return řadič
      */
     public static DefaultNormalWordValidationController create(
-            final CheckController checkController) {
+            final CheckController<NormalWord> checkController) {
         return new DefaultNormalWordValidationController(checkController);
     }
 
@@ -81,7 +83,7 @@ public final class DefaultNormalWordValidationController implements
      * @return řadič
      */
     public static DefaultNormalWordValidationController create(
-            final NormalWordChecker checker, final EventManager eventManager) {
+            final Checker checker, final EventManager eventManager) {
         return create(DefaultNormalWordValidator.create(checker, eventManager),
                 eventManager);
     }
@@ -96,7 +98,7 @@ public final class DefaultNormalWordValidationController implements
      * @return řadič
      */
     public static DefaultNormalWordValidationController
-            create(final NormalWordValidator validator,
+            create(final Validator<NormalWord> validator,
                     final EventManager eventManager) {
         Preconditions.checkNotNull(validator);
         Preconditions.checkNotNull(eventManager);
@@ -104,10 +106,10 @@ public final class DefaultNormalWordValidationController implements
         return create(DefaultCheckController.create(validator, eventManager));
     }
 
-    private final CheckController checkController;
+    private final CheckController<NormalWord> checkController;
 
     private DefaultNormalWordValidationController(
-            final CheckController checkController) {
+            final CheckController<NormalWord> checkController) {
         Preconditions.checkNotNull(checkController);
 
         this.checkController = checkController;
@@ -175,6 +177,18 @@ public final class DefaultNormalWordValidationController implements
      */
     @Override
     public void removeView(final CheckView view) {
+        Preconditions.checkNotNull(view);
+        
         this.checkController.removeView(view);
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController#provideBuilder(java.lang.String)
+     */
+    @Override
+    public Builder<NormalWord> provideBuilder(final String value) {
+        Preconditions.checkNotNull(value);
+        
+        return this.checkController.provideBuilder(value);
     }
 }

@@ -18,7 +18,12 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker;
+import java.net.URI;
+import java.util.Map;
+
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Checker;
+import cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration;
+import cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration;
 
 /**
  * Rozhraní pro provedení kontroly složeného vzoru dle specifikace jazyka AIML.
@@ -27,4 +32,24 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker;
  * @version 1.0
  */
 public interface MixedPatternChecker extends Checker {
+    /**
+     * Nastavení robota užitá pro validaci.
+     * 
+     * @return nastavení robota
+     */
+    BotConfiguration getBotSettings();
+    
+    /**
+     * Nastavení jazyka užitá pro validaci.
+     * 
+     * @return nastavení jazyka
+     */
+    LanguageConfiguration getLanguageSettings();
+
+    /**
+     * Vrátí vzájemně jednoznačné zobrazení jmenných prostorů a jejich výchozích prefixů.
+     * 
+     * @return vzájemně jednoznačné zobrazení jmenných prostorů a jejich výchozích prefixů
+     */
+    Map<URI, String> getNamespacesToPrefixes();
 }

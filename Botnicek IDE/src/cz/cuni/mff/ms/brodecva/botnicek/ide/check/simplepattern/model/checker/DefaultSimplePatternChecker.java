@@ -18,9 +18,10 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Checker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 
@@ -31,7 +32,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultSimplePatternChecker implements SimplePatternChecker,
+public final class DefaultSimplePatternChecker implements Checker,
         Source {
 
     /**

@@ -33,8 +33,8 @@ import org.powermock.reflect.Whitebox;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.NormalWordChecker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Checker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Normalizer;
 
@@ -213,8 +213,8 @@ public class NormalWordsTest {
                 INVALID_RESULT_MESSAGE);
         EasyMock.replay(invalidCheckResultStub);
 
-        final NormalWordChecker checkerStub =
-                EasyMock.createStrictMock(NormalWordChecker.class);
+        final Checker checkerStub =
+                EasyMock.createStrictMock(Checker.class);
         EasyMock.expect(checkerStub.check(CREATED_WORD_NOT_FIXABLE_NAME))
                 .andStubReturn(invalidCheckResultStub);
         EasyMock.replay(checkerStub);
@@ -240,8 +240,8 @@ public class NormalWordsTest {
         EasyMock.expect(validCheckResultStub.isValid()).andStubReturn(true);
         EasyMock.replay(validCheckResultStub);
 
-        final NormalWordChecker checkerStub =
-                EasyMock.createStrictMock(NormalWordChecker.class);
+        final Checker checkerStub =
+                EasyMock.createStrictMock(Checker.class);
         EasyMock.expect(checkerStub.check(CREATED_WORD_VALID_NAME))
                 .andStubReturn(validCheckResultStub);
         EasyMock.replay(checkerStub);

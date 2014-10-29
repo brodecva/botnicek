@@ -16,22 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.builder;
-
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.ContentAggregator;
-
 /**
- * Konstruktor validního normálního slova.
- * 
- * @author Václav Brodec
+ * Rozhraní vlastního validátoru a obecně platné objekty pro popis výsledku validace.
+ *
  * @version 1.0
  */
-public interface NormalWordBuilder extends ContentAggregator {
-    /**
-     * Sestaví validní normální slovo.
-     * 
-     * @return validní normální slovo
-     */
-    NormalWord build();
-}
+package cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker;
+

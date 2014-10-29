@@ -18,9 +18,11 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.types;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.controllers.NormalWordValidationController;
 
 /**
  * Atrapa řadiče pro validaci normálních slov dle definice jazyka AIML.
@@ -29,7 +31,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.controllers.NormalWordVa
  * @version 1.0
  */
 final class DummyNormalWordValidationController implements
-        NormalWordValidationController {
+        CheckController<NormalWord> {
 
     /**
      * Vytvoří atrapu.
@@ -97,5 +99,13 @@ final class DummyNormalWordValidationController implements
      */
     @Override
     public void removeView(final CheckView view) {
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController#provideBuilder(java.lang.String)
+     */
+    @Override
+    public Builder<NormalWord> provideBuilder(String value) {
+        throw new UnsupportedOperationException();
     }
 }

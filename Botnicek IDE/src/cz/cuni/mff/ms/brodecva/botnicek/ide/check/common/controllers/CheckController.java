@@ -18,7 +18,8 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller;
 
@@ -27,8 +28,9 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller;
  * 
  * @author Václav Brodec
  * @version 1.0
+ * @param <T> validovaný typ
  */
-public interface CheckController extends Controller<CheckView> {
+public interface CheckController<T> extends Controller<CheckView> {
     /**
      * Odstraní výsledky pro daný předmět.
      * 
@@ -48,4 +50,12 @@ public interface CheckController extends Controller<CheckView> {
      *            vstupní řetězec
      */
     void check(Source client, Object subject, String value);
+    
+    /**
+     * Poskytne stavitele typované hodnoty. Pomáhá odstranit nutnost duplikace validace při běžné kontrole a sestavení.
+     * 
+     * @param value textový hodnota
+     * @return stavitel typu
+     */
+    Builder<T> provideBuilder(final String value);
 }

@@ -16,18 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model;
+package cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.validator;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.events.CheckEvent;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 
 /**
- * Rozhraní pro provedení kontroly.
+ * Rozhraní pro provedení kontroly a vyslání výsledku.
  * 
  * @author Václav Brodec
  * @version 1.0
+ * @param <T> validovaný typ
  */
-public interface Checker {
+public interface Validator<T> {
     /**
-     * Zkontroluje textový řetězec, zda-li odpovídá požadavkům.
+     * Odstraní výsledky pro daný předmět.
+     * 
+     * @param subject
+     *            předmět.
+     */
+    void clear(Object subject);
+
+    /**
+     * Zkontroluje textový řetězec, zda-li odpovídá požadavkům, a vytvoří po
+     * provedení kontroly příslušnou událost {@link CheckEvent}.
      * 
      * @param source
      *            zdroj řetězce
@@ -35,16 +48,14 @@ public interface Checker {
      *            identifikátor opakovaných pokusů o kontrolu
      * @param content
      *            vstupní řetězec
-     * @return výsledek
      */
-    CheckResult check(Source source, Object subject, String content);
+    void validate(Source source, Object subject, String content);
 
     /**
-     * Zkontroluje textový řetězec, zda-li odpovídá požadavkům.
+     * Poskytne stavitele typované hodnoty. Pomáhá odstranit nutnost duplikace validace při běžné kontrole a sestavení.
      * 
-     * @param content
-     *            vstupní řetězec
-     * @return výsledek
+     * @param value textový hodnota
+     * @return stavitel typu
      */
-    CheckResult check(String content);
+    Builder<T> provideBuilder(String value);
 }

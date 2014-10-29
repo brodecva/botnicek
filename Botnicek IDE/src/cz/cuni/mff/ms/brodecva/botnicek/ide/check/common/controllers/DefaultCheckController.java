@@ -22,9 +22,10 @@ import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.events.CheckEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.events.CheckListener;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Validator;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.validator.Validator;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
@@ -36,9 +37,10 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.AbstractController;
  * 
  * @author Václav Brodec
  * @version 1.0
+ * @param <T> validovaný typ
  */
-public final class DefaultCheckController extends AbstractController<CheckView>
-        implements CheckController {
+public final class DefaultCheckController<T> extends AbstractController<CheckView>
+        implements CheckController<T> {
 
     /**
      * Posluchač událost provedené kontroly, který aktualizuje zaregistrované
@@ -77,10 +79,10 @@ public final class DefaultCheckController extends AbstractController<CheckView>
      *            správce událostí
      * @return řadič
      */
-    public static DefaultCheckController create(final Validator validator,
+    public static <T> DefaultCheckController<T> create(final Validator<T> validator,
             final EventManager eventManager) {
-        final DefaultCheckController newInstance =
-                new DefaultCheckController(validator, eventManager);
+        final DefaultCheckController<T> newInstance =
+                new DefaultCheckController<T>(validator, eventManager);
 
         newInstance.addListener(CheckEvent.class,
                 newInstance.new DefaultCheckListener());
@@ -88,9 +90,9 @@ public final class DefaultCheckController extends AbstractController<CheckView>
         return newInstance;
     }
 
-    private final Validator validator;
+    private final Validator<T> validator;
 
-    private DefaultCheckController(final Validator validator,
+    private DefaultCheckController(final Validator<T> validator,
             final EventManager eventManager) {
         super(eventManager);
 
@@ -127,5 +129,15 @@ public final class DefaultCheckController extends AbstractController<CheckView>
         Preconditions.checkNotNull(value);
 
         this.validator.validate(client, subject, value);
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController#provideBuilder(java.lang.String)
+     */
+    @Override
+    public Builder<T> provideBuilder(final String value) {
+        Preconditions.checkNotNull(value);
+        
+        return this.validator.provideBuilder(value);
     }
 }

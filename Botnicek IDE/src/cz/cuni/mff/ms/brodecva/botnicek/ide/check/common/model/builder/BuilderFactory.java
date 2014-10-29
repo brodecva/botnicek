@@ -16,15 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.controllers;
-
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
+package cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder;
 
 /**
- * Řadiče validace normálního slova dle specifikace jazyka AIML.
+ * Továrna na {@link Builder}.
  * 
  * @author Václav Brodec
  * @version 1.0
+ * @param <T> sestavovaný typ
  */
-public interface NormalWordValidationController extends CheckController {
+public interface BuilderFactory<T> {
+    /**
+     * Vytvoří stavitele.
+     * 
+     * @param value
+     *            hodnota v textu
+     * @return stavitel
+     */
+    Builder<T> produce(final String value);
 }

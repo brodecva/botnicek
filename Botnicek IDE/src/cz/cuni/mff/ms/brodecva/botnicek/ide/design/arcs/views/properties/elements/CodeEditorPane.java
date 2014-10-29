@@ -40,8 +40,11 @@ import org.bounce.text.xml.XMLStyleConstants;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.controllers.CodeValidationController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearable;
 
 /**
@@ -50,7 +53,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearab
  * @author Václav Brodec
  * @version 1.0
  */
-public final class CodeEditorPane extends JEditorPane implements Clearable {
+public final class CodeEditorPane extends JEditorPane implements Clearable, CheckView {
 
     private static final long serialVersionUID = 1L;
 
@@ -74,7 +77,7 @@ public final class CodeEditorPane extends JEditorPane implements Clearable {
      * @return editovací panel
      */
     public static CodeEditorPane create(final Source client,
-            final CodeValidationController validationController) {
+            final CheckController<? extends Code> validationController) {
         Preconditions.checkNotNull(client);
         Preconditions.checkNotNull(validationController);
 
@@ -85,7 +88,7 @@ public final class CodeEditorPane extends JEditorPane implements Clearable {
                 new Color(255, 0, 0), Font.BOLD);
 
         final CodeEditorPane newInstance =
-                new CodeEditorPane(validationController);
+                new CodeEditorPane(client, validationController);
 
         newInstance.setEditorKit(codeKit);
         newInstance.setFont(new Font("Courier", Font.PLAIN, 12));
@@ -96,37 +99,21 @@ public final class CodeEditorPane extends JEditorPane implements Clearable {
 
             @Override
             public void changedUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance,
-                            document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
+                newInstance.checkDocument(e.getDocument());
             }
 
             @Override
             public void insertUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance,
-                            document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
+                newInstance.checkDocument(e.getDocument());
             }
 
             @Override
             public void removeUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance,
-                            document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
+                newInstance.checkDocument(e.getDocument());
             }
         });
+        
+        validationController.addView(newInstance);
 
         return newInstance;
     }
@@ -166,9 +153,11 @@ public final class CodeEditorPane extends JEditorPane implements Clearable {
         });
     }
 
-    private final CodeValidationController validationController;
+    private final CheckController<? extends Code> validationController;
+    private final Source client;
 
-    private CodeEditorPane(final CodeValidationController validationController) {
+    private CodeEditorPane(final Source client, final CheckController<? extends Code> validationController) {
+        this.client = client;
         this.validationController = validationController;
     }
 
@@ -197,5 +186,37 @@ public final class CodeEditorPane extends JEditorPane implements Clearable {
 
         setText("");
         this.validationController.check(client, this, getText());
+    }
+    
+    private void checkDocument(final Document document) {
+        try {
+            this.validationController.check(this.client, this,
+                    document.getText(0, document.getLength()));
+        } catch (final BadLocationException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView#closed()
+     */
+    @Override
+    public void closed() {
+        this.validationController.removeView(this);
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView#updateResult(cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult)
+     */
+    @Override
+    public void updateResult(final CheckResult result) {
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView#repeal()
+     */
+    @Override
+    public void repeal() {
+        checkDocument(getDocument());
     }
 }

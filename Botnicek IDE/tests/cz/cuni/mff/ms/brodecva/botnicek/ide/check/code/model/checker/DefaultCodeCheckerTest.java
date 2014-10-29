@@ -32,7 +32,7 @@ import org.junit.experimental.categories.Category;
 
 import com.google.common.collect.ImmutableMap;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.Settings;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.RuntimeSettings;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
@@ -54,8 +54,8 @@ public class DefaultCodeCheckerTest {
     private static final String AIML_PREFIX = "aiml";
     private static final String SCHEMA_PREFIX = "customschemans";
 
-    private DefaultCodeChecker defaultPrefixedTested = Intended.nullReference();
-    private DefaultCodeChecker customPrefixedTested = Intended.nullReference();
+    private CodeChecker defaultPrefixedTested = Intended.nullReference();
+    private CodeChecker customPrefixedTested = Intended.nullReference();
 
     /**
      * Sestaví testovaný objekt.

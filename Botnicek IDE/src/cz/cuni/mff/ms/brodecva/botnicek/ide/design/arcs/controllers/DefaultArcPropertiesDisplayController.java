@@ -22,13 +22,12 @@ import java.net.URI;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.controllers.CodeValidationController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.controllers.MixedPatternValidationController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.controllers.SimplePatternValidationController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.controllers.NormalWordValidationController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.ArcPropertiesDisplayedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events.ArcPropertiesDisplayedListener;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
@@ -70,10 +69,11 @@ public class DefaultArcPropertiesDisplayController extends
                             .create(DefaultArcPropertiesDisplayController.this.system,
                                     getEventManager(),
                                     arc,
-                                    DefaultArcPropertiesDisplayController.this.botSettings,
-                                    DefaultArcPropertiesDisplayController.this.languageSettings,
-                                    ImmutableMap
-                                            .copyOf(DefaultArcPropertiesDisplayController.this.namespacesToPrefixes));
+                                    DefaultArcPropertiesDisplayController.this.nameValidationController,
+                                    DefaultArcPropertiesDisplayController.this.codeValidationController,
+                                    DefaultArcPropertiesDisplayController.this.simplePatternValidationController,
+                                    DefaultArcPropertiesDisplayController.this.mixedPatternValidationController,
+                                    DefaultArcPropertiesDisplayController.this.predicateValidationController);
 
             callViews(new Callback<ArcPropertiesDisplayView>() {
 
@@ -131,11 +131,11 @@ public class DefaultArcPropertiesDisplayController extends
                     final LanguageConfiguration languageSettings,
                     final Map<URI, String> namespacesToPrefixes,
                     final AvailableReferencesController availableReferencesController,
-                    final NormalWordValidationController nameValidationController,
-                    final CodeValidationController codeValidationController,
-                    final SimplePatternValidationController simplePatternValidationController,
-                    final MixedPatternValidationController mixedPatternValidationController,
-                    final NormalWordValidationController predicateValidationController) {
+                    final CheckController<NormalWord> nameValidationController,
+                    final CheckController<Code> codeValidationController,
+                    final CheckController<SimplePattern> simplePatternValidationController,
+                    final CheckController<MixedPattern> mixedPatternValidationController,
+                    final CheckController<NormalWord> predicateValidationController) {
         final DefaultArcPropertiesDisplayController newInstance =
                 new DefaultArcPropertiesDisplayController(system, eventManager,
                         botSettings, languageSettings, namespacesToPrefixes,
@@ -151,19 +151,14 @@ public class DefaultArcPropertiesDisplayController extends
         return newInstance;
     }
 
-    private final AvailableReferencesController availableReferencesController;
-    private final NormalWordValidationController nameValidationController;
-    private final CodeValidationController codeValidationController;
-    private final SimplePatternValidationController simplePatternValidationController;
-    private final MixedPatternValidationController mixedPatternValidationController;
-
-    private final NormalWordValidationController predicateValidationController;
     private final System system;
-    private final BotConfiguration botSettings;
-    private final LanguageConfiguration languageSettings;
-
-    private final Map<URI, String> namespacesToPrefixes;
-
+    private final AvailableReferencesController availableReferencesController;
+    private final CheckController<NormalWord> nameValidationController;
+    private final CheckController<Code> codeValidationController;
+    private final CheckController<SimplePattern> simplePatternValidationController;
+    private final CheckController<MixedPattern> mixedPatternValidationController;
+    private final CheckController<NormalWord> predicateValidationController;
+    
     private DefaultArcPropertiesDisplayController(
             final System system,
             final EventManager eventManager,
@@ -171,11 +166,11 @@ public class DefaultArcPropertiesDisplayController extends
             final LanguageConfiguration languageSettings,
             final Map<URI, String> namespacesToPrefixes,
             final AvailableReferencesController availableReferencesController,
-            final NormalWordValidationController nameValidationController,
-            final CodeValidationController codeValidationController,
-            final SimplePatternValidationController simplePatternValidationController,
-            final MixedPatternValidationController mixedPatternValidationController,
-            final NormalWordValidationController predicateValidationController) {
+            final CheckController<NormalWord> nameValidationController,
+            final CheckController<Code> codeValidationController,
+            final CheckController<SimplePattern> simplePatternValidationController,
+            final CheckController<MixedPattern> mixedPatternValidationController,
+            final CheckController<NormalWord> predicateValidationController) {
         super(eventManager);
 
         Preconditions.checkNotNull(system);
@@ -188,9 +183,6 @@ public class DefaultArcPropertiesDisplayController extends
         Preconditions.checkNotNull(predicateValidationController);
 
         this.system = system;
-        this.botSettings = botSettings;
-        this.languageSettings = languageSettings;
-        this.namespacesToPrefixes = namespacesToPrefixes;
         this.availableReferencesController = availableReferencesController;
         this.nameValidationController = nameValidationController;
         this.codeValidationController = codeValidationController;

@@ -29,17 +29,18 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.controllers.CodeValidationController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.controllers.DefaultCodeValidationController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.CodeChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.controllers.DefaultMixedPatternValidationController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.controllers.MixedPatternValidationController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.DefaultMixedPatternChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.controllers.DefaultSimplePatternValidationController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.controllers.SimplePatternValidationController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.controllers.DefaultNormalWordValidationController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.controllers.NormalWordValidationController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcPropertiesDisplayController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.AvailableReferencesController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.DefaultArcPropertiesDisplayController;
@@ -266,19 +267,19 @@ public class DefaultProjectController extends AbstractController<ProjectView>
             final AvailableReferencesController availableReferencesController =
                     DefaultAvailableReferencesController.create(system,
                             eventManager);
-            final NormalWordValidationController nameValidationController =
+            final CheckController<NormalWord> nameValidationController =
                     DefaultNormalWordValidationController.create(
                             system.getStatesNamingAuthority(), eventManager);
-            final CodeValidationController codeValidationController =
-                    DefaultCodeValidationController.create(codeChecker,
-                            eventManager);
-            final SimplePatternValidationController simplePatternValidationController =
+            final CheckController<Code> codeValidationController =
+                    DefaultCodeValidationController.create(opened,
+                            codeChecker, eventManager);
+            final CheckController<SimplePattern> simplePatternValidationController =
                     DefaultSimplePatternValidationController
                             .create(eventManager);
-            final MixedPatternValidationController mixedPatternValidationController =
-                    DefaultMixedPatternValidationController.create(codeChecker,
+            final CheckController<MixedPattern> mixedPatternValidationController =
+                    DefaultMixedPatternValidationController.create(opened, DefaultMixedPatternChecker.create(codeChecker),
                             eventManager);
-            final NormalWordValidationController predicateValidationController =
+            final CheckController<NormalWord> predicateValidationController =
                     DefaultNormalWordValidationController
                             .create(system.getPredicatesNamingAuthority(),
                                     eventManager);
@@ -297,7 +298,7 @@ public class DefaultProjectController extends AbstractController<ProjectView>
             final NetworkDisplayController networkPropertiesController =
                     DefaultNetworkDisplayController.create(system,
                             arcPropertiesController, getEventManager());
-            final Set<CheckController> checkControllers =
+            final Set<CheckController<?>> checkControllers =
                     ImmutableSet.of(codeValidationController,
                             simplePatternValidationController,
                             mixedPatternValidationController,

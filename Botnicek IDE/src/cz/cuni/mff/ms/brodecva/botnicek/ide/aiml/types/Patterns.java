@@ -25,8 +25,8 @@ import java.io.Serializable;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Checker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.SimplePatternChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 
@@ -132,7 +132,7 @@ public final class Patterns {
         }
     }
 
-    private static SimplePatternChecker checker =
+    private static Checker checker =
             new DefaultSimplePatternChecker();
 
     /**

@@ -57,11 +57,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.controllers.CodeValidationController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.controllers.MixedPatternValidationController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.controllers.SimplePatternValidationController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.controllers.NormalWordValidationController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.AvailableReferencesController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
@@ -185,11 +185,11 @@ public class ArcInternalWindow extends ArcViewAdapter {
             create(final Container parent,
                     final ArcController arcController,
                     final AvailableReferencesController availableReferencesController,
-                    final NormalWordValidationController nameValidationController,
-                    final CodeValidationController codeValidationController,
-                    final SimplePatternValidationController simplePatternValidationController,
-                    final MixedPatternValidationController mixedPatternValidationController,
-                    final NormalWordValidationController predicateNameValidationController) {
+                    final CheckController<? extends NormalWord> nameValidationController,
+                    final CheckController<? extends Code> codeValidationController,
+                    final CheckController<? extends SimplePattern> simplePatternValidationController,
+                    final CheckController<? extends MixedPattern> mixedPatternValidationController,
+                    final CheckController<? extends NormalWord> predicateNameValidationController) {
         Preconditions.checkNotNull(arcController);
         Preconditions.checkNotNull(availableReferencesController);
         Preconditions.checkNotNull(nameValidationController);

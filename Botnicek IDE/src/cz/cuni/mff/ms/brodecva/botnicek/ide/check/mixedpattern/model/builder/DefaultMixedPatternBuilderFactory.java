@@ -20,16 +20,19 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.builder;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.BuilderFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.MixedPatternChecker;
 
 /**
- * Výchozí implementace {@link MixedPatternBuilderFactory}.
+ * Výchozí implementace {@link BuilderFactory}.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class DefaultMixedPatternBuilderFactory implements
-        MixedPatternBuilderFactory {
+        BuilderFactory<MixedPattern> {
 
     /**
      * Vytvoří továrnu.
@@ -51,17 +54,14 @@ public final class DefaultMixedPatternBuilderFactory implements
         this.checker = checker;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder.
-     * MixedPatternBuilderFactory#produce(java.lang.String)
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.BuilderFactory#produce(java.lang.String)
      */
     @Override
-    public MixedPatternBuilder produce(final String start) {
-        Preconditions.checkNotNull(start);
+    public Builder<MixedPattern> produce(final String value) {
+        Preconditions.checkNotNull(value);
 
-        return DefaultMixedPatternBuilder.create(this.checker, start);
+        return DefaultMixedPatternBuilder.create(this.checker, value);
     }
 
 }

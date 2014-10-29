@@ -18,7 +18,13 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.validator;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Validator;
+import java.net.URI;
+import java.util.Map;
+
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.validator.Validator;
+import cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration;
+import cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration;
 
 /**
  * Validátor řetězce s předpokládaným složeným vzorem dle specifikace jazyka
@@ -27,5 +33,25 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Validator;
  * @author Václav Brodec
  * @version 1.0
  */
-public interface MixedPatternValidator extends Validator {
+public interface MixedPatternValidator extends Validator<MixedPattern> {
+    /**
+     * Nastavení robota užitá pro validaci.
+     * 
+     * @return nastavení robota
+     */
+    BotConfiguration getBotSettings();
+    
+    /**
+     * Nastavení jazyka užitá pro validaci.
+     * 
+     * @return nastavení jazyka
+     */
+    LanguageConfiguration getLanguageSettings();
+
+    /**
+     * Vrátí vzájemně jednoznačné zobrazení jmenných prostorů a jejich výchozích prefixů.
+     * 
+     * @return vzájemně jednoznačné zobrazení jmenných prostorů a jejich výchozích prefixů
+     */
+    Map<URI, String> getNamespacesToPrefixes();
 }

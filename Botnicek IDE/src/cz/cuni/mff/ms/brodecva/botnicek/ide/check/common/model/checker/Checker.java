@@ -16,15 +16,36 @@
  * You should have received a copy of the GNU General Public License
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker;
+package cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Checker;
+
 
 /**
- * Rozhraní pro provedení kontroly prostého vzoru dle specifikace jazyka AIML.
+ * Rozhraní pro provedení kontroly.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public interface SimplePatternChecker extends Checker {
+public interface Checker {
+    /**
+     * Zkontroluje textový řetězec, zda-li odpovídá požadavkům.
+     * 
+     * @param source
+     *            zdroj řetězce
+     * @param subject
+     *            identifikátor opakovaných pokusů o kontrolu
+     * @param content
+     *            vstupní řetězec
+     * @return výsledek
+     */
+    CheckResult check(Source source, Object subject, String content);
+
+    /**
+     * Zkontroluje textový řetězec, zda-li odpovídá požadavkům.
+     * 
+     * @param content
+     *            vstupní řetězec
+     * @return výsledek
+     */
+    CheckResult check(String content);
 }

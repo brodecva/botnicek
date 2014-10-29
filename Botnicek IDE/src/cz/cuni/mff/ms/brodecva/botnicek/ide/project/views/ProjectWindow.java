@@ -1099,7 +1099,7 @@ public final class ProjectWindow implements ProjectView {
     public void open(final SystemController systemController,
             final NetworkDisplayController networkPropertiesController,
             final ArcPropertiesDisplayController arcPropertiesController,
-            final Set<CheckController> checkControllers) {
+            final Set<CheckController<?>> checkControllers) {
         assert SwingUtilities.isEventDispatchThread();
 
         Preconditions.checkNotNull(systemController);

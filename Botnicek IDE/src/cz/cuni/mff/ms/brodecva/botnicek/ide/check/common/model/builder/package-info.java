@@ -17,7 +17,7 @@
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * Rozhraní agregátoru budovaného výrazu.
+ * Rozhraní stavitele typovaného výrazu.
  *
  * @version 1.0
  */

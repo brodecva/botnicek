@@ -37,8 +37,8 @@ import javax.swing.UIManager;
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.controllers.NormalWordValidationController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements.NormalWordTextField;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.types.Priority;
@@ -99,7 +99,7 @@ public final class MainPanel extends AbstractPartPanel {
      */
     public static MainPanel create(final Source parent,
             final ArcController arcController,
-            final NormalWordValidationController nameValidationController) {
+            final CheckController<? extends NormalWord> nameValidationController) {
         Preconditions.checkNotNull(parent);
         Preconditions.checkNotNull(arcController);
         Preconditions.checkNotNull(nameValidationController);

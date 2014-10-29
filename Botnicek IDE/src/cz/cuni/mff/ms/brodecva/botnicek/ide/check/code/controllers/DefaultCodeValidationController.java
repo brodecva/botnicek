@@ -23,15 +23,29 @@ import java.util.Map;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.CodeChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.validator.CodeValidator;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.validator.DefaultCodeValidator;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.DefaultCheckController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.events.CheckEvent;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.events.CheckListener;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.BotSettingsChangedEvent;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.BotSettingsChangedListener;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.LanguageSettingsChangedEvent;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.LanguageSettingsChangedListener;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.SettingsChangedEvent;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.SettingsChangedListener;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.Project;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.Settings;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.EventManager;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.AbstractController;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration;
 
@@ -41,96 +55,124 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultCodeValidationController implements
-        CodeValidationController {
+public final class DefaultCodeValidationController extends AbstractController<CheckView> implements
+        CheckController<Code> {
 
     /**
-     * Vytvoří řadič.
-     * 
-     * @param botSettings
-     *            nastavení bota
-     * @param languageSettings
-     *            nastavení jazyka
-     * @param namespacesToPrefixes
-     *            prefixy na prostory na jmen
-     * @param eventManager
-     *            správce událostí
-     * @return řadič
+     * Posluchač událost provedené kontroly, který aktualizuje zaregistrované
+     * pohledy novými výsledky.
      */
-    public static DefaultCodeValidationController create(
-            final BotConfiguration botSettings,
-            final LanguageConfiguration languageSettings,
-            final Map<URI, String> namespacesToPrefixes,
-            final EventManager eventManager) {
-        return create(DefaultCodeValidator.create(DefaultCodeChecker.create(
-                botSettings, languageSettings, namespacesToPrefixes),
-                eventManager), eventManager);
+    private class DefaultCheckListener implements CheckListener {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.edit.check.input.events.
+         * CodeCheckListener
+         * #checked(cz.cuni.mff.ms.brodecva.botnicek.ide.edit.check
+         * .input.model.CodeCheckResult)
+         */
+        @Override
+        public void checked(final CheckResult result) {
+            callViews(new Callback<CheckView>() {
+
+                @Override
+                public void call(final CheckView view) {
+                    Preconditions.checkNotNull(view);
+                    
+                    view.updateResult(result);
+                }
+
+            });
+        }
+
+    }
+    
+    private final class DefaultSettingsChangedListener implements
+            SettingsChangedListener {
+
+        /* (non-Javadoc)
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.SettingsChangedListener#changed(cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.Settings)
+         */
+        @Override
+        public void changed(final Settings settings) {
+            Preconditions.checkNotNull(settings);
+
+            DefaultCodeValidationController.this.validator = DefaultCodeValidator.create(DefaultCodeChecker.create(
+                    validator.getBotSettings(), validator.getLanguageSettings(), settings.getNamespacesToPrefixes()),
+                    getEventManager());
+            
+            repealViews();
+        }
+    }
+    
+    private final class DefaultLanguageSettingsChangedListener implements
+            LanguageSettingsChangedListener {
+
+        /* (non-Javadoc)
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.LanguageSettingsChangedListener#changed(cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration)
+         */
+        @Override
+        public void changed(final LanguageConfiguration settings) {
+            Preconditions.checkNotNull(settings);
+
+            DefaultCodeValidationController.this.validator = DefaultCodeValidator.create(DefaultCodeChecker.create(
+                    validator.getBotSettings(), settings, validator.getNamespacesToPrefixes()),
+                    getEventManager());
+            
+            repealViews();
+        }
+
     }
 
-    /**
-     * Vytvoří řadič.
-     * 
-     * @param checker
-     *            přímý validátor kódu
-     * @param eventManager
-     *            správce událostí
-     * @return řadič
-     */
-    public static DefaultCodeValidationController create(
-            final CodeChecker checker, final EventManager eventManager) {
-        return create(DefaultCodeValidator.create(checker, eventManager),
-                eventManager);
+    private final class DefaultBotSettingsChangedListener implements
+            BotSettingsChangedListener {
+
+        /* (non-Javadoc)
+         * @see cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.BotSettingsChangedListener#changed(cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration)
+         */
+        @Override
+        public void changed(final BotConfiguration settings) {
+            Preconditions.checkNotNull(settings);
+
+            DefaultCodeValidationController.this.validator = DefaultCodeValidator.create(DefaultCodeChecker.create(
+                    settings, validator.getLanguageSettings(), validator.getNamespacesToPrefixes()),
+                    getEventManager());
+            
+            repealViews();
+        }
+
     }
 
     /**
      * Vytvoří řadič.
      * 
      * @param validator
-     *            validátor kódu vysílající událost o výsledku
+     *            validátor provádějící vlastní validaci
      * @param eventManager
      *            správce událostí
      * @return řadič
      */
-    public static DefaultCodeValidationController create(
-            final CodeValidator validator, final EventManager eventManager) {
+    public static DefaultCodeValidationController create(final CodeValidator validator,
+            final EventManager eventManager) {
         final DefaultCodeValidationController newInstance =
-                new DefaultCodeValidationController(
-                        DefaultCheckController.create(validator, eventManager));
+                new DefaultCodeValidationController(validator, eventManager);
+
+        newInstance.addListener(CheckEvent.class,
+                newInstance.new DefaultCheckListener());
 
         return newInstance;
     }
 
-    /**
-     * Vytvoří řadič.
-     * 
-     * @param checkController
-     *            implementující řadič pro validaci kódu šablony jazyka AIML
-     * @return řadič
-     */
-    static DefaultCodeValidationController create(
-            final CheckController checkController) {
-        return new DefaultCodeValidationController(checkController);
-    }
+    private CodeValidator validator;
 
-    private final CheckController checkController;
+    private DefaultCodeValidationController(final CodeValidator validator,
+            final EventManager eventManager) {
+        super(eventManager);
 
-    private DefaultCodeValidationController(
-            final CheckController checkController) {
-        Preconditions.checkNotNull(checkController);
+        Preconditions.checkNotNull(validator);
 
-        this.checkController = checkController;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#addView(java
-     * .lang.Object)
-     */
-    @Override
-    public void addView(final CheckView view) {
-        this.checkController.addView(view);
+        this.validator = validator;
     }
 
     /*
@@ -142,27 +184,17 @@ public final class DefaultCodeValidationController implements
      */
     @Override
     public void clear(final Object subject) {
-        this.checkController.clear(subject);
+        Preconditions.checkNotNull(subject);
+
+        this.validator.clear(subject);
     }
 
     /*
      * (non-Javadoc)
      * 
      * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#fill(java.lang
-     * .Object)
-     */
-    @Override
-    public void fill(final CheckView view) {
-        this.checkController.fill(view);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.edit.check.controllers.CheckController
-     * #check(java.lang.String)
+     * cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController
+     * #check(java.lang.Object, java.lang.String)
      */
     @Override
     public void check(final Source client, final Object subject,
@@ -170,18 +202,96 @@ public final class DefaultCodeValidationController implements
         Preconditions.checkNotNull(client);
         Preconditions.checkNotNull(value);
 
-        this.checkController.check(client, subject, value);
+        this.validator.validate(client, subject, value);
+    }
+    
+    /**
+     * Vytvoří řadič.
+     * 
+     * @param project projekt, ve kterém probíhá validace
+     * @param botSettings
+     *            nastavení bota
+     * @param languageSettings
+     *            nastavení jazyka
+     * @param namespacesToPrefixes
+     *            prefixy na prostory na jmen
+     * @param eventManager
+     *            správce událostí
+     * 
+     * @return řadič
+     */
+    public static DefaultCodeValidationController create(
+            final Project project,
+            final BotConfiguration botSettings,
+            final LanguageConfiguration languageSettings,
+            final Map<URI, String> namespacesToPrefixes, final EventManager eventManager) {
+        return create(project, DefaultCodeValidator.create(DefaultCodeChecker.create(
+                        botSettings, languageSettings, namespacesToPrefixes),
+                        eventManager), eventManager);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Vytvoří řadič.
+     * @param project projekt, ve kterém probíhá validace
+     * @param checker
+     *            přímý validátor kódu
+     * @param eventManager
+     *            správce událostí
      * 
-     * @see
-     * cz.cuni.mff.ms.brodecva.botnicek.ide.utils.mvc.Controller#removeView(
-     * java.lang.Object)
+     * @return řadič
+     */
+    public static DefaultCodeValidationController create(
+            final Project project, final CodeChecker checker, final EventManager eventManager) {
+        return create(project,
+                DefaultCodeValidator.create(checker, eventManager), eventManager);
+    }
+
+    /**
+     * Vytvoří řadič.
+     * 
+     * @param project projekt, ve kterém probíhá validace
+     * @param validator
+     *            validátor kódu vysílající událost o výsledku
+     * @param eventManager
+     *            správce událostí
+     * 
+     * @return řadič
+     */
+    public static DefaultCodeValidationController create(
+            final Project project, final CodeValidator validator, final EventManager eventManager) {
+        Preconditions.checkNotNull(project);
+        
+        final DefaultCodeValidationController newInstance =
+                new DefaultCodeValidationController(validator, eventManager);
+        
+        newInstance.addListener(CheckEvent.class, newInstance.new DefaultCheckListener());
+        newInstance.addListener(SettingsChangedEvent.class, project, newInstance.new DefaultSettingsChangedListener());
+        newInstance.addListener(LanguageSettingsChangedEvent.class, project, newInstance.new DefaultLanguageSettingsChangedListener());
+        newInstance.addListener(BotSettingsChangedEvent.class, project, newInstance.new DefaultBotSettingsChangedListener());
+        
+        return newInstance;
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController#provideBuilder(java.lang.String)
      */
     @Override
-    public void removeView(final CheckView view) {
-        this.checkController.removeView(view);
+    public Builder<Code> provideBuilder(String value) {
+        Preconditions.checkNotNull(value);
+        
+        return this.validator.provideBuilder(value);
+    }
+
+    private void repealViews() {
+        callViews(new Callback<CheckView>() {
+
+            @Override
+            public void call(final CheckView view) {
+                Preconditions.checkNotNull(view);
+                
+                view.repeal();
+            }
+
+        });
     }
 }

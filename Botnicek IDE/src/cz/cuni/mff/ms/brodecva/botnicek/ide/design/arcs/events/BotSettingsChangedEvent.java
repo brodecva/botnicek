@@ -16,42 +16,43 @@
  * You should have received a copy of the GNU General Public License
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.cuni.mff.ms.brodecva.botnicek.ide.project.events;
+package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.events;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.Project;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.project.events.BotSettingsChangedListener;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractMappedEvent;
 import cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration;
 
 /**
- * Událost změny nastavení bota.
+ * Událost změny nastavení bota užitého pro validaci v systému.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class BotSettingsChangedEvent extends
-        AbstractMappedEvent<Project, BotSettingsChangedListener> {
+        AbstractMappedEvent<System, BotSettingsChangedListener> {
 
     /**
      * Vytvoří událost.
      * 
-     * @param project
-     *            projekt, kterému bot patří
+     * @param system
+     *            systém, který je změnou nastavení ovlivněn
      * @param settings
      *            nová nastavení
      * @return událost
      */
-    public static BotSettingsChangedEvent create(final Project project,
+    public static BotSettingsChangedEvent create(final System system,
             final BotConfiguration settings) {
-        return new BotSettingsChangedEvent(project, settings);
+        return new BotSettingsChangedEvent(system, settings);
     }
 
     private final BotConfiguration settings;
 
-    private BotSettingsChangedEvent(final Project project,
+    private BotSettingsChangedEvent(final System system,
             final BotConfiguration settings) {
-        super(project);
+        super(system);
 
         Preconditions.checkNotNull(settings);
 

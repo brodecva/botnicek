@@ -366,8 +366,7 @@ public final class NodeUI extends FramedComponent implements
     }
 
     /**
-     * Přidá vstupní hranu k uzlu, v případě že k ní existuje protisměrná,
-     * zpraví je o nutnosti vytvoření mezery mezi nimi.
+     * Přidá vstupní hranu k uzlu.
      * 
      * @param arc
      *            komponenta hrany
@@ -379,14 +378,6 @@ public final class NodeUI extends FramedComponent implements
         Preconditions.checkArgument(!this.ins.contains(arc));
 
         this.ins.add(arc);
-
-        for (final ArcUI opposite : this.ins) {
-            if (areComplementary(arc, opposite)) {
-                arc.jointDilated();
-                opposite.jointDilated();
-                break;
-            }
-        }
     }
 
     /**
@@ -404,6 +395,10 @@ public final class NodeUI extends FramedComponent implements
 
         this.outs.add(arc);
 
+        dilateComplementary(arc);
+    }
+
+    private void dilateComplementary(final ArcUI arc) {
         for (final ArcUI opposite : this.ins) {
             if (areComplementary(arc, opposite)) {
                 arc.jointDilated();

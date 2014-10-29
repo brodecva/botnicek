@@ -16,35 +16,37 @@
  * You should have received a copy of the GNU General Public License
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model;
+package cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.events.CheckEvent;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
 
 /**
- * Rozhraní pro provedení kontroly a vyslání výsledku.
+ * Budovatel řetězce, který umožňuje jej postupně validovat.
  * 
  * @author Václav Brodec
  * @version 1.0
+ * @param <T> sestavovaný typ
  */
-public interface Validator {
-    /**
-     * Odstraní výsledky pro daný předmět.
-     * 
-     * @param subject
-     *            předmět.
-     */
-    void clear(Object subject);
+public interface Builder<T> {
 
     /**
-     * Zkontroluje textový řetězec, zda-li odpovídá požadavkům, a vytvoří po
-     * provedení kontroly příslušnou událost {@link CheckEvent}.
+     * Provede kontrolu aktuálního stavu sestavovaného řetězce.
      * 
-     * @param source
-     *            zdroj řetězce
-     * @param subject
-     *            identifikátor opakovaných pokusů o kontrolu
-     * @param content
-     *            vstupní řetězec
+     * @return výsledek kontroly
      */
-    void validate(Source source, Object subject, String content);
+    CheckResult check();
+
+    /**
+     * Zjistí, zda-li je řetězec validní.
+     * 
+     * @return zda-li je řetězec validní
+     */
+    boolean isValid();
+    
+    /**
+     * Vytvoří typovanou hodnotu.
+     * 
+     * @return typovaná hodnota
+     */
+    T build();
 }

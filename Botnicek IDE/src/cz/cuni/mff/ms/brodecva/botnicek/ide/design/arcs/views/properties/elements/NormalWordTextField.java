@@ -26,8 +26,11 @@ import javax.swing.text.Document;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.controllers.NormalWordValidationController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearable;
 
 /**
@@ -36,7 +39,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearab
  * @author Václav Brodec
  * @version 1.0
  */
-public class NormalWordTextField extends JTextField implements Clearable {
+public class NormalWordTextField extends JTextField implements Clearable, CheckView {
 
     private static final long serialVersionUID = 1L;
 
@@ -50,56 +53,43 @@ public class NormalWordTextField extends JTextField implements Clearable {
      * @return textové pole
      */
     public static NormalWordTextField create(final Source client,
-            final NormalWordValidationController validationController) {
+            final CheckController<? extends NormalWord> validationController) {
         Preconditions.checkNotNull(client);
         Preconditions.checkNotNull(validationController);
 
         final NormalWordTextField newInstance =
-                new NormalWordTextField(validationController);
+                new NormalWordTextField(client, validationController);
 
         newInstance.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
             public void changedUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance,
-                            document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
+                newInstance.checkDocument(e.getDocument());
             }
 
             @Override
             public void insertUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance,
-                            document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
+                newInstance.checkDocument(e.getDocument());
             }
 
             @Override
             public void removeUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance,
-                            document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
+                newInstance.checkDocument(e.getDocument());
             }
         });
+        
+        validationController.addView(newInstance);
 
         return newInstance;
     }
 
-    private final NormalWordValidationController validationController;
+    private final CheckController<? extends NormalWord> validationController;
+    private Source client;
 
     private NormalWordTextField(
-            final NormalWordValidationController validationController) {
+            final Source client,
+            final CheckController<? extends NormalWord> validationController) {
+        this.client = client;
         this.validationController = validationController;
     }
 
@@ -129,5 +119,36 @@ public class NormalWordTextField extends JTextField implements Clearable {
         setText("");
         this.validationController.check(client, this, getText());
     }
+    
+    private void checkDocument(final Document document) {
+        try {
+            this.validationController.check(this.client, this,
+                    document.getText(0, document.getLength()));
+        } catch (final BadLocationException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
 
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView#closed()
+     */
+    @Override
+    public void closed() {
+        this.validationController.removeView(this);
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView#updateResult(cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult)
+     */
+    @Override
+    public void updateResult(final CheckResult result) {
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView#repeal()
+     */
+    @Override
+    public void repeal() {
+        checkDocument(getDocument());
+    }
 }

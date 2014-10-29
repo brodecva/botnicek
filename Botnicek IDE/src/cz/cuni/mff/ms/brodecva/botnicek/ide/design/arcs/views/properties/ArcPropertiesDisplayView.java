@@ -18,10 +18,11 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.controllers.CodeValidationController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.controllers.MixedPatternValidationController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.controllers.SimplePatternValidationController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.controllers.NormalWordValidationController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.AvailableReferencesController;
 
@@ -54,9 +55,9 @@ public interface ArcPropertiesDisplayView {
             arcDisplayed(
                     ArcController arcController,
                     AvailableReferencesController availableReferencesController,
-                    NormalWordValidationController nameValidationController,
-                    CodeValidationController codeValidationController,
-                    SimplePatternValidationController simplePatternValidationController,
-                    MixedPatternValidationController mixedPatternValidationController,
-                    NormalWordValidationController predicateNameValidationController);
+                    CheckController<? extends NormalWord> nameValidationController,
+                    CheckController<? extends Code> codeValidationController,
+                    CheckController<? extends SimplePattern> simplePatternValidationController,
+                    CheckController<? extends MixedPattern> mixedPatternValidationController,
+                    CheckController<? extends NormalWord> predicateNameValidationController);
 }

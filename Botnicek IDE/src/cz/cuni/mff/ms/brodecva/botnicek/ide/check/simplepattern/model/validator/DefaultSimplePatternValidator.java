@@ -20,11 +20,16 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.validator
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.events.CheckEvent;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.SimplePatternChecker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.BuilderFactory;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Checker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.validator.Validator;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.builder.DefaultSimplePatternBuilderFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
 
 /**
@@ -35,7 +40,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
  * @version 1.0
  */
 public final class DefaultSimplePatternValidator implements
-        SimplePatternValidator {
+        Validator<SimplePattern> {
 
     /**
      * Vytvoří vysílací validátor.
@@ -47,20 +52,42 @@ public final class DefaultSimplePatternValidator implements
      * @return vysílací validátor
      */
     public static DefaultSimplePatternValidator create(
-            final SimplePatternChecker checker, final Dispatcher dispatcher) {
-        return new DefaultSimplePatternValidator(checker, dispatcher);
+            final Checker checker, final Dispatcher dispatcher) {
+        return new DefaultSimplePatternValidator(checker, DefaultSimplePatternBuilderFactory.create(checker), dispatcher);
+    }
+    
+    /**
+     * Vytvoří vysílací validátor.
+     * 
+     * @param checker
+     *            přímý validátor
+     * @param builderFactory továrna na stavitele typu
+     * @param dispatcher
+     *            rozesílač událostí
+     * @return vysílací validátor
+     */
+    public static DefaultSimplePatternValidator create(
+            final Checker checker,
+            final BuilderFactory<SimplePattern> builderFactory,
+            final Dispatcher dispatcher) {
+        return new DefaultSimplePatternValidator(checker, builderFactory, dispatcher);
     }
 
-    private final SimplePatternChecker checker;
+    private final Checker checker;
 
     private final Dispatcher dispatcher;
 
-    private DefaultSimplePatternValidator(final SimplePatternChecker checker,
+    private final BuilderFactory<SimplePattern> builderFactory;
+
+    private DefaultSimplePatternValidator(final Checker checker,
+            final BuilderFactory<SimplePattern> builderFactory,
             final Dispatcher dispatcher) {
         Preconditions.checkNotNull(checker);
+        Preconditions.checkNotNull(builderFactory);
         Preconditions.checkNotNull(dispatcher);
 
         this.checker = checker;
+        this.builderFactory = builderFactory;
         this.dispatcher = dispatcher;
     }
 
@@ -93,5 +120,15 @@ public final class DefaultSimplePatternValidator implements
 
         final CheckResult result = this.checker.check(source, subject, content);
         this.dispatcher.fire(CheckEvent.create(result));
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Validator#provideBuilder(java.lang.String)
+     */
+    @Override
+    public Builder<SimplePattern> provideBuilder(final String value) {
+        Preconditions.checkNotNull(value);
+        
+        return this.builderFactory.produce(value);
     }
 }

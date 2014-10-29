@@ -25,6 +25,7 @@ import java.io.Serializable;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.CodeChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 
 /**
@@ -41,11 +42,11 @@ public class Codes {
 
         private static final long serialVersionUID = 1L;
 
+        private final String text;
+        
         public static CodeImplementation create(final String text) {
             return new CodeImplementation(text);
         }
-
-        private final String text;
 
         private CodeImplementation(final String text) {
             Preconditions.checkNotNull(text);
@@ -121,5 +122,20 @@ public class Codes {
      */
     public static Code createEmpty() {
         return CodeImplementation.create("");
+    }
+
+    /**
+     * Vytvoří kód z textu, jež projde validací.
+     * 
+     * @param code zdrojový kód šablony v textové podobě
+     * @param checker validátor zdrojového kódu
+     * @return zdrojový kód
+     */
+    public static Code of(final String code, final CodeChecker checker) {
+        Preconditions.checkNotNull(code);
+        Preconditions.checkNotNull(checker);
+        Preconditions.checkArgument(checker.check(code).isValid());
+        
+        return CodeImplementation.create(code);
     }
 }

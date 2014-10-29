@@ -18,8 +18,10 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.controllers.CodeValidationController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView;
 
 /**
@@ -28,14 +30,14 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView;
  * @author Václav Brodec
  * @version 1.0
  */
-class DummyCodeValidationController implements CodeValidationController {
+class DummyCodeValidationController implements CheckController<Code> {
 
     /**
      * Vytvoří atrapu.
      * 
      * @return atrapa
      */
-    public static CodeValidationController create() {
+    public static DummyCodeValidationController create() {
         return new DummyCodeValidationController();
     }
 
@@ -96,5 +98,13 @@ class DummyCodeValidationController implements CodeValidationController {
      */
     @Override
     public void removeView(final CheckView view) {
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController#provideBuilder(java.lang.String)
+     */
+    @Override
+    public Builder<Code> provideBuilder(String value) {
+        throw new UnsupportedOperationException();
     }
 }

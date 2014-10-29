@@ -83,7 +83,7 @@ public interface ProjectView {
     void open(SystemController systemController,
             NetworkDisplayController networkDisplayController,
             ArcPropertiesDisplayController arcPropertiesDisplayController,
-            Set<CheckController> checkControllers);
+            Set<CheckController<?>> checkControllers);
 
     /**
      * Zobrazí spuštěnou konverzaci.

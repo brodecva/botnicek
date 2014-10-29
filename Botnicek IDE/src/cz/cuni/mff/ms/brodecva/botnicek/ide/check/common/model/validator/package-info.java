@@ -16,15 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.controllers;
-
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
-
 /**
- * Řadič validace kódu šablony jazyka AIML.
- * 
- * @author Václav Brodec
+ * Rozhraní validátoru zasílajícího zprávy o validaci.
+ *
  * @version 1.0
  */
-public interface CodeValidationController extends CheckController {
-}
+package cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.validator;
+

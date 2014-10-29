@@ -26,8 +26,11 @@ import javax.swing.text.Document;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.controllers.MixedPatternValidationController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearable;
 
 /**
@@ -37,7 +40,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearab
  * @version 1.0
  */
 public final class MixedPatternTextField extends JTextField implements
-        Clearable {
+        Clearable, CheckView {
 
     private static final long serialVersionUID = 1L;
 
@@ -51,56 +54,43 @@ public final class MixedPatternTextField extends JTextField implements
      * @return textové pole
      */
     public static MixedPatternTextField create(final Source client,
-            final MixedPatternValidationController validationController) {
+            final CheckController<? extends MixedPattern> validationController) {
         Preconditions.checkNotNull(client);
         Preconditions.checkNotNull(validationController);
 
         final MixedPatternTextField newInstance =
-                new MixedPatternTextField(validationController);
+                new MixedPatternTextField(client, validationController);
 
         newInstance.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
             public void changedUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance,
-                            document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
+                newInstance.checkDocument(e.getDocument());
             }
 
             @Override
             public void insertUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance,
-                            document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
+                newInstance.checkDocument(e.getDocument());
             }
 
             @Override
             public void removeUpdate(final DocumentEvent e) {
-                try {
-                    final Document document = e.getDocument();
-                    validationController.check(client, newInstance,
-                            document.getText(0, document.getLength()));
-                } catch (final BadLocationException ex) {
-                    throw new IllegalStateException(ex);
-                }
+                newInstance.checkDocument(e.getDocument());
             }
         });
+        
+        validationController.addView(newInstance);
 
         return newInstance;
     }
 
-    private final MixedPatternValidationController validationController;
+    private final CheckController<? extends MixedPattern> validationController;
+    private final Source client;
 
     private MixedPatternTextField(
-            final MixedPatternValidationController validationController) {
+            final Source client,
+            final CheckController<? extends MixedPattern> validationController) {
+        this.client = client;
         this.validationController = validationController;
     }
 
@@ -129,5 +119,37 @@ public final class MixedPatternTextField extends JTextField implements
 
         setText("");
         this.validationController.check(client, this, getText());
+    }
+
+    private void checkDocument(final Document document) {
+        try {
+            this.validationController.check(this.client, this,
+                    document.getText(0, document.getLength()));
+        } catch (final BadLocationException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView#closed()
+     */
+    @Override
+    public void closed() {
+        this.validationController.removeView(this);
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView#updateResult(cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult)
+     */
+    @Override
+    public void updateResult(final CheckResult result) { 
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views.CheckView#repeal()
+     */
+    @Override
+    public void repeal() {
+        checkDocument(getDocument());
     }
 }

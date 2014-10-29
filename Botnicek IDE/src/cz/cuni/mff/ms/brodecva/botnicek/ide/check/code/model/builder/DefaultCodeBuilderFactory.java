@@ -20,16 +20,19 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.CodeChecker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.BuilderFactory;
 
 /**
- * Výchozí implementace {@link CodeContentBuilderFactory}.
+ * Výchozí implementace {@link BuilderFactory}.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultCodeContentBuilderFactory implements
-        CodeContentBuilderFactory {
+public final class DefaultCodeBuilderFactory implements
+        BuilderFactory<Code> {
 
     /**
      * Vytvoří továrnu.
@@ -38,30 +41,27 @@ public final class DefaultCodeContentBuilderFactory implements
      *            validátor
      * @return továrna
      */
-    public static DefaultCodeContentBuilderFactory create(
+    public static DefaultCodeBuilderFactory create(
             final CodeChecker checker) {
         Preconditions.checkNotNull(checker);
 
-        return new DefaultCodeContentBuilderFactory(checker);
+        return new DefaultCodeBuilderFactory(checker);
     }
 
     private final CodeChecker checker;
 
-    private DefaultCodeContentBuilderFactory(final CodeChecker checker) {
+    private DefaultCodeBuilderFactory(final CodeChecker checker) {
         this.checker = checker;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder.
-     * CodeContentBuilderFactory#produce(java.lang.String)
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.BuilderFactory#produce(java.lang.String)
      */
     @Override
-    public CodeContentBuilder produce(final String startContent) {
+    public Builder<Code> produce(final String startContent) {
         Preconditions.checkNotNull(startContent);
 
-        return DefaultCodeContentBuilder.create(this.checker, startContent);
+        return DefaultCodeBuilder.create(this.checker, startContent);
     }
 
 }

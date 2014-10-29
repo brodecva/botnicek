@@ -32,7 +32,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components;
 
@@ -66,7 +66,7 @@ public final class ResultsTable implements CheckView {
      * @return správce tabulky
      */
     public static ResultsTable create(final JScrollPane parent,
-            final Set<CheckController> checkControllers) {
+            final Set<CheckController<?>> checkControllers) {
         return create(parent, checkControllers, ResultsTableModel.create());
     }
 
@@ -82,13 +82,13 @@ public final class ResultsTable implements CheckView {
      * @return správce tabulky
      */
     static ResultsTable create(final JScrollPane parent,
-            final Set<CheckController> checkControllers,
+            final Set<CheckController<?>> checkControllers,
             final ResultsTableModel model) {
         Preconditions.checkNotNull(parent);
         Preconditions.checkNotNull(checkControllers);
         Preconditions.checkNotNull(model);
 
-        final Set<CheckController> checkControllersCopy =
+        final Set<CheckController<?>> checkControllersCopy =
                 ImmutableSet.copyOf(checkControllers);
 
         final ResultsTable newInstance =
@@ -100,11 +100,11 @@ public final class ResultsTable implements CheckView {
         return newInstance;
     }
 
-    private final Set<CheckController> checkControllers;
+    private final Set<CheckController<?>> checkControllers;
 
     private final JTable table;
 
-    private ResultsTable(final Set<CheckController> checkControllers,
+    private ResultsTable(final Set<CheckController<?>> checkControllers,
             final ResultsTableModel model) {
         Preconditions.checkNotNull(model);
         Preconditions.checkNotNull(checkControllers);
@@ -150,14 +150,14 @@ public final class ResultsTable implements CheckView {
         parent.setView(Intended.<Component> nullReference());
     }
 
-    private void subscribe(final Set<CheckController> checkControllers) {
-        for (final CheckController checkController : checkControllers) {
+    private void subscribe(final Set<CheckController<?>> checkControllers) {
+        for (final CheckController<?> checkController : checkControllers) {
             checkController.addView(this);
         }
     }
 
     private void unsubscribe() {
-        for (final CheckController checkController : this.checkControllers) {
+        for (final CheckController<?> checkController : this.checkControllers) {
             checkController.removeView(this);
         }
     }
@@ -175,5 +175,16 @@ public final class ResultsTable implements CheckView {
         Preconditions.checkNotNull(result);
 
         getModel().updateResult(result);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * Tabulka výsledků ovšem nemusí nikterak reagovat, neboť jí budou aktualizace zaslány.
+     * </p>
+     */
+    @Override
+    public void repeal() {
     }
 }

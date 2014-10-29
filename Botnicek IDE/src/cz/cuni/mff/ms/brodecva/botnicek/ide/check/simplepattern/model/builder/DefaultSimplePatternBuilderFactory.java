@@ -20,16 +20,19 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.builder;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.SimplePatternChecker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.BuilderFactory;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Checker;
 
 /**
- * Výchozí implementace {@link SimplePatternBuilderFactory}.
+ * Výchozí implementace {@link BuilderFactory}.
  * 
  * @author Václav Brodec
  * @version 1.0
  */
 public final class DefaultSimplePatternBuilderFactory implements
-        SimplePatternBuilderFactory {
+        BuilderFactory<SimplePattern> {
 
     /**
      * Vytvoří továrnu.
@@ -39,27 +42,24 @@ public final class DefaultSimplePatternBuilderFactory implements
      * @return továrna
      */
     public static DefaultSimplePatternBuilderFactory create(
-            final SimplePatternChecker checker) {
+            final Checker checker) {
         Preconditions.checkNotNull(checker);
 
         return new DefaultSimplePatternBuilderFactory(checker);
     }
 
-    private final SimplePatternChecker checker;
+    private final Checker checker;
 
     private DefaultSimplePatternBuilderFactory(
-            final SimplePatternChecker checker) {
+            final Checker checker) {
         this.checker = checker;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.builder.
-     * SimplePatternBuilderFactory#produce(java.lang.String)
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.BuilderFactory#produce(java.lang.String)
      */
     @Override
-    public SimplePatternBuilder produce(final String start) {
+    public Builder<SimplePattern> produce(final String start) {
         Preconditions.checkNotNull(start);
 
         return DefaultSimplePatternBuilder.create(this.checker, start);

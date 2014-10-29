@@ -38,10 +38,8 @@ import com.google.common.base.Preconditions;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Code;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.controllers.CodeValidationController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.controllers.SimplePatternValidationController;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.controllers.NormalWordValidationController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.controllers.ArcController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements.CodeEditorPane;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.elements.NormalWordTextField;
@@ -109,9 +107,9 @@ public final class PredicateTestArcPanel extends AbstractTypePanel {
             PredicateTestArcPanel
             create(final Source parent,
                     final ArcController arcController,
-                    final CodeValidationController codeValidationController,
-                    final SimplePatternValidationController simplePatternValidationController,
-                    final NormalWordValidationController predicateNameValidationController) {
+                    final CheckController<? extends Code> codeValidationController,
+                    final CheckController<? extends SimplePattern> simplePatternValidationController,
+                    final CheckController<? extends NormalWord> predicateNameValidationController) {
         Preconditions.checkNotNull(parent);
         Preconditions.checkNotNull(arcController);
         Preconditions.checkNotNull(codeValidationController);

@@ -20,11 +20,16 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.validator;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.events.CheckEvent;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.NormalWordChecker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.BuilderFactory;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Checker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.validator.Validator;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.builder.DefaultNormalWordBuilderFactory;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
 
 /**
@@ -34,7 +39,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultNormalWordValidator implements NormalWordValidator {
+public final class DefaultNormalWordValidator implements Validator<NormalWord> {
 
     /**
      * Vytvoří vysílací validátor.
@@ -46,20 +51,43 @@ public final class DefaultNormalWordValidator implements NormalWordValidator {
      * @return vysílací validátor
      */
     public static DefaultNormalWordValidator create(
-            final NormalWordChecker checker, final Dispatcher dispatcher) {
-        return new DefaultNormalWordValidator(checker, dispatcher);
+            final Checker checker,
+            final Dispatcher dispatcher) {
+        return new DefaultNormalWordValidator(checker, DefaultNormalWordBuilderFactory.create(checker), dispatcher);
+    }
+    
+    /**
+     * Vytvoří vysílací validátor.
+     * 
+     * @param checker
+     *            přímý validátor
+     * @param builderFactory továrna na stavitele typu
+     * @param dispatcher
+     *            rozesílač událostí
+     * @return vysílací validátor
+     */
+    public static DefaultNormalWordValidator create(
+            final Checker checker,
+            final BuilderFactory<NormalWord> builderFactory,
+            final Dispatcher dispatcher) {
+        return new DefaultNormalWordValidator(checker, builderFactory, dispatcher);
     }
 
-    private final NormalWordChecker checker;
+    private final Checker checker;
+    private final BuilderFactory<NormalWord> builderFactory;
 
     private final Dispatcher dispatcher;
 
-    private DefaultNormalWordValidator(final NormalWordChecker checker,
+
+    private DefaultNormalWordValidator(final Checker checker,
+            final BuilderFactory<NormalWord> builderFactory,
             final Dispatcher dispatcher) {
         Preconditions.checkNotNull(checker);
+        Preconditions.checkNotNull(builderFactory);
         Preconditions.checkNotNull(dispatcher);
 
         this.checker = checker;
+        this.builderFactory = builderFactory;
         this.dispatcher = dispatcher;
     }
 
@@ -92,5 +120,15 @@ public final class DefaultNormalWordValidator implements NormalWordValidator {
 
         final CheckResult result = this.checker.check(source, subject, content);
         this.dispatcher.fire(CheckEvent.create(result));
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Validator#provideBuilder(java.lang.String)
+     */
+    @Override
+    public Builder<NormalWord> provideBuilder(final String value) {
+        Preconditions.checkNotNull(value);
+        
+        return this.builderFactory.produce(value);
     }
 }

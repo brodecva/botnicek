@@ -18,7 +18,7 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.views;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
 
 /**
  * Pohled na výsledky kontroly.
@@ -39,4 +39,14 @@ public interface CheckView {
      *            nový výsledek
      */
     void updateResult(CheckResult result);
+    
+    /**
+     * <p>
+     * Upozorní pohled na to, že došlo od poslední validace ke změně podmínek.
+     * </p>
+     * </p>
+     * Toto obvykle vyžaduje opětovnou validaci zdrojového obsahu a aktualizaci pohledu.
+     * </p>
+     */
+    void repeal();
 }

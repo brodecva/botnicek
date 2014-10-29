@@ -26,9 +26,10 @@ import java.io.Serializable;
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.NormalWordChecker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.builder.Builder;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Checker;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
 
 /**
@@ -38,21 +39,21 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Objects;
  * @author Václav Brodec
  * @version 1.0
  */
-public final class DefaultNormalWordBuilder implements NormalWordBuilder,
+public final class DefaultNormalWordBuilder implements Builder<NormalWord>,
         Source {
 
-    private final static class PredicateNameImplementation implements
+    private final static class NormalWordImplementation implements
             NormalWord, Serializable {
         private static final long serialVersionUID = 1L;
 
-        public static PredicateNameImplementation
+        public static NormalWordImplementation
                 create(final String rawContent) {
-            return new PredicateNameImplementation(rawContent);
+            return new NormalWordImplementation(rawContent);
         }
 
         private final String rawContent;
 
-        private PredicateNameImplementation(final String rawContent) {
+        private NormalWordImplementation(final String rawContent) {
             Preconditions.checkNotNull(rawContent);
 
             this.rawContent = rawContent;
@@ -138,26 +139,21 @@ public final class DefaultNormalWordBuilder implements NormalWordBuilder,
      * @return konstruktor
      */
     public static DefaultNormalWordBuilder create(
-            final NormalWordChecker checker, final String startContent) {
+            final Checker checker, final String startContent) {
         return new DefaultNormalWordBuilder(checker, startContent);
     }
 
     private final StringBuilder contentBuilder;
 
-    private final NormalWordChecker checker;
+    private final Checker checker;
 
-    private DefaultNormalWordBuilder(final NormalWordChecker checker,
+    private DefaultNormalWordBuilder(final Checker checker,
             final String startContent) {
         Preconditions.checkNotNull(checker);
         Preconditions.checkNotNull(startContent);
 
         this.checker = checker;
         this.contentBuilder = new StringBuilder(startContent);
-    }
-
-    @Override
-    public void add(final String content) {
-        this.contentBuilder.append(content);
     }
 
     /*
@@ -173,7 +169,7 @@ public final class DefaultNormalWordBuilder implements NormalWordBuilder,
             throw new IllegalStateException();
         }
 
-        return PredicateNameImplementation.create(this.contentBuilder
+        return NormalWordImplementation.create(this.contentBuilder
                 .toString());
     }
 

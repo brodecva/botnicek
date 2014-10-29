@@ -18,16 +18,20 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker;
 
+import java.net.URI;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import com.google.common.base.Preconditions;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.CodeChecker;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.DefaultCheckResult;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.Source;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.Source;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.resources.ExceptionLocalizer;
+import cz.cuni.mff.ms.brodecva.botnicek.library.api.BotConfiguration;
+import cz.cuni.mff.ms.brodecva.botnicek.library.api.LanguageConfiguration;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.AIML;
 import cz.cuni.mff.ms.brodecva.botnicek.library.platform.XML;
 
@@ -213,5 +217,29 @@ public class DefaultMixedPatternChecker implements MixedPatternChecker, Source {
 
         return new TagProcessingResult(DefaultCheckResult.succeed(source,
                 subject), offset);
+    }
+    
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.MixedPatternChecker#getBotSettings()
+     */
+    @Override
+    public BotConfiguration getBotSettings() {
+        return this.codeChecker.getBotSettings();
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.MixedPatternChecker#getLanguageSettings()
+     */
+    @Override
+    public LanguageConfiguration getLanguageSettings() {
+        return this.codeChecker.getLanguageSettings();
+    }
+
+    /* (non-Javadoc)
+     * @see cz.cuni.mff.ms.brodecva.botnicek.ide.check.mixedpattern.model.checker.MixedPatternChecker#getNamespacesToPrefixes()
+     */
+    @Override
+    public Map<URI, String> getNamespacesToPrefixes() {
+        return this.codeChecker.getNamespacesToPrefixes();
     }
 }

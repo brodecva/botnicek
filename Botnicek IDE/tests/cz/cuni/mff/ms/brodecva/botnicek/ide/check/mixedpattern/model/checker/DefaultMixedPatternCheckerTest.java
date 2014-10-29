@@ -35,7 +35,7 @@ import com.google.common.collect.ImmutableMap;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.CodeChecker;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.code.model.checker.DefaultCodeChecker;
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.Settings;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.runtime.model.RuntimeSettings;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended;

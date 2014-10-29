@@ -20,7 +20,7 @@ package cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.events;
 
 import com.google.common.base.Preconditions;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.CheckResult;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.AbstractEvent;
 
 /**
