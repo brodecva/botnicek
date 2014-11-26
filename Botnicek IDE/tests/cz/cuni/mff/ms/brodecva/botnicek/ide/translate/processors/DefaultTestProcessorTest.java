@@ -62,6 +62,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.IntegrationTest;
         RecurentArc.class, TransitionArc.class })
 public class DefaultTestProcessorTest {
 
+    private static final String UNIVERSAL_PATTERN_TEXT = "*";
     private static final String RECURENT_ARC_NAME = "RECURENTARC";
     private static final String PATTERN_ARC_NAME = "PATTERNARC";
     private static final String PREDICATE_TEST_ARC_NAME = "PREDICATETESTARC";
@@ -244,6 +245,61 @@ public class DefaultTestProcessorTest {
                         + "<pattern>*</pattern>"
                         + "<that>*</that>"
                         + "<template>"
+                        + "<think><set name=\"TOPIC\"><topicstar/></set></think>"
+                        + "<sr/>" + "</template>" + "</category>" + "</topic>",
+                this.renderer.getResult());
+
+        PowerMock.verify(patternArcStub);
+        EasyMock.verify(mixedPatternStub);
+        EasyMock.verify(this.arcCodeStub);
+        EasyMock.verify(this.targetStub);
+    }
+    
+    /**
+     * Test method for
+     * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultTestProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.PatternArc)}
+     * .
+     */
+    @Test
+    public void testProcessPatternArcWhenPatternsUniversalExpectOneCategory() {
+        final MixedPattern mixedPatternStub =
+                EasyMock.createStrictMock(MixedPattern.class);
+        EasyMock.expect(mixedPatternStub.getText())
+                .andStubReturn(UNIVERSAL_PATTERN_TEXT);
+        EasyMock.replay(mixedPatternStub);
+
+        final PatternArc patternArcStub =
+                PowerMock.createMock(PatternArc.class);
+        EasyMock.expect(patternArcStub.getCode()).andStubReturn(
+                this.arcCodeStub);
+        EasyMock.expect(patternArcStub.getName()).andStubReturn(
+                NormalWords.of(PATTERN_ARC_NAME));
+        EasyMock.expect(patternArcStub.getPattern()).andStubReturn(
+                mixedPatternStub);
+        EasyMock.expect(patternArcStub.getThat()).andStubReturn(
+                Patterns.create(UNIVERSAL_PATTERN_TEXT));
+        EasyMock.expect(patternArcStub.getTo()).andStubReturn(this.targetStub);
+        PowerMock.replay(patternArcStub);
+
+        AbstractElement.acceptForEach(this.tested.process(patternArcStub),
+                this.renderer);
+        assertEquals(
+                "<topic name=\""
+                        + PATTERN_ARC_NAME
+                        + " *\">"
+                        + "<category>"
+                        + "<pattern>"
+                        + UNIVERSAL_PATTERN_TEXT
+                        + "</pattern>"
+                        + "<that>"
+                        + UNIVERSAL_PATTERN_TEXT
+                        + "</that>"
+                        + "<template>"
+                        + ARC_CODE
+                        + "<think><set name=\"TOPIC\">"
+                        + TARGET_NAME
+                        + " <topicstar/></set></think>"
+                        + "<srai><star index=\"1\"/></srai>"
                         + "<think><set name=\"TOPIC\"><topicstar/></set></think>"
                         + "<sr/>" + "</template>" + "</category>" + "</topic>",
                 this.renderer.getResult());

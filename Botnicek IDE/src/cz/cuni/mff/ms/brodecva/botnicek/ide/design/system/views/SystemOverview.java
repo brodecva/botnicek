@@ -33,7 +33,6 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
@@ -356,10 +355,13 @@ public class SystemOverview implements SystemView {
     }
 
     private void removeFromParent() {
-        final JViewport parent = (JViewport) this.tree.getParent();
-        Preconditions.checkState(Components.hasParent(parent));
+        final Container networksPaneParent = networksScrollPane.getParent();
+        final Container addButtonParent = this.addNetworkButton.getParent();
+        Preconditions.checkState(Components.hasParent(networksPaneParent));
+        Preconditions.checkState(Components.hasParent(addButtonParent));
 
-        parent.setView(Intended.<Component> nullReference());
+        networksPaneParent.remove(this.networksScrollPane);
+        addButtonParent.remove(this.addNetworkButton);
     }
 
     /*

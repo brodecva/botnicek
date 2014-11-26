@@ -23,6 +23,8 @@ import java.util.List;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.category.Template;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.TemplateElement;
@@ -40,6 +42,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Category;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.toplevel.Topic;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.MixedPattern;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Patterns;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.TestProcessor;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.CodeTestArc;
@@ -244,13 +247,25 @@ public final class DefaultTestProcessor implements TestProcessor<List<Topic>> {
 
         final List<TemplateElement> successCode =
                 ImmutableList.of(doCode, pushTarget, passCopy);
-        final List<TemplateElement> failCode = ImmutableList.of(popArc, pass);
+        final List<TemplateElement> continueCode = ImmutableList.of(popArc, pass);
 
-        return ImmutableList.of(createArcTopic(
-                arc,
-                Category.create(pattern, arc.getThat(),
-                        Template.create(successCode)),
-                Category.createUniversal(Template.create(failCode))));
+        final String universalPatternText =
+                Patterns.createUniversal().getText();
+        if (pattern.getText().equals(universalPatternText)
+                && arc.getThat().getText().equals(universalPatternText)) {
+            // Aby nedošlo k přepsání kódu šablony, pokud uživatel přidá zcela
+            // obecný vzor, je třeba sloučit do jedné.
+            return ImmutableList.of(createArcTopic(arc, Category.create(
+                    pattern, arc.getThat(), Template.create(Lists
+                            .newLinkedList(Iterables.concat(successCode,
+                                    continueCode))))));
+        } else {
+            return ImmutableList.of(createArcTopic(
+                    arc,
+                    Category.create(pattern, arc.getThat(),
+                            Template.create(successCode)),
+                    Category.createUniversal(Template.create(continueCode))));
+        }
     }
 
     /**

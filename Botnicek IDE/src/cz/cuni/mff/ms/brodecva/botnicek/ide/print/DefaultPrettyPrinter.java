@@ -69,6 +69,8 @@ public final class DefaultPrettyPrinter implements Printer, Serializable {
     private static final String ENABLE_OPTION_VALUE = "yes";
     private static final String DISABLE_OPTION_VALUE = "no";
     private static final String INDENT_NUMBER_OPTION_NAME = "indent-number";
+    
+    private static final String NEW_LINE = System.lineSeparator();
 
     /**
      * Vytvoří formátovač s výchozím nastavením velikost odsazení.
@@ -141,7 +143,13 @@ public final class DefaultPrettyPrinter implements Printer, Serializable {
             throw new PrintException(e);
         }
 
-        return xmlOutput.getWriter().toString();
+        final String rootNotBrokenOutput = xmlOutput.getWriter().toString();
+
+        final String result =
+                new StringBuilder(rootNotBrokenOutput).insert(
+                        rootNotBrokenOutput.indexOf("?>") + 2, NEW_LINE).toString();
+        
+        return result;
     }
 
     /*
