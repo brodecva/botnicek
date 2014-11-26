@@ -18,7 +18,7 @@
  */
 package cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.implementations;
 
-import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractElement;
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.AbstractProperElement;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.SystemDefinedElement;
 
 /**
@@ -30,7 +30,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.elements.template.SystemDefined
  * @see <a
  *      href="http://www.alicebot.org/TR/2011/#section-system-defined-predicates">http://www.alicebot.org/TR/2011/#section-system-defined-predicates</a>
  */
-public class Id extends AbstractElement implements SystemDefinedElement {
+public class Id extends AbstractProperElement implements SystemDefinedElement {
     private static final String NAME = "id";
 
     /**
