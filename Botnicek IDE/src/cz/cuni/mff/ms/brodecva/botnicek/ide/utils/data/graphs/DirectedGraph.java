@@ -91,8 +91,8 @@ public interface DirectedGraph<V, E> {
      * @param connections
      *            zpětné volání pro každou odebranou související hranu
      */
-    void extractVertex(V vertex, Function<V, V> neighboursRepair,
-            Callback<V> neighbours, Callback<E> connections);
+    void extractVertex(V vertex, Function<? super V, V> neighboursRepair,
+            Callback<? super V> neighbours, Callback<? super E> connections);
 
     /**
      * Vrátí výchozí vrchol hrany.

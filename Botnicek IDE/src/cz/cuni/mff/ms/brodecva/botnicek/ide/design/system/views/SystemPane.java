@@ -228,7 +228,7 @@ public class SystemPane implements ArcPropertiesDisplayView,
      * .ide.design.arcs.controllers.ArcPropertiesController)
      */
     @Override
-    public void displayNetwork(final NetworkController networkController,
+    public void networkDisplayed(final NetworkController networkController,
             final ArcsController arcsController,
             final NodesController nodesController,
             final ArcPropertiesDisplayController arcPropertiesController) {

@@ -76,7 +76,7 @@ final class PermissiveNamingAuthority implements NamingAuthority {
      * #tryReplace(java.util.Map)
      */
     @Override
-    public void tryReplace(final Map<String, String> oldToNew) {
+    public void tryReplace(final Map<? extends String, ? extends String> oldToNew) {
     }
 
     @Override

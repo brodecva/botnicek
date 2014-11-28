@@ -63,7 +63,7 @@ public final class Set extends AbstractCompoundElement implements
      * @return prvek
      */
     public static Set create(final NormalWord name,
-            final List<TemplateElement> content) {
+            final List<? extends TemplateElement> content) {
         return new Set(name, content);
     }
 
@@ -85,7 +85,7 @@ public final class Set extends AbstractCompoundElement implements
 
     private final NormalWord name;
 
-    private Set(final NormalWord name, final List<TemplateElement> content) {
+    private Set(final NormalWord name, final List<? extends TemplateElement> content) {
         super(content);
 
         Preconditions.checkNotNull(name);

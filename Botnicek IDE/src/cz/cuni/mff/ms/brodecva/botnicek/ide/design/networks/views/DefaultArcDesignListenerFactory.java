@@ -57,7 +57,7 @@ public class DefaultArcDesignListenerFactory implements
      */
     @Override
     public ArcDesignListener produce(final JPanel designPanel,
-            final Set<NodeUI> nodes, final Set<ArcUI> arcs,
+            final Set<? extends NodeUI> nodes, final Set<? extends ArcUI> arcs,
             final NetworkController networkController) {
         Preconditions.checkNotNull(designPanel);
         Preconditions.checkNotNull(nodes);

@@ -225,7 +225,7 @@ public final class DragOrderableList<E> extends JList<E> {
      * @param data
      *            prvky modelu
      */
-    public final void setDefaultModel(final List<E> data) {
+    public final void setDefaultModel(final List<? extends E> data) {
         Preconditions.checkNotNull(data);
 
         final DefaultListModel<E> model = new DefaultListModel<>();

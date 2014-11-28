@@ -71,7 +71,7 @@ public class DisplayStrategyTableModel extends
      * @return model
      */
     public static DisplayStrategyTableModel create(
-            final Map<NormalWord, DisplayStrategy> namesToValues) {
+            final Map<? extends NormalWord, ? extends DisplayStrategy> namesToValues) {
         return new DisplayStrategyTableModel(namesToValues,
                 DefaultDisplayStrategyFactory.create());
     }
@@ -86,7 +86,7 @@ public class DisplayStrategyTableModel extends
      * @return model
      */
     public static DisplayStrategyTableModel create(
-            final Map<NormalWord, DisplayStrategy> namesToValues,
+            final Map<? extends NormalWord, ? extends DisplayStrategy> namesToValues,
             final DisplayStrategyFactory strategyFactory) {
         return new DisplayStrategyTableModel(namesToValues, strategyFactory);
     }
@@ -104,7 +104,7 @@ public class DisplayStrategyTableModel extends
     }
 
     private DisplayStrategyTableModel(
-            final Map<NormalWord, DisplayStrategy> namesToValues,
+            final Map<? extends NormalWord, ? extends DisplayStrategy> namesToValues,
             final DisplayStrategyFactory strategyFactory) {
         super(namesToValues, UiLocalizer.print("PREDICATE_COLUMN_NAME"),
                 UiLocalizer.print("STRATEGY_COLUMN_NAME"));

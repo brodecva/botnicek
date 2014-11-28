@@ -45,7 +45,7 @@ public final class System extends AbstractCompoundElement implements
      *            potomci
      * @return prvek
      */
-    public static System create(final List<TemplateElement> content) {
+    public static System create(final List<? extends TemplateElement> content) {
         return new System(content);
     }
 
@@ -60,7 +60,7 @@ public final class System extends AbstractCompoundElement implements
         return new System(content);
     }
 
-    private System(final List<TemplateElement> content) {
+    private System(final List<? extends TemplateElement> content) {
         super(content);
     }
 

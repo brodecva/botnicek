@@ -127,7 +127,7 @@ final class HintingTextFieldEditor<E> extends BasicComboBoxEditor implements
      * @param list
      *            seznam položek
      */
-    public void setDataList(final List<E> list) {
+    public void setDataList(final List<? extends E> list) {
         Preconditions.checkNotNull(list);
 
         getTextField().setDataList(list);

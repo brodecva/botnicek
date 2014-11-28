@@ -67,7 +67,7 @@ public final class DefaultRendererFactory implements RendererFactory,
      * .util.Map)
      */
     @Override
-    public Renderer produce(final Map<URI, String> namespacesToPrefixes) {
+    public Renderer produce(final Map<? extends URI, ? extends String> namespacesToPrefixes) {
         Preconditions.checkNotNull(namespacesToPrefixes);
 
         return DefaultRenderer.create(this.renderingVisitorFactory,

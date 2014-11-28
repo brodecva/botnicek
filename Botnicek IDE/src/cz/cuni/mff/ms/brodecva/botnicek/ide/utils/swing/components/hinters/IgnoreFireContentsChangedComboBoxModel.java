@@ -48,7 +48,7 @@ final class IgnoreFireContentsChangedComboBoxModel<E> extends
      * @return model
      */
     public static <E> IgnoreFireContentsChangedComboBoxModel<E> create(
-            final List<E> list) {
+            final List<? extends E> list) {
         Preconditions.checkNotNull(list);
 
         return new IgnoreFireContentsChangedComboBoxModel<E>(

@@ -321,9 +321,9 @@ public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E>,
     @Override
     public final void
             extractVertex(final V vertex,
-                    final Function<V, V> neighboursRepair,
-                    final Callback<V> neighboursCall,
-                    final Callback<E> connectionsCall)
+                    final Function<? super V, V> neighboursRepair,
+                    final Callback<? super V> neighboursCall,
+                    final Callback<? super E> connectionsCall)
                     throws IllegalArgumentException {
         Preconditions.checkNotNull(vertex);
         Preconditions.checkNotNull(neighboursCall);
@@ -381,14 +381,14 @@ public class DefaultDirectedGraph<V, E> implements DirectedGraph<V, E>,
     }
 
     private void checkEdges(final Set<Entry<Joint<V>, E>> jointEntries,
-            final Callback<E> connectionsCall) {
+            final Callback<? super E> connectionsCall) {
         for (final Entry<Joint<V>, E> jointEntry : jointEntries) {
             connectionsCall.call(jointEntry.getValue());
         }
     }
 
     private void checkNeighbours(final Set<V> neighbours,
-            final Callback<V> neighboursCall) {
+            final Callback<? super V> neighboursCall) {
         for (final V neighbour : neighbours) {
             neighboursCall.call(neighbour);
         }

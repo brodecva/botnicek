@@ -34,5 +34,5 @@ public interface ProceedProcessible {
      *            procesor pro míru interaktivity přechodu do dalšího stavu
      * @return výsledek zpracování
      */
-    <T> T accept(ProceedProcessor<T> processor);
+    <T> T accept(ProceedProcessor<? extends T> processor);
 }

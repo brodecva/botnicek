@@ -53,7 +53,7 @@ public final class ValueOnlyListItem extends AbstractListItem {
      * @return položka
      */
     public static ValueOnlyListItem create(final SimplePattern value,
-            final List<TemplateElement> content) {
+            final List<? extends TemplateElement> content) {
         return new ValueOnlyListItem(value, content);
     }
 
@@ -74,7 +74,7 @@ public final class ValueOnlyListItem extends AbstractListItem {
     private final SimplePattern value;
 
     private ValueOnlyListItem(final SimplePattern value,
-            final List<TemplateElement> content) {
+            final List<? extends TemplateElement> content) {
         super(content);
 
         Preconditions.checkNotNull(value);

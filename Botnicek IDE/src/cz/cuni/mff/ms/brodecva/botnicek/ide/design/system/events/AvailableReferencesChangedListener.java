@@ -36,6 +36,6 @@ public interface AvailableReferencesChangedListener {
      * @param references
      *            aktuální množina dostupných uzlů
      */
-    void referencesChanged(Set<EnterNode> references);
+    void referencesChanged(Set<? extends EnterNode> references);
 
 }

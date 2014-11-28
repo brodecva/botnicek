@@ -76,7 +76,7 @@ public class SubstitutionsTableModel extends
      * @return model
      */
     public static SubstitutionsTableModel create(
-            final Map<Pattern, String> patternsToSubs) {
+            final Map<? extends Pattern, ? extends String> patternsToSubs) {
         return new SubstitutionsTableModel(patternsToSubs);
     }
 
@@ -86,7 +86,7 @@ public class SubstitutionsTableModel extends
                         .print("VALUE_COLUMN_NAME"));
     }
 
-    private SubstitutionsTableModel(final Map<Pattern, String> patternsToSubs) {
+    private SubstitutionsTableModel(final Map<? extends Pattern, ? extends String> patternsToSubs) {
         super(patternsToSubs, new PatternComparator(), UiLocalizer
                 .print("PATTERN_COLUMN_NAME"), UiLocalizer
                 .print("VALUE_COLUMN_NAME"));

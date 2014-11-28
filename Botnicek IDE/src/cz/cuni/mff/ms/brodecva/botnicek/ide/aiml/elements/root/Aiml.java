@@ -78,7 +78,7 @@ public class Aiml extends AbstractProperElement {
      * @return prvek
      */
     public static Aiml create(final List<? extends Toplevel> content,
-            final Map<URI, String> namespacesToPrefixes) {
+            final Map<? extends URI, ? extends String> namespacesToPrefixes) {
         return create(content, namespacesToPrefixes, DEFAULT_SCHEMA_URI);
     }
 
@@ -94,7 +94,7 @@ public class Aiml extends AbstractProperElement {
      * @return prvek
      */
     public static Aiml create(final List<? extends Toplevel> content,
-            final Map<URI, String> namespacesToPrefixes,
+            final Map<? extends URI, ? extends  String> namespacesToPrefixes,
             final URI schemaLocation) {
         Preconditions.checkNotNull(content);
         Preconditions.checkNotNull(namespacesToPrefixes);

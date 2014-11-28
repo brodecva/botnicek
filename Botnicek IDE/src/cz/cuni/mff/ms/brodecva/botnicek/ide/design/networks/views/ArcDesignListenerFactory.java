@@ -46,6 +46,6 @@ public interface ArcDesignListenerFactory {
      *            řadič sítě (zabezpečuje přidání hrany)
      * @return posluchač návrhu
      */
-    ArcDesignListener produce(JPanel designPanel, Set<NodeUI> nodes,
-            Set<ArcUI> arcs, NetworkController controller);
+    ArcDesignListener produce(JPanel designPanel, Set<? extends NodeUI> nodes,
+            Set<? extends ArcUI> arcs, NetworkController controller);
 }

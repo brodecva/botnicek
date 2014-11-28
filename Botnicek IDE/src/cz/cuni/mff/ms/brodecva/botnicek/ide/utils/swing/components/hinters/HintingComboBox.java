@@ -53,7 +53,7 @@ public class HintingComboBox<E> extends JComboBox<E> implements HintListener {
      *            vynucuje užití jen napovězených řetězců
      * @return napovídající combo box
      */
-    public static <E> HintingComboBox<E> create(final List<E> list,
+    public static <E> HintingComboBox<E> create(final List<? extends E> list,
             final boolean caseSensitive, final boolean strict) {
         return new HintingComboBox<>(list, caseSensitive, strict);
     }
@@ -134,7 +134,7 @@ public class HintingComboBox<E> extends JComboBox<E> implements HintListener {
      * @param strict
      *            vynucuje užití jen napovězených řetězců
      */
-    protected HintingComboBox(final List<E> list, final boolean caseSensitive,
+    protected HintingComboBox(final List<? extends E> list, final boolean caseSensitive,
             final boolean strict) {
         this(HintingTextField.create(list, caseSensitive, strict));
     }
@@ -209,7 +209,7 @@ public class HintingComboBox<E> extends JComboBox<E> implements HintListener {
      * @param list
      *            seznam položek
      */
-    public final void setDataList(final List<E> list) {
+    public final void setDataList(final List<? extends E> list) {
         Preconditions.checkNotNull(list);
 
         this.hintingTextFieldEditor.setDataList(list);

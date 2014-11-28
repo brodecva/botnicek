@@ -49,7 +49,7 @@ public class Template extends AbstractCompoundElement {
      *            potomci
      * @return prvek
      */
-    public static Template create(final List<TemplateElement> children) {
+    public static Template create(final List<? extends TemplateElement> children) {
         Preconditions.checkNotNull(children);
 
         return new Template(children);
@@ -68,7 +68,7 @@ public class Template extends AbstractCompoundElement {
         return new Template(children);
     }
 
-    private Template(final List<TemplateElement> children) {
+    private Template(final List<? extends TemplateElement> children) {
         super(children);
     }
 

@@ -58,7 +58,7 @@ final class HintingDocument<E> extends PlainDocument {
      *            poskytovatel mezí výběru
      * @return textové pole
      */
-    public static <E> HintingDocument<E> create(final List<E> list,
+    public static <E> HintingDocument<E> create(final List<? extends E> list,
             final boolean caseSensitive, final boolean strict,
             final SelectionBoundsProvider selectionBoundsProvider) {
         return create(list, caseSensitive, strict, selectionBoundsProvider,
@@ -80,7 +80,7 @@ final class HintingDocument<E> extends PlainDocument {
      *            správce událostí
      * @return textové pole
      */
-    public static <E> HintingDocument<E> create(final List<E> list,
+    public static <E> HintingDocument<E> create(final List<? extends E> list,
             final boolean caseSensitive, final boolean strict,
             final SelectionBoundsProvider selectionBoundsProvider,
             final EventManager eventManager) {
@@ -318,7 +318,7 @@ final class HintingDocument<E> extends PlainDocument {
      * @param list
      *            seznam položek
      */
-    public void setDataList(final List<E> list) {
+    public void setDataList(final List<? extends E> list) {
         Preconditions.checkNotNull(list);
 
         this.list = ImmutableList.copyOf(list);

@@ -103,7 +103,7 @@ public final class ReferenceHintingComboBox extends HintingComboBox<EnterNode>
         });
     }
 
-    private ReferenceHintingComboBox(final List<EnterNode> list,
+    private ReferenceHintingComboBox(final List<? extends EnterNode> list,
             final boolean caseSensitive, final boolean strict) {
         super(list, caseSensitive, strict);
     }
@@ -115,7 +115,7 @@ public final class ReferenceHintingComboBox extends HintingComboBox<EnterNode>
      * AvailableReferencesView#extendedAvailableReferences(java.util.Set)
      */
     @Override
-    public void extendAvailableReferences(final Set<EnterNode> extension) {
+    public void extendAvailableReferences(final Set<? extends EnterNode> extension) {
         Preconditions.checkNotNull(extension);
 
         final Set<EnterNode> updated = new HashSet<>(getDataList());
@@ -142,7 +142,7 @@ public final class ReferenceHintingComboBox extends HintingComboBox<EnterNode>
      * AvailableReferencesView#removedAvailableReferences(java.util.Set)
      */
     @Override
-    public void removeAvailableReferences(final Set<EnterNode> removed) {
+    public void removeAvailableReferences(final Set<? extends EnterNode> removed) {
         Preconditions.checkNotNull(removed);
 
         final Set<EnterNode> updated = new HashSet<>(getDataList());
@@ -167,12 +167,12 @@ public final class ReferenceHintingComboBox extends HintingComboBox<EnterNode>
      * updatedAvailableReferences(java.util.Set)
      */
     @Override
-    public void updateAvailableReferences(final Set<EnterNode> references) {
+    public void updateAvailableReferences(final Set<? extends EnterNode> references) {
         Preconditions.checkNotNull(references);
 
         final Object selected = getSelectedItem();
 
-        final List<EnterNode> update =
+        final List<? extends EnterNode> update =
                 REFERENCE_ORDERING.immutableSortedCopy(references);
         setDataList(update);
 

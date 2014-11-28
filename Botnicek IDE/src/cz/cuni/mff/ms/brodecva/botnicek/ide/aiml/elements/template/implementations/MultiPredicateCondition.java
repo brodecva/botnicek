@@ -56,7 +56,7 @@ public final class MultiPredicateCondition extends AbstractProperElement
      */
     public static MultiPredicateCondition create(
             final DefaultListItem defaultItem,
-            final List<NameAndValueListItem> items) {
+            final List<? extends NameAndValueListItem> items) {
         Preconditions.checkNotNull(defaultItem);
 
         return new MultiPredicateCondition(Optional.of(defaultItem), items);
@@ -91,7 +91,7 @@ public final class MultiPredicateCondition extends AbstractProperElement
      * @return prvek
      */
     public static MultiPredicateCondition create(
-            final List<NameAndValueListItem> items) {
+            final List<? extends NameAndValueListItem> items) {
         return new MultiPredicateCondition(Optional.<DefaultListItem> absent(),
                 items);
     }
@@ -117,7 +117,7 @@ public final class MultiPredicateCondition extends AbstractProperElement
 
     private MultiPredicateCondition(
             final Optional<DefaultListItem> defaultItem,
-            final List<NameAndValueListItem> items) {
+            final List<? extends NameAndValueListItem> items) {
         Preconditions.checkNotNull(defaultItem);
         Preconditions.checkNotNull(items);
 

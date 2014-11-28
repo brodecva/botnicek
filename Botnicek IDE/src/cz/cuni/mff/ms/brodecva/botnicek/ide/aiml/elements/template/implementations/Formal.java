@@ -47,7 +47,7 @@ public final class Formal extends AbstractCompoundElement implements
      *            potomci
      * @return prvek
      */
-    public static Formal create(final List<TemplateElement> content) {
+    public static Formal create(final List<? extends TemplateElement> content) {
         return new Formal(content);
     }
 
@@ -62,7 +62,7 @@ public final class Formal extends AbstractCompoundElement implements
         return new Formal(content);
     }
 
-    private Formal(final List<TemplateElement> content) {
+    private Formal(final List<? extends TemplateElement> content) {
         super(content);
     }
 

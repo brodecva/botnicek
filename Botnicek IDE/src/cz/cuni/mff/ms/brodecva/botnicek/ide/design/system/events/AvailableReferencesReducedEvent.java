@@ -47,14 +47,14 @@ public class AvailableReferencesReducedEvent extends
      * @return událost
      */
     public static AvailableReferencesReducedEvent create(final System system,
-            final Set<EnterNode> removedReferences) {
+            final Set<? extends EnterNode> removedReferences) {
         return new AvailableReferencesReducedEvent(system, removedReferences);
     }
 
     private final Set<EnterNode> removedReferences;
 
     private AvailableReferencesReducedEvent(final System system,
-            final Set<EnterNode> removedReferences) {
+            final Set<? extends EnterNode> removedReferences) {
         super(system);
 
         Preconditions.checkNotNull(removedReferences);

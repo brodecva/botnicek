@@ -68,7 +68,7 @@ public class DefaultNetworkDisplayController extends
                 public void call(final NetworkDisplayView view) {
                     Preconditions.checkNotNull(view);
 
-                    view.displayNetwork(
+                    view.networkDisplayed(
                             networkController,
                             arcsController,
                             nodesController,

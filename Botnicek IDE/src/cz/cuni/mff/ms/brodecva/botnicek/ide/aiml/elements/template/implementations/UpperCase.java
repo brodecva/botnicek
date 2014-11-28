@@ -43,7 +43,7 @@ public final class UpperCase extends AbstractCompoundElement implements
      *            potomci
      * @return prvek
      */
-    public static UpperCase create(final List<TemplateElement> content) {
+    public static UpperCase create(final List<? extends TemplateElement> content) {
         return new UpperCase(content);
     }
 
@@ -58,7 +58,7 @@ public final class UpperCase extends AbstractCompoundElement implements
         return new UpperCase(content);
     }
 
-    private UpperCase(final List<TemplateElement> content) {
+    private UpperCase(final List<? extends TemplateElement> content) {
         super(content);
     }
 

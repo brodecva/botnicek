@@ -93,7 +93,7 @@ public final class TransitionArc extends AbstractCodeArc implements
      * .arcs.api.Visitor)
      */
     @Override
-    public <T> T accept(final Processor<T> processor) {
+    public <T> T accept(final Processor<? extends T> processor) {
         return processor.process(this);
     }
 

@@ -100,7 +100,7 @@ public final class PredicateTestArc extends AbstractTestArc {
      * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.api.Processor)
      */
     @Override
-    public <T> T accept(final Processor<T> processor) {
+    public <T> T accept(final Processor<? extends T> processor) {
         return processor.process(this);
     }
 

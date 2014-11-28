@@ -40,5 +40,5 @@ interface NodeTopicFactory {
      *            kód šablony, simulující chování uzlu
      * @return téma
      */
-    Topic produce(final Node node, final List<TemplateElement> code);
+    Topic produce(final Node node, final List<? extends TemplateElement> code);
 }

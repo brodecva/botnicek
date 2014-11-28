@@ -154,7 +154,7 @@ public abstract class AbstractNameValueTableModel<N, V> extends
      * @param valueColumnName
      *            název sloupce s hodnotami
      */
-    protected AbstractNameValueTableModel(final Map<N, V> namesToValues,
+    protected AbstractNameValueTableModel(final Map<? extends N, ? extends V> namesToValues,
             final Comparator<? super N> nameComparator,
             final String nameColumnName, final String valueColumnName) {
         Preconditions.checkNotNull(namesToValues);
@@ -185,7 +185,7 @@ public abstract class AbstractNameValueTableModel<N, V> extends
      * @param valueColumnName
      *            název sloupce hodnot
      */
-    protected AbstractNameValueTableModel(final Map<N, V> namesToValues,
+    protected AbstractNameValueTableModel(final Map<? extends N, ? extends V> namesToValues,
             final String nameColumnName, final String valueColumnName) {
         this(namesToValues, new NaturalComparator<N>(), nameColumnName,
                 valueColumnName);

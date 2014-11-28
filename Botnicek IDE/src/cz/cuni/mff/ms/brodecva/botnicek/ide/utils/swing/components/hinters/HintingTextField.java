@@ -54,11 +54,11 @@ public class HintingTextField<E> extends JTextField implements
      *            vynutí užití jen povolených slov
      * @return textové pole
      */
-    public static <E> HintingTextField<E> create(final List<E> list,
+    public static <E> HintingTextField<E> create(final List<? extends E> list,
             final boolean caseSensitive, final boolean strict) {
         final HintingTextField<E> newInstance = new HintingTextField<>();
 
-        final HintingDocument<E> document =
+        final HintingDocument<? extends E> document =
                 HintingDocument.create(list, caseSensitive, strict,
                         new SelectionBoundsProvider() {
 
@@ -139,7 +139,7 @@ public class HintingTextField<E> extends JTextField implements
         setSelectionEnd(end);
     }
 
-    private void initialize(final HintingDocument<E> document) {
+    private void initialize(final HintingDocument<? extends E> document) {
         setDocument(document);
         rewriteDisplayed(document.getDataList());
     }
@@ -194,7 +194,7 @@ public class HintingTextField<E> extends JTextField implements
         }
     }
 
-    private void rewriteDisplayed(final List<E> list) {
+    private void rewriteDisplayed(final List<? extends E> list) {
         if (isStrict() && !list.isEmpty()) {
             setText(list.iterator().next().toString());
         }
@@ -206,7 +206,7 @@ public class HintingTextField<E> extends JTextField implements
      * @param list
      *            seznam položek
      */
-    final public void setDataList(final List<E> list) {
+    final public void setDataList(final List<? extends E> list) {
         Preconditions.checkNotNull(list);
 
         getCastDocument().setDataList(list);

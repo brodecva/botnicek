@@ -47,7 +47,7 @@ public final class AvailableReferencesExtendedEvent extends
      * @return událost
      */
     public static AvailableReferencesExtendedEvent create(final System system,
-            final Set<EnterNode> additionalReferences) {
+            final Set<? extends EnterNode> additionalReferences) {
         return new AvailableReferencesExtendedEvent(system,
                 additionalReferences);
     }
@@ -55,7 +55,7 @@ public final class AvailableReferencesExtendedEvent extends
     private final Set<EnterNode> additionalReferences;
 
     private AvailableReferencesExtendedEvent(final System system,
-            final Set<EnterNode> additionalReferences) {
+            final Set<? extends EnterNode> additionalReferences) {
         super(system);
 
         Preconditions.checkNotNull(additionalReferences);

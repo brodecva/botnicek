@@ -185,8 +185,8 @@ public final class AIMLConversation implements Conversation, Serializable {
     public AIMLConversation(final Loader loader, final Splitter splitter,
             final Normalizer normalizer, final Language language,
             final TemplateParserFactory parserFactory,
-            final Map<String, String> defaultPredicates,
-            final Map<String, DisplayStrategy> predicatesSetBehavior) {
+            final Map<? extends String, ? extends String> defaultPredicates,
+            final Map<? extends String, ? extends DisplayStrategy> predicatesSetBehavior) {
         this(loader, splitter, normalizer, language, parserFactory,
                 defaultPredicates, predicatesSetBehavior, Executors
                         .newSingleThreadExecutor());
@@ -217,8 +217,8 @@ public final class AIMLConversation implements Conversation, Serializable {
     public AIMLConversation(final Loader loader, final Splitter splitter,
             final Normalizer normalizer, final Language language,
             final TemplateParserFactory parserFactory,
-            final Map<String, String> defaultPredicates,
-            final Map<String, DisplayStrategy> predicatesSetBehavior,
+            final Map<? extends String, ? extends String> defaultPredicates,
+            final Map<? extends String, ? extends DisplayStrategy> predicatesSetBehavior,
             final ExecutorService executor) {
         LOGGER.log(Level.INFO, "responder.ConversationCreating", new Object[] { loader,
                 splitter, normalizer, language, parserFactory, defaultPredicates, predicatesSetBehavior, executor });

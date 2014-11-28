@@ -34,5 +34,5 @@ public interface StackProcessible {
      *            procesor pro zásobník
      * @return výsledek zpracování
      */
-    <T> T accept(StackProcessor<T> processor);
+    <T> T accept(StackProcessor<? extends T> processor);
 }

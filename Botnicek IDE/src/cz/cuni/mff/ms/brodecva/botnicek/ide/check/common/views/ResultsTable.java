@@ -66,7 +66,7 @@ public final class ResultsTable implements CheckView {
      * @return správce tabulky
      */
     public static ResultsTable create(final JScrollPane parent,
-            final Set<CheckController<?>> checkControllers) {
+            final Set<? extends CheckController<?>> checkControllers) {
         return create(parent, checkControllers, ResultsTableModel.create());
     }
 
@@ -82,7 +82,7 @@ public final class ResultsTable implements CheckView {
      * @return správce tabulky
      */
     static ResultsTable create(final JScrollPane parent,
-            final Set<CheckController<?>> checkControllers,
+            final Set<? extends CheckController<?>> checkControllers,
             final ResultsTableModel model) {
         Preconditions.checkNotNull(parent);
         Preconditions.checkNotNull(checkControllers);

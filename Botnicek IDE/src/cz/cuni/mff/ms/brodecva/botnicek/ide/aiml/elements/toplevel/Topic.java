@@ -82,7 +82,7 @@ public final class Topic extends AbstractProperElement implements Toplevel {
      * @return téma
      */
     public static Topic create(final SimplePattern name,
-            final List<Category> categories) {
+            final List<? extends Category> categories) {
         return new Topic(name, categories);
     }
 
@@ -94,7 +94,7 @@ public final class Topic extends AbstractProperElement implements Toplevel {
         this(name, ImmutableList.copyOf(categories));
     }
 
-    private Topic(final SimplePattern name, final List<Category> categories) {
+    private Topic(final SimplePattern name, final List<? extends Category> categories) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(categories);
 

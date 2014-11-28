@@ -36,6 +36,6 @@ public interface AvailableReferencesExtendedListener {
      * @param additionalReferences
      *            uzly navíc
      */
-    void referencesExtended(Set<EnterNode> additionalReferences);
+    void referencesExtended(Set<? extends EnterNode> additionalReferences);
 
 }

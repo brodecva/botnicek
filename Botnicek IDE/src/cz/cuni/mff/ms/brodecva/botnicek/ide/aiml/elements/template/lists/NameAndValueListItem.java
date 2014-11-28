@@ -59,7 +59,7 @@ public final class NameAndValueListItem extends AbstractListItem {
      * @return položka
      */
     public static NameAndValueListItem create(final NormalWord name,
-            final SimplePattern value, final List<TemplateElement> content) {
+            final SimplePattern value, final List<? extends TemplateElement> content) {
         return new NameAndValueListItem(name, value,
                 ImmutableList.copyOf(content));
     }
@@ -86,7 +86,7 @@ public final class NameAndValueListItem extends AbstractListItem {
     private final SimplePattern value;
 
     private NameAndValueListItem(final NormalWord name,
-            final SimplePattern value, final List<TemplateElement> content) {
+            final SimplePattern value, final List<? extends TemplateElement> content) {
         super(content);
 
         Preconditions.checkNotNull(name);

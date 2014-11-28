@@ -96,7 +96,7 @@ public final class Settings implements Serializable {
      *            název testovacího predikátu
      * @return nastavení
      */
-    public static Settings create(final Map<URI, String> namespacesToPrefixes,
+    public static Settings create(final Map<? extends URI, ? extends String> namespacesToPrefixes,
             final NormalWord prefix, final NormalWord pullState,
             final NormalWord pullStopState, final NormalWord successState,
             final NormalWord failState, final NormalWord returnState,
@@ -127,7 +127,7 @@ public final class Settings implements Serializable {
 
     private final NormalWord testingPredicate;
 
-    private Settings(final Map<URI, String> namespacesToPrefixes,
+    private Settings(final Map<? extends URI, ? extends String> namespacesToPrefixes,
             final NormalWord prefix, final NormalWord pullState,
             final NormalWord pullStopState, final NormalWord successState,
             final NormalWord failState, final NormalWord returnState,

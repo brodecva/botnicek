@@ -35,5 +35,5 @@ public interface DispatchProcessible {
      *            stavu
      * @return výsledek zpracování
      */
-    <T> T accept(DispatchProcessor<T> processor);
+    <T> T accept(DispatchProcessor<? extends T> processor);
 }

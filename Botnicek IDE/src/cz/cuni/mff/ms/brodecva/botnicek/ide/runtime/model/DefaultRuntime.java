@@ -179,8 +179,8 @@ public class DefaultRuntime implements Runtime {
     public static Runtime create(final Loader loader, final Splitter splitter,
             final Normalizer normalizer,
             final TemplateParserFactory parserFactory, final Language language,
-            final Map<String, String> defaultPredicates,
-            final Map<String, DisplayStrategy> predicatesSetBehavior,
+            final Map<? extends String, ? extends String> defaultPredicates,
+            final Map<? extends String, ? extends DisplayStrategy> predicatesSetBehavior,
             final RunFactory runFactory, final Dispatcher dispatcher) {
         return new DefaultRuntime(loader, splitter, normalizer, parserFactory,
                 language, defaultPredicates, predicatesSetBehavior, runFactory,
@@ -225,8 +225,8 @@ public class DefaultRuntime implements Runtime {
     private DefaultRuntime(final Loader loader, final Splitter splitter,
             final Normalizer normalizer,
             final TemplateParserFactory parserFactory, final Language language,
-            final Map<String, String> defaultPredicates,
-            final Map<String, DisplayStrategy> predicatesSetBehavior,
+            final Map<? extends String, ? extends String> defaultPredicates,
+            final Map<? extends String, ? extends DisplayStrategy> predicatesSetBehavior,
             final RunFactory runFactory, final Dispatcher dispatcher) {
         Preconditions.checkNotNull(loader);
         Preconditions.checkNotNull(splitter);

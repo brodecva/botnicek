@@ -42,7 +42,7 @@ public interface NetworkDisplayView {
      * @param arcDisplayController
      *            řadič zobrazovače hran
      */
-    void displayNetwork(NetworkController networkController,
+    void networkDisplayed(NetworkController networkController,
             ArcsController arcsController, NodesController nodesController,
             ArcPropertiesDisplayController arcDisplayController);
 }

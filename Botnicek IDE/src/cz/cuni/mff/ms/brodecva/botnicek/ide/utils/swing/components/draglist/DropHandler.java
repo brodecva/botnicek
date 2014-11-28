@@ -53,15 +53,15 @@ final class DropHandler<E> extends TransferHandler {
      *            obsluhovaný seznam
      * @return obslužný objekt
      */
-    public static <E> DropHandler<E> create(final DragOrderableList<E> moved) {
+    public static <E> DropHandler<E> create(final DragOrderableList<? extends E> moved) {
         Preconditions.checkNotNull(moved);
 
         return new DropHandler<E>(moved);
     }
 
-    private final DragOrderableList<E> moved;
+    private final DragOrderableList<? extends E> moved;
 
-    private DropHandler(final DragOrderableList<E> moved) {
+    private DropHandler(final DragOrderableList<? extends E> moved) {
         this.moved = moved;
     }
 

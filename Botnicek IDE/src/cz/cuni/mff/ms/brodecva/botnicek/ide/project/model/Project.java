@@ -488,7 +488,7 @@ public final class Project {
         exportConfigs(directory);
     }
 
-    private void exportUnit(final SystemName name, final List<Topic> content,
+    private void exportUnit(final SystemName name, final List<? extends Topic> content,
             final Renderer render, final Path directory) throws IOException {
         final String text = render(render, content);
         final String formatted = format(text);

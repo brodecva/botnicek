@@ -36,7 +36,7 @@ public interface AvailableReferencesView {
      * @param extension
      *            rozšiřující množina dostupných referencí
      */
-    void extendAvailableReferences(Set<EnterNode> extension);
+    void extendAvailableReferences(Set<? extends EnterNode> extension);
 
     /**
      * Zmenší množinu dostupných referencí.
@@ -44,7 +44,7 @@ public interface AvailableReferencesView {
      * @param removed
      *            odstraněná množina dostupných referencí
      */
-    void removeAvailableReferences(Set<EnterNode> removed);
+    void removeAvailableReferences(Set<? extends EnterNode> removed);
 
     /**
      * Aktualizuje množinu zobrazených dostupných referencí.
@@ -52,5 +52,5 @@ public interface AvailableReferencesView {
      * @param references
      *            množina dostupných referencí
      */
-    void updateAvailableReferences(Set<EnterNode> references);
+    void updateAvailableReferences(Set<? extends EnterNode> references);
 }

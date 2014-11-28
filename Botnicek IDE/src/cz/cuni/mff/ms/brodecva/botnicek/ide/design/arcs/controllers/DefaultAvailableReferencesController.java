@@ -55,7 +55,7 @@ public class DefaultAvailableReferencesController extends
          * AvailableReferencesChangedListener#referencesChanged(java.util.Set)
          */
         @Override
-        public void referencesExtended(final Set<EnterNode> references) {
+        public void referencesExtended(final Set<? extends EnterNode> references) {
             Preconditions.checkNotNull(references);
 
             callViews(new Callback<AvailableReferencesView>() {
@@ -80,7 +80,7 @@ public class DefaultAvailableReferencesController extends
          * AvailableReferencesChangedListener#referencesChanged(java.util.Set)
          */
         @Override
-        public void referencesChanged(final Set<EnterNode> references) {
+        public void referencesChanged(final Set<? extends EnterNode> references) {
             Preconditions.checkNotNull(references);
 
             callViews(new Callback<AvailableReferencesView>() {
@@ -105,7 +105,7 @@ public class DefaultAvailableReferencesController extends
          * AvailableReferencesChangedListener#referencesChanged(java.util.Set)
          */
         @Override
-        public void referencesReduced(final Set<EnterNode> references) {
+        public void referencesReduced(final Set<? extends EnterNode> references) {
             Preconditions.checkNotNull(references);
 
             callViews(new Callback<AvailableReferencesView>() {

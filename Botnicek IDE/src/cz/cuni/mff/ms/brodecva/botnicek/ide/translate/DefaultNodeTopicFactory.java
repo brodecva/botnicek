@@ -61,7 +61,7 @@ final class DefaultNodeTopicFactory implements NodeTopicFactory {
      * java.util.List)
      */
     @Override
-    public Topic produce(final Node node, final List<TemplateElement> code) {
+    public Topic produce(final Node node, final List<? extends TemplateElement> code) {
         Preconditions.checkNotNull(node);
         Preconditions.checkNotNull(code);
 

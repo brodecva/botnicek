@@ -57,6 +57,6 @@ public interface ConversationFactory {
     Conversation produce(Loader loader, Splitter splitter,
             Normalizer normalizer, Language language,
             TemplateParserFactory parserFactory,
-            Map<String, String> defaultPredicates,
-            Map<String, DisplayStrategy> predicatesSetBehavior);
+            Map<? extends String, ? extends String> defaultPredicates,
+            Map<? extends String, ? extends DisplayStrategy> predicatesSetBehavior);
 }

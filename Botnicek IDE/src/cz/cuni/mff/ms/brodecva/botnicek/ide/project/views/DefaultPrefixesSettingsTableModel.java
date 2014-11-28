@@ -81,7 +81,7 @@ final class DefaultPrefixesSettingsTableModel extends
      *             pokud zobrazení neobsahuje položky pro povinné prostory jmen
      */
     public static DefaultPrefixesSettingsTableModel create(
-            final Map<URI, String> namespacesToPrefixes) {
+            final Map<? extends URI, ? extends String> namespacesToPrefixes) {
         final ImmutableMap<URI, String> copy =
                 ImmutableMap.copyOf(namespacesToPrefixes);
 
@@ -94,7 +94,7 @@ final class DefaultPrefixesSettingsTableModel extends
     }
 
     private DefaultPrefixesSettingsTableModel(
-            final Map<URI, String> namespacesToPrefixes) {
+            final Map<? extends URI, ? extends String> namespacesToPrefixes) {
         super(namespacesToPrefixes, UiLocalizer.print("NAMESPACE_COLUMN_NAME"),
                 UiLocalizer.print("PREFIX_COLUMN_NAME"));
     }

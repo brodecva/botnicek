@@ -44,7 +44,7 @@ public final class Gender extends AbstractCompoundElement implements
      *            potomci
      * @return prvek
      */
-    public static Gender create(final List<TemplateElement> content) {
+    public static Gender create(final List<? extends TemplateElement> content) {
         return new Gender(content);
     }
 
@@ -59,7 +59,7 @@ public final class Gender extends AbstractCompoundElement implements
         return new Gender(content);
     }
 
-    private Gender(final List<TemplateElement> content) {
+    private Gender(final List<? extends TemplateElement> content) {
         super(content);
     }
 

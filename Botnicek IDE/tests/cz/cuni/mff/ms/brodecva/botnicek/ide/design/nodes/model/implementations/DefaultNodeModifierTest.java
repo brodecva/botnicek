@@ -202,7 +202,7 @@ public class DefaultNodeModifierTest {
          * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.DispatchProcessor)
          */
         @Override
-        public <T> T accept(final DispatchProcessor<T> processor) {
+        public <T> T accept(final DispatchProcessor<? extends T> processor) {
             throw new IllegalStateException();
         }
 
@@ -215,7 +215,7 @@ public class DefaultNodeModifierTest {
          * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.ProceedProcessor)
          */
         @Override
-        public <T> T accept(final ProceedProcessor<T> processor) {
+        public <T> T accept(final ProceedProcessor<? extends T> processor) {
             throw new IllegalStateException();
         }
 
@@ -228,7 +228,7 @@ public class DefaultNodeModifierTest {
          * (cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.StackProcessor)
          */
         @Override
-        public <T> T accept(final StackProcessor<T> processor) {
+        public <T> T accept(final StackProcessor<? extends T> processor) {
             throw new IllegalStateException();
         }
 

@@ -43,7 +43,7 @@ public final class LowerCase extends AbstractCompoundElement implements
      *            potomci
      * @return prvek
      */
-    public static LowerCase create(final List<TemplateElement> content) {
+    public static LowerCase create(final List<? extends TemplateElement> content) {
         return new LowerCase(content);
     }
 
@@ -58,7 +58,7 @@ public final class LowerCase extends AbstractCompoundElement implements
         return new LowerCase(content);
     }
 
-    private LowerCase(final List<TemplateElement> content) {
+    private LowerCase(final List<? extends TemplateElement> content) {
         super(content);
     }
 

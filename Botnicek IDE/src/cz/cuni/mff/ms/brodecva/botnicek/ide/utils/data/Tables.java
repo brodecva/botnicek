@@ -42,18 +42,18 @@ public class Tables {
      * @return tabulka
      */
     public static <R, C, V> Table<R, C, V> toImmutableTable(
-            final Map<R, Map<C, V>> tableMap) {
+            final Map<? extends R, ? extends Map<? extends C, ? extends V>> tableMap) {
         Preconditions.checkNotNull(tableMap);
 
         final Builder<R, C, V> builder = ImmutableTable.builder();
 
-        final Set<Entry<R, Map<C, V>>> rowEntries = tableMap.entrySet();
-        for (final Entry<R, Map<C, V>> rowEntry : rowEntries) {
+        final Set<? extends Entry<? extends R, ? extends Map<? extends C, ? extends V>>> rowEntries = tableMap.entrySet();
+        for (final Entry<? extends R, ? extends Map<? extends C, ? extends V>> rowEntry : rowEntries) {
             final R rowKey = rowEntry.getKey();
 
-            final Map<C, V> row = rowEntry.getValue();
-            final Set<Entry<C, V>> cellEntries = row.entrySet();
-            for (final Entry<C, V> cellEntry : cellEntries) {
+            final Map<? extends C, ? extends V> row = rowEntry.getValue();
+            final Set<? extends Entry<? extends C, ? extends V>> cellEntries = row.entrySet();
+            for (final Entry<? extends C, ? extends V> cellEntry : cellEntries) {
                 final C columnKey = cellEntry.getKey();
                 final V value = cellEntry.getValue();
 

@@ -60,7 +60,7 @@ public final class BlockCondition extends AbstractCompoundElement implements
      * @return prvek
      */
     public static BlockCondition create(final NormalWord name,
-            final SimplePattern value, final List<TemplateElement> content) {
+            final SimplePattern value, final List<? extends TemplateElement> content) {
         return new BlockCondition(name, value, content);
     }
 
@@ -85,7 +85,7 @@ public final class BlockCondition extends AbstractCompoundElement implements
     private final SimplePattern value;
 
     private BlockCondition(final NormalWord name, final SimplePattern value,
-            final List<TemplateElement> content) {
+            final List<? extends TemplateElement> content) {
         super(content);
 
         Preconditions.checkNotNull(name);

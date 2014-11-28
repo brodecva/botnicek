@@ -36,5 +36,5 @@ public interface RenderingVisitorFactory {
      *            nastavení prefixů pro jmenné prostory
      * @return návštěvník generující kód
      */
-    RenderingVisitor produce(Map<URI, String> namespacesToPrefixes);
+    RenderingVisitor produce(Map<? extends URI, ? extends String> namespacesToPrefixes);
 }

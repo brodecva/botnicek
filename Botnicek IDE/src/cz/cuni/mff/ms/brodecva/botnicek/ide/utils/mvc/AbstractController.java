@@ -160,7 +160,7 @@ public abstract class AbstractController<V> implements Controller<V> {
      * @param callback
      *            instrukce k provedení na pohledu
      */
-    protected final void callViews(final Callback<V> callback) {
+    protected final void callViews(final Callback<? super V> callback) {
         final Set<V> viewsSnapshot = ImmutableSet.copyOf(this.views);
 
         for (final V view : viewsSnapshot) {

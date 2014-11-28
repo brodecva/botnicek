@@ -36,6 +36,6 @@ public interface AvailableReferencesReducedListener {
      * @param removedReferences
      *            odstraněné uzly
      */
-    void referencesReduced(Set<EnterNode> removedReferences);
+    void referencesReduced(Set<? extends EnterNode> removedReferences);
 
 }

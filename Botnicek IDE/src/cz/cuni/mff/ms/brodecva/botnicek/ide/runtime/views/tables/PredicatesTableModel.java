@@ -56,7 +56,7 @@ public class PredicatesTableModel extends
      * @return model
      */
     public static PredicatesTableModel create(
-            final Map<NormalWord, String> namesToValues) {
+            final Map<? extends NormalWord, ? extends String> namesToValues) {
         return new PredicatesTableModel(namesToValues);
     }
 
@@ -65,7 +65,7 @@ public class PredicatesTableModel extends
                 .print("VALUE_COLUMN_NAME"));
     }
 
-    private PredicatesTableModel(final Map<NormalWord, String> namesToValues) {
+    private PredicatesTableModel(final Map<? extends NormalWord, ? extends String> namesToValues) {
         super(namesToValues, UiLocalizer.print("NAME_COLUMN_NAME"), UiLocalizer
                 .print("VALUE_COLUMN_NAME"));
     }

@@ -62,14 +62,14 @@ public final class DefaultDisplayStrategyFactory implements
      * @return továrna
      */
     public static DisplayStrategyFactory create(
-            final Map<String, DisplayStrategy> supported) {
+            final Map<? extends String, ? extends DisplayStrategy> supported) {
         return new DefaultDisplayStrategyFactory(HashBiMap.create(supported));
     }
 
     private final BiMap<String, DisplayStrategy> supported;
 
     private DefaultDisplayStrategyFactory(
-            final BiMap<String, DisplayStrategy> supported) {
+            final BiMap<? extends String, ? extends DisplayStrategy> supported) {
         this.supported = ImmutableBiMap.copyOf(supported);
     }
 

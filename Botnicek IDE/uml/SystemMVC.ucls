@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.7" icons="true" automaticImage="PNG" always-add-relationships="true" generalizations="true" 
+  realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
+  <interface id="1" language="java" name="cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.views.SystemView" 
+    project="Botnicek IDE" 
+    file="/Botnicek IDE/src/cz/cuni/mff/ms/brodecva/botnicek/ide/design/system/views/SystemView.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="258" y="153"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="2" language="java" name="cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.views.SystemOverview" 
+    project="Botnicek IDE" 
+    file="/Botnicek IDE/src/cz/cuni/mff/ms/brodecva/botnicek/ide/design/system/views/SystemOverview.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="258" y="383"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.views.SystemPane" 
+    project="Botnicek IDE" 
+    file="/Botnicek IDE/src/cz/cuni/mff/ms/brodecva/botnicek/ide/design/system/views/SystemPane.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="736" y="153"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" 
+    name="cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.views.SystemOverview.SystemTree" project="Botnicek IDE" 
+    file="/Botnicek IDE/src/cz/cuni/mff/ms/brodecva/botnicek/ide/design/system/views/SystemOverview.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="258" y="569"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="5" language="java" 
+    name="cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.ArcPropertiesDisplayView" 
+    project="Botnicek IDE" 
+    file="/Botnicek IDE/src/cz/cuni/mff/ms/brodecva/botnicek/ide/design/arcs/views/properties/ArcPropertiesDisplayView.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="76" width="313" x="465" y="401"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="true" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="true" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="6" language="java" name="cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.views.NetworkDisplayView" 
+    project="Botnicek IDE" 
+    file="/Botnicek IDE/src/cz/cuni/mff/ms/brodecva/botnicek/ide/design/networks/views/NetworkDisplayView.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="300" x="783" y="401"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="true" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <nesting id="7">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </nesting>  
+  <realization id="8">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </realization>  
+  <association id="9">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="10" name="tree"/>      
+      <multiplicity id="11" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="12">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="6"/>  
+  </realization>  
+  <realization id="13">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="1"/>  
+  </realization>  
+  <realization id="14">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="5"/>  
+  </realization>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

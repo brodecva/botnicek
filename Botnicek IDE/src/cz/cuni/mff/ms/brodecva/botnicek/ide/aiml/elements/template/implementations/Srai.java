@@ -42,7 +42,7 @@ public final class Srai extends AbstractCompoundElement implements
      *            potomci
      * @return prvek
      */
-    public static Srai create(final List<TemplateElement> content) {
+    public static Srai create(final List<? extends TemplateElement> content) {
         return new Srai(content);
     }
 
@@ -57,7 +57,7 @@ public final class Srai extends AbstractCompoundElement implements
         return new Srai(content);
     }
 
-    private Srai(final List<TemplateElement> content) {
+    private Srai(final List<? extends TemplateElement> content) {
         super(content);
     }
 

@@ -115,7 +115,7 @@ public class DefaultArcModifierTest {
          * Processor)
          */
         @Override
-        public <T> T accept(final Processor<T> processor) {
+        public <T> T accept(final Processor<? extends T> processor) {
             throw new IllegalStateException();
         }
 

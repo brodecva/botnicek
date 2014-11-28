@@ -43,7 +43,7 @@ public final class DefaultListItem extends AbstractListItem {
      *            potomci prvku
      * @return vytvoří výchozího položku
      */
-    public static DefaultListItem create(final List<TemplateElement> content) {
+    public static DefaultListItem create(final List<? extends TemplateElement> content) {
         return new DefaultListItem(content);
     }
 
@@ -58,7 +58,7 @@ public final class DefaultListItem extends AbstractListItem {
         return new DefaultListItem(content);
     }
 
-    private DefaultListItem(final List<TemplateElement> content) {
+    private DefaultListItem(final List<? extends TemplateElement> content) {
         super(content);
     }
 

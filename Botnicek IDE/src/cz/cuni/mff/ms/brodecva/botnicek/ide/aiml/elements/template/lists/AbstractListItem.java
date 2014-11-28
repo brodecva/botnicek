@@ -39,7 +39,7 @@ public abstract class AbstractListItem extends AbstractCompoundElement
      * @param content
      *            prvky šablony obsažené v položce
      */
-    protected AbstractListItem(final List<TemplateElement> content) {
+    protected AbstractListItem(final List<? extends TemplateElement> content) {
         super(content);
     }
 

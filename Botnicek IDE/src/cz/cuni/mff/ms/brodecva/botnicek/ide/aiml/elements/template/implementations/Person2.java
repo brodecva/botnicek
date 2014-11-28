@@ -44,7 +44,7 @@ public final class Person2 extends AbstractCompoundElement implements
      *            potomci
      * @return prvek
      */
-    public static Person2 create(final List<TemplateElement> content) {
+    public static Person2 create(final List<? extends TemplateElement> content) {
         return new Person2(content);
     }
 
@@ -59,7 +59,7 @@ public final class Person2 extends AbstractCompoundElement implements
         return new Person2(content);
     }
 
-    private Person2(final List<TemplateElement> content) {
+    private Person2(final List<? extends TemplateElement> content) {
         super(content);
     }
 

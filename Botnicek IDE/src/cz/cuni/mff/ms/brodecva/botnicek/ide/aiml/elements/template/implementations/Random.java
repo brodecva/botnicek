@@ -49,18 +49,18 @@ public class Random extends AbstractProperElement implements CompoundElement {
      *            možnosti
      * @return prvek
      */
-    public static Random create(final List<List<TemplateElement>> choices) {
+    public static Random create(final List<? extends List<? extends TemplateElement>> choices) {
         return new Random(choices);
     }
 
     private final List<List<TemplateElement>> choices;
 
-    private Random(final List<List<TemplateElement>> choices) {
+    private Random(final List<? extends List<? extends TemplateElement>> choices) {
         Preconditions.checkNotNull(choices);
 
         final Builder<List<TemplateElement>> listBuilder =
                 ImmutableList.builder();
-        for (final List<TemplateElement> choice : choices) {
+        for (final List<? extends TemplateElement> choice : choices) {
             Preconditions.checkNotNull(choice);
 
             listBuilder.add(ImmutableList.copyOf(choice));

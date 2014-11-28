@@ -47,14 +47,14 @@ public class AvailableReferencesChangedEvent extends
      * @return událost
      */
     public static AvailableReferencesChangedEvent create(final System system,
-            final Set<EnterNode> references) {
+            final Set<? extends EnterNode> references) {
         return new AvailableReferencesChangedEvent(system, references);
     }
 
     private final Set<EnterNode> references;
 
     private AvailableReferencesChangedEvent(final System system,
-            final Set<EnterNode> references) {
+            final Set<? extends EnterNode> references) {
         super(system);
 
         Preconditions.checkNotNull(references);

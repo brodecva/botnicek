@@ -44,7 +44,7 @@ public final class DefaultRenderer implements Renderer {
      * @return generátor
      */
     public static Renderer create(final RenderingVisitorFactory visitorFactory,
-            final Map<URI, String> namespacesToPrefixes) {
+            final Map<? extends URI, ? extends String> namespacesToPrefixes) {
         return new DefaultRenderer(visitorFactory, namespacesToPrefixes);
     }
 
@@ -53,7 +53,7 @@ public final class DefaultRenderer implements Renderer {
     private final Map<URI, String> namespacesToPrefixes;
 
     private DefaultRenderer(final RenderingVisitorFactory visitorFactory,
-            final Map<URI, String> namespacesToPrefixes) {
+            final Map<? extends URI, ? extends String> namespacesToPrefixes) {
         Preconditions.checkNotNull(visitorFactory);
         Preconditions.checkNotNull(namespacesToPrefixes);
 

@@ -96,7 +96,7 @@ public interface NamingAuthority {
      *             pokud se původní nevyskytuje nebo je některý z názvu
      *             nepoužitelný v původní podobě
      */
-    void tryReplace(Map<String, String> oldToNew);
+    void tryReplace(Map<? extends String, ? extends String> oldToNew);
 
     /**
      * Pokusí se užít sérii názvů, v případě selhání nedojde k aktualizaci

@@ -80,8 +80,8 @@ public final class Stack {
      * @return strom prvků šablony, který provede nastavení zásobníku
      */
     public static TemplateElement concatenate(
-            final List<TemplateElement> first,
-            final List<TemplateElement> second) {
+            final List<? extends TemplateElement> first,
+            final List<? extends TemplateElement> second) {
         final Builder<TemplateElement> newStackBuilder =
                 ImmutableList.builder();
         if (!first.isEmpty()) {
@@ -107,8 +107,8 @@ public final class Stack {
      *            kategorie tématu
      * @return téma stavu
      */
-    public static Topic createState(final List<NormalWord> composedName,
-            final List<Category> categories) {
+    public static Topic createState(final List<? extends NormalWord> composedName,
+            final List<? extends Category> categories) {
         Preconditions.checkNotNull(composedName);
         Preconditions.checkNotNull(categories);
 
@@ -147,7 +147,7 @@ public final class Stack {
      *            normální slova
      * @return řetězec z normálních slov pospojovaných oddělovačem slov
      */
-    public static String joinWithSpaces(final List<NormalWord> words) {
+    public static String joinWithSpaces(final List<? extends NormalWord> words) {
         Preconditions.checkNotNull(words);
 
         final List<NormalWord> wordsCopy = ImmutableList.copyOf(words);
@@ -180,7 +180,7 @@ public final class Stack {
      * @return strom prvků šablony, který provede přidání výsledku na zásobník
      */
     public static TemplateElement
-            popAndPush(final List<TemplateElement> content) {
+            popAndPush(final List<? extends TemplateElement> content) {
         Preconditions.checkNotNull(content);
 
         return concatenate(ImmutableList.copyOf(content),
@@ -209,7 +209,7 @@ public final class Stack {
      *            normální slova
      * @return strom prvků šablony, který provede přidání slov na zásobník
      */
-    public static TemplateElement popAndPushWords(final List<NormalWord> words) {
+    public static TemplateElement popAndPushWords(final List<? extends NormalWord> words) {
         Preconditions.checkNotNull(words);
 
         final ImmutableList<NormalWord> wordsCopy = ImmutableList.copyOf(words);
@@ -244,7 +244,7 @@ public final class Stack {
      *            zbytek prvků, jejichž vyhodnocení bude nastaveno do zásobníku
      * @return strom prvků šablony, který provede nastavení zásobníku
      */
-    public static TemplateElement prepend(final List<NormalWord> words,
+    public static TemplateElement prepend(final List<? extends NormalWord> words,
             final List<TemplateElement> rest) {
         Preconditions.checkNotNull(words);
         Preconditions.checkNotNull(rest);
@@ -268,7 +268,7 @@ public final class Stack {
      *            prvky k vytvoření obsahu zásobníku
      * @return strom prvků, který nastaví zásobník
      */
-    public static TemplateElement set(final List<TemplateElement> content) {
+    public static TemplateElement set(final List<? extends TemplateElement> content) {
         Preconditions.checkNotNull(content);
 
         final Set update =

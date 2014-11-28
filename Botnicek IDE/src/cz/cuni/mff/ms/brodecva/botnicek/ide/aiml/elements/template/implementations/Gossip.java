@@ -46,7 +46,7 @@ public final class Gossip extends AbstractCompoundElement implements
      *            potomci
      * @return prvek
      */
-    public static Gossip create(final List<TemplateElement> content) {
+    public static Gossip create(final List<? extends TemplateElement> content) {
         return new Gossip(content);
     }
 
@@ -63,7 +63,7 @@ public final class Gossip extends AbstractCompoundElement implements
         return new Gossip(content);
     }
 
-    private Gossip(final List<TemplateElement> content) {
+    private Gossip(final List<? extends TemplateElement> content) {
         super(content);
     }
 

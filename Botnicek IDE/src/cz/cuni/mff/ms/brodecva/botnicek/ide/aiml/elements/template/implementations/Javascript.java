@@ -47,7 +47,7 @@ public final class Javascript extends AbstractCompoundElement implements
      *            potomci
      * @return prvek
      */
-    public static Javascript create(final List<TemplateElement> content) {
+    public static Javascript create(final List<? extends TemplateElement> content) {
         return new Javascript(content);
     }
 
@@ -64,7 +64,7 @@ public final class Javascript extends AbstractCompoundElement implements
         return new Javascript(content);
     }
 
-    private Javascript(final List<TemplateElement> content) {
+    private Javascript(final List<? extends TemplateElement> content) {
         super(content);
     }
 

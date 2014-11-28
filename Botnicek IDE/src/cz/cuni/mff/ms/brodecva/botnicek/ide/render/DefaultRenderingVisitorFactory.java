@@ -57,7 +57,7 @@ public final class DefaultRenderingVisitorFactory implements
      */
     @Override
     public DefaultRenderingVisitor produce(
-            final Map<URI, String> namespacesToPrefixes) {
+            final Map<? extends URI, ? extends String> namespacesToPrefixes) {
         return DefaultRenderingVisitor.create(namespacesToPrefixes);
     }
 

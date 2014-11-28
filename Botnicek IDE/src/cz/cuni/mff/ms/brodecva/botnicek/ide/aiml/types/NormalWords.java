@@ -179,7 +179,7 @@ public final class NormalWords {
      *            normální slova
      * @return spojené normální slovo
      */
-    public static NormalWord join(final List<NormalWord> names) {
+    public static NormalWord join(final List<? extends NormalWord> names) {
         Preconditions.checkNotNull(names);
         Preconditions.checkArgument(!names.isEmpty());
 
@@ -232,7 +232,7 @@ public final class NormalWords {
      *            zdroj
      * @return výstup
      */
-    public static <V> Map<NormalWord, V> toTyped(final Map<String, V> from) {
+    public static <V> Map<NormalWord, V> toTyped(final Map<? extends String, ? extends V> from) {
         Preconditions.checkNotNull(from);
 
         return transformKeys(from, new Function<String, NormalWord>() {
@@ -253,7 +253,7 @@ public final class NormalWords {
      *            zdroj
      * @return výstup
      */
-    public static <V> Map<String, V> toUntyped(final Map<NormalWord, V> from) {
+    public static <V> Map<String, V> toUntyped(final Map<? extends NormalWord, ? extends V> from) {
         Preconditions.checkNotNull(from);
 
         return transformKeys(from, new Function<NormalWord, String>() {
@@ -268,14 +268,14 @@ public final class NormalWords {
         });
     }
 
-    private static <K, V, L> Map<L, V> transformKeys(final Map<K, V> from,
+    private static <K, V, L> Map<L, V> transformKeys(final Map<? extends K, ? extends V> from,
             final Function<K, L> transformation) {
         Preconditions.checkNotNull(from);
         Preconditions.checkNotNull(transformation);
 
         final ImmutableMap.Builder<L, V> builder = ImmutableMap.builder();
-        final Set<Entry<K, V>> fromEntries = from.entrySet();
-        for (final Entry<K, V> entry : fromEntries) {
+        final Set<? extends Entry<? extends K, ? extends V>> fromEntries = from.entrySet();
+        for (final Entry<? extends K, ? extends V> entry : fromEntries) {
             final K key = entry.getKey();
             final V value = entry.getValue();
 

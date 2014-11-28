@@ -44,7 +44,7 @@ public final class Sentence extends AbstractCompoundElement implements
      *            potomci
      * @return prvek
      */
-    public static Sentence create(final List<TemplateElement> content) {
+    public static Sentence create(final List<? extends TemplateElement> content) {
         return new Sentence(content);
     }
 
@@ -59,7 +59,7 @@ public final class Sentence extends AbstractCompoundElement implements
         return new Sentence(content);
     }
 
-    private Sentence(final List<TemplateElement> content) {
+    private Sentence(final List<? extends TemplateElement> content) {
         super(content);
     }
 

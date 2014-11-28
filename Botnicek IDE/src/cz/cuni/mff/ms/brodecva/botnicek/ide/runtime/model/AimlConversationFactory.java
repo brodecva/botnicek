@@ -68,8 +68,8 @@ public final class AimlConversationFactory implements ConversationFactory {
     public Conversation produce(final Loader loader, final Splitter splitter,
             final Normalizer normalizer, final Language language,
             final TemplateParserFactory parserFactory,
-            final Map<String, String> defaultPredicates,
-            final Map<String, DisplayStrategy> predicatesSetBehavior) {
+            final Map<? extends String, ? extends String> defaultPredicates,
+            final Map<? extends String, ? extends DisplayStrategy> predicatesSetBehavior) {
         Preconditions.checkNotNull(loader);
         Preconditions.checkNotNull(splitter);
         Preconditions.checkNotNull(normalizer);

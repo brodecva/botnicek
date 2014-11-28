@@ -32,5 +32,5 @@ public interface Processible {
      *            procesor
      * @return návratová hodnota zpracování
      */
-    <T> T accept(Processor<T> processor);
+    <T> T accept(Processor<? extends T> processor);
 }

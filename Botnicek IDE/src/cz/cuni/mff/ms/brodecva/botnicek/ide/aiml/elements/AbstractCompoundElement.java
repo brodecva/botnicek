@@ -48,7 +48,7 @@ public abstract class AbstractCompoundElement extends AbstractProperElement
      * @param children
      *            potomci
      */
-    protected AbstractCompoundElement(final List<TemplateElement> children) {
+    protected AbstractCompoundElement(final List<? extends TemplateElement> children) {
         Preconditions.checkNotNull(children);
 
         this.content = ImmutableList.copyOf(children);

@@ -53,7 +53,7 @@ final class DragListener<E> implements DragSourceListener, DragGestureListener {
      *            naslouchaný seznamu
      * @return posluchač tahu prvku seznamu
      */
-    public static <E> DragListener<E> create(final DragOrderableList<E> list) {
+    public static <E> DragListener<E> create(final DragOrderableList<? extends E> list) {
         Preconditions.checkNotNull(list);
 
         final DragSource dragSource = new DragSource();
@@ -66,11 +66,11 @@ final class DragListener<E> implements DragSourceListener, DragGestureListener {
         return newInstance;
     }
 
-    private final DragOrderableList<E> list;
+    private final DragOrderableList<? extends E> list;
 
     private final DragSource dragSource;
 
-    private DragListener(final DragOrderableList<E> list,
+    private DragListener(final DragOrderableList<? extends E> list,
             final DragSource dragSource) {
         this.list = list;
         this.dragSource = dragSource;
@@ -84,7 +84,7 @@ final class DragListener<E> implements DragSourceListener, DragGestureListener {
      * )
      */
     @Override
-    public void dragDropEnd(final DragSourceDropEvent dsde) {
+    public void dragDropEnd(final DragSourceDropEvent e) {
     }
 
     /*
@@ -95,7 +95,7 @@ final class DragListener<E> implements DragSourceListener, DragGestureListener {
      * )
      */
     @Override
-    public void dragEnter(final DragSourceDragEvent dsde) {
+    public void dragEnter(final DragSourceDragEvent e) {
     }
 
     /*
@@ -105,7 +105,7 @@ final class DragListener<E> implements DragSourceListener, DragGestureListener {
      * java.awt.dnd.DragSourceListener#dragExit(java.awt.dnd.DragSourceEvent)
      */
     @Override
-    public void dragExit(final DragSourceEvent dse) {
+    public void dragExit(final DragSourceEvent e) {
     }
 
     /*
@@ -135,7 +135,7 @@ final class DragListener<E> implements DragSourceListener, DragGestureListener {
      * )
      */
     @Override
-    public void dragOver(final DragSourceDragEvent dsde) {
+    public void dragOver(final DragSourceDragEvent e) {
     }
 
     /*
@@ -145,6 +145,6 @@ final class DragListener<E> implements DragSourceListener, DragGestureListener {
      * DragSourceDragEvent)
      */
     @Override
-    public void dropActionChanged(final DragSourceDragEvent dsde) {
+    public void dropActionChanged(final DragSourceDragEvent e) {
     }
 }

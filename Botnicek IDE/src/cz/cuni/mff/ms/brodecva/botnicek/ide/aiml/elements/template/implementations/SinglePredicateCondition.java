@@ -63,7 +63,7 @@ public final class SinglePredicateCondition extends AbstractProperElement
      */
     public static SinglePredicateCondition create(final NormalWord name,
             final DefaultListItem defaultItem,
-            final List<ValueOnlyListItem> items) {
+            final List<? extends ValueOnlyListItem> items) {
         Preconditions.checkNotNull(defaultItem);
 
         return new SinglePredicateCondition(name, Optional.of(defaultItem),
@@ -100,7 +100,7 @@ public final class SinglePredicateCondition extends AbstractProperElement
      * @return prvek
      */
     public static SinglePredicateCondition create(final NormalWord name,
-            final List<ValueOnlyListItem> items) {
+            final List<? extends ValueOnlyListItem> items) {
         return new SinglePredicateCondition(name,
                 Optional.<DefaultListItem> absent(), items);
     }
@@ -129,7 +129,7 @@ public final class SinglePredicateCondition extends AbstractProperElement
 
     private SinglePredicateCondition(final NormalWord name,
             final Optional<DefaultListItem> defaultItem,
-            final List<ValueOnlyListItem> items) {
+            final List<? extends ValueOnlyListItem> items) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(items);
         Preconditions.checkNotNull(defaultItem);

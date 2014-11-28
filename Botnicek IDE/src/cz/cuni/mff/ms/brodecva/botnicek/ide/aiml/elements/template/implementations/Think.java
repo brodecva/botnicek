@@ -43,7 +43,7 @@ public final class Think extends AbstractCompoundElement implements
      *            potomci
      * @return prvek
      */
-    public static Think create(final List<TemplateElement> content) {
+    public static Think create(final List<? extends TemplateElement> content) {
         return new Think(content);
     }
 
@@ -58,7 +58,7 @@ public final class Think extends AbstractCompoundElement implements
         return new Think(content);
     }
 
-    private Think(final List<TemplateElement> content) {
+    private Think(final List<? extends TemplateElement> content) {
         super(content);
     }
 

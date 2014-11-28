@@ -81,10 +81,10 @@ public final class DefaultTranslatingObserver extends AbstractDfsObserver
      */
     public static DefaultTranslatingObserver create(
             final NodeTopicFactory nodeTopicFactory,
-            final StackProcessor<List<TemplateElement>> stackProcessor,
-            final DispatchProcessor<List<TemplateElement>> dispatchProcessor,
-            final ProceedProcessor<List<TemplateElement>> proceedProcessor,
-            final TestProcessor<List<Topic>> testProcessor) {
+            final StackProcessor<? extends List<? extends TemplateElement>> stackProcessor,
+            final DispatchProcessor<? extends List<? extends TemplateElement>> dispatchProcessor,
+            final ProceedProcessor<? extends List<? extends TemplateElement>> proceedProcessor,
+            final TestProcessor<? extends List<? extends Topic>> testProcessor) {
         Preconditions.checkNotNull(stackProcessor);
         Preconditions.checkNotNull(dispatchProcessor);
         Preconditions.checkNotNull(proceedProcessor);
@@ -138,12 +138,12 @@ public final class DefaultTranslatingObserver extends AbstractDfsObserver
     }
 
     private final NodeTopicFactory nodeTopicFactory;
-    private final StackProcessor<List<TemplateElement>> stackProcessor;
-    private final DispatchProcessor<List<TemplateElement>> dispatchProcessor;
+    private final StackProcessor<? extends List<? extends TemplateElement>> stackProcessor;
+    private final DispatchProcessor<? extends List<? extends TemplateElement>> dispatchProcessor;
 
-    private final ProceedProcessor<List<TemplateElement>> proceedProcessor;
+    private final ProceedProcessor<? extends List<? extends TemplateElement>> proceedProcessor;
 
-    private final TestProcessor<List<Topic>> testProcessor;
+    private final TestProcessor<? extends List<? extends Topic>> testProcessor;
 
     private final ListMultimap<Network, Topic> units = ArrayListMultimap
             .create();
@@ -151,10 +151,10 @@ public final class DefaultTranslatingObserver extends AbstractDfsObserver
     private Optional<Network> current = Optional.absent();
 
     private DefaultTranslatingObserver(final NodeTopicFactory nodeTopicFactory,
-            final StackProcessor<List<TemplateElement>> stackProcessor,
-            final DispatchProcessor<List<TemplateElement>> dispatchProcessor,
-            final ProceedProcessor<List<TemplateElement>> proceedProcessor,
-            final TestProcessor<List<Topic>> testProcessor) {
+            final StackProcessor<? extends List<? extends TemplateElement>> stackProcessor,
+            final DispatchProcessor<? extends List<? extends TemplateElement>> dispatchProcessor,
+            final ProceedProcessor<? extends List<? extends TemplateElement>> proceedProcessor,
+            final TestProcessor<? extends List<? extends Topic>> testProcessor) {
         this.nodeTopicFactory = nodeTopicFactory;
         this.stackProcessor = stackProcessor;
         this.dispatchProcessor = dispatchProcessor;
@@ -168,7 +168,7 @@ public final class DefaultTranslatingObserver extends AbstractDfsObserver
      * @param added
      *            nové témata
      */
-    private void add(final List<Topic> added) {
+    private void add(final List<? extends Topic> added) {
         assert this.current.isPresent();
 
         final Network currentRaw = this.current.get();
@@ -226,11 +226,11 @@ public final class DefaultTranslatingObserver extends AbstractDfsObserver
         Preconditions.checkNotNull(node);
         Preconditions.checkState(this.current.isPresent());
 
-        final List<TemplateElement> stackProcessorResult =
+        final List<? extends TemplateElement> stackProcessorResult =
                 node.accept(this.stackProcessor);
-        final List<TemplateElement> dispatchProcessorResult =
+        final List<? extends TemplateElement> dispatchProcessorResult =
                 node.accept(this.dispatchProcessor);
-        final List<TemplateElement> proceedProcessorResult =
+        final List<? extends TemplateElement> proceedProcessorResult =
                 node.accept(this.proceedProcessor);
 
         final ImmutableList.Builder<TemplateElement> codeBuilder =
@@ -259,7 +259,7 @@ public final class DefaultTranslatingObserver extends AbstractDfsObserver
         Preconditions.checkNotNull(arc);
         Preconditions.checkState(this.current.isPresent());
 
-        final List<Topic> testProcessorResult = arc.accept(this.testProcessor);
+        final List<? extends Topic> testProcessorResult = arc.accept(this.testProcessor);
 
         add(testProcessorResult);
     }
@@ -294,8 +294,8 @@ public final class DefaultTranslatingObserver extends AbstractDfsObserver
     }
 
     private TemplateElement pushToStack(
-            final List<TemplateElement> stackProcessorResult,
-            final List<TemplateElement> dispatchProcessorResult) {
+            final List<? extends TemplateElement> stackProcessorResult,
+            final List<? extends TemplateElement> dispatchProcessorResult) {
         final Iterable<TemplateElement> pushed;
         if (!dispatchProcessorResult.isEmpty()
                 && !stackProcessorResult.isEmpty()) {

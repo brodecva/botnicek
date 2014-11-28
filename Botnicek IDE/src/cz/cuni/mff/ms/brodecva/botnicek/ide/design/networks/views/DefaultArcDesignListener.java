@@ -74,7 +74,7 @@ public final class DefaultArcDesignListener extends MouseAdapter implements
      * @return posluchač
      */
     public static DefaultArcDesignListener create(final JPanel designPanel,
-            final Set<NodeUI> nodes, final Set<ArcUI> arcs,
+            final Set<? extends NodeUI> nodes, final Set<? extends ArcUI> arcs,
             final NetworkController controller) {
         return new DefaultArcDesignListener(designPanel, nodes, arcs,
                 controller);
@@ -115,16 +115,16 @@ public final class DefaultArcDesignListener extends MouseAdapter implements
 
     private final NetworkController controller;
     private final JPanel designPanel;
-    private final Set<NodeUI> nodes;
+    private final Set<? extends NodeUI> nodes;
 
-    private final Set<ArcUI> arcs;
+    private final Set<? extends ArcUI> arcs;
     private volatile boolean connecting = false;
     private Optional<Segment> segment = Optional.<Segment> absent();
 
     private Optional<NodeUI> from = Optional.<NodeUI> absent();
 
     private DefaultArcDesignListener(final JPanel designPanel,
-            final Set<NodeUI> nodes, final Set<ArcUI> arcs,
+            final Set<? extends NodeUI> nodes, final Set<? extends ArcUI> arcs,
             final NetworkController controller) {
         Preconditions.checkNotNull(designPanel);
         Preconditions.checkNotNull(nodes);
