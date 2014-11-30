@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -74,7 +74,7 @@ public class DefaultRealignmentProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.DefaultRealignmentProcessor#create(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.NodeModifier)}
      * .
      */
@@ -90,7 +90,7 @@ public class DefaultRealignmentProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.DefaultRealignmentProcessor#realign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
      * .
      */
@@ -114,7 +114,7 @@ public class DefaultRealignmentProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.DefaultRealignmentProcessor#realign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
      * .
      */
@@ -138,7 +138,7 @@ public class DefaultRealignmentProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.DefaultRealignmentProcessor#realign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
      * .
      */
@@ -163,7 +163,7 @@ public class DefaultRealignmentProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.implementations.DefaultRealignmentProcessor#realign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
      * .
      */

@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -68,7 +68,7 @@ public class DefaultSimplePatternCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
      * .
      */
@@ -82,7 +82,7 @@ public class DefaultSimplePatternCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
      * .
      */
@@ -92,7 +92,7 @@ public class DefaultSimplePatternCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
      * .
      */
@@ -102,7 +102,7 @@ public class DefaultSimplePatternCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
      * .
      */
@@ -122,7 +122,7 @@ public class DefaultSimplePatternCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
      * .
      */
@@ -132,7 +132,7 @@ public class DefaultSimplePatternCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
      * .
      */
@@ -142,7 +142,7 @@ public class DefaultSimplePatternCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
      * .
      */
@@ -152,7 +152,7 @@ public class DefaultSimplePatternCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
      * .
      */
@@ -162,7 +162,7 @@ public class DefaultSimplePatternCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
      * .
      */
@@ -185,7 +185,7 @@ public class DefaultSimplePatternCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.simplepattern.model.checker.DefaultSimplePatternChecker#check(java.lang.String)}
      * .
      */

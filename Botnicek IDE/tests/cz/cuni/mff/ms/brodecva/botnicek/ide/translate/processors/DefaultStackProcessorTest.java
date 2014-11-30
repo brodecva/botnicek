@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -131,7 +131,7 @@ public class DefaultStackProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultStackProcessor#create(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)}
      * .
      */
@@ -144,7 +144,7 @@ public class DefaultStackProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultStackProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.EnterNode)}
      * .
      */
@@ -164,7 +164,7 @@ public class DefaultStackProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultStackProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode)}
      * .
      */
@@ -184,7 +184,7 @@ public class DefaultStackProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultStackProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InnerNode)}
      * .
      */
@@ -197,7 +197,7 @@ public class DefaultStackProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultStackProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode)}
      * .
      */

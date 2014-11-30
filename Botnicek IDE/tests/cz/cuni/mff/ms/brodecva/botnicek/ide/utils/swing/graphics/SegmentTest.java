@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -47,7 +47,7 @@ public class SegmentTest {
     private static final double DOUBLE_COMPARISONS_TOLERANCE = 0.002d;
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#contains(int, int, double)}
      * .
      */
@@ -60,7 +60,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#contains(int, int, double)}
      * .
      */
@@ -73,7 +73,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#contains(int, int, double)}
      * .
      */
@@ -86,7 +86,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#contains(int, int, double)}
      * .
      */
@@ -100,7 +100,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#contains(int, int, double)}
      * .
      */
@@ -112,7 +112,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#contains(int, int, double)}
      * .
      */
@@ -126,7 +126,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#contains(int, int, double)}
      * .
      */
@@ -140,7 +140,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#create(java.awt.Point, java.awt.Point)}
      * .
      */
@@ -150,7 +150,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#create(java.awt.Point, java.awt.Point)}
      * .
      */
@@ -162,9 +162,9 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#equals(java.lang.Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#hashCode()}
      * .
      */
@@ -175,7 +175,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#getFromX()}
      * .
      */
@@ -187,7 +187,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#getFromY()}
      * .
      */
@@ -199,7 +199,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#getLength()}
      * .
      */
@@ -212,7 +212,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#getLength()}
      * .
      */
@@ -227,7 +227,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#getLength()}
      * .
      */
@@ -242,7 +242,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#getLength()}
      * .
      */
@@ -256,7 +256,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#getToX()}
      * .
      */
@@ -268,7 +268,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#getToY()}
      * .
      */
@@ -280,7 +280,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#isPoint()}
      * .
      */
@@ -290,7 +290,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#isPoint()}
      * .
      */
@@ -300,11 +300,11 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#moveFrom(java.awt.Point)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#getToX()}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#getToY()}
      * .
      */
@@ -323,11 +323,11 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#moveFrom(java.awt.Point)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#getFromX()}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#getFromY()}
      * .
      */
@@ -346,7 +346,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#moveFrom(java.awt.Point)}
      * .
      */
@@ -362,11 +362,11 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#moveFrom(java.awt.Point)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#getFromX()}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#getFromY()}
      * .
      */
@@ -385,11 +385,11 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#moveTo(java.awt.Point)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#getToX()}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#getToY()}
      * .
      */
@@ -408,7 +408,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#moveTo(java.awt.Point)}
      * .
      */
@@ -424,7 +424,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#offset(double)}
      * .
      */
@@ -438,9 +438,9 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#offset(double)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#getLength()}
      * .
      */
@@ -455,7 +455,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#offset(double)}
      * .
      */
@@ -469,7 +469,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#offset(double)}
      * .
      */
@@ -485,7 +485,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#offset(double)}
      * .
      */
@@ -498,7 +498,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#toBounds()}
      * .
      */
@@ -514,7 +514,7 @@ public class SegmentTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.graphics.Segment#toBounds()}
      * .
      */

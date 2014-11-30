@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -38,7 +38,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System;
 public class DefaultDfsVisitorTest {
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#create(java.util.Set)}
      * .
      */
@@ -57,11 +57,11 @@ public class DefaultDfsVisitorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visitEnter(Node)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visitExit(Node)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)}
      * .
      */
@@ -96,7 +96,7 @@ public class DefaultDfsVisitorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)}
      * .
      */
@@ -126,11 +126,11 @@ public class DefaultDfsVisitorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visitEnter(Node)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visitExit(Node)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)}
      * .
      */
@@ -171,11 +171,11 @@ public class DefaultDfsVisitorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visitEnter(Node)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visitExit(Node)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)}
      * .
      */
@@ -215,9 +215,9 @@ public class DefaultDfsVisitorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visitEnter(Node)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)}
      * .
      */
@@ -254,9 +254,9 @@ public class DefaultDfsVisitorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visitEnter(Node)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)}
      * .
      */
@@ -291,7 +291,7 @@ public class DefaultDfsVisitorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visited(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
      * .
      */
@@ -306,9 +306,9 @@ public class DefaultDfsVisitorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visited(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visitEnter(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
      * .
      */
@@ -326,9 +326,9 @@ public class DefaultDfsVisitorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visitEnter(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visitExit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
      * .
      */
@@ -352,7 +352,7 @@ public class DefaultDfsVisitorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visitEnter(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
      * .
      */
@@ -373,7 +373,7 @@ public class DefaultDfsVisitorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visitEnter(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
      * .
      */
@@ -396,7 +396,7 @@ public class DefaultDfsVisitorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visitExit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
      * .
      */
@@ -417,7 +417,7 @@ public class DefaultDfsVisitorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)}
      * .
      */
@@ -438,7 +438,7 @@ public class DefaultDfsVisitorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.dfs.DefaultDfsVisitor#visit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System)}
      * .
      */

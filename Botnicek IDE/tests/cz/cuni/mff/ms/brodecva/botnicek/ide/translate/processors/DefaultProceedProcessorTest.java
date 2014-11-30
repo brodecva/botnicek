@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -90,7 +90,7 @@ public class DefaultProceedProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultProceedProcessor#create()}
      * .
      */
@@ -100,7 +100,7 @@ public class DefaultProceedProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultProceedProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.InputNode)}
      * .
      */
@@ -112,7 +112,7 @@ public class DefaultProceedProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultProceedProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ProcessingNode)}
      * .
      */

@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -107,9 +107,6 @@ public final class DragListener extends MouseAdapter implements
         return e.getYOnScreen() - this.screenY;
     }
 
-    /**
-     * @return
-     */
     private boolean hasBeenDragged() {
         return this.dragged;
     }

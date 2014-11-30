@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -63,7 +63,7 @@ public class DefaultPrettyPrinterTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.print.DefaultPrettyPrinter#create(int)}
      * .
      */
@@ -73,7 +73,7 @@ public class DefaultPrettyPrinterTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.print.DefaultPrettyPrinter#print(java.lang.String)}
      * .
      * 

@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -69,7 +69,7 @@ public class PresenceTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence#isAbsent(java.lang.Object)}
      * .
      */
@@ -79,7 +79,7 @@ public class PresenceTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence#isAbsent(java.lang.Object)}
      * .
      */
@@ -89,7 +89,7 @@ public class PresenceTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence#isPresent(java.lang.Object)}
      * .
      */
@@ -99,7 +99,7 @@ public class PresenceTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Presence#isPresent(java.lang.Object)}
      * .
      */

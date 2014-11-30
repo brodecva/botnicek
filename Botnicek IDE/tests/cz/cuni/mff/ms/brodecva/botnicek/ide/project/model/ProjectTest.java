@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -47,7 +47,7 @@ public class ProjectTest {
     private static final SystemName PROJECT_NAME = SystemName.of("My_Project");
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.Project#createAndOpen(SystemName, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Dispatcher)}
      * .
      */
@@ -76,7 +76,7 @@ public class ProjectTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.project.model.Project#open(java.io.InputStream, Dispatcher)}
      * .
      * 

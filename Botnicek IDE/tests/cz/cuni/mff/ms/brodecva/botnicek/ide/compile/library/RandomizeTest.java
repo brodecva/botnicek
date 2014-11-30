@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -83,7 +83,7 @@ public class RandomizeTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.compile.library.Randomize#getLibrary(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, int, int, cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority)}
      * .
      */
@@ -327,7 +327,7 @@ public class RandomizeTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.compile.library.Randomize#getLibrary(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, int, int, cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NamingAuthority)}
      * .
      */

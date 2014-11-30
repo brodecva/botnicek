@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -87,7 +87,7 @@ public class DefaultNodeTopicFactoryTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultNodeTopicFactory#create()}
      * .
      */
@@ -97,7 +97,7 @@ public class DefaultNodeTopicFactoryTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultNodeTopicFactory#produce(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, java.util.List)}
      * .
      */

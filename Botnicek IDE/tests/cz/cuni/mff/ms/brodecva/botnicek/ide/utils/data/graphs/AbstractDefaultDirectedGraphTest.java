@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -254,9 +254,9 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#add(Object, Object, Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#containsEdge(Object)}
      * .
      */
@@ -271,11 +271,11 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#add(Object, Object, Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#removeEdge(Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#edges()}
      * .
      */
@@ -291,11 +291,11 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#add(Object, Object, Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#removeEdge(Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#containsEdge(Object)}
      * .
      */
@@ -311,9 +311,9 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#add(Object, Object, Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#edges()}
      * .
      */
@@ -328,11 +328,11 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#add(Object, Object, Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#from(Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#to(Object)}
      * .
      */
@@ -350,11 +350,11 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#add(Object, Object, Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#ins(Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#outs(Object)}
      * .
      */
@@ -372,9 +372,9 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#add(java.lang.Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#containsVertex(Object)}
      * .
      */
@@ -388,11 +388,11 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#add(java.lang.Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#removeVertex(Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#vertices()}
      * .
      */
@@ -408,11 +408,11 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#add(java.lang.Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#removeVertex(Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#containsVertex(Object)}
      * .
      */
@@ -428,9 +428,9 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#add(java.lang.Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#vertices()}
      * .
      */
@@ -444,7 +444,7 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#create()}
      * .
      */
@@ -454,7 +454,7 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#create()}
      * .
      */
@@ -465,9 +465,9 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#extractVertex(java.lang.Object, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Function, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#containsEdge(Object)}
      * .
      */
@@ -509,9 +509,9 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#extractVertex(java.lang.Object, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Function, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#containsVertex(Object)}
      * .
      */
@@ -553,9 +553,9 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#extractVertex(java.lang.Object, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Function, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#containsEdge(Object)}
      * .
      */
@@ -591,9 +591,9 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#extractVertex(java.lang.Object, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Function, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#containsVertex(Object)}
      * .
      */
@@ -630,9 +630,9 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#extractVertex(java.lang.Object, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Function, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#containsEdge(Object)}
      * .
      */
@@ -674,9 +674,9 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#extractVertex(java.lang.Object, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Function, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#containsVertex(Object)}
      * .
      */
@@ -718,9 +718,9 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#extractVertex(java.lang.Object, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Function, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Callback)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#containsVertex(Object)}
      * .
      */
@@ -757,7 +757,7 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#removeEdge(java.lang.Object)}
      * .
      */
@@ -772,7 +772,7 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#removeVertex(java.lang.Object)}
      * .
      */
@@ -787,9 +787,9 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#removeVertex(java.lang.Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#containsEdge(Object)}
      * .
      */
@@ -805,7 +805,7 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#removeVertex(java.lang.Object)}
      * .
      */
@@ -820,7 +820,7 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#replaceEdge(java.lang.Object, java.lang.Object)}
      * .
      */
@@ -837,7 +837,7 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#replaceEdge(java.lang.Object, java.lang.Object)}
      * .
      */
@@ -854,11 +854,11 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#replaceEdge(Object, Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#from(Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#to(Object)}
      * .
      */
@@ -879,11 +879,11 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#replaceEdge(Object, Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#outs(Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#ins(Object)}
      * .
      */
@@ -904,7 +904,7 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#replaceVertex(java.lang.Object, java.lang.Object)}
      * .
      */
@@ -920,7 +920,7 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#replaceVertex(java.lang.Object, java.lang.Object)}
      * .
      */
@@ -937,11 +937,11 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#replaceVertex(Object, Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#from(Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#to(Object)}
      * .
      */
@@ -964,11 +964,11 @@ public abstract class AbstractDefaultDirectedGraphTest<V, E> {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#replaceVertex(Object, Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#outs(Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultDirectedGraph#ins(Object)}
      * .
      */

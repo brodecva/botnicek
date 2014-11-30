@@ -55,7 +55,7 @@ public final class DefautSpaceStrategyTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformOpenTag(java.lang.StringBuilder)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformOpenTag(java.lang.StringBuilder)}.
      */
     @Test
     public void testTransformOpenTagWhenNoSpacesAtEndRemainsUnchanged() {
@@ -68,7 +68,7 @@ public final class DefautSpaceStrategyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformOpenTag(java.lang.StringBuilder)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformOpenTag(java.lang.StringBuilder)}.
      */
     @Test
     public void testTransformOpenTagRemovesAllTrailingSpacesButOne() {
@@ -79,7 +79,7 @@ public final class DefautSpaceStrategyTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformCloseTag(java.lang.StringBuilder)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformCloseTag(java.lang.StringBuilder)}.
      */
     @Test
     public void testTransformCloseTagWhenNoSpacesAtEndRemainsUnchanged() {
@@ -92,7 +92,7 @@ public final class DefautSpaceStrategyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformCloseTag(java.lang.StringBuilder)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformCloseTag(java.lang.StringBuilder)}.
      */
     @Test
     public void testTransformCloseTagRemovesAllTrailingSpacesButOne() {
@@ -103,7 +103,7 @@ public final class DefautSpaceStrategyTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformChars(java.lang.StringBuilder, char[], int, int)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformChars(java.lang.StringBuilder, char[], int, int)}.
      */
     @Test
     public void testTransformCharsWhenNoTagAtEndAddsAll() {
@@ -116,7 +116,7 @@ public final class DefautSpaceStrategyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformChars(java.lang.StringBuilder, char[], int, int)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformChars(java.lang.StringBuilder, char[], int, int)}.
      */
     @Test
     public void testTransformCharsWhenNoSpacesAddsAll() {
@@ -129,7 +129,7 @@ public final class DefautSpaceStrategyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformChars(java.lang.StringBuilder, char[], int, int)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformChars(java.lang.StringBuilder, char[], int, int)}.
      */
     @Test
     public void testTransformCharsWhenTagEndsAndMultipleSpacesAddsOne() {
@@ -142,7 +142,7 @@ public final class DefautSpaceStrategyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformChars(java.lang.StringBuilder, char[], int, int)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformChars(java.lang.StringBuilder, char[], int, int)}.
      */
     @Test
     public void testTransformCharsWhenTagEndsAndOneSpaceAdds() {
@@ -155,7 +155,7 @@ public final class DefautSpaceStrategyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformChars(java.lang.StringBuilder, char[], int, int)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformChars(java.lang.StringBuilder, char[], int, int)}.
      */
     @Test
     public void testTransformCharsWhenTagEndsAndOneSpaceFollowsAddsNoSpace() {
@@ -168,7 +168,7 @@ public final class DefautSpaceStrategyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformChars(java.lang.StringBuilder, char[], int, int)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.loader.DefaultSpaceStrategy#transformChars(java.lang.StringBuilder, char[], int, int)}.
      */
     @Test
     public void testTransformCharsSubsequentCallsDoesNotAddMultipleSpaces() {

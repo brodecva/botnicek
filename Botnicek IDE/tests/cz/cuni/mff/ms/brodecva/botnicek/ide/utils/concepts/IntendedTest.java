@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -36,7 +36,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
 public class IntendedTest {
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#arrayNull()}
      * .
      */
@@ -46,7 +46,7 @@ public class IntendedTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#arrayNull()}
      * .
      */
@@ -56,7 +56,7 @@ public class IntendedTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#booleanArrayNull()}
      * .
      */
@@ -66,7 +66,7 @@ public class IntendedTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#byteArrayNull()}
      * .
      */
@@ -76,7 +76,7 @@ public class IntendedTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#doubleArrayNull()}
      * .
      */
@@ -86,7 +86,7 @@ public class IntendedTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#floatArrayNull()}
      * .
      */
@@ -96,7 +96,7 @@ public class IntendedTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#charArrayNull()}
      * .
      */
@@ -106,7 +106,7 @@ public class IntendedTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#intArrayNull()}
      * .
      */
@@ -116,7 +116,7 @@ public class IntendedTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#longArrayNull()}
      * .
      */
@@ -126,7 +126,7 @@ public class IntendedTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#nullReference()}
      * .
      */
@@ -136,7 +136,7 @@ public class IntendedTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#nullReference()}
      * .
      */
@@ -146,7 +146,7 @@ public class IntendedTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.concepts.Intended#shortArrayNull()}
      * .
      */

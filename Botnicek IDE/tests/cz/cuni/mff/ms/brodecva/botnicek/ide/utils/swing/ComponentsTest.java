@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -42,7 +42,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
 public class ComponentsTest {
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components#hasParent(java.awt.Container)}
      * .
      */
@@ -56,7 +56,7 @@ public class ComponentsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.swing.Components#hasParent(java.awt.Container)}
      * .
      */

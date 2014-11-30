@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -166,7 +166,7 @@ public abstract class AbstractDefaultLabeledDirectedGraphTest<V, L, E, M>
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph#create()}
      * .
      */
@@ -177,7 +177,7 @@ public abstract class AbstractDefaultLabeledDirectedGraphTest<V, L, E, M>
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph#getEdge(java.lang.Object)}
      * .
      */
@@ -189,9 +189,9 @@ public abstract class AbstractDefaultLabeledDirectedGraphTest<V, L, E, M>
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph#getEdge(java.lang.Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph#add(Object, Object, Object, Object)}
      * .
      */
@@ -207,7 +207,7 @@ public abstract class AbstractDefaultLabeledDirectedGraphTest<V, L, E, M>
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph#getVertex(java.lang.Object)}
      * .
      */
@@ -219,9 +219,9 @@ public abstract class AbstractDefaultLabeledDirectedGraphTest<V, L, E, M>
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph#getVertex(java.lang.Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph#add(Object, Object)}
      * .
      */
@@ -236,9 +236,9 @@ public abstract class AbstractDefaultLabeledDirectedGraphTest<V, L, E, M>
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph#removeEdge(Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph#getEdge(Object)}
      * .
      */
@@ -251,9 +251,9 @@ public abstract class AbstractDefaultLabeledDirectedGraphTest<V, L, E, M>
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph#removeVertex(Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph#getEdge(Object)}
      * .
      */
@@ -265,9 +265,9 @@ public abstract class AbstractDefaultLabeledDirectedGraphTest<V, L, E, M>
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph#removeVertex(Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph#getVertex(Object)}
      * .
      */
@@ -278,9 +278,9 @@ public abstract class AbstractDefaultLabeledDirectedGraphTest<V, L, E, M>
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph#replaceEdge(Object, Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph#getEdge(Object)}
      * .
      */
@@ -296,9 +296,9 @@ public abstract class AbstractDefaultLabeledDirectedGraphTest<V, L, E, M>
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph#replaceVertex(Object, Object)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.DefaultLabeledDirectedGraph#getVertex(Object)}
      * .
      */

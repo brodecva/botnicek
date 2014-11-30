@@ -53,7 +53,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
 public final class PropertyTest {
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#load(java.io.InputStream)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#load(java.io.InputStream)}.
      * @throws IOException chyba při čtení
      */
     @Test(expected = NullPointerException.class)
@@ -62,7 +62,7 @@ public final class PropertyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#load(java.io.InputStream)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#load(java.io.InputStream)}.
      * @throws IOException chyba při čtení
      */
     @Test
@@ -79,7 +79,7 @@ public final class PropertyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#load(java.io.InputStream)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#load(java.io.InputStream)}.
      * @throws IOException chyba při čtení
      */
     @Test
@@ -95,7 +95,7 @@ public final class PropertyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#toMap(java.util.Properties)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#toMap(java.util.Properties)}.
      */
     @Test(expected = NullPointerException.class)
     public void testToMapWhenNull() {
@@ -103,7 +103,7 @@ public final class PropertyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#toMap(java.util.Properties)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#toMap(java.util.Properties)}.
      */
     @Test
     public void testToMapWhenAllValuesValidReturnsExpected() {
@@ -125,7 +125,7 @@ public final class PropertyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#toMap(java.util.Properties)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#toMap(java.util.Properties)}.
      */
     @Test
     public void testToMapWhenSomeKeyNullReturnsExpected() {
@@ -147,7 +147,7 @@ public final class PropertyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#toMap(java.util.Properties)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#toMap(java.util.Properties)}.
      */
     @Test
     public void testToMapWhenSomeValueNullReturnsExpected() {
@@ -169,7 +169,7 @@ public final class PropertyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#toMap(java.util.Properties)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#toMap(java.util.Properties)}.
      */
     @Test(expected = ClassCastException.class)
     public void testToMapWhenSomeKeyNotString() {
@@ -186,7 +186,7 @@ public final class PropertyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#toMap(java.util.Properties)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#toMap(java.util.Properties)}.
      */
     @Test(expected = ClassCastException.class)
     public void testToMapWhenSomeValueNotString() {
@@ -203,7 +203,7 @@ public final class PropertyTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#checkEntriesNotNull(java.util.Map)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#checkEntriesNotNull(java.util.Map)}.
      */
     @Test
     public void testCheckEntriesNotNullWhenAllNotNullReturnsTrue() {
@@ -217,7 +217,7 @@ public final class PropertyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#checkEntriesNotNull(java.util.Map)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#checkEntriesNotNull(java.util.Map)}.
      */
     @Test
     public void testCheckEntriesNotNullWhenEmptyReturnsTrue() {
@@ -226,7 +226,7 @@ public final class PropertyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#checkEntriesNotNull(java.util.Map)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#checkEntriesNotNull(java.util.Map)}.
      */
     @Test(expected = NullPointerException.class)
     public void testCheckEntriesWhenNull() {
@@ -234,7 +234,7 @@ public final class PropertyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#checkEntriesNotNull(java.util.Map)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#checkEntriesNotNull(java.util.Map)}.
      */
     @Test
     public void testCheckEntriesNotNullWhenSomeKeyNullReturnsFalse() {
@@ -248,7 +248,7 @@ public final class PropertyTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#checkEntriesNotNull(java.util.Map)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Property#checkEntriesNotNull(java.util.Map)}.
      */
     @Test
     public void testCheckEntriesNotNullWhenSomeValueNullReturnsFalse() {

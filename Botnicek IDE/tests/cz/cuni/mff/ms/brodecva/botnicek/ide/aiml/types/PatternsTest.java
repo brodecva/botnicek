@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -47,7 +47,7 @@ public class PatternsTest {
     private static final String INVALID_RESULT_MESSAGE = "Invalid";
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Codes#createEmpty()}
      * .
      */
@@ -58,7 +58,7 @@ public class PatternsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Patterns#create(String)}
      * .
      */
@@ -87,7 +87,7 @@ public class PatternsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Patterns#create(String)}
      * .
      */

@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -85,7 +85,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#concatenate(java.util.List, java.util.List)}
      * .
      */
@@ -99,7 +99,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#concatenate(java.util.List, java.util.List)}
      * .
      */
@@ -118,7 +118,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#concatenate(java.util.List, java.util.List)}
      * .
      */
@@ -140,7 +140,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#concatenate(java.util.List, java.util.List)}
      * .
      */
@@ -165,7 +165,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#createState(List, java.util.List)}
      * .
      */
@@ -181,7 +181,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#createState(List, java.util.List)}
      * .
      */
@@ -205,7 +205,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#createState(List, java.util.List)}
      * .
      */
@@ -225,7 +225,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#createState(List, java.util.List)}
      * .
      */
@@ -254,7 +254,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#joinWithSpaces(java.util.List)}
      * .
      */
@@ -264,7 +264,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#joinWithSpaces(java.util.List)}
      * .
      */
@@ -275,7 +275,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#pop()}.
      */
     @Test
@@ -287,7 +287,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#prepend(java.util.List, java.util.List)}
      * .
      */
@@ -301,7 +301,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#prepend(java.util.List, java.util.List)}
      * .
      */
@@ -320,7 +320,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#prepend(java.util.List, java.util.List)}
      * .
      */
@@ -336,7 +336,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#prepend(java.util.List, java.util.List)}
      * .
      */
@@ -356,7 +356,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#popAndPush(java.util.List)}
      * .
      */
@@ -370,7 +370,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#popAndPush(java.util.List)}
      * .
      */
@@ -388,7 +388,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#popAndPushWords(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord[])}
      * .
      */
@@ -402,7 +402,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#popAndPushWords(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord[])}
      * .
      */
@@ -418,7 +418,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#set(java.util.List)}
      * .
      */
@@ -431,7 +431,7 @@ public class StackTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.Stack#set(java.util.List)}
      * .
      */

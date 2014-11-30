@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -104,7 +104,7 @@ public class DefaultEventManagerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager#addListener(java.lang.Class, java.lang.Object)}
      * .
      */
@@ -118,7 +118,7 @@ public class DefaultEventManagerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager#addListener(java.lang.Class, java.lang.Object)}
      * .
      */
@@ -132,7 +132,7 @@ public class DefaultEventManagerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager#addListener(java.lang.Class, java.lang.Object, java.lang.Object)}
      * .
      */
@@ -147,7 +147,7 @@ public class DefaultEventManagerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager#removeAllListeners(java.lang.Class, java.lang.Object)}
      * .
      */
@@ -171,7 +171,7 @@ public class DefaultEventManagerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager#removeAllListeners(java.lang.Class)}
      * .
      */
@@ -195,7 +195,7 @@ public class DefaultEventManagerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager#fire(cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event)}
      * .
      */
@@ -213,7 +213,7 @@ public class DefaultEventManagerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager#fire(cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event)}
      * .
      */
@@ -233,7 +233,7 @@ public class DefaultEventManagerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager#removeAllListeners(java.lang.Class)}
      * .
      */
@@ -253,7 +253,7 @@ public class DefaultEventManagerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager#removeAllListeners(java.lang.Class)}
      * .
      */
@@ -275,7 +275,7 @@ public class DefaultEventManagerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager#fire(cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event)}
      * .
      */
@@ -294,7 +294,7 @@ public class DefaultEventManagerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager#fire(cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event)}
      * .
      */
@@ -314,7 +314,7 @@ public class DefaultEventManagerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager#removeAllListeners(java.lang.Class, java.lang.Object)}
      * .
      */
@@ -336,7 +336,7 @@ public class DefaultEventManagerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager#removeAllListeners(java.lang.Class, java.lang.Object)}
      * .
      */
@@ -361,7 +361,7 @@ public class DefaultEventManagerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager#fire(cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event)}
      * .
      */
@@ -383,7 +383,7 @@ public class DefaultEventManagerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager#fire(cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.Event)}
      * .
      */
@@ -405,7 +405,7 @@ public class DefaultEventManagerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.events.DefaultEventManager#create()}
      * .
      */

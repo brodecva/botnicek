@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -40,7 +40,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.library.utils.test.UnitTest;
 public class ComparisonsTest {
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}
      * .
      */
@@ -51,7 +51,7 @@ public class ComparisonsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}
      * .
      */
@@ -62,7 +62,7 @@ public class ComparisonsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}
      * .
      */
@@ -72,7 +72,7 @@ public class ComparisonsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}
      * .
      */
@@ -82,7 +82,7 @@ public class ComparisonsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}
      * .
      */
@@ -92,7 +92,7 @@ public class ComparisonsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}
      * .
      */
@@ -102,7 +102,7 @@ public class ComparisonsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.Comparisons#allDifferent(Object...)}
      * .
      */

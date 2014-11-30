@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -540,9 +540,9 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#accept(cz.cuni.mff.ms.brodecva.botnicek.ide.design.api.Visitor)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, SystemName)}
      * .
      */
@@ -567,7 +567,7 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, SystemName)}
      * .
      */
@@ -594,7 +594,7 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, SystemName)}
      * .
      */
@@ -613,7 +613,7 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, SystemName)}
      * .
      */
@@ -633,7 +633,7 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, SystemName)}
      * .
      */
@@ -650,9 +650,9 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#getNetworks()}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, SystemName)}
      * .
      */
@@ -670,9 +670,9 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#getNodes(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNode(Network, int, int)}
      * .
      */
@@ -708,9 +708,9 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#getNodes(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#removeNode(Node)}
      * .
      */
@@ -770,7 +770,7 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#changeNode(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)}
      * .
      */
@@ -806,7 +806,7 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#changeNode(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, int, int)}
      * .
      */
@@ -838,7 +838,7 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#changeNode(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, java.lang.Class)}
      * .
      */
@@ -873,7 +873,7 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#changeNode(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, java.lang.Class)}
      * .
      */
@@ -897,9 +897,9 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#removeArc(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#removeNode(Node)}
      * .
      */
@@ -1174,11 +1174,11 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#removeNetwork(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#getNetworks()}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#addNetwork(Network, SystemName)}
      * .
      */
@@ -1222,7 +1222,7 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#removeNetwork(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)}
      * a další.
      */
@@ -1482,7 +1482,7 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#removeNetwork(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)}
      * a další.
      */
@@ -1668,7 +1668,7 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#removeNetwork(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)}
      * .
      */
@@ -1684,7 +1684,7 @@ public class DefaultSystemTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystem#removeNode(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
      * .
      */

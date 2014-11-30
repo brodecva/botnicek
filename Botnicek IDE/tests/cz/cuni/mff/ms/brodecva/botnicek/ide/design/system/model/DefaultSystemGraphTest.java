@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -128,7 +128,7 @@ public class DefaultSystemGraphTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraph#addAndRealign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RealignmentProcessor, java.util.Set)}
      * .
      */
@@ -211,7 +211,7 @@ public class DefaultSystemGraphTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraph#addAndRealign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RealignmentProcessor, java.util.Set)}
      * .
      */
@@ -295,7 +295,7 @@ public class DefaultSystemGraphTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraph#adjoins(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)}
      * .
      */
@@ -327,7 +327,7 @@ public class DefaultSystemGraphTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraph#adjoins(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)}
      * .
      */
@@ -359,7 +359,7 @@ public class DefaultSystemGraphTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraph#adjoins(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)}
      * .
      */
@@ -391,7 +391,7 @@ public class DefaultSystemGraphTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraph#adjoins(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)}
      * .
      */
@@ -423,7 +423,7 @@ public class DefaultSystemGraphTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraph#attached(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)}
      * .
      */
@@ -448,7 +448,7 @@ public class DefaultSystemGraphTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraph#attached(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)}
      * .
      */
@@ -473,7 +473,7 @@ public class DefaultSystemGraphTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraph#connections(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)}
      * .
      */
@@ -494,7 +494,7 @@ public class DefaultSystemGraphTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraph#connections(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node, cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.Direction)}
      * .
      */
@@ -515,7 +515,7 @@ public class DefaultSystemGraphTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraph#of(cz.cuni.mff.ms.brodecva.botnicek.ide.utils.data.graphs.LabeledDirectedGraph, cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.updates.UpdateBuilderFactory)}
      * .
      */
@@ -526,7 +526,7 @@ public class DefaultSystemGraphTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraph#purge(java.util.Set)}
      * .
      */
@@ -551,7 +551,7 @@ public class DefaultSystemGraphTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraph#removeAndRealign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RealignmentProcessor, java.util.Map, java.util.Set)}
      * .
      */
@@ -625,7 +625,7 @@ public class DefaultSystemGraphTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraph#removeAndRealign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RealignmentProcessor, java.util.Map, java.util.Set)}
      * .
      */
@@ -702,7 +702,7 @@ public class DefaultSystemGraphTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraph#removeAndRealign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RealignmentProcessor, java.util.Map, java.util.Set)}
      * .
      */
@@ -782,7 +782,7 @@ public class DefaultSystemGraphTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraph#removeAndRealign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RealignmentProcessor, java.util.Map, java.util.Set)}
      * .
      */
@@ -864,7 +864,7 @@ public class DefaultSystemGraphTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.DefaultSystemGraph#removeAndRealign(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc, cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RealignmentProcessor, java.util.Map, java.util.Set)}
      * .
      */

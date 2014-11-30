@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -99,7 +99,7 @@ public class DefaultNormalWordCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
      * .
      */
@@ -109,7 +109,7 @@ public class DefaultNormalWordCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
      * .
      */
@@ -119,7 +119,7 @@ public class DefaultNormalWordCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
      * .
      */
@@ -137,7 +137,7 @@ public class DefaultNormalWordCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
      * .
      */
@@ -147,7 +147,7 @@ public class DefaultNormalWordCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
      * .
      */
@@ -157,7 +157,7 @@ public class DefaultNormalWordCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
      * .
      */
@@ -167,7 +167,7 @@ public class DefaultNormalWordCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
      * .
      */
@@ -177,7 +177,7 @@ public class DefaultNormalWordCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
      * .
      */
@@ -191,7 +191,7 @@ public class DefaultNormalWordCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
      * .
      */
@@ -201,7 +201,7 @@ public class DefaultNormalWordCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
      * .
      */
@@ -216,7 +216,7 @@ public class DefaultNormalWordCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
      * .
      */
@@ -227,7 +227,7 @@ public class DefaultNormalWordCheckerTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.words.model.checker.DefaultNormalWordChecker#check(java.lang.String)}
      * .
      */

@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -99,7 +99,7 @@ public class NormalWordsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#from(String)}
      * .
      */
@@ -121,7 +121,7 @@ public class NormalWordsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#from(String)}
      * .
      */
@@ -145,7 +145,7 @@ public class NormalWordsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#from(String)}
      * .
      */
@@ -167,7 +167,7 @@ public class NormalWordsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#join(java.util.List)}
      * .
      */
@@ -177,7 +177,7 @@ public class NormalWordsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#join(java.util.List)}
      * .
      */
@@ -200,7 +200,7 @@ public class NormalWordsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#of(String)}
      * .
      */
@@ -229,7 +229,7 @@ public class NormalWordsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#of(String)}
      * .
      */
@@ -255,7 +255,7 @@ public class NormalWordsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#toTyped(java.util.Map)}
      * .
      */
@@ -280,7 +280,7 @@ public class NormalWordsTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWords#toUntyped(java.util.Map)}
      * .
      */

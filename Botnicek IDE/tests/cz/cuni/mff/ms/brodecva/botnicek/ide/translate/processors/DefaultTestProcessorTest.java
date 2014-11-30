@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -133,7 +133,7 @@ public class DefaultTestProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultTestProcessor#create(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord, cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)}
      * .
      */
@@ -146,7 +146,7 @@ public class DefaultTestProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultTestProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.CodeTestArc)}
      * .
      */
@@ -195,7 +195,7 @@ public class DefaultTestProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultTestProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.PatternArc)}
      * .
      */
@@ -256,7 +256,7 @@ public class DefaultTestProcessorTest {
     }
     
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultTestProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.PatternArc)}
      * .
      */
@@ -311,7 +311,7 @@ public class DefaultTestProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultTestProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.PredicateTestArc)}
      * .
      */
@@ -357,7 +357,7 @@ public class DefaultTestProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultTestProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.RecurentArc)}
      * .
      */
@@ -405,7 +405,7 @@ public class DefaultTestProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultTestProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.TransitionArc)}
      * .
      */

@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -208,7 +208,7 @@ public class DefaultTranslatingObserverTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#create(NodeTopicFactory, StackProcessor, DispatchProcessor, ProceedProcessor, TestProcessor)}
      * .
      */
@@ -222,7 +222,7 @@ public class DefaultTranslatingObserverTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#getResult()}
      * .
      */
@@ -234,7 +234,7 @@ public class DefaultTranslatingObserverTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyDiscovery(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
      * .
      */
@@ -281,7 +281,7 @@ public class DefaultTranslatingObserverTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyExamination(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)}
      * .
      */
@@ -300,9 +300,9 @@ public class DefaultTranslatingObserverTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyVisit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#getResult()}
      * .
      */
@@ -317,11 +317,11 @@ public class DefaultTranslatingObserverTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyVisit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyBack(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#getResult()}
      * .
      */
@@ -340,11 +340,11 @@ public class DefaultTranslatingObserverTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyVisit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyCross(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#getResult()}
      * .
      */
@@ -363,11 +363,11 @@ public class DefaultTranslatingObserverTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyVisit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyDiscovery(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#getResult()}
      * .
      */
@@ -431,11 +431,11 @@ public class DefaultTranslatingObserverTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyVisit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyExamination(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#getResult()}
      * .
      */
@@ -462,11 +462,11 @@ public class DefaultTranslatingObserverTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyVisit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyFinish(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.Node)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#getResult()}
      * .
      */
@@ -485,11 +485,11 @@ public class DefaultTranslatingObserverTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyVisit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.networks.model.Network)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyTree(cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.model.Arc)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#getResult()}
      * .
      */
@@ -508,9 +508,9 @@ public class DefaultTranslatingObserverTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#notifyVisit(cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.System)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.DefaultTranslatingObserver#getResult()}
      * .
      */

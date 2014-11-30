@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -98,7 +98,7 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#create(int, cz.cuni.mff.ms.brodecva.botnicek.library.preprocessor.Normalizer)}
      * .
      */
@@ -114,7 +114,7 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#generate()}
      * .
      */
@@ -129,9 +129,9 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#isUsable(java.lang.String)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#use(java.lang.String)}
      * .
      */
@@ -145,7 +145,7 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#isUsable(java.lang.String)}
      * .
      */
@@ -157,9 +157,9 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#isUsable(java.lang.String)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#use(java.lang.String)}
      * ..
      */
@@ -171,7 +171,7 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#isUsed(java.lang.String)}
      * .
      */
@@ -183,9 +183,9 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#isUsed(java.lang.String)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#use(String)}
      * .
      */
@@ -199,7 +199,7 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#release(java.lang.String)}
      * .
      */
@@ -211,11 +211,11 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#release(java.lang.String)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#use(String)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#isUsed(java.lang.String)}
      * .
      */
@@ -230,7 +230,7 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#replace(java.lang.String, java.lang.String)}
      * .
      */
@@ -242,11 +242,11 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#replace(java.lang.String, java.lang.String)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#use(String)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#getSnapshot()}
      * .
      */
@@ -264,11 +264,11 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#replace(java.lang.String, java.lang.String)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#use(String)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#isUsed(String)}
      * .
      */
@@ -283,11 +283,11 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#replace(java.lang.String, java.lang.String)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#use(String)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#isUsed(String)}
      * .
      */
@@ -302,11 +302,11 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryReplace(java.util.Map)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryUse(String...)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#getSnapshot()}
      * .
      */
@@ -325,11 +325,11 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryReplace(java.util.Map)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryUse(String...)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#getSnapshot()}
      * .
      */
@@ -346,11 +346,11 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryReplace(java.util.Map)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryUse(String...)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#getSnapshot()}
      * .
      */
@@ -369,11 +369,11 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryReplace(java.util.Map)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryUse(String...)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#getSnapshot()}
      * .
      */
@@ -392,11 +392,11 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryReplace(java.util.Map)}
      * ,
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryUse(String...)}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#getSnapshot()}
      * .
      */
@@ -413,9 +413,9 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryUse(java.lang.String[])}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#getSnapshot()}
      * .
      */
@@ -431,9 +431,9 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryUse(java.lang.String[])}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#getSnapshot()}
      * .
      */
@@ -448,9 +448,9 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryUse(java.lang.String[])}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#getSnapshot()}
      * .
      */
@@ -466,9 +466,9 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#tryUse(java.lang.String[])}
-     * and
+     * a
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#getSnapshot()}
      * .
      */
@@ -484,7 +484,7 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#use(java.lang.String)}
      * .
      */
@@ -496,7 +496,7 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#use(java.lang.String)}
      * .
      */
@@ -511,7 +511,7 @@ public class NormalizedNamingAuthorityTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.design.system.model.NormalizedNamingAuthority#use(java.lang.String)}
      * .
      */

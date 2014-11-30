@@ -100,7 +100,7 @@ public final class ConfigurationTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readValue(java.util.Map, java.lang.String)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readValue(java.util.Map, java.lang.String)}.
      * @throws ConfigurationException chyba v konfiguraci
      */
     @Test(expected = ConfigurationException.class)
@@ -112,7 +112,7 @@ public final class ConfigurationTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readPath(java.util.Map, java.lang.String)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readPath(java.util.Map, java.lang.String)}.
      * @throws ConfigurationException chyba v konfiguraci
      */
     @Test(expected = ConfigurationException.class)
@@ -124,7 +124,7 @@ public final class ConfigurationTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readLoadingOrder(java.util.Map, java.lang.String)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readLoadingOrder(java.util.Map, java.lang.String)}.
      * @throws ConfigurationException chyba v konfiguraci
      */
     @Test
@@ -136,7 +136,7 @@ public final class ConfigurationTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readLoadingOrder(java.util.Map, java.lang.String)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readLoadingOrder(java.util.Map, java.lang.String)}.
      * @throws ConfigurationException chyba v konfiguraci
      */
     @Test
@@ -148,7 +148,7 @@ public final class ConfigurationTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readLoadingOrder(java.util.Map, java.lang.String)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readLoadingOrder(java.util.Map, java.lang.String)}.
      * @throws ConfigurationException chyba v konfiguraci
      */
     @Test
@@ -160,7 +160,7 @@ public final class ConfigurationTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readPattern(java.util.Map, java.lang.String)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readPattern(java.util.Map, java.lang.String)}.
      * @throws ConfigurationException chyba v konfiguraci
      */
     @Test(expected = ConfigurationException.class)
@@ -172,7 +172,7 @@ public final class ConfigurationTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readReplacements(java.util.Map)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readReplacements(java.util.Map)}.
      * @throws ConfigurationException chyba v konfiguraci
      */
     @Test(expected = ConfigurationException.class)
@@ -184,7 +184,7 @@ public final class ConfigurationTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readReplacements(java.util.Map)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readReplacements(java.util.Map)}.
      * @throws ConfigurationException chyba v konfiguraci
      */
     @Test(expected = ConfigurationException.class)
@@ -196,7 +196,7 @@ public final class ConfigurationTest {
     }
 
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readValidStrategies(java.util.Map, cz.cuni.mff.ms.brodecva.botnicek.library.utils.classes.ClassMap)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readValidStrategies(java.util.Map, cz.cuni.mff.ms.brodecva.botnicek.library.utils.classes.ClassMap)}.
      * @throws ConfigurationException chyba v konfiguraci
      */
     @SuppressWarnings("rawtypes")
@@ -219,7 +219,7 @@ public final class ConfigurationTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readValidStrategies(java.util.Map, cz.cuni.mff.ms.brodecva.botnicek.library.utils.classes.ClassMap)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readValidStrategies(java.util.Map, cz.cuni.mff.ms.brodecva.botnicek.library.utils.classes.ClassMap)}.
      * @throws ConfigurationException chyba v konfiguraci
      */
     @SuppressWarnings("rawtypes")
@@ -239,7 +239,7 @@ public final class ConfigurationTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readValidStrategies(java.util.Map, cz.cuni.mff.ms.brodecva.botnicek.library.utils.classes.ClassMap)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readValidStrategies(java.util.Map, cz.cuni.mff.ms.brodecva.botnicek.library.utils.classes.ClassMap)}.
      * @throws ConfigurationException chyba v konfiguraci
      */
     @SuppressWarnings("rawtypes")
@@ -257,7 +257,7 @@ public final class ConfigurationTest {
     }
     
     /**
-     * Test method for {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readValidStrategies(java.util.Map, cz.cuni.mff.ms.brodecva.botnicek.library.utils.classes.ClassMap)}.
+     * Testovací metoda pro {@link cz.cuni.mff.ms.brodecva.botnicek.library.utils.Configuration#readValidStrategies(java.util.Map, cz.cuni.mff.ms.brodecva.botnicek.library.utils.classes.ClassMap)}.
      * @throws ConfigurationException chyba v konfiguraci
      */
     @SuppressWarnings("rawtypes")

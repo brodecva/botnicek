@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -72,7 +72,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#hashCode()}
      * .
      */
@@ -83,7 +83,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
@@ -99,7 +99,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
@@ -111,7 +111,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
@@ -122,7 +122,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
@@ -137,7 +137,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
@@ -150,7 +150,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
@@ -163,7 +163,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
@@ -179,7 +179,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
@@ -195,7 +195,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
@@ -206,7 +206,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
@@ -221,7 +221,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
@@ -234,7 +234,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
@@ -247,7 +247,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#succeed(java.lang.Object, java.lang.Object)}
      * .
      */
@@ -259,7 +259,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#succeed(java.lang.Object, java.lang.Object)}
      * .
      */
@@ -271,7 +271,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
@@ -283,7 +283,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#fail(int, int, java.lang.String, java.lang.Object, java.lang.Object)}
      * .
      */
@@ -295,7 +295,7 @@ public class DefaultCheckResultTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.DefaultCheckResult#succeed(java.lang.Object, java.lang.Object)}
      * .
      */

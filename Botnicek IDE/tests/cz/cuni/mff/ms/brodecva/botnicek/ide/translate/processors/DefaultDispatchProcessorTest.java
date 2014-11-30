@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -215,7 +215,7 @@ public class DefaultDispatchProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultDispatchProcessor#create(cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.NormalWord)}
      * .
      */
@@ -225,7 +225,7 @@ public class DefaultDispatchProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultDispatchProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.ExitNode)}
      * .
      */
@@ -235,7 +235,7 @@ public class DefaultDispatchProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultDispatchProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.IsolatedNode)}
      * .
      */
@@ -245,7 +245,7 @@ public class DefaultDispatchProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultDispatchProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.OrderedNode)}
      * .
      */
@@ -281,7 +281,7 @@ public class DefaultDispatchProcessorTest {
     }
 
     /**
-     * Test method for
+     * Testovací metoda pro
      * {@link cz.cuni.mff.ms.brodecva.botnicek.ide.translate.processors.DefaultDispatchProcessor#process(cz.cuni.mff.ms.brodecva.botnicek.ide.design.nodes.model.RandomNode)}
      * .
      */

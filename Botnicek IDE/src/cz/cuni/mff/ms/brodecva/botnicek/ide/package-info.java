@@ -1,5 +1,5 @@
 /**
- * Copyright Václav Brodec 2013.
+ * Copyright Václav Brodec 2014.
  * 
  * This file is part of Botníček.
  * 
@@ -17,7 +17,11 @@
  * along with Botníček.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * Prostředí pro návrh. 
+ * Prostředí pro návrh AIML robotů s podporou pro řízení dialogu grafovým
+ * přístupem, s využitím rozšířených přechodových sítí.
+ * Využívá {@link cz.cuni.mff.ms.brodecva.botnicek.library} jako testovací
+ * a validační interpret dodržující striktně standard. 
+ * 
  *
  * @version 1.0
  */
