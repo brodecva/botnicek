@@ -206,7 +206,7 @@ public final class Text {
      * @param replacement
      *            nahrazení
      * @return nahrazený řetězec
-     * @see Matcher#appendReplacement(StringBuffer, String) pro formát nahrazení
+     * @see java.util.regex.Matcher#appendReplacement(StringBuffer, String) pro formát nahrazení
      */
     private static String applyReplacement(final Matcher matcher,
             final String text, final String replacement) {

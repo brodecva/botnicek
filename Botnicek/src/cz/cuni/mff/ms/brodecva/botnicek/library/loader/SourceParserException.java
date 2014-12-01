@@ -149,7 +149,7 @@ public class SourceParserException extends Exception {
      *            povolena: říká, že příčina neexistuje či není známa.)
      * @param systemId systémový identifikátor prvku s chybou (Hodnota {@code null} je
      *            povolena: říká, že ID není dostupné.)
-     * @param publicId veřejný identifikátor prvku s chybou (Hodnota {@value #NOT_PRESENT_ID} je
+     * @param publicId veřejný identifikátor prvku s chybou (Hodnota {@code null} je
      *            povolena: říká, že ID není dostupné.)
      * @param lineNumber číslo řádku s chybou (číslováno od 1, hodnota {@value #NOT_PRESENT_NUMBER} značí chybějící informaci)
      * @param columnNumber číslo sloupce s chybou (číslováno od 1, hodnota {@value #NOT_PRESENT_NUMBER} značí chybějící informaci)
@@ -173,7 +173,7 @@ public class SourceParserException extends Exception {
     }
 
     /**
-     * @return veřejný identifikátor prvku s chybou (Hodnota {@value #NOT_PRESENT_ID} je
+     * @return veřejný identifikátor prvku s chybou (Hodnota {@code null} je
      *            povolena: říká, že ID není dostupné.)
      */
     public String getPublicId() {
