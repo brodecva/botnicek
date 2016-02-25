@@ -1378,7 +1378,7 @@ public class DefaultSystem implements System, Serializable {
         final EnterNode referred = (EnterNode) oldVersion;
         final EnterNode newReferred = (EnterNode) newVersion;
 
-        final Set<RecurentArc> referringArcs = this.references.get(referred);
+        final Set<RecurentArc> referringArcs = ImmutableSet.copyOf(this.references.get(referred));
         for (final RecurentArc referringArc : referringArcs) {
             changeArc(referringArc, referringArc.getName(),
                     referringArc.getPriority(), RecurentArc.class,

@@ -42,6 +42,7 @@ import cz.cuni.mff.ms.brodecva.botnicek.ide.design.arcs.views.properties.Clearab
 public class NormalWordTextField extends JTextField implements Clearable, CheckView {
 
     private static final long serialVersionUID = 1L;
+    private static final String DEFAULT_NORMAL_WORD = "UNKNOWN";
 
     /**
      * Vytvoří textové pole pro zadávání normálního slova.
@@ -116,7 +117,7 @@ public class NormalWordTextField extends JTextField implements Clearable, CheckV
     public void reset(final Source client) {
         Preconditions.checkNotNull(client);
 
-        setText("");
+        setText(DEFAULT_NORMAL_WORD);
         this.validationController.check(client, this, getText());
     }
     

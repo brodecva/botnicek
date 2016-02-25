@@ -26,6 +26,7 @@ import javax.swing.text.Document;
 
 import com.google.common.base.Preconditions;
 
+import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.Patterns;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.aiml.types.SimplePattern;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.controllers.CheckController;
 import cz.cuni.mff.ms.brodecva.botnicek.ide.check.common.model.checker.CheckResult;
@@ -116,7 +117,7 @@ public class SimplePatternTextField extends JTextField implements Clearable, Che
     public void reset(final Source client) {
         Preconditions.checkNotNull(client);
 
-        setText("");
+        setText(Patterns.createUniversal().getText());
         this.validationController.check(client, this, getText());
     }
     

@@ -168,7 +168,6 @@ public abstract class AbstractController<V> implements Controller<V> {
                 callback.call(view);
             } catch (final RuntimeException e) {
                 LOGGER.log(Level.WARNING, "ViewCallException", new Object[] {view, e.getMessage()});
-                throw e;
             }
         }
     }
