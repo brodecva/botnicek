@@ -1,1 +1,0 @@
-More at https://is.cuni.cz/webapps/zzp/detail/143563/12855695 .
